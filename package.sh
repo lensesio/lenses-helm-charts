@@ -15,9 +15,9 @@ echo "Linting and checking"
 scripts/lint.sh
 RET=$?
 
-# if [[ "${RET}" == 1 ]]; then
-#     exit 1
-# fi  
+if [[ "${RET}" == 1 ]]; then
+    exit 1
+fi  
 
 echo "Packaging charts..."
 cd packages && helm package ../charts/*
@@ -26,7 +26,6 @@ cd ../
 echo "Checking version compatibility"
 scripts/test.sh
 RET=$? 
-RET=0
 
 if [[ "${RET}" == 0 ]]; then 
     echo "Merging index.yaml"

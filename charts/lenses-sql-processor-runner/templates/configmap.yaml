@@ -1,4 +1,4 @@
-{{- if and .Values.lenses.kafka.sasl.enabled (eq .Values.lenses.kafka.sasl.mechanism "GSSAPI") }}
+{{- if and .Values.kafka.saslEnabled (eq .Values.kafka.sasl.mechanism "GSSAPI") }}
 
 kind: ConfigMap
 metadata:
@@ -9,6 +9,6 @@ metadata:
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"
 data:
-  krb5.conf:
-{{ .Values.lenses.kafka.sasl.krb5Conf | indent 4 }} 
+  krb5.conf: |-
+{{ .Values.kafka.sasl.krb5Conf | indent 4 }} 
 {{- end -}}
