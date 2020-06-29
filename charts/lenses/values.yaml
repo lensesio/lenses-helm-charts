@@ -364,6 +364,8 @@ lenses:
         groupExtractRegex: ""
         personNameKey: ""
 
+    append:
+      conf: |-
 
   # license is the Lenses license
   license: |-
