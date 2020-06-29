@@ -405,6 +405,10 @@ spec:
         {{- end }}
         {{- end }}
 
+        {{- if .Values.lenses.env }}
+        {{- toYaml .Values.lenses.env | nindent 8 }}
+        {{- end }}
+
         # extras configs
         {{- range $key, $value := .Values.lenses.configOverrides }}
         - name: {{ printf "%s" $key | replace "." "_" | upper | quote }}
