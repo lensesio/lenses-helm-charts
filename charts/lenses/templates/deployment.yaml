@@ -405,8 +405,10 @@ spec:
         {{- end }}
         {{- end }}
 
-        {{- if .Values.lenses.env }}
-        {{- toYaml .Values.lenses.env | nindent 8 }}
+        # Custom env variables
+        {{- range $key, $value := .Values.lenses.env }}
+        - name: {{ $key | quote }}
+          value: {{ $value | quote }}
         {{- end }}
 
         # extras configs
