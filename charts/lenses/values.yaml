@@ -7,7 +7,7 @@
 replicaCount: 1
 
 image:
-  repository: landoop/lenses
+  repository: lensesio/lenses
   pullPolicy: IfNotPresent
 
 nodeSelector: {}
