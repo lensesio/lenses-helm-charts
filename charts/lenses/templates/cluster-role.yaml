@@ -40,9 +40,17 @@ rules:
     - patch
 - apiGroups: [""]
   resources:
-    - events
-  verbs: 
+    - pods/log
+  verbs:
+    - get
     - list
     - watch
-    - get           
+    - create
+- apiGroups: [""]
+  resources:
+    - events
+  verbs:
+    - list
+    - watch
+    - get
 {{- end }}
