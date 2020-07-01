@@ -7,7 +7,7 @@
 replicaCount: 1
 
 image:
-  repository: landoop/lenses
+  repository: lensesio/lenses
   pullPolicy: IfNotPresent
 
 nodeSelector: {}
@@ -364,12 +364,18 @@ lenses:
         groupExtractRegex: ""
         personNameKey: ""
 
+    append:
+      conf: |-
 
   # license is the Lenses license
   license: |-
 
   # licenseUrl is a url pointing to the Lenses license
   licenseUrl:
+
+  # Uncomment to inject custom env vars if needed
+#  env:
+#    CUSTOM_ENV_VAR: "foo"
 
   # extra configurations that will be append to the lenses.conf file mounted in /mnt/settings
   ## keys must be uppercase and underscores for separators suit for use as environment variables

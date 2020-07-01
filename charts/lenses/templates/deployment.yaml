@@ -34,13 +34,15 @@ spec:
             items:
               - key: security.conf
                 path: security.conf
+              - key: security.append.conf
+                path: security.append.conf
               - key: lenses.keytab
-                path: lenses.keytab 
+                path: lenses.keytab
               - key: keytab
                 path: keytab
               - key: client.keystore.jks
                 path: client.keystore.jks
-              - key: client.truststore.jks 
+              - key: client.truststore.jks
                 path: client.truststore.jks
               - key: processor.client.keystore.jks
                 path: processor.client.keystore.jks
@@ -71,6 +73,10 @@ spec:
       - name: {{ .Chart.Name }}
         image: "{{ .Values.image.repository }}:{{if .Values.image.tag }}{{ .Values.image.tag }}{{else}}{{ .Chart.AppVersion }}{{end}}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
+        {{- if .Values.image.registrySecretKey }}
+        imagePullSecrets:
+        - name: {{ .Values.image.registrySecretKey }}
+        {{- end }}
         ports:
         - containerPort: {{ .Values.restPort }}
         livenessProbe:
@@ -84,10 +90,13 @@ spec:
             mountPath: "/mnt/secrets"
           - name: secrets
             mountPath: "/etc/keytab"
-            subPath: "keytab"  
+            subPath: "keytab"
           - name: secrets
             mountPath: "/etc/registry.keytab"
-            subPath: "registry.keytab"  
+            subPath: "registry.keytab"
+          - name: secrets
+            mountPath: "/mnt/settings/security.append.conf"
+            subPath: "security.append.conf"
           - name: krb
             mountPath: "/etc/krb5.conf"
             subPath: "krb5.conf"
@@ -394,6 +403,12 @@ spec:
               name: {{ include "fullname" . | quote }}
               key:  "processor.client.key.password"
         {{- end }}
+        {{- end }}
+
+        # Custom env variables
+        {{- range $key, $value := .Values.lenses.env }}
+        - name: {{ $key | quote }}
+          value: {{ $value | quote }}
         {{- end }}
 
         # extras configs
