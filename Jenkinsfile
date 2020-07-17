@@ -29,6 +29,9 @@ pipeline {
             }
         }
         stage('Upload Helm Charts') {
+            when {
+                branch 'release/**'
+            }
             environment {
                 HELM_REPOSITORY = 'lenses-private-helm-charts'
                 ARTIFACTORY_URL = 'https://lenses.jfrog.io/artifactory/'
