@@ -99,8 +99,8 @@ spec:
           {{- if .Values.lenses.tls.enabled }}
             scheme: HTTPS
           {{- end }}
-          initialDelaySeconds: 120
-          periodSeconds: 3
+          initialDelaySeconds: 300
+          periodSeconds: 10
         volumeMounts:
           - name: secrets
             mountPath: "/mnt/secrets"
