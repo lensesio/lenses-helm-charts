@@ -33,7 +33,7 @@ pipeline {
                 branch 'release/**'
             }
             environment {
-                HELM_REPOSITORY = 'lenses-private-helm-charts'
+                HELM_REPOSITORY = 'lenses-helm-charts'
                 ARTIFACTORY_URL = 'https://lenses.jfrog.io/artifactory/'
                 ARTIFACTORY_API_KEY = credentials('artifactory-lenses-helm')
             }
