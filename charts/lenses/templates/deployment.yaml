@@ -90,8 +90,8 @@ spec:
           httpGet:
             path: /
             port: {{ .Values.restPort }}
-          initialDelaySeconds: 120
-          periodSeconds: 3
+          initialDelaySeconds: 300
+          periodSeconds: 10
         volumeMounts:
           - name: secrets
             mountPath: "/mnt/secrets"
