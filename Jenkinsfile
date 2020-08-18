@@ -3,7 +3,7 @@
 pipeline {
 
     agent {
-        label 'connector||docker'
+        label 'docker&&ephemeral'
     }
 
     options {
@@ -29,8 +29,11 @@ pipeline {
             }
         }
         stage('Upload Helm Charts') {
+            when {
+                branch 'release/**'
+            }
             environment {
-                HELM_REPOSITORY = 'lenses-private-helm-charts'
+                HELM_REPOSITORY = 'lenses-helm-charts'
                 ARTIFACTORY_URL = 'https://lenses.jfrog.io/artifactory/'
                 ARTIFACTORY_API_KEY = credentials('artifactory-lenses-helm')
             }
@@ -42,6 +45,18 @@ pipeline {
                 }
             }
         }
+
+        stage('Update helm.repo.lenses.io') {
+            environment {
+                SSH_HOST = credentials('ssh-host')
+            }
+            steps {
+                sshagent (credentials: ['57dab1e7-d47f-4c57-8eef-c107c4bb707a']){
+                    sh '_cicd/functions.sh cloneSite'
+                }
+            }
+        }
+
     }
 
     post {
