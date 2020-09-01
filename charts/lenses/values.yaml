@@ -8,7 +8,7 @@ replicaCount: 1
 
 image:
   repository: lensesio/lenses
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
 
 nodeSelector: {}
 tolerations: {}
