@@ -176,7 +176,7 @@ spec:
         {{- end }}
 
         - name: LENSES_OPTS
-          value: ""
+          value: {{ .Values.lenses.lensesOpts | default "" | quote }}
         {{- if .Values.lenses.opts.keyStoreFileData }}
         - name: CLIENT_OPTS_KEYSTORE_FILE
           value: "/mnt/secrets/lenses.opts.keystore.jks"
