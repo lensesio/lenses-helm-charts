@@ -47,6 +47,9 @@ pipeline {
         }
 
         stage('Update helm.repo.lenses.io') {
+            when {
+                branch 'release/**'
+            }
             environment {
                 SSH_HOST = credentials('ssh-host')
             }
