@@ -419,10 +419,13 @@ lenses:
       #  openssl base64 < saml.jks | tr -d '\n'
       keyStoreFileData: |-
 
-      # Password to for accessing the keystore.
+      # Password for accessing the keystore.
       keyStorePassword:
 
-      # Password to use for the SAML generated key within the keystore.
+      # Alias to use for the private key within the keystore (only required when the keystore has multiple keys)
+      keyAlias:
+
+      # Password for accessing the private key within the keystore.
       keyPassword:
 
     append:
