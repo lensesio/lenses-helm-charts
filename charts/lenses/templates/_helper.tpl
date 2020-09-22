@@ -451,7 +451,7 @@ lenses.security.saml.idp.provider={{ .Values.lenses.security.saml.provider | quo
 lenses.security.saml.idp.metadata.file="/mnt/secrets/saml.idp.xml"
 lenses.security.saml.keystore.location="/mnt/secrets/saml.keystore.jks"
 lenses.security.saml.keystore.password={{ .Values.lenses.security.saml.keyStorePassword | quote }}
-{{- if .Values.lenses.saml.key.alias -}}
+{{- if .Values.lenses.security.saml.keyAlias -}}
 lenses.security.saml.key.alias={{ .Values.lenses.security.saml.keyAlias | quote }}
 {{- end }}
 lenses.security.saml.key.password={{ .Values.lenses.security.saml.keyPassword | quote }}
