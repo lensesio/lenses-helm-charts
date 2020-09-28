@@ -16,7 +16,7 @@ spec:
     matchLabels:
       app: {{ include "fullname" . | quote }}
   strategy:
-    type: Recreate
+    type: {{ default "Recreate" .Values.strategy.type | quote }}
   template:
     metadata:
       labels:
