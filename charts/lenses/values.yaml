@@ -10,6 +10,7 @@ image:
   repository: lensesio/lenses
   pullPolicy: IfNotPresent
 
+strategy: {}
 nodeSelector: {}
 tolerations: {}
 affinity: {}
@@ -213,7 +214,7 @@ lenses:
 
   # zookeeper
   ## Zookeepers should be behind a service, if so set one entry in the hosts
-  ## If your zookeepers are outside explicitly add them to the hosts. 
+  ## If your zookeepers are outside explicitly add them to the hosts.
   zookeepers:
     enabled: false
     chroot:
