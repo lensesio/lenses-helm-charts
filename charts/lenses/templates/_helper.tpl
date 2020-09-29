@@ -169,9 +169,7 @@ PLAINTEXT
   {{- if .Values.lenses.kafka.metrics.password}}
   password: {{ .Values.lenses.kafka.metrics.password | quote}},
   {{- end }}
-  {{- if .Values.lenses.kafka.metrics.port}}
-  default.port: {{ .Values.lenses.kafka.metrics.port }}
-  {{- else}}
+  {{- if .Values.lenses.kafka.metrics.ports}}
   port: [
     {{- if eq .Values.lenses.kafka.metrics.type "AWS" }}
     {{ range $index, $element := .Values.lenses.kafka.metrics.ports }}
@@ -189,6 +187,8 @@ PLAINTEXT
     {{- end}}
     {{- end }}
   ]
+  {{- else}}
+  default.port: {{ .Values.lenses.kafka.metrics.port }}
   {{- end}}
 }
 {{- end -}}
