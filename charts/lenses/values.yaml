@@ -97,10 +97,12 @@ ingress:
   tls:
     enabled: false
     crt: |-
+
     key: |-
 
 lenses:
   lensesOpts: |-
+
   jvm:
     # heapOpts are any overrides for Lenses Heap JVM options
     heapOpts: |-
