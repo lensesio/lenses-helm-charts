@@ -1,41 +1,19 @@
 [![Build Status](https://travis-ci.com/lensesio/kafka-helm-charts.svg?branch=master)](https://travis-ci.com/lensesio/kafka-helm-charts)
 
-# Helm Charts for Lenses, Lenses SQL Runners and Apache Kafka Connect and other components
+# Helm Chart for Lenses
 
-This repo contains Helm Charts Apache Kafka components
+This repo contains Helm chart for Lenses.
 
 Add the repo:
 
 ```bash
-helm repo add lensesio https://lensesio.github.io/kafka-helm-charts/
+helm repo add lensesio https://helm.repo.lenses.io
 helm repo update
 ```
-
-## Stream Reactor 
-
-[Stream-reactor](https://github.com/lensesio/stream-reactor) and Kafka Connectors any environment variable beginning with ``CONNECT`` is used to build the Kafka Connect properties file, the Connect cluster is started with this file in distributed mode. Any
-environment variable starting with ``CONNECTOR`` is used to make the Connector properties file, which is posted into
-the Connect cluster to start the connector.
 
 ## Lenses
 
 Documentation for the Lenses chart can be found [here](https://docs.lenses.io/install_setup/deployment-options/kubernetes-deployment.html).
-
-## Lenses SQL runners
-
-Documentation for the Lenses SQL Runner chart can be found [here](https://docs.lenses.io/install_setup/advanced-config/sql-config.html).
-
-## SSL/SASL
-
-The connectors support SSL and SASL on Kafka. For this you need to provide the base64 encoded contents of the key and truststores.
-
-The key/truststores added to a secret and mounted into /mnt/secrets
-
-For SASL, you need to provide the base64 encoded keytab file contents. Note that the keytab path in the jaas.conf must be set to /mnt/secrets.
-
-If the connector, for example, Cassandra requires SSL, provided the base64 contents for the key/truststores. They will be mounted into /mnt/connector-secrets and any connector config parameters are set automatically.
-
-For connectors supporting TLS, the certs will be mounted via secrets into /mnt/connector-secrets and any connector config parameters are set automatically
 
 ### FOR BASE64 encoding
 
