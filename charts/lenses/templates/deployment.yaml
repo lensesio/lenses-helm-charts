@@ -75,7 +75,7 @@ spec:
               - key: saml.idp.xml
                 path: saml.idp.xml
               {{- end }}
-        - name: krb
+        - name: config
           configMap:
             name: {{ include "fullname" . | quote }}
         {{- if .Values.persistence.enabled }}
@@ -116,10 +116,13 @@ spec:
           - name: secrets
             mountPath: "/mnt/settings/security.append.conf"
             subPath: "security.append.conf"
-          - name: krb
+          - name: config
+            mountPath: "/mnt/settings/lenses.append.conf"
+            subPath: "lenses.append.conf"
+          - name: config
             mountPath: "/etc/krb5.conf"
             subPath: "krb5.conf"
-          - name: krb
+          - name: config
             mountPath: "/etc/processor.krb5.conf"
             subPath: "processor.krb5.conf"
           {{- if .Values.persistence.enabled }}
