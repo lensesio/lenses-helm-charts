@@ -101,11 +101,19 @@ ingress:
     key: |-
 
 lenses:
+  # For generic settings
+  # Read more: https://docs.lenses.io/4.0/configuration/jvm/#content
   lensesOpts: |-
+
+  append:
+    # Add custom configuration values, will take precedence over the env variables and auto-generated values
+    # Read more: https://docs.lenses.io/3.2/install_setup/deployment-options/docker-deployment.html#configuration-via-files-and-secrets
+    conf: |-
 
   jvm:
     # heapOpts are any overrides for Lenses Heap JVM options
     heapOpts: |-
+
     # logBackOpts are any logging options
     logBackOpts:
     #performanceOpts are any jvm tuning options to add to the jvm
@@ -240,6 +248,7 @@ lenses:
         # keyTabData is the base64 contents kerberos keytab file is using kerberos mounted in /mnt/secrets
         # openssl base64 < keytab | tr -d '\n'
         keytabData: |-
+
         # jaasFileData is the contents of the kafka jaas file mounted in /mnt/secrets
         jaasFileData: |-
 
@@ -327,8 +336,6 @@ lenses:
       #       generator-url="http://lenses_prod:port1"
       #     }
 
-
-
   #grafana
   grafanaUrl:
 
@@ -352,7 +359,7 @@ lenses:
 
       debug: false
 
-     # ldap setting
+    # ldap setting
     ldap:
       enabled: false
       url: ""
@@ -390,13 +397,18 @@ lenses:
       # content of the XML file - base64 encoded
       #  openssl base64 < idp.xml | tr -d '\n'
       metadataFileData: |-
+
       # base64 encoded keystore data to be used for SAML crypto.
       #  openssl base64 < saml.jks | tr -d '\n'
       keyStoreFileData: |-
-      # Password to for accessing the keystore.
+
+      # Password for accessing the keystore.
       keyStorePassword:
 
-      # Password to use for the SAML generated key within the keystore.
+      # Alias to use for the private key within the keystore (only required when the keystore has multiple keys)
+      keyAlias:
+
+      # Password for accessing the private key within the keystore.
       keyPassword:
 
     append:

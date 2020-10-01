@@ -113,13 +113,13 @@ _kafka_lenses_processors
 {{- define "securityProtocol" -}}
 {{- if and .Values.lenses.kafka.sasl.enabled .Values.lenses.kafka.ssl.enabled -}}
 SASL_SSL
-{{- end -}} 
+{{- end -}}
 {{- if and .Values.lenses.kafka.sasl.enabled (not .Values.lenses.kafka.ssl.enabled) -}}
 SASL_PLAINTEXT
-{{- end -}} 
+{{- end -}}
 {{- if and .Values.lenses.kafka.ssl.enabled (not .Values.lenses.kafka.sasl.enabled) -}}
 SSL
-{{- end -}} 
+{{- end -}}
 {{- if and (not .Values.lenses.kafka.ssl.enabled) (not .Values.lenses.kafka.sasl.enabled) -}}
 PLAINTEXT
 {{- end -}}
@@ -131,7 +131,7 @@ PLAINTEXT
   {{- if $index -}}
     {{- if eq $protocol "PLAINTEXT" -}}
   ,{{$protocol}}://{{$element.name}}:{{$element.port}}
-    {{- end -}}  
+    {{- end -}}
     {{- if eq $protocol "SSL" -}}
   ,{{$protocol}}://{{$element.name}}:{{$element.sslPort}}
     {{- end -}}
@@ -144,7 +144,7 @@ PLAINTEXT
   {{- else -}}
     {{- if eq $protocol "PLAINTEXT" -}}
   {{$protocol}}://{{$element.name}}:{{$element.port}}
-    {{- end -}}  
+    {{- end -}}
     {{- if eq $protocol "SSL" -}}
   {{$protocol}}://{{$element.name}}:{{$element.sslPort}}
     {{- end -}}
@@ -154,7 +154,7 @@ PLAINTEXT
     {{- if eq $protocol "SASL_PLAINTEXT" -}}
   {{$protocol}}://{{$element.name}}:{{$element.saslPlainTextPort}}
     {{- end -}}
-  {{- end -}}  
+  {{- end -}}
   {{end}}
 {{- end -}}
 
@@ -210,7 +210,7 @@ PLAINTEXT
   {id: {{$element.id}}, port: {{$element.port}}}
   {{- end}}
 {{- end}}
-]  
+]
 {{- end -}}
 
 {{- define "zookeepers" -}}
@@ -223,7 +223,7 @@ PLAINTEXT
     url: "{{$element.host}}:{{$element.metrics.port}}",
     {{- else }}
     url: "{{$element.protocol}}://{{$element.host}}:{{$element.metrics.port}}",
-    {{- end }} 
+    {{- end }}
     type: "{{$element.metrics.type}}",
     ssl: {{default false $element.metrics.ssl}},
     {{- if $element.metrics.username -}}
@@ -295,7 +295,7 @@ PLAINTEXT
   }{{- end}}}
   {{- end}}
 {{- end}}
-]  
+]
 {{- end -}}
 {{- end -}}
 
@@ -355,7 +355,7 @@ PLAINTEXT
     ]
   }
   {{- else}},
-  {  
+  {
     name: "{{- index $element "name"}}",
     statuses: "{{index $element "statusTopic"}}",
     configs: "{{index $element "configTopic"}}",
@@ -363,7 +363,7 @@ PLAINTEXT
     {{ if index $element "authType" }}authType: "{{index $element "authType"}}",{{- end -}}
     {{ if index $element "username" }}username: "{{index $element "username"}}",{{- end -}}
     {{ if index $element "password" }}password: "{{index $element "password"}}",{{- end -}}
-    urls:[ 
+    urls:[
       {{ range $index, $element := index $element "hosts" -}}
         {{- if not $index -}}
         {url: "{{$protocol}}://{{$element.host}}:{{$port}}"
@@ -429,6 +429,10 @@ lenses.security.kerberos.debug={{ .Values.lenses.security.kerberos.debug | quote
 {{end -}}
 {{- end -}}
 
+{{- define "lensesAppendConf" -}}
+{{ default "" .Values.lenses.append.conf }}
+{{- end -}}
+
 {{- define "securityConf" -}}
 {{- if .Values.lenses.security.defaultUser -}}
 lenses.security.user={{ .Values.lenses.security.defaultUser.username | quote }}
@@ -451,10 +455,12 @@ lenses.security.saml.idp.provider={{ .Values.lenses.security.saml.provider | quo
 lenses.security.saml.idp.metadata.file="/mnt/secrets/saml.idp.xml"
 lenses.security.saml.keystore.location="/mnt/secrets/saml.keystore.jks"
 lenses.security.saml.keystore.password={{ .Values.lenses.security.saml.keyStorePassword | quote }}
+{{- if .Values.lenses.security.saml.keyAlias }}
+lenses.security.saml.key.alias={{ .Values.lenses.security.saml.keyAlias | quote }}
+{{- end }}
 lenses.security.saml.key.password={{ .Values.lenses.security.saml.keyPassword | quote }}
 {{- end }}
 {{- if .Values.lenses.security.kerberos.enabled -}}
 {{ include "kerberos" .}}
 {{- end -}}
 {{- end -}}
-
