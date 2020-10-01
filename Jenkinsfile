@@ -19,8 +19,21 @@ pipeline {
         stage('Build Helm Charts') {
             steps {
                 script {
+
+                    env.BRANCH_VERSION = env.BRANCH_NAME
+                        .trim()
+                        .toLowerCase()
+                        .replaceAll(' ','-')
+                        .replaceAll('/','-')
+                        .replaceAll('\\.','-')
+
+                    env.BUILD_MODE = 'development'
+                    if (env.BRANCH_NAME =~ /^release/) {
+                        env.BUILD_MODE = 'release'
+                    }
+
                     docker.image("dtzar/helm-kubectl").inside {
-                        sh("./package.sh")
+                        sh("_cicd/functions.sh package_all")
                     }
 
                     dir('build') {
@@ -50,7 +63,6 @@ pipeline {
         stage('Upload Helm Chart to private repo') {
             when {
                 not { branch 'release/**' }
-                not { branch 'master' }
             }
             environment {
                 HELM_REPOSITORY = 'lenses-private-helm-charts'
@@ -75,7 +87,7 @@ pipeline {
             }
             steps {
                 sshagent (credentials: ['57dab1e7-d47f-4c57-8eef-c107c4bb707a']){
-                    sh '_cicd/functions.sh cloneSite'
+                    sh '_cicd/functions.sh clone_site'
                 }
             }
         }

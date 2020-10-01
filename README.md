@@ -23,7 +23,7 @@ Make sure to ***not*** include split lines.
 
 # Building/Testing
 
-Run ``package.sh`` this in turn calls ``scripts/lint.sh`` which will perform linting checks on the charts and also check we aren't going to overwrite existing charts.
+Run ``_cicd/functions.sh package_all`` this in turn calls ``scripts/lint.sh`` which will perform linting checks on the charts and also check we aren't going to overwrite existing charts.
 
 If all good, checkin, tag and push the ```docs`` folder. This charts are hosted on the github page.
 
@@ -31,7 +31,7 @@ If all good, checkin, tag and push the ```docs`` folder. This charts are hosted 
 
 Contributions are welcome for any Kafka Connector or any other component that is useful for building Data Streaming pipelines
 
-# Signing 
+# Signing
 For integrity we sign the Helm Charts. For more information see this document https://helm.sh/docs/topics/provenance/.
 
 The steps to do so are as follows:
@@ -50,5 +50,5 @@ The steps to do so are as follows:
 ```
 * And commit the key.gpg.enc to Git.
 
-The ```package.sh``` then needs to be updated with the key name, and an environment variable ```HELM_KEY_PASSPHRASE``` 
+The ```_cicd/functions.sh package_all``` then needs to be updated with the key name, and an environment variable ```HELM_KEY_PASSPHRASE```
 created in the travis build settings with the pass phrase used to encrypt the key.

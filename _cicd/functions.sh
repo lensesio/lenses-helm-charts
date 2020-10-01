@@ -1,11 +1,13 @@
 #!/usr/bin/env bash
 
+SCRIPTS_DIR=$(dirname "${BASH_SOURCE[0]}")
+
 set -o errexit
 set -o nounset
 set -o pipefail
 set -o xtrace
 
-cloneSite() {
+clone_site() {
     mkdir -p "${HOME}/.ssh"
     ssh-keyscan -t rsa ${SSH_HOST#*@} >> ~/.ssh/known_hosts
 
