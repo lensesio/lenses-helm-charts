@@ -30,4 +30,4 @@ script:
 	#./scripts/ci-test.sh
 
 deploy:
-	./package.sh
+	./_cicd/functions.sh package_all
