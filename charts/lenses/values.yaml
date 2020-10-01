@@ -101,7 +101,14 @@ ingress:
     key: |-
 
 lenses:
+  # For generic settings
+  # Read more: https://docs.lenses.io/4.0/configuration/jvm/#content
   lensesOpts: |-
+
+  append:
+    # Add custom configuration values, will take precedence over the env variables and auto-generated values
+    # Read more: https://docs.lenses.io/3.2/install_setup/deployment-options/docker-deployment.html#configuration-via-files-and-secrets
+    conf: |-
 
   jvm:
     # heapOpts are any overrides for Lenses Heap JVM options
@@ -295,6 +302,15 @@ lenses:
             #   ssl:
           - host: connect-worker-2
           - host: connect-worker-3
+  storage:
+    postgres:
+      enabled: false
+      host:
+      port:               # optional, defaults to 5432
+      username:
+      password:
+      database:
+      schema:             # optional, defaults to public schema
 
   # sql
   sql:

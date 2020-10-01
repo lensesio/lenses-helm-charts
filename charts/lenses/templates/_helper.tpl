@@ -429,6 +429,21 @@ lenses.security.kerberos.debug={{ .Values.lenses.security.kerberos.debug | quote
 {{end -}}
 {{- end -}}
 
+{{- define "lensesAppendConf" -}}
+{{- if .Values.lenses.storage.postgres.enabled }}
+lenses.storage.postgres.host={{ required "PostgreSQL 'host' value is mandatory" .Values.lenses.storage.postgres.host | quote }}
+lenses.storage.postgres.database={{ required "PostgreSQL 'database' value is mandatory" .Values.lenses.storage.postgres.database | quote }}
+lenses.storage.postgres.username={{ required "PostgreSQL 'username' value is mandatory" .Values.lenses.storage.postgres.username | quote }}
+{{- if .Values.lenses.storage.postgres.port }}
+lenses.storage.postgres.port={{  .Values.lenses.storage.postgres.port | quote }}
+{{- end }}
+{{- if .Values.lenses.storage.postgres.schema }}
+lenses.storage.postgres.schema={{ .Values.lenses.storage.postgres.schema | quote }}
+{{- end }}
+{{- end }}
+{{ default "" .Values.lenses.append.conf }}
+{{- end -}}
+
 {{- define "securityConf" -}}
 {{- if .Values.lenses.security.defaultUser -}}
 lenses.security.user={{ .Values.lenses.security.defaultUser.username | quote }}
@@ -459,5 +474,7 @@ lenses.security.saml.key.password={{ .Values.lenses.security.saml.keyPassword | 
 {{- if .Values.lenses.security.kerberos.enabled -}}
 {{ include "kerberos" .}}
 {{- end -}}
+{{- if .Values.lenses.storage.postgres.enabled }}
+lenses.storage.postgres.password={{ required "PostgreSQL 'password' value is mandatory" .Values.lenses.storage.postgres.password | quote }}
 {{- end -}}
-
+{{- end -}}
