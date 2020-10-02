@@ -21,5 +21,44 @@ rm -rf lenses.jfrog.io/
 EOF
 }
 
+package_all() {
+    mkdir -p "${SCRIPTS_DIR}/../build/"
+
+    for CHART_DIR in "${SCRIPTS_DIR}/../charts"/*; do
+        package "${CHART_DIR}"
+    done
+
+    ls -lsa "${SCRIPTS_DIR}/../build/"
+}
+
+package() {
+    pushd "$1"
+    if [[ "${BUILD_MODE}" == 'development' ]]; then
+        set_development_chart_version
+    fi
+    helm lint .
+    helm dep build .
+    # TODO: sign package
+    helm package -d "../../build" .
+    popd
+}
+
+set_development_chart_version() {
+    if [ ! -f ./Chart.yaml ]; then
+        echo "=== Chart.yaml file in folder '$(pwd)' not found, exiting..."
+        exit 1
+    fi
+
+    if [ -z "${BRANCH_VERSION}" ]; then
+        echo "=== Env var BRANCH_VERSION not found, exiting..."
+        exit 1
+    fi
+
+    # We keep major/minor and change patch to: `0-dev-[BRANCH_NAME]`
+    sed -i '/^version/s/[^.]*$/'"0-dev-${BRANCH_VERSION}/" ./Chart.yaml
+    echo "=== Chart.yaml file at $(pwd):"
+    cat ./Chart.yaml
+}
+
 # Run the function at $1, pass the rest of the args
 $1 "${@:2}"
