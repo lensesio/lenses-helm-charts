@@ -35,6 +35,7 @@ pipeline {
                     docker.image("dtzar/helm-kubectl").inside {
                         sh("_cicd/functions.sh package_all")
                     }
+
                     dir('build') {
                         archiveArtifacts '*.tgz'
                     }
@@ -78,6 +79,9 @@ pipeline {
         }
 
         stage('Update helm.repo.lenses.io') {
+            when {
+                branch 'release/**'
+            }
             environment {
                 SSH_HOST = credentials('ssh-host')
             }
