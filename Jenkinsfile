@@ -22,6 +22,7 @@ pipeline {
                     docker.image("dtzar/helm-kubectl").inside {
                         sh("./package.sh")
                     }
+
                     dir('build') {
                         archiveArtifacts '*.tgz'
                     }
