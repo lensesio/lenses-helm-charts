@@ -85,6 +85,9 @@ spec:
         {{- end }}
       serviceAccountName: {{ .Values.serviceAccount }}
       containers:
+      {{- if .Values.sidecarContainers }}
+      {{- toYaml .Values.sidecarContainers | nindent 6 }}
+      {{- end }}
       - name: {{ .Chart.Name }}
         image: "{{ .Values.image.repository }}:{{if .Values.image.tag }}{{ .Values.image.tag }}{{else}}{{ .Chart.AppVersion }}{{end}}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}

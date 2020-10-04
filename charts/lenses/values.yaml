@@ -456,3 +456,8 @@ lenses:
   ## see https://docs.lenses.io/install_setup/configuration/lenses-config.html#option-reference
   configOverrides: {}
     #LENSES_PROPERTY : value
+
+sidecarContainers:
+  # - name: sidecar-example
+  #   image: alpine
+  #   command: ["sh", "-c", "watch datetime"]
