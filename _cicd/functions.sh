@@ -38,7 +38,7 @@ package() {
         set_development_chart_version
     fi
     helm lint .
-    helm dep update .
+    helm dep build .
     # TODO: sign package
     helm package -d "../../build" .
     popd
@@ -56,7 +56,7 @@ set_development_chart_version() {
     fi
 
     # We keep major/minor and change patch to: `0-dev-[BRANCH_NAME]`
-    sed -i '/version/s/[^.]*$/'"0-dev-${BRANCH_VERSION}/" ./Chart.yaml
+    sed -i '/^version/s/[^.]*$/'"0-dev-${BRANCH_VERSION}/" ./Chart.yaml
     echo "=== Chart.yaml file at $(pwd):"
     cat ./Chart.yaml
 }
