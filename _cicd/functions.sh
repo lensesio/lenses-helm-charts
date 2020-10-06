@@ -41,6 +41,10 @@ package() {
     helm dep build .
     # TODO: sign package
     helm package -d "../../build" .
+    if [[ "${BUILD_MODE}" == 'development' ]]; then
+        # Restore version change after packaging
+        git restore --source=HEAD --staged --worktree -- .
+    fi
     popd
 }
 
