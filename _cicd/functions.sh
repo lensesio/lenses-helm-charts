@@ -41,6 +41,10 @@ package() {
     helm dep build .
     # TODO: sign package
     helm package -d "../../build" .
+    if [[ "${BUILD_MODE}" == 'development' ]]; then
+        # Restore version change after packaging
+        git restore --source=HEAD --staged --worktree -- .
+    fi
     popd
 }
 
@@ -59,6 +63,12 @@ set_development_chart_version() {
     sed -i '/^version/s/[^.]*$/'"0-dev-${BRANCH_VERSION}/" ./Chart.yaml
     echo "=== Chart.yaml file at $(pwd):"
     cat ./Chart.yaml
+}
+
+publish_all() {
+    for CHART_DIR in "${SCRIPTS_DIR}/../build"/*.tgz; do
+        jfrog rt u "${CHART_DIR}" ${HELM_REPOSITORY} --url=${ARTIFACTORY_URL} --apikey=${ARTIFACTORY_API_KEY}
+    done
 }
 
 # Run the function at $1, pass the rest of the args
