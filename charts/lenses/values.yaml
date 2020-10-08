@@ -290,6 +290,8 @@ lenses:
         authType:
         username:
         password:
+        aes256:
+          - key: PasswordPasswordPasswordPassword
         hosts:
           - host: connect-worker-1
             # JMX/JOLOKIA Metrics
