@@ -483,3 +483,8 @@ spec:
 
         - name: LT_PACKAGE_VERSION
           value: "{{ .Chart.Version }}"
+
+      {{- if .Values.sidecarContainers }}
+      {{- toYaml .Values.sidecarContainers | nindent 6 }}
+      {{- end }}
+
