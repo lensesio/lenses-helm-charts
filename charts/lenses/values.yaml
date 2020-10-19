@@ -309,8 +309,10 @@ lenses:
 #    processorImageTag: 2.3
     mode: IN_PROC
     heap: 1024M
+    minHeap: 128M
     memLimit: 1152M
     memRequest: 128M
+    livenessInitialDelay: 60 seconds
     # If Lenses is ssl or sasl Lenses will create a secret from the contents below and it will be mounted into the runners
     # This data is mounted into /mnt/secrets/processors for Lenses to read
     # trustStoreFileData and keyStoreFileData is the base64 encoded contents of the jks files

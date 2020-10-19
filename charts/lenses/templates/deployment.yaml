@@ -409,10 +409,14 @@ spec:
           value: "/etc/registry.keytab"
         - name: LENSES_KUBERNETES_POD_HEAP
           value: {{ .Values.lenses.sql.heap | quote }}
+        - name: LENSES_KUBERNETES_POD_MIN_HEAP
+          value: {{ .Values.lenses.sql.minHeap | quote }}
         - name: LENSES_KUBERNETES_POD_MEM_LIMIT
           value: {{ .Values.lenses.sql.memLimit | quote }}
         - name: LENSES_KUBERNETES_POD_MEM_REQUEST
           value: {{ .Values.lenses.sql.memRequest | quote }}
+        - name: LENSES_KUBERNETES_POD_LIVENESS_INITIAL_DELAY
+          value: {{ .Values.lenses.sql.livenessInitialDelay | quote }}
         - name: LENSES_KUBERNETES_PROCESSOR_SECURITY_PROTOCOL
           value: {{ include "securityProtocol" . | quote }}
         - name: LENSES_KUBERNETES_PROCESSOR_SASL_MECHANISM
