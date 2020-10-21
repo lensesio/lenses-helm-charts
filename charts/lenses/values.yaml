@@ -314,6 +314,15 @@ lenses:
       database:
       schema:             # optional, defaults to public schema
 
+  # Data Application Deployment Framework
+  deployments:
+    eventsBufferSize: 10000
+    errorsBufferSize: 1000
+
+    connect:
+      statusInterval: 30 second
+      actionsBufferSize: 1000
+
   # sql
   sql:
 #    processorImage: eu.gcr.io/lenses-container-registry/lenses-sql-processor

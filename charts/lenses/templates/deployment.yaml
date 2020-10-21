@@ -467,6 +467,24 @@ spec:
         {{- end }}
         {{- end }}
 
+        # Deployments
+        {{- if.Values.lenses.deployments.eventsBufferSize }}
+        - name: LENSES_DEPLOYMENTS_EVENTS_BUFFER_SIZE
+          value: {{ .Values.lenses.deployments.eventsBufferSize | quote }}
+        {{- end }}
+        {{- if.Values.lenses.deployments.errorsBufferSize }}
+        - name: LENSES_DEPLOYMENTS_ERRORS_BUFFER_SIZE
+          value: {{ .Values.lenses.deployments.errorsBufferSize | quote }}
+        {{- end }}
+        {{- if.Values.lenses.deployments.connect.statusInterval }}
+        - name: LENSES_DEPLOYMENT_CONNECT_STATUS_INTERVAL
+          value: {{ .Values.lenses.deployments.connect.statusInterval | quote }}
+        {{- end }}
+        {{- if.Values.lenses.deployments.connect.actionsBufferSize }}
+        - name: LENSES_DEPLOYMENT_CONNECT_ACTIONS_BUFFER_SIZE
+          value: {{ .Values.lenses.deployments.connect.actionsBufferSize | quote }}
+        {{- end }}
+
         # Custom env variables
         {{- range $key, $value := .Values.lenses.env }}
         - name: {{ $key | quote }}
