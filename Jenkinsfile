@@ -80,7 +80,10 @@ pipeline {
 
         stage('Update helm.repo.lenses.io') {
             when {
-                branch 'release/**'
+                anyOf {
+                    branch 'release/3.2'
+                    branch 'release/4.0'
+                }
             }
             environment {
                 SSH_HOST = credentials('ssh-host')
