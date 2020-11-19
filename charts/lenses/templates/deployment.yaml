@@ -29,6 +29,18 @@ spec:
         prometheus.io/port: "9102"
         prometheus.io/path: "/metrics"
     spec:
+      {{- if .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml .Values.nodeSelector | nindent 8 }}
+      {{- end }}
+      {{- if .Values.affinity }}
+      affinity:
+        {{- toYaml .Values.affinity | nindent 8 }}
+      {{- end }}
+      {{- if .Values.tolerations }}
+      tolerations:
+        {{- toYaml .Values.tolerations | nindent 8 }}
+      {{- end }}
       volumes:
         - name: secrets
           secret:
@@ -131,18 +143,6 @@ spec:
           {{- end }}
         resources:
 {{ toYaml .Values.resources | indent 10 }}
-        {{- if .Values.nodeSelector }}
-        nodeSelector:
-{{ toYaml .Values.nodeSelector | indent 10 }}
-        {{- end }}
-        {{- if .Values.affinity }}
-        affinity:
-{{ toYaml .Values.affinity | indent 10 }}
-        {{- end }}
-        {{- if .Values.tolerations }}
-        tolerations:
-{{ toYaml .Values.tolerations | indent 10 }}
-        {{- end }}
         env:
         {{- if .Values.lenses.tls.enabled }}
         {{- if .Values.lenses.tls.keyStoreFileData }}
