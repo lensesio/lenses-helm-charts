@@ -48,6 +48,7 @@ pipeline {
                 }
             }
         }
+
         stage('Upload Helm Chart to public repo') {
             when {
                 anyOf {
@@ -96,7 +97,6 @@ pipeline {
             }
         }
     }
-
     post {
         always {
             cleanWs()
