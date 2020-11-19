@@ -44,7 +44,10 @@ pipeline {
         }
         stage('Upload Helm Chart to public repo') {
             when {
-                branch 'release/**'
+                anyOf {
+                    branch 'release/3.2'
+                    branch 'release/4.0'
+                }
             }
             environment {
                 HELM_REPOSITORY = 'lenses-helm-charts'
