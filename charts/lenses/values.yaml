@@ -247,7 +247,7 @@ lenses:
   ## Schema registries should be behind a service, if so set one entry in the hosts
   ## If your schema registries are outside explicitly add them to the hosts.
   schemaRegistries:
-    enabled: true
+    enabled: false
     mode:
     topic:
     hosts:
@@ -278,11 +278,12 @@ lenses:
         # keyTabData is the base64 contents kerberos keytab file is using kerberos mounted in /mnt/secrets
         # openssl base64 < keytab | tr -d '\n'
         keytabData: |-
+
         # jaasFileData is the contents of the kafka jaas file mounted in /mnt/secrets
         jaasFileData: |-
 
   connectClusters:
-    enabled: true
+    enabled: false
     clusters:
       - name: streamreactor
         port: 8083
