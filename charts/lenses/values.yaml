@@ -66,7 +66,7 @@ service:
 
   # If you want to make it available as a node port, then add nodePort: <somePort>
   # Warning: this should not be used with servicePort:
-  # nodePort: 
+  # nodePort:
 
   ## Load balancer IP address
   ## Is not required, but allows for static address with
@@ -130,6 +130,8 @@ lenses:
     # trust store password
     trustStorePassword:
 
+  # TODO: Replace with docker implementation
+  # Global truststore/keystore for the JVM
   opts:
     # base64 encoded truststore data
     # openssl base64 < kafka.truststore.jks | tr -d '\n'
@@ -148,14 +150,8 @@ lenses:
     keyStorePassword: |-
 
   tls:
+    # TLS setup for serving Lenses over TLS
     enabled: false
-    # base64 encoded truststore data
-    # openssl base64 < kafka.truststore.jks | tr -d '\n'
-    trustStoreFileData: |-
-
-    # base64 trust store password
-    # echo "$password" | tr -d '\n' | base64
-    trustStorePassword: |-
 
     # base64 encoded truststore data
     # openssl base64 < kafka.truststore.jks | tr -d '\n'
@@ -169,9 +165,18 @@ lenses:
     # echo "$password" | tr -d '\n' | base64
     keyPassword: |-
 
+    # Authenticate to Lenses with client authentication
     clientAuth: false
 
-  # broker details
+    # base64 encoded truststore data
+    # openssl base64 < kafka.truststore.jks | tr -d '\n'
+    trustStoreFileData: |-
+
+    # base64 trust store password
+    # echo "$password" | tr -d '\n' | base64
+    trustStorePassword: |-
+
+  # Broker details
   ## Brokers should be behind a service, if so set one entry in the hosts
   ## If your brokers are outside explicitly add them to the hosts. Note you only need one to bootstrap
   ## but you should specify more than one for resilience
@@ -183,31 +188,36 @@ lenses:
   # and added to the kafka secret and mounted into /mnt/secrets
   kafka:
     ssl:
+      # TLS setup to connect to brokers over TLS with/without client authentication
       enabled: false
+
       # base64 encoded truststore data
       trustStoreFileData: |-
+
+      # password strings
+      trustStorePassword:
 
       # base64 encoded keystore data
       keyStoreFileData: |-
 
-      # password strings
-      trustStorePassword:
       keyStorePassword:
       keyPassword:
     sasl:
+      # Authenticate to brokers using SASL, can be used in conjuction with SSL
       enabled: false
-      # keyTabData is the base64 contents kerberos keytab file is using kerberos mounted in /mnt/secrets
-      # openssl base64 < keytab | tr -d '\n'
-      keyTabData: |-
-
-      # jaasFileData is the contents of the kafka jaas file mounted in /mnt/secrets
-      jaasFileData: |-
 
       # mechanism is the sasl authentication mechanism GSSAPI, SCRAM or PLAIN
       mechanism: GSSAPI
 
+      # jaasFileData is the contents of the kafka jaas file mounted in /mnt/secrets
+      jaasFileData: |-
+
       # krb5Conf is the kerberos config data to be mounted into /etc
       krb5Conf: |-
+
+      # keyTabData is the base64 contents kerberos keytab file is using kerberos mounted in /mnt/secrets
+      # openssl base64 < keytab | tr -d '\n'
+      keyTabData: |-
 
     # JMX/JOLOKIA Metrics
     metrics:
@@ -266,21 +276,25 @@ lenses:
         #   ssl:
     security:
       enabled: false
+
+      # Authenticate using BasicAuth
       authType:
       username:
       password:
-      kerberos:
-        enabled: false
-        # the kerberos principal <name>@<KDC-REALM>
-        principal:
-        # the service name HTTP@<service-url>
-        serviceName:
-        # keyTabData is the base64 contents kerberos keytab file is using kerberos mounted in /mnt/secrets
-        # openssl base64 < keytab | tr -d '\n'
-        keytabData: |-
+      
+      # TODO: Remove SPNEGO
+      # kerberos:
+      #   enabled: false
+      #   # the kerberos principal <name>@<KDC-REALM>
+      #   principal:
+      #   # the service name HTTP@<service-url>
+      #   serviceName:
+      #   # keyTabData is the base64 contents kerberos keytab file is using kerberos mounted in /mnt/secrets
+      #   # openssl base64 < keytab | tr -d '\n'
+      #   keytabData: |-
 
-        # jaasFileData is the contents of the kafka jaas file mounted in /mnt/secrets
-        jaasFileData: |-
+      #   # jaasFileData is the contents of the kafka jaas file mounted in /mnt/secrets
+      #   jaasFileData: |-
 
   connectClusters:
     enabled: false
@@ -292,11 +306,18 @@ lenses:
         offsetsTopic: connect-offsets
         statusTopic: connect-status
         configTopic: connect-configs
+
+        # Authenticate using BasicAuth
         authType:
         username:
         password:
+
+        # TODO: Add connect auth using SSL
+
+        # Secret provider
         aes256:
           - key: PasswordPasswordPasswordPassword
+
         hosts:
           - host: connect-worker-1
             # JMX/JOLOKIA Metrics
@@ -309,6 +330,7 @@ lenses:
             #   ssl:
           - host: connect-worker-2
           - host: connect-worker-3
+
   storage:
     postgres:
       enabled: false
@@ -342,28 +364,29 @@ lenses:
     # This data is mounted into /mnt/secrets/processors for Lenses to read
     # trustStoreFileData and keyStoreFileData is the base64 encoded contents of the jks files
     # openssl base64 < client.keystore.jks | tr -d '\n'
-    ssl:
-      trustStoreFileData: |-
+    # ssl:
+    #   trustStoreFileData: |-
 
-      keyStoreFileData: |-
+    #   keyStoreFileData: |-
 
-      trustStorePassword:
-      keyStorePassword:
-      keyPassword:
+    #   trustStorePassword:
+    #   keyStorePassword:
+    #   keyPassword:
 
-    sasl:
-      # keyTabData is the base64 contents kerberos keytab file is using kerberos mounted in /mnt/secrets/processors
-      # openssl base64 < keytab | tr -d '\n'
-      keyTabData: |-
+    # sasl:
+    #   # keyTabData is the base64 contents kerberos keytab file is using kerberos mounted in /mnt/secrets/processors
+    #   # openssl base64 < keytab | tr -d '\n'
+    #   keyTabData: |-
 
-      # jaasFileData is the contents of the kafka jaas file mounted in /mnt/secrets/processors
-      jaasFileData: |-
+    #   # TODO: Before removing, fix the bug where this was driving secure registry from the processor
+    #   # jaasFileData is the contents of the kafka jaas file mounted in /mnt/secrets/processors
+    #   jaasFileData: |-
 
-      # mechanism is the sasl authentication mechanism GSSAPI, SCRAM or PLAIN
-      mechanism: GSSAPI
+    #   # mechanism is the sasl authentication mechanism GSSAPI, SCRAM or PLAIN
+    #   mechanism: GSSAPI
 
-      # krb5Conf is the kerberos config data to be mounted into /mnt/secrets/processors
-      krb5Conf: |-
+    #   # krb5Conf is the kerberos config data to be mounted into /mnt/secrets/processors
+    #   krb5Conf: |-
 
   # alerts
   alerts:
@@ -406,6 +429,7 @@ lenses:
     #  username: admin
     #  password: admin
 
+    # SPNEGO for incoming connections to Lenses
     kerberos:
       enabled: false
       principal:
@@ -413,7 +437,7 @@ lenses:
 
       debug: false
 
-     # ldap setting
+    # ldap setting
     ldap:
       enabled: false
       url: ""

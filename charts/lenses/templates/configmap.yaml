@@ -13,8 +13,5 @@ data:
   krb5.conf: |-
     {{- .Values.lenses.kafka.sasl.krb5Conf | nindent 4 }}
 
-  processor.krb5.conf: |-
-    {{- .Values.lenses.sql.sasl.krb5Conf | nindent 4 }}
-
   lenses.append.conf: |-
     {{- include "lensesAppendConf" . | nindent 4 }}

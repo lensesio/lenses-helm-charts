@@ -46,18 +46,8 @@ spec:
                 path: client.keystore.jks
               - key: client.truststore.jks
                 path: client.truststore.jks
-              - key: processor.client.keystore.jks
-                path: processor.client.keystore.jks
-              - key: processor.client.truststore.jks
-                path: processor.client.truststore.jks
               - key: jaas.conf
                 path: jaas.conf
-              - key: processor.jaas.conf
-                path: processor.jaas.conf
-              - key: processor.keytab
-                path: processor.keytab
-              - key: registry.keytab
-                path: registry.keytab
               - key: lenses.opts.keystore.jks
                 path: lenses.opts.keystore.jks
               - key: lenses.opts.truststore.jks
@@ -270,16 +260,6 @@ spec:
 {{ include "registries" . | indent 12 }}
         - name: LENSES_SCHEMA_REGISTRY_MODE
           value: {{ default "" .Values.lenses.schemaRegistries.mode | quote }}
-        {{- if .Values.lenses.schemaRegistries.security.kerberos.enabled }}
-        - name: LENSES_SCHEMA_REGISTRY_KERBEROS
-          value: {{ default "false" .Values.lenses.schemaRegistries.security.kerberos.enabled | quote }}
-        - name: LENSES_SCHEMA_REGISTRY_KEYTAB
-          value: "/etc/registry.keytab"
-        - name: LENSES_SCHEMA_REGISTRY_PRINCIPAL
-          value: {{ .Values.lenses.schemaRegistries.security.kerberos.principal | quote }}
-        - name: LENSES_SCHEMA_REGISTRY_SERVICE_NAME
-          value: {{ .Values.lenses.schemaRegistries.security.kerberos.serviceName | quote }}
-        {{- end }}
         # from secrets as might contain basic auth credentials
         - name: LENSES_KAFKA_CONNECT_CLUSTERS
           valueFrom:
@@ -435,36 +415,6 @@ spec:
           value: {{ include "kafkaSchemaBasicAuth" . | quote }}
         - name: LENSES_KUBERNETES_PROCESSOR_KAFKA_SETTINGS_SECURITY_PROTOCOL
           value: {{ include "securityProtocol" . | quote }}
-
-        {{- if and .Values.lenses.sql.ssl.trustStoreFileData .Values.lenses.kafka.ssl.enabled }}
-        - name: LENSES_KUBERNETES_PROCESSOR_KAFKA_SETTINGS_SSL_TRUSTSTORE_LOCATION
-          value: "/mnt/secrets/processor.client.truststore.jks"
-        {{- end }}
-        {{- if and .Values.lenses.sql.ssl.keyStoreFileData .Values.lenses.kafka.ssl.enabled }}
-        - name: LENSES_KUBERNETES_PROCESSOR_KAFKA_SETTINGS_SSL_KEYSTORE_LOCATION
-          value: "/mnt/secrets/processor.client.keystore.jks"
-        {{- end -}}
-        {{- if and .Values.lenses.sql.ssl.trustStorePassword .Values.lenses.kafka.ssl.enabled }}
-        - name: LENSES_KUBERNETES_PROCESSOR_KAFKA_SETTINGS_SSL_TRUSTSTORE_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: {{ include "fullname" . | quote }}
-              key:  "processor.client.truststore.password"
-        {{- end -}}
-        {{- if and .Values.lenses.sql.ssl.keyStorePassword .Values.lenses.kafka.ssl.enabled }}
-        - name: LENSES_KUBERNETES_PROCESSOR_KAFKA_SETTINGS_SSL_KEYSTORE_PASSWORD
-          valueFrom:
-            secretKeyRef:
-             name: {{ include "fullname" . | quote }}
-             key:  "processor.client.keystore.password"
-        {{- end -}}
-        {{- if and .Values.lenses.sql.ssl.keyPassword .Values.lenses.kafka.ssl.enabled }}
-        - name: LENSES_KUBERNETES_PROCESSOR_KAFKA_SETTINGS_SSL_KEY_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: {{ include "fullname" . | quote }}
-              key:  "processor.client.key.password"
-        {{- end }}
         {{- end }}
 
         # Deployments
@@ -506,4 +456,3 @@ spec:
       {{- if .Values.sidecarContainers }}
       {{- toYaml .Values.sidecarContainers | nindent 6 }}
       {{- end }}
-
