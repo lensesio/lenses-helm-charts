@@ -70,7 +70,10 @@ pipeline {
 
         stage('Upload Helm Chart to private repo') {
             when {
-                not { branch 'release/**' }
+                anyOf {
+                    branch 'release/4.1'
+                    not { branch 'release/**' }
+                }
             }
             environment {
                 HELM_REPOSITORY = 'lenses-private-helm-charts'
