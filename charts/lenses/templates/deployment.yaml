@@ -109,12 +109,11 @@ spec:
           - name: config
             mountPath: "/mnt/settings/lenses.append.conf"
             subPath: "lenses.append.conf"
+          {{- if .Values.lenses.kafka.sasl.enabled }}
           - name: config
             mountPath: "/etc/krb5.conf"
             subPath: "krb5.conf"
-          - name: config
-            mountPath: "/etc/processor.krb5.conf"
-            subPath: "processor.krb5.conf"
+          {{- end }}
           {{- if .Values.persistence.enabled }}
           - name: storage
             mountPath: "/data/storage"
@@ -383,10 +382,6 @@ spec:
           value: {{ .Values.lenses.sql.processorImage | quote }}
         - name: LENSES_KUBERNETES_PROCESSOR_IMAGE_TAG
           value: {{ .Values.lenses.sql.processorImageTag | quote }}
-        - name: LENSES_KUBERNETES_PROCESSOR_IMAGE_TAG
-          value: {{ .Values.lenses.sql.processorImageTag | quote }}
-        - name: LENSES_KUBERNETES_PROCESSOR_SCHEMA_REGISTRY_KEYTAB
-          value: "/etc/registry.keytab"
         - name: LENSES_KUBERNETES_POD_HEAP
           value: {{ .Values.lenses.sql.heap | quote }}
         - name: LENSES_KUBERNETES_POD_MIN_HEAP
@@ -397,24 +392,6 @@ spec:
           value: {{ .Values.lenses.sql.memRequest | quote }}
         - name: LENSES_KUBERNETES_POD_LIVENESS_INITIAL_DELAY
           value: {{ .Values.lenses.sql.livenessInitialDelay | quote }}
-        - name: LENSES_KUBERNETES_PROCESSOR_SECURITY_PROTOCOL
-          value: {{ include "securityProtocol" . | quote }}
-        - name: LENSES_KUBERNETES_PROCESSOR_SASL_MECHANISM
-          value: {{ default "GSSAPI" .Values.lenses.kafka.sasl.mechanism | quote }}
-        - name: LENSES_KUBERNETES_PROCESSOR_JAAS
-          value: "/mnt/secrets/processor.jaas.conf"
-        - name: LENSES_KUBERNETES_PROCESSOR_KRB5
-          value: "/etc/processor.krb5.conf"
-        - name: LENSES_KUBERNETES_PROCESSOR_SETTINGS_BASIC_AUTH_CREDENTIALS_SOURCE
-          value: {{ default "" .Values.lenses.schemaRegistries.security.authType | quote }}
-        - name: LENSES_KUBERNETES_PROCESSOR_SETTINGS_BASIC_AUTH_USER_INFO
-          value: {{ include "kafkaSchemaBasicAuth" . | quote }}
-        - name: LENSES_KUBERNETES_PROCESSOR_SCHEMA_REGISTRY_SETTINGS_BASIC_AUTH_CREDENTIALS_SOURCE
-          value: {{ default "" .Values.lenses.schemaRegistries.security.authType | quote }}
-        - name: LENSES_KUBERNETES_PROCESSOR_SCHEMA_REGISTRY_SETTINGS_BASIC_AUTH_AUTH_USER_INFO
-          value: {{ include "kafkaSchemaBasicAuth" . | quote }}
-        - name: LENSES_KUBERNETES_PROCESSOR_KAFKA_SETTINGS_SECURITY_PROTOCOL
-          value: {{ include "securityProtocol" . | quote }}
         {{- end }}
 
         # Deployments
