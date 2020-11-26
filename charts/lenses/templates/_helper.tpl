@@ -314,7 +314,7 @@ PLAINTEXT
     {{ if index $element "authType" }}auth: "{{index $element "authType"}}",{{- end -}}
     {{ if index $element "username" }}username: "{{index $element "username"}}",{{- end -}}
     {{ if index $element "password" }}password: "{{index $element "password"}}",{{- end -}}
-    {{ if index $element "aes256" }}aes256: 
+    {{ if index $element "aes256" }}aes256:
       {{- range $index, $element := index $element "aes256" -}}
         {{- if index $element "key" -}}{ key: "{{index $element "key"}}" },{{- end -}}
       {{- end -}}
@@ -365,10 +365,15 @@ PLAINTEXT
     statuses: "{{index $element "statusTopic"}}",
     configs: "{{index $element "configTopic"}}",
     offsets: "{{index $element "offsetsTopic"}}",
-    {{ if index $element "authType" }}authType: "{{index $element "authType"}}",{{- end -}}
+    {{ if index $element "authType" }}auth: "{{index $element "authType"}}",{{- end -}}
     {{ if index $element "username" }}username: "{{index $element "username"}}",{{- end -}}
     {{ if index $element "password" }}password: "{{index $element "password"}}",{{- end -}}
-    urls:[
+    {{ if index $element "aes256" }}aes256:
+      {{- range $index, $element := index $element "aes256" -}}
+        {{- if index $element "key" -}}{ key: "{{index $element "key"}}" },{{- end -}}
+      {{- end -}}
+    {{- end -}}
+    urls: [
       {{ range $index, $element := index $element "hosts" -}}
         {{- if not $index -}}
         {url: "{{$protocol}}://{{$element.host}}:{{$port}}"
