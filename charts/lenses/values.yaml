@@ -10,6 +10,7 @@ image:
   repository: lensesio/lenses
   pullPolicy: IfNotPresent
 
+annotations: {}
 strategy: {}
 nodeSelector: {}
 tolerations: {}
@@ -281,7 +282,7 @@ lenses:
       authType:
       username:
       password:
-      
+
       # TODO: Remove SPNEGO
       # kerberos:
       #   enabled: false

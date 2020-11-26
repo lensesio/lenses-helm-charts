@@ -10,6 +10,10 @@ metadata:
     component: "lenses"
     lenses.io/app: "{{ include "fullname" . }}"
     lenses.io/app.type: lenses
+  annotations:
+  {{- range $key, $value := .Values.annotations }}
+    {{ $key }}: {{ $value | quote }}
+  {{- end }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
