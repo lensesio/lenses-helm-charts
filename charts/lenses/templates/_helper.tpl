@@ -451,6 +451,10 @@ lenses.storage.postgres.port={{  .Values.lenses.storage.postgres.port | quote }}
 lenses.storage.postgres.schema={{ .Values.lenses.storage.postgres.schema | quote }}
 {{- end }}
 {{- end }}
+{{- if and .Values.lenses.kafka.sasl.enabled .Values.lenses.kafka.sasl.jaasConfig }}
+lenses.kafka.settings.client.sasl.jaas.config="""{{ .Values.lenses.kafka.sasl.jaasConfig }}
+"""
+{{- end }}
 {{ default "" .Values.lenses.append.conf }}
 {{- end -}}
 

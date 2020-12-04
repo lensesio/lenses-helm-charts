@@ -211,7 +211,14 @@ lenses:
       mechanism: GSSAPI
 
       # jaasFileData is the contents of the kafka jaas file mounted in /mnt/secrets
+      # Note: this will be deprecated in favor of jaasConfig
       jaasFileData: |-
+
+      # jaasConfig
+      # This configuration is used inline, so do not enclose it in 'KafkaClient{ }'
+      # jaasConfig: |-
+      #   com.sun.security.auth.module.Krb5LoginModule required useKeyTab=true keyTab="lenses.keytab" storeKey=true useTicketCache=false serviceName=kafka principal="lenses@TESTING.LENSES.IO";
+      jaasConfig: |-
 
       # krb5Conf is the kerberos config data to be mounted into /etc
       krb5Conf: |-
@@ -275,6 +282,22 @@ lenses:
         #   username:
         #   password:
         #   ssl:
+
+    ssl:
+      ## Encryption in Transit
+      # base64 encoded truststore data
+      trustStoreFileData: |-
+
+      # password strings
+      trustStorePassword:
+
+      ## Authentication via TLS certificates
+      # base64 encoded keystore data
+      keyStoreFileData: |-
+
+      keyStorePassword:
+      keyPassword:
+
     security:
       enabled: false
 

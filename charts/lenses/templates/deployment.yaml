@@ -52,6 +52,10 @@ spec:
                 path: client.truststore.jks
               - key: jaas.conf
                 path: jaas.conf
+              - key: schema.registry.keystore.jks
+                path: schema.registry.keystore.jks
+              - key: schema.registry.truststore.jks
+                path: schema.registry.truststore.jks
               - key: lenses.opts.keystore.jks
                 path: lenses.opts.keystore.jks
               - key: lenses.opts.truststore.jks
@@ -105,7 +109,6 @@ spec:
             subPath: "keytab"
           - name: secrets
             mountPath: "/etc/registry.keytab"
-            subPath: "registry.keytab"
             subPath: "registry.keytab"
           - name: secrets
             mountPath: "/mnt/settings/security.append.conf"
@@ -209,9 +212,13 @@ spec:
         - name: LICENSE_URL
           value: {{ .Values.lenses.licenseUrl }}
         {{- end }}
-        {{- if .Values.lenses.kafka.sasl.enabled }}
+        {{- if and .Values.lenses.kafka.sasl.jaasFileData .Values.lenses.kafka.sasl.jaasConfig }}
+        {{/* Deliberately fail helm deployment if both vaues are set */}}
+        {{ required "Both jaasFileData and jaasConfig are defined." nil }}
+        {{- end }}
+        {{- if and .Values.lenses.kafka.sasl.enabled .Values.lenses.kafka.sasl.jaasFileData }}
         - name: LENSES_OPTS
-          value: "$(LENSES_OPTS) -Djava.security.krb5.conf=/etc/krb5.conf -Djava.security.auth.login.config=/mnt/secrets/jaas.conf"
+          value: "$(LENSES_OPTS) -Djava.security.auth.login.config=/mnt/secrets/jaas.conf"
         {{- end }}
         {{- if.Values.lenses.jvm.heapOpts}}
         - name: LENSES_HEAP_OPTS
@@ -378,6 +385,35 @@ spec:
             secretKeyRef:
               name: {{ include "fullname" . | quote }}
               key:  "client.key.password"
+        {{- end }}
+        {{- if .Values.lenses.schemaRegistries.ssl.trustStoreFileData }}
+        - name: LENSES_SCHEMA_REGISTRY_SSL_TRUSTSTORE_LOCATION
+          value: "/mnt/secrets/schema.registry.truststore.jks"
+        {{- end -}}
+        {{- if .Values.lenses.schemaRegistries.ssl.keyStoreFileData }}
+        - name: LENSES_SCHEMA_REGISTRY_SSL_KEYSTORE_LOCATION
+          value: "/mnt/secrets/schema.registry.keystore.jks"
+        {{- end -}}
+        {{- if .Values.lenses.schemaRegistries.ssl.trustStorePassword }}
+        - name: LENSES_SCHEMA_REGISTRY_SSL_TRUSTSTORE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "fullname" . | quote }}
+              key:  "schema.registry.truststore.password"
+        {{- end -}}
+        {{- if .Values.lenses.schemaRegistries.ssl.keyStorePassword }}
+        - name: LENSES_SCHEMA_REGISTRY_SSL_KEYSTORE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "fullname" . | quote }}
+              key:  "schema.registry.keystore.password"
+        {{- end -}}
+        {{- if .Values.lenses.schemaRegistries.ssl.keyPassword }}
+        - name: LENSES_SCHEMA_REGISTRY_SSL_KEY_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "fullname" . | quote }}
+              key:  "schema.registry.key.password"
         {{- end }}
 
         # Kubernetes processors
