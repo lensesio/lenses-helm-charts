@@ -10,10 +10,13 @@ metadata:
     component: "lenses"
     lenses.io/app: "{{ include "fullname" . }}"
     lenses.io/app.type: lenses
-  annotations:
-  {{- range $key, $value := .Values.annotations }}
+    {{- range $key, $value := .Values.labels }}
     {{ $key }}: {{ $value | quote }}
-  {{- end }}
+    {{- end }}
+  annotations:
+    {{- range $key, $value := .Values.annotations }}
+    {{ $key }}: {{ $value | quote }}
+    {{- end }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
@@ -28,6 +31,9 @@ spec:
         component: "lenses"
         hostPort: {{ .Values.restPort | quote }}
         containerPort: {{ .Values.restPort | quote }}
+        {{- range $key, $value := .Values.labels }}
+        {{ $key }}: {{ $value | quote }}
+        {{- end }}
       annotations:
         prometheus.io/scrape: "true"
         prometheus.io/port: "9102"
