@@ -10,8 +10,10 @@ metadata:
     lenses.io/app: "{{ include "fullname" . }}"
     lenses.io/app.type: lenses-configmap
 data:
-  krb5.conf: |-
+  {{- if and .Values.lenses.kafka.sasl.enabled .Values.lenses.kafka.sasl.krb5Conf }}
+  "krb5.conf": |-
     {{- .Values.lenses.kafka.sasl.krb5Conf | nindent 4 }}
+  {{- end }}
 
-  lenses.append.conf: |-
+  "lenses.append.conf": |-
     {{- include "lensesAppendConf" . | nindent 4 }}

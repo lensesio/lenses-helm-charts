@@ -1,0 +1,82 @@
+suite: enable SSL and check the changes in deployment, configmap and secret
+templates:
+  - deployment.yaml
+  - configmap.yaml
+  - secrets.yaml
+tests:
+  - it: should work
+    values:
+      - values/with-ssl.yaml
+    asserts:
+      # Check the rendered manifest has not changed
+      # Review the changes and if they are verified use `helm unittest -u .` to update the manifest
+      # Writing tests that cover this chaneg is highly recommended
+      - matchSnapshot: {}
+      # deployment.yaml
+      - template: deployment.yaml
+        isKind:
+          of: Deployment
+      - template: deployment.yaml
+        contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: LENSES_KAFKA_BROKERS
+            value: SSL://kafka:9093
+      - template: deployment.yaml
+        contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: LENSES_KAFKA_SETTINGS_CLIENT_SECURITY_PROTOCOL
+            value: SSL
+      - template: deployment.yaml
+        contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: LENSES_KAFKA_SETTINGS_CLIENT_SSL_TRUSTSTORE_LOCATION
+            value: /mnt/secrets/client.truststore.jks
+      - template: deployment.yaml
+        contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: LENSES_KAFKA_SETTINGS_CLIENT_SSL_KEYSTORE_LOCATION
+            value: /mnt/secrets/client.keystore.jks
+      - template: deployment.yaml
+        contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: LENSES_KAFKA_SETTINGS_CLIENT_SSL_TRUSTSTORE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: client.truststore.password
+                name: RELEASE-NAME
+      - template: deployment.yaml
+        contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: LENSES_KAFKA_SETTINGS_CLIENT_SSL_KEYSTORE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: client.keystore.password
+                name: RELEASE-NAME
+      - template: deployment.yaml
+        contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: LENSES_KAFKA_SETTINGS_CLIENT_SSL_KEY_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: client.key.password
+                name: RELEASE-NAME
+      # configmap.yaml
+      - template: configmap.yaml
+        matchSnapshot: {}
+      - template: configmap.yaml
+        isKind:
+          of: ConfigMap
+
+      # secrets.yaml
+      - template: secrets.yaml
+        matchSnapshot: {}
+      - template: secrets.yaml
+        isKind:
+          of: Secret

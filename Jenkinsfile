@@ -3,7 +3,7 @@
 pipeline {
 
     agent {
-        label 'docker&&ephemeral'
+        label 'docker && ephemeral'
     }
 
     options {
@@ -17,6 +17,13 @@ pipeline {
 
     stages {
         stage('Build Helm Charts') {
+            agent {
+                docker {
+                    image "dtzar/helm-kubectl"
+                    args '-e HOME=/tmp -e HELM_HOME=/tmp'
+                    reuseNode true
+                }
+            }
             steps {
                 script {
 
@@ -32,9 +39,8 @@ pipeline {
                         env.BUILD_MODE = 'release'
                     }
 
-                    docker.image("dtzar/helm-kubectl").inside {
-                        sh("_cicd/functions.sh package_all")
-                    }
+                    sh("_cicd/functions.sh setup_helm")
+                    sh("_cicd/functions.sh package_all")
 
                     dir('build') {
                         archiveArtifacts '*.tgz'

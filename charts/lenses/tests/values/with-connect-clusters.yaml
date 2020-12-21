@@ -1,0 +1,34 @@
+lenses:
+  connectClusters:
+    enabled: true
+    clusters:
+      - name: streamreactor
+        port: 8083
+        jmxPort: 9102
+        protocol: http
+        offsetsTopic: connect-offsets
+        statusTopic: connect-status
+        configTopic: connect-configs
+        aes256:
+          - key: PasswordPasswordPasswordPassword
+        hosts:
+          - host: connect-worker-1
+            metrics:
+              type: "JMX"
+              port: 9102
+              protocol:
+              username: admin
+              password: admin
+              ssl:
+          - host: connect-worker-2
+          - host: connect-worker-3
+      - name: sqllenses
+        port: 8084
+        jmxPort: 9103
+        protocol: http
+        offsetsTopic: connect-sqllenses-offsets
+        statusTopic: connect-sqllenses-status
+        configTopic: connect-sqllenses-configs
+        hosts:
+          - host: sqllenses-worker-1
+          - host: sqllenses-worker-2

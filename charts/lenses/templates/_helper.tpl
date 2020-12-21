@@ -171,21 +171,14 @@ PLAINTEXT
   {{- end }}
   {{- if .Values.lenses.kafka.metrics.ports}}
   port: [
-    {{- if eq .Values.lenses.kafka.metrics.type "AWS" }}
-    {{ range $index, $element := .Values.lenses.kafka.metrics.ports }}
-    {{- if not $index -}}{id: {{$element.id}}, url: "{{$element.url}}"}
-    {{- else}},
-    {id: {{$element.id}}, url: "{{$element.url}}"}
+    {{- range $portIndex, $portDetails := .Values.lenses.kafka.metrics.ports }}
+    {{- if $portIndex -}},{{- end }}
+    {
+      {{- range $key, $value := $portDetails }}
+      {{ $key }}: {{ $value | quote }},
+      {{- end}}
+    }
     {{- end}}
-    {{- end}}
-    {{- else -}}
-    {{ range $index, $element := .Values.lenses.kafka.metrics.ports }}
-    {{- if not $index -}}{id: {{$element.id}}, port: {{$element.port}}, host: "{{$element.host}}"}
-    {{- else}},
-    {id: {{$element.id}}, port: {{$element.port}}, host: "{{$element.host}}"}
-    {{- end}}
-    {{- end}}
-    {{- end }}
   ]
   {{- else}}
   default.port: {{ .Values.lenses.kafka.metrics.port }}
@@ -303,117 +296,56 @@ PLAINTEXT
 {{- define "connect" -}}
 {{- if .Values.lenses.connectClusters.enabled -}}
 [
-{{- range $index, $element := .Values.lenses.connectClusters.clusters -}}
-  {{- $port := index $element "port" -}}
-  {{- $protocol := index $element "protocol" -}}
-  {{- if not $index -}}{
-    name: "{{- index $element "name"}}",
-    statuses: "{{index $element "statusTopic"}}",
-    configs: "{{index $element "configTopic"}}",
-    offsets: "{{index $element "offsetsTopic"}}",
-    {{ if index $element "authType" }}auth: "{{index $element "authType"}}",{{- end -}}
-    {{ if index $element "username" }}username: "{{index $element "username"}}",{{- end -}}
-    {{ if index $element "password" }}password: "{{index $element "password"}}",{{- end -}}
-    {{ if index $element "aes256" }}aes256:
-      {{- range $index, $element := index $element "aes256" -}}
-        {{- if index $element "key" -}}{ key: "{{index $element "key"}}" },{{- end -}}
-      {{- end -}}
-    {{- end -}}
-    urls: [
-      {{ range $index, $element := index $element "hosts" -}}
-        {{- if not $index -}}
-        {url: "{{$protocol}}://{{$element.host}}:{{$port}}"
-        {{- if $element.metrics -}}, metrics: {
-        {{- if eq $element.metrics.type "JMX" -}}
-        url: "{{$element.host}}:{{$element.metrics.port}}",
-        {{- else }}
-        url: "{{$protocol}}://{{$element.host}}:{{$element.metrics.port}}",
-        {{- end }}
-          type: "{{default "JMX" $element.metrics.type}}",
-          ssl: {{default false $element.metrics.ssl}},
-          {{- if $element.metrics.username -}}
-          user: {{$element.metrics.username | quote}},
-          {{- end }}
-          {{- if $element.metrics.password -}}
-          password: {{$element.metrics.password | quote}}
-          {{- end }}
-        }{{- end}}}
-        {{- else -}},
-        {url: "{{$protocol}}://{{$element.host}}:{{$port}}"
-        {{- if $element.metrics -}}, metrics: {
-        {{- if eq $element.metrics.type "JMX" -}}
-        url: "{{$element.host}}:{{$element.metrics.port}}",
-        {{- else }}
-        url: "{{$protocol}}://{{$element.host}}:{{$element.metrics.port}}",
-        {{- end }}
-          type: "{{default "JMX" $element.metrics.type}}",
-          ssl: {{default false $element.metrics.ssl}},
-          {{- if $element.metrics.username -}}
-          user: {{$element.metrics.username | quote}},
-          {{- end }}
-          {{- if $element.metrics.password -}}
-          password: {{$element.metrics.password | quote}}
-          {{- end }}
-        }{{- end}}}
-        {{- end -}}
-      {{- end}}
-    ]
-  }
-  {{- else}},
+{{- range $clusterCount, $cluster := .Values.lenses.connectClusters.clusters -}}
+  {{- $port := $cluster.port -}}
+  {{- $protocol := $cluster.protocol -}}
+  {{- if $clusterCount }},{{ end }}
   {
-    name: "{{- index $element "name"}}",
-    statuses: "{{index $element "statusTopic"}}",
-    configs: "{{index $element "configTopic"}}",
-    offsets: "{{index $element "offsetsTopic"}}",
-    {{ if index $element "authType" }}auth: "{{index $element "authType"}}",{{- end -}}
-    {{ if index $element "username" }}username: "{{index $element "username"}}",{{- end -}}
-    {{ if index $element "password" }}password: "{{index $element "password"}}",{{- end -}}
-    {{ if index $element "aes256" }}aes256:
-      {{- range $index, $element := index $element "aes256" -}}
-        {{- if index $element "key" -}}{ key: "{{index $element "key"}}" },{{- end -}}
-      {{- end -}}
-    {{- end -}}
+    name: {{ $cluster.name | quote }},
+    statuses: {{ $cluster.statusTopic | quote }},
+    configs: {{ $cluster.configTopic | quote }},
+    offsets: {{ $cluster.offsetsTopic | quote }},
+    {{ if $cluster.authType }}auth: {{ $cluster.authType | quote }},
+    {{ end -}}
+    {{ if $cluster.username }}username: {{ $cluster.username | quote }},
+    {{ end -}}
+    {{ if $cluster.password }}password: {{ $cluster.password | quote }},
+    {{ end -}}
+    {{ if $cluster.aes256 }}aes256:
+      {{- range $value := $cluster.aes256 -}}
+        {{- if $value.key }} { key: {{$value.key | quote}} },{{- end -}}
+      {{- end }}
+    {{ end -}}
     urls: [
-      {{ range $index, $element := index $element "hosts" -}}
-        {{- if not $index -}}
-        {url: "{{$protocol}}://{{$element.host}}:{{$port}}"
-        {{- if $element.metrics -}}, metrics: {
-        {{- if eq $element.metrics.type "JMX" -}}
-        url: "{{$element.host}}:{{$element.metrics.port}}",
-        {{- else }}
-        url: "{{$protocol}}://{{$element.host}}:{{$element.metrics.port}}",
-        {{- end }}
-          type: "{{default "JMX" $element.metrics.type}}",
-          ssl: {{default false $element.metrics.ssl}},
-          {{- if $element.metrics.username -}}
-          user: {{$element.metrics.username | quote}},
+      {{ if not $cluster.hosts }}
+      {{/* Deliberately fail helm deployment */}}
+      {{ required "A connect cluster should always have hosts." nil }}
+      {{ end }}
+      {{- range $key, $host := $cluster.hosts -}}
+      {{- if $key -}},
+      {{ end -}}
+      {
+        url: "{{$protocol}}://{{$host.host}}:{{$port}}"
+        {{- if $host.metrics -}},
+        metrics: {
+          {{- if eq $host.metrics.type "JMX" }}
+          url: "{{$host.host}}:{{$host.metrics.port}}"
+          {{- else }}
+          url: "{{$protocol}}://{{$host.host}}:{{$host.metrics.port}}"
+          {{- end }},
+          type: {{ default "JMX" $host.metrics.type | quote  }},
+          ssl: {{ default "false" $host.metrics.ssl }},
+          {{- if $host.metrics.username }}
+          user: {{$host.metrics.username | quote}},
           {{- end }}
-          {{- if $element.metrics.password -}}
-          password: {{$element.metrics.password | quote}}
+          {{- if $host.metrics.password }}
+          password: {{$host.metrics.password | quote}}
           {{- end }}
-        }{{- end}}}
-        {{- else -}},
-        {url: "{{$protocol}}://{{$element.host}}:{{$port}}"
-        {{- if $element.metrics -}}, metrics: {
-        {{- if eq $element.metrics.type "JMX" -}}
-        url: "{{$element.host}}:{{$element.metrics.port}}",
-        {{- else }}
-        url: "{{$protocol}}://{{$element.host}}:{{$element.metrics.port}}",
-        {{- end }}
-          type: "{{default "JMX" $element.metrics.type}}",
-          ssl: {{default false $element.metrics.ssl}},
-          {{- if $element.metrics.username -}}
-          user: {{$element.metrics.username | quote}},
-          {{- end }}
-          {{- if $element.metrics.password -}}
-          password: {{$element.metrics.password | quote}}
-          {{- end }}
-        }{{- end}}}
-        {{- end -}}
-      {{- end}}
+        }{{- end}}
+      }
+      {{- end }}
     ]
   }
-  {{- end}}
 {{- end}}
 ]
 {{- end -}}
@@ -450,6 +382,10 @@ lenses.storage.postgres.port={{  .Values.lenses.storage.postgres.port | quote }}
 {{- if .Values.lenses.storage.postgres.schema }}
 lenses.storage.postgres.schema={{ .Values.lenses.storage.postgres.schema | quote }}
 {{- end }}
+{{- end }}
+{{- if and .Values.lenses.kafka.sasl.enabled (not .Values.lenses.kafka.sasl.jaasConfig) }}
+{{/* Deliberately fail helm deployment if sasl enabled and jaasConfig is missing */}}
+{{ required "SASL is enabled but lenses.kafka.sasl.jaasConfig is not set." nil }}
 {{- end }}
 {{- if and .Values.lenses.kafka.sasl.enabled .Values.lenses.kafka.sasl.jaasConfig }}
 lenses.kafka.settings.client.sasl.jaas.config="""{{ .Values.lenses.kafka.sasl.jaasConfig }}

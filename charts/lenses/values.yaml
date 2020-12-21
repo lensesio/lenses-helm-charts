@@ -231,11 +231,26 @@ lenses:
     # JMX/JOLOKIA Metrics
     metrics:
       enabled: false
-      type: "JMX"
-      port: 9102
       username:
       password:
       ssl:
+      type: "JMX"
+      port: 9102
+      # For multiple ports:
+      # ports:
+      #   - id: foo
+      #     port: 9103
+      #     host: example1
+      #   - id: bar
+      #     port: 9104
+      #     host: example2
+      # For multiple ports from AWS:
+      # type: AWS
+      # ports:
+      #   - id: foo
+      #     url: example1:9103
+      #   - id: bar
+      #     url: example2:9104
 
     bootstrapServers:
       - name: kafka

@@ -122,7 +122,7 @@ spec:
           - name: config
             mountPath: "/mnt/settings/lenses.append.conf"
             subPath: "lenses.append.conf"
-          {{- if .Values.lenses.kafka.sasl.enabled }}
+          {{- if and .Values.lenses.kafka.sasl.enabled .Values.lenses.kafka.sasl.krb5Conf }}
           - name: config
             mountPath: "/etc/krb5.conf"
             subPath: "krb5.conf"
@@ -220,7 +220,7 @@ spec:
         {{- end }}
         {{- if and .Values.lenses.kafka.sasl.jaasFileData .Values.lenses.kafka.sasl.jaasConfig }}
         {{/* Deliberately fail helm deployment if both vaues are set */}}
-        {{ required "Both jaasFileData and jaasConfig are defined." nil }}
+        {{ required "Both jaasFileData and jaasConfig are defined, pick one." nil }}
         {{- end }}
         {{- if and .Values.lenses.kafka.sasl.enabled .Values.lenses.kafka.sasl.jaasFileData }}
         - name: LENSES_OPTS

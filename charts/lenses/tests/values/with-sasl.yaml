@@ -1,0 +1,6 @@
+lenses:
+  kafka:
+    sasl:
+      enabled: true
+      krb5Conf: foo
+      jaasConfig: bar
