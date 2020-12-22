@@ -1,0 +1,12 @@
+suite: enable connect clusters and check the changes in secret
+templates:
+  - secrets.yaml
+tests:
+  - it: should work
+    values:
+      - values/with-connect-clusters.yaml
+    asserts:
+      # Check the rendered manifest has not changed
+      # Review the changes and if they are verified use `helm unittest -u .` to update the manifest
+      # Writing tests that cover this chaneg is highly recommended
+      - matchSnapshot: {}

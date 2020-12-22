@@ -1,0 +1,50 @@
+suite: enable SSL and check the changes in deployment, configmap and secret
+templates:
+  - deployment.yaml
+tests:
+  - it: should work with default.port
+    set:
+      lenses:
+        kafka:
+          metrics:
+            enabled: true
+    asserts:
+      # Check the rendered manifest has not changed
+      # Review the changes and if they are verified use `helm unittest -u .` to update the manifest
+      # Writing tests that cover this chaneg is highly recommended
+      - matchSnapshot: {}
+  - it: should work with multiple ports
+    set:
+      lenses:
+        kafka:
+          metrics:
+            enabled: true
+            ports:
+              - id: foo
+                port: 9103
+                host: example1
+              - id: bar
+                port: 9104
+                host: example2
+    asserts:
+      # Check the rendered manifest has not changed
+      # Review the changes and if they are verified use `helm unittest -u .` to update the manifest
+      # Writing tests that cover this chaneg is highly recommended
+      - matchSnapshot: {}
+  - it: should work with multiple ports and type AWS
+    set:
+      lenses:
+        kafka:
+          metrics:
+            enabled: true
+            type: AWS
+            ports:
+              - id: foo
+                url: example1:9103
+              - id: bar
+                url: example2:9104
+    asserts:
+      # Check the rendered manifest has not changed
+      # Review the changes and if they are verified use `helm unittest -u .` to update the manifest
+      # Writing tests that cover this chaneg is highly recommended
+      - matchSnapshot: {}

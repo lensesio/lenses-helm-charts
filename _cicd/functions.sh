@@ -22,6 +22,13 @@ wget https://raw.githubusercontent.com/lensesio/kafka-helm-charts/gh-pages/index
 EOF
 }
 
+setup_helm() {
+    echo "=== Helm add plugins"
+    eval "$(helm env)"
+    helm plugin install https://github.com/quintush/helm-unittest --version master || true
+    helm plugin ls
+}
+
 package_all() {
     mkdir -p "${SCRIPTS_DIR}/../build/"
 
@@ -34,18 +41,46 @@ package_all() {
 
 package() {
     pushd "$1"
+    if [ -f './.disable-package' ]; then
+        echo "=== Packaging was disabled for chart $(basename ${PWD})"
+        popd
+        return
+    fi
+
+    run_tests
+
+    echo -e "\n\n === Packaging $(basename ${PWD})"
     if [[ "${BUILD_MODE}" == 'development' ]]; then
         set_development_chart_version
     fi
-    helm lint .
+
+    run_lint
+
     helm dep build .
     # TODO: sign package
     helm package -d "../../build" .
+
     if [[ "${BUILD_MODE}" == 'development' ]]; then
         # Restore version change after packaging
         git restore --source=HEAD --staged --worktree -- .
     fi
     popd
+}
+
+run_lint() {
+    local extra_args=''
+
+    if [ -f "./values.test.yaml" ]; then
+        extra_args="${extra_args} -f ./values.test.yaml"
+    fi
+
+    helm lint . ${extra_args}
+}
+
+run_tests() {
+    if [ -d "./tests" ]; then
+        helm unittest -3 .
+    fi
 }
 
 set_development_chart_version() {
