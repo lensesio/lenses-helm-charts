@@ -322,20 +322,6 @@ lenses:
       username:
       password:
 
-      # TODO: Remove SPNEGO
-      # kerberos:
-      #   enabled: false
-      #   # the kerberos principal <name>@<KDC-REALM>
-      #   principal:
-      #   # the service name HTTP@<service-url>
-      #   serviceName:
-      #   # keyTabData is the base64 contents kerberos keytab file is using kerberos mounted in /mnt/secrets
-      #   # openssl base64 < keytab | tr -d '\n'
-      #   keytabData: |-
-
-      #   # jaasFileData is the contents of the kafka jaas file mounted in /mnt/secrets
-      #   jaasFileData: |-
-
   connectClusters:
     enabled: false
     clusters:
