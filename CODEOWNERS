@@ -1,0 +1,5 @@
+# Code Owners for parts of this repo
+# Code Owners are the people that must approve PRs
+
+## Default owners (unless we match something else) is the ops team
+* @lensesio-dev/devops
