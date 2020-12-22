@@ -386,33 +386,6 @@ lenses:
     memLimit: 1152M
     memRequest: 128M
     livenessInitialDelay: 60 seconds
-    # If Lenses is ssl or sasl Lenses will create a secret from the contents below and it will be mounted into the runners
-    # This data is mounted into /mnt/secrets/processors for Lenses to read
-    # trustStoreFileData and keyStoreFileData is the base64 encoded contents of the jks files
-    # openssl base64 < client.keystore.jks | tr -d '\n'
-    # ssl:
-    #   trustStoreFileData: |-
-
-    #   keyStoreFileData: |-
-
-    #   trustStorePassword:
-    #   keyStorePassword:
-    #   keyPassword:
-
-    # sasl:
-    #   # keyTabData is the base64 contents kerberos keytab file is using kerberos mounted in /mnt/secrets/processors
-    #   # openssl base64 < keytab | tr -d '\n'
-    #   keyTabData: |-
-
-    #   # TODO: Before removing, fix the bug where this was driving secure registry from the processor
-    #   # jaasFileData is the contents of the kafka jaas file mounted in /mnt/secrets/processors
-    #   jaasFileData: |-
-
-    #   # mechanism is the sasl authentication mechanism GSSAPI, SCRAM or PLAIN
-    #   mechanism: GSSAPI
-
-    #   # krb5Conf is the kerberos config data to be mounted into /mnt/secrets/processors
-    #   krb5Conf: |-
 
   # alerts
   alerts:
