@@ -1,0 +1,108 @@
+suite: test deployment
+templates:
+  - deployment.yaml
+tests:
+  - it: should test default values
+    asserts:
+      # Check the rendered manifest has not changed
+      # Review the changes and if they are verified use `helm unittest -u .` to update the manifest
+      # Writing tests that cover this chaneg is highly recommended
+      - matchSnapshot: {}
+      - isKind:
+          of: Deployment
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: lensesio/lenses:4.1.0
+      - isEmpty:
+          path: metadata.annotations
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: LENSES_KAFKA_BROKERS
+            value: PLAINTEXT://kafka:9092
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: LENSES_KAFKA_SETTINGS_CLIENT_SECURITY_PROTOCOL
+            value: PLAINTEXT
+
+  - it: should test docker image tag override
+    set:
+      image.tag: bar
+    asserts:
+      # Check the rendered manifest has not changed
+      # Review the changes and if they are verified use `helm unittest -u .` to update the manifest
+      # Writing tests that cover this chaneg is highly recommended
+      - matchSnapshot: {}
+      - isKind:
+          of: Deployment
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: lensesio/lenses:bar
+
+  - it: when override release name is overriden metadata.name should change
+    release:
+      name: bar
+    asserts:
+      # Check the rendered manifest has not changed
+      # Review the changes and if they are verified use `helm unittest -u .` to update the manifest
+      # Writing tests that cover this chaneg is highly recommended
+      - matchSnapshot: {}
+      - isKind:
+          of: Deployment
+      - equal:
+          path: metadata.labels.app
+          value: bar
+      - equal:
+          path: metadata.name
+          value: bar
+      - equal:
+          path: spec.selector.matchLabels.app
+          value: bar
+
+  - it: should test replica set override
+    set:
+      replicaCount: 10
+    asserts:
+      # Check the rendered manifest has not changed
+      # Review the changes and if they are verified use `helm unittest -u .` to update the manifest
+      # Writing tests that cover this chaneg is highly recommended
+      - matchSnapshot: {}
+      - isKind:
+          of: Deployment
+      - equal:
+          path: spec.replicas
+          value: 10
+
+  - it: should add custom annotations
+    set:
+      annotations:
+        foo: bar
+    asserts:
+      # Check the rendered manifest has not changed
+      # Review the changes and if they are verified use `helm unittest -u .` to update the manifest
+      # Writing tests that cover this chaneg is highly recommended
+      - matchSnapshot: {}
+      - isKind:
+          of: Deployment
+      - equal:
+          path: metadata.annotations.foo
+          value: bar
+
+  - it: should add custom labels
+    set:
+      labels:
+        foo: bar
+    asserts:
+      # Check the rendered manifest has not changed
+      # Review the changes and if they are verified use `helm unittest -u .` to update the manifest
+      # Writing tests that cover this chaneg is highly recommended
+      - matchSnapshot: {}
+      - isKind:
+          of: Deployment
+      - equal:
+          path: metadata.labels.foo
+          value: bar
+      - equal:
+          path: spec.template.metadata.labels.foo
+          value: bar

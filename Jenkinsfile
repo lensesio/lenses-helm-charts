@@ -3,7 +3,7 @@
 pipeline {
 
     agent {
-        label 'docker&&ephemeral'
+        label 'docker && ephemeral'
     }
 
     options {
@@ -17,6 +17,13 @@ pipeline {
 
     stages {
         stage('Build Helm Charts') {
+            agent {
+                docker {
+                    image "dtzar/helm-kubectl"
+                    args '-e HOME=/tmp -e HELM_HOME=/tmp'
+                    reuseNode true
+                }
+            }
             steps {
                 script {
 
@@ -32,9 +39,8 @@ pipeline {
                         env.BUILD_MODE = 'release'
                     }
 
-                    docker.image("dtzar/helm-kubectl").inside {
-                        sh("_cicd/functions.sh package_all")
-                    }
+                    sh("_cicd/functions.sh setup_helm")
+                    sh("_cicd/functions.sh package_all")
 
                     dir('build') {
                         archiveArtifacts '*.tgz'
@@ -63,7 +69,7 @@ pipeline {
                     }
 
                     // Update helm.repo.lenses.io
-                    sshagent(credentials: ['57dab1e7-d47f-4c57-8eef-c107c4bb707a']) {
+                    sshagent (credentials: ['57dab1e7-d47f-4c57-8eef-c107c4bb707a']){
                         sh '_cicd/functions.sh clone_site'
                     }
                 }
@@ -72,7 +78,10 @@ pipeline {
 
         stage('Upload Helm Chart to private repo') {
             when {
-                not { branch 'release/**' }
+                anyOf {
+                    branch 'release/4.1'
+                    not { branch 'release/**' }
+                }
             }
             environment {
                 HELM_REPOSITORY = 'lenses-private-helm-charts'

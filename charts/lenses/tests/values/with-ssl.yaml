@@ -1,0 +1,11 @@
+lenses:
+  kafka:
+    ssl:
+      enabled: true
+      trustStoreFileData: |-
+        foo
+      keyStoreFileData: |-
+        bar
+      trustStorePassword: fooPass
+      keyStorePassword: barPass
+      keyPassword: foobarPass
