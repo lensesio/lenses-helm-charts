@@ -48,8 +48,8 @@ persistence:
   accessModes:
     - ReadWriteOnce
   size: 5Gi
-  # set to true to use you own Persistent volume claim
-  existingClaim: false
+  # Target an pre-existing volume claim to use it as Lenses Persistent volume
+  # existingClaim:
 
   ## Policies data Persistent Volume Storage Class
   ## If defined, storageClassName: <storageClass>
