@@ -31,4 +31,3 @@ tests:
             name: storage
             persistentVolumeClaim:
               claimName: foobar
-      - template: volume-claim.yaml

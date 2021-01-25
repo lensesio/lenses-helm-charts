@@ -35,7 +35,7 @@ helm unittest -3 charts/lenses
 
 Snapshot match takes a snapshot the current run and compares with the latest one. When it fails, it means that a change that is not explicitly tested has been found. If this happens follow the steps:
 
-- Review the changes in the faield test
+- Review the changes in the failed test
 - Write tests that cover this change (optional but highly recommended)
 - Run `helm unittest -3 -u charts/lenses` to update the snapshot manifest
 - Commit the changes
