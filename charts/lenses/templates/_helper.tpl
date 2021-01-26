@@ -188,9 +188,9 @@ PLAINTEXT
 {{- end -}}
 
 {{- define "kafkaSchemaBasicAuth" -}}
-  {{- if .Values.lenses.schemaRegistries.security.enabled -}}
-    {{- if (.Values.lenses.schemaRegistries.security.authType)  and eq .Values.lenses.schemaRegistries.security.authType "USER_INFO" -}}
-    {{- .Values.lenses.schemaRegistries.security.username}}:{{.Values.lenses.schemaRegistries.security.password}}
+  {{- if and .Values.lenses.schemaRegistries.security.enabled .Values.lenses.schemaRegistries.security.authType -}}
+    {{- if eq ((.Values.lenses.schemaRegistries.security | default (dict "authType" "")).authType) "USER_INFO" -}}
+      {{- required "When Schema registry security auth type is USER_INFO then username should be provided." .Values.lenses.schemaRegistries.security.username -}}:{{- required "When Schema registry security auth type is USER_INFO then password should be provided." .Values.lenses.schemaRegistries.security.password -}}
     {{- end -}}
   {{- end -}}
 {{- end -}}
