@@ -134,7 +134,7 @@ should work:
               value: helm
             - name: LT_PACKAGE_VERSION
               value: 4.2.0
-            image: lensesio/lenses:4.1.0
+            image: lensesio/lenses:4.1.2
             imagePullPolicy: IfNotPresent
             livenessProbe:
               httpGet:
