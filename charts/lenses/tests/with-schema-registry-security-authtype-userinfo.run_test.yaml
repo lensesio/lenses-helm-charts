@@ -1,0 +1,144 @@
+suite: Enable Schema Registry authentication is enabled and authType is set to USER_INFO
+templates:
+  - deployment.yaml
+tests:
+  - it: should work without security enabled
+    set:
+      lenses:
+          schemaRegistries:
+            enabled: true
+    asserts:
+      # Check the rendered manifest has not changed
+      # Review the changes and if they are verified use `helm unittest -u .` to update the manifest
+      # Writing tests that cover this chaneg is highly recommended
+      - matchSnapshot: {}
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: LENSES_SCHEMA_REGISTRY_AUTH
+            value: ""
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: LENSES_KAFKA_SETTINGS_CLIENT_BASIC_AUTH_CREDENTIALS_SOURCE
+            value: ""
+  - it: should work with security enabled but without specific authType
+    set:
+      lenses:
+          schemaRegistries:
+            enabled: true
+            security:
+              enabled: true
+    asserts:
+      # Check the rendered manifest has not changed
+      # Review the changes and if they are verified use `helm unittest -u .` to update the manifest
+      # Writing tests that cover this chaneg is highly recommended
+      - matchSnapshot: {}
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: LENSES_SCHEMA_REGISTRY_AUTH
+            value: ""
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: LENSES_KAFKA_SETTINGS_CLIENT_BASIC_AUTH_CREDENTIALS_SOURCE
+            value: ""
+  - it: should work with security enabled and with specific authType other than USER_INFO
+    set:
+      lenses:
+          schemaRegistries:
+            enabled: true
+            security:
+              enabled: true
+            #   # Authenticate using BasicAuth
+              authType: foobar
+            #   username: foo
+            #   password: bar
+    asserts:
+      # Check the rendered manifest has not changed
+      # Review the changes and if they are verified use `helm unittest -u .` to update the manifest
+      # Writing tests that cover this chaneg is highly recommended
+      - matchSnapshot: {}
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: LENSES_SCHEMA_REGISTRY_AUTH
+            value: foobar
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: LENSES_KAFKA_SETTINGS_CLIENT_BASIC_AUTH_CREDENTIALS_SOURCE
+            value: foobar
+  - it: should fail with security enabled and with specific authType USER_INFO but without username
+    set:
+      lenses:
+          schemaRegistries:
+            enabled: true
+            security:
+              enabled: true
+            #   # Authenticate using BasicAuth
+              authType: USER_INFO
+            #   username: foo
+              password: bar
+    asserts:
+      # Check the rendered manifest has not changed
+      # Review the changes and if they are verified use `helm unittest -u .` to update the manifest
+      # Writing tests that cover this chaneg is highly recommended
+      - matchSnapshot: {}
+      - failedTemplate:
+          errorMessage: When Schema registry security auth type is USER_INFO then username should be provided.
+  - it: should fail with security enabled and with specific authType USER_INFO but without password
+    set:
+      lenses:
+          schemaRegistries:
+            enabled: true
+            security:
+              enabled: true
+            #   # Authenticate using BasicAuth
+              authType: USER_INFO
+              username: foo
+            #   password: bar
+    asserts:
+      # Check the rendered manifest has not changed
+      # Review the changes and if they are verified use `helm unittest -u .` to update the manifest
+      # Writing tests that cover this chaneg is highly recommended
+      - matchSnapshot: {}
+      - failedTemplate:
+          errorMessage: When Schema registry security auth type is USER_INFO then password should be provided.
+  - it: should work with security enabled, specific authType USER_INFO, username password
+    set:
+      lenses:
+          schemaRegistries:
+            enabled: true
+            security:
+              enabled: true
+            #   # Authenticate using BasicAuth
+              authType: USER_INFO
+              username: foo
+              password: bar
+    asserts:
+      # Check the rendered manifest has not changed
+      # Review the changes and if they are verified use `helm unittest -u .` to update the manifest
+      # Writing tests that cover this chaneg is highly recommended
+      - matchSnapshot: {}
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: LENSES_SCHEMA_REGISTRY_AUTH
+            value: USER_INFO
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: LENSES_SCHEMA_REGISTRY_USERNAME
+            value: foo
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: LENSES_KAFKA_SETTINGS_CLIENT_BASIC_AUTH_CREDENTIALS_SOURCE
+            value: USER_INFO
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: LENSES_KAFKA_SETTINGS_CLIENT_BASIC_AUTH_USER_INFO
+            value: foo:bar

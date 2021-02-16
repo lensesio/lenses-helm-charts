@@ -1,0 +1,54 @@
+suite: enable SAML and check the changes in deployment and secrets
+templates:
+  - deployment.yaml
+  - secrets.yaml
+tests:
+  - it: should work
+    values:
+      - values/with-saml.yaml
+    asserts:
+      # Check the rendered manifest has not changed
+      # Review the changes and if they are verified use `helm unittest -u .` to update the manifest
+      # Writing tests that cover this chaneg is highly recommended
+      - matchSnapshot: {}
+      # deployment.yaml
+      - template: deployment.yaml
+        isKind:
+          of: Deployment
+      - template: deployment.yaml
+        equal:
+          path: spec.template.spec.volumes[0].name
+          value: secrets
+      - template: deployment.yaml
+        equal:
+          path: spec.template.spec.volumes[0].secret.secretName
+          value: RELEASE-NAME
+      - template: deployment.yaml
+        contains:
+          path: spec.template.spec.volumes[0].secret.items
+          content:
+            key: saml.keystore.jks
+            path: saml.keystore.jks
+      - template: deployment.yaml
+        contains:
+          path: spec.template.spec.volumes[0].secret.items
+          content:
+            key: saml.idp.xml
+            path: saml.idp.xml
+      # secrets.yaml
+      - template: secrets.yaml
+        matchSnapshot: {}
+      - template: secrets.yaml
+        isKind:
+          of: Secret
+      - template: secrets.yaml
+        equal:
+          path: stringData.security\.conf
+          value: |2-
+
+            lenses.security.saml.base.url="https://accounts.google.com/o/saml2/idp?idpid=XXX"
+            lenses.security.saml.idp.provider="google"
+            lenses.security.saml.idp.metadata.file="/mnt/secrets/saml.idp.xml"
+            lenses.security.saml.keystore.location="/mnt/secrets/saml.keystore.jks"
+            lenses.security.saml.keystore.password="changeit1"
+            lenses.security.saml.key.password="changeit2"

@@ -69,7 +69,7 @@ pipeline {
                     }
 
                     // Update helm.repo.lenses.io
-                    sshagent (credentials: ['57dab1e7-d47f-4c57-8eef-c107c4bb707a']){
+                    sshagent (credentials: ['57dab1e7-d47f-4c57-8eef-c107c4bb707a']) {
                         sh '_cicd/functions.sh clone_site'
                     }
                 }

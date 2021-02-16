@@ -1,4 +1,4 @@
-suite: enable SSL and check the changes in deployment, configmap and secret
+suite: enable metrics and check the changes in deployment, configmap and secret
 templates:
   - deployment.yaml
 tests:

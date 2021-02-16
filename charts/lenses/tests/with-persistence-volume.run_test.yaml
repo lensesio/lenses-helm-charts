@@ -1,0 +1,48 @@
+suite: enable existing Volume claim and check the changes in deployment
+templates:
+  - deployment.yaml
+  - volume-claim.yaml
+tests:
+  - it: should work with default values
+    asserts:
+      # Check the rendered manifest has not changed
+      # Review the changes and if they are verified use `helm unittest -u .` to update the manifest
+      # Writing tests that cover this chaneg is highly recommended
+      - template: deployment.yaml
+        matchSnapshot: {}
+  - it: should work
+    set:
+      persistence:
+        enabled: true
+        # existingClaim: true
+    asserts:
+      # Check the rendered manifest has not changed
+      # Review the changes and if they are verified use `helm unittest -u .` to update the manifest
+      # Writing tests that cover this chaneg is highly recommended
+      - matchSnapshot: {}
+      # deployment.yaml
+      - template: deployment.yaml
+        isKind:
+          of: Deployment
+      - template: deployment.yaml
+        contains:
+          path: spec.template.spec.containers[0].volumeMounts
+          content:
+            mountPath: /data/storage
+            name: storage
+      - template: deployment.yaml
+        contains:
+          path: spec.template.spec.volumes
+          content:
+            name: storage
+            persistentVolumeClaim:
+              claimName: RELEASE-NAME-claim
+      - template: volume-claim.yaml
+        contains:
+          path: spec.accessModes
+          content:
+            ReadWriteOnce
+      - template: volume-claim.yaml
+        equal:
+          path: spec.resources.requests.storage
+          value: 5Gi
