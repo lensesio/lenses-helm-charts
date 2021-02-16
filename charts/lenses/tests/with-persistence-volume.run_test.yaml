@@ -3,6 +3,13 @@ templates:
   - deployment.yaml
   - volume-claim.yaml
 tests:
+  - it: should work with default values
+    asserts:
+      # Check the rendered manifest has not changed
+      # Review the changes and if they are verified use `helm unittest -u .` to update the manifest
+      # Writing tests that cover this chaneg is highly recommended
+      - template: deployment.yaml
+        matchSnapshot: {}
   - it: should work
     set:
       persistence:
