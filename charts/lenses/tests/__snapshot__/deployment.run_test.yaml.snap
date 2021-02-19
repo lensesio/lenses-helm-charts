@@ -116,7 +116,7 @@ should add custom annotations:
               value: helm
             - name: LT_PACKAGE_VERSION
               value: 4.2.0
-            image: lensesio/lenses:4.1.2
+            image: lensesio/lenses:4.1.3
             imagePullPolicy: IfNotPresent
             livenessProbe:
               httpGet:
@@ -297,7 +297,7 @@ should add custom labels:
               value: helm
             - name: LT_PACKAGE_VERSION
               value: 4.2.0
-            image: lensesio/lenses:4.1.2
+            image: lensesio/lenses:4.1.3
             imagePullPolicy: IfNotPresent
             livenessProbe:
               httpGet:
@@ -476,7 +476,7 @@ should test default values:
               value: helm
             - name: LT_PACKAGE_VERSION
               value: 4.2.0
-            image: lensesio/lenses:4.1.2
+            image: lensesio/lenses:4.1.3
             imagePullPolicy: IfNotPresent
             livenessProbe:
               httpGet:
@@ -834,7 +834,7 @@ should test replica set override:
               value: helm
             - name: LT_PACKAGE_VERSION
               value: 4.2.0
-            image: lensesio/lenses:4.1.2
+            image: lensesio/lenses:4.1.3
             imagePullPolicy: IfNotPresent
             livenessProbe:
               httpGet:
@@ -1013,7 +1013,7 @@ when override release name is overriden metadata.name should change:
               value: helm
             - name: LT_PACKAGE_VERSION
               value: 4.2.0
-            image: lensesio/lenses:4.1.2
+            image: lensesio/lenses:4.1.3
             imagePullPolicy: IfNotPresent
             livenessProbe:
               httpGet:
