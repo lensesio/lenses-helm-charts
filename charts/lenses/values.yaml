@@ -41,7 +41,7 @@ serviceAccount: default
 
 # If you use Data Policies module enable a Persistent Volume to keep your data policies rule.
 persistence:
-  enabled: false
+  enabled: true
   accessModes:
     - ReadWriteOnce
   size: 5Gi
