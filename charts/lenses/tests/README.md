@@ -39,3 +39,14 @@ Snapshot match takes a snapshot the current run and compares with the latest one
 - Write tests that cover this change (optional but highly recommended)
 - Run `helm unittest -3 -u charts/lenses` to update the snapshot manifest
 - Commit the changes
+
+## When you move tests between branches or update Helm chart version
+
+You get a lot of failures in manifests due to the changed versions.
+You have to run:
+
+```
+helm unittest -3 charts/lenses -u
+```
+
+manually to update these versions in manifests.

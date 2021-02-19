@@ -717,7 +717,7 @@ should test docker image tag override:
           - configMap:
               name: RELEASE-NAME
             name: config
-should test replica set override:
+should test replica set cannot be overriden:
   1: |
     apiVersion: apps/v1
     kind: Deployment
@@ -733,7 +733,7 @@ should test replica set override:
         release: RELEASE-NAME
       name: RELEASE-NAME
     spec:
-      replicas: 10
+      replicas: 1
       selector:
         matchLabels:
           app: RELEASE-NAME
