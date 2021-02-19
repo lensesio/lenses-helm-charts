@@ -3,9 +3,6 @@
 ### LENSES WILL USE TO DEPLOY. SEE:
 ### https://docs.lenses.io/install_setup/deployment-options/kubernetes-deployment.html
 
-# Basic info
-replicaCount: 1
-
 image:
   repository: lensesio/lenses
   pullPolicy: IfNotPresent
