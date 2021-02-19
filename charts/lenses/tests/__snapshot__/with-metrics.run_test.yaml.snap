@@ -122,7 +122,7 @@ should work with default.port:
               value: helm
             - name: LT_PACKAGE_VERSION
               value: 4.2.0
-            image: lensesio/lenses:4.1.2
+            image: lensesio/lenses:4.1.3
             imagePullPolicy: IfNotPresent
             livenessProbe:
               httpGet:
@@ -319,7 +319,7 @@ should work with multiple ports:
               value: helm
             - name: LT_PACKAGE_VERSION
               value: 4.2.0
-            image: lensesio/lenses:4.1.2
+            image: lensesio/lenses:4.1.3
             imagePullPolicy: IfNotPresent
             livenessProbe:
               httpGet:
@@ -514,7 +514,7 @@ should work with multiple ports and type AWS:
               value: helm
             - name: LT_PACKAGE_VERSION
               value: 4.2.0
-            image: lensesio/lenses:4.1.2
+            image: lensesio/lenses:4.1.3
             imagePullPolicy: IfNotPresent
             livenessProbe:
               httpGet:
