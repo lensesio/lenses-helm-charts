@@ -152,6 +152,8 @@ should work:
             - mountPath: /etc/krb5.conf
               name: config
               subPath: krb5.conf
+            - mountPath: /data/storage
+              name: storage
           serviceAccountName: default
           volumes:
           - name: secrets
@@ -183,6 +185,9 @@ should work:
           - configMap:
               name: RELEASE-NAME
             name: config
+          - name: storage
+            persistentVolumeClaim:
+              claimName: RELEASE-NAME-claim
   2: |
     apiVersion: v1
     data:

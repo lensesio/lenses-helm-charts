@@ -165,6 +165,8 @@ should work:
             - mountPath: /mnt/settings/lenses.append.conf
               name: config
               subPath: lenses.append.conf
+            - mountPath: /data/storage
+              name: storage
           serviceAccountName: default
           volumes:
           - name: secrets
@@ -196,6 +198,9 @@ should work:
           - configMap:
               name: RELEASE-NAME
             name: config
+          - name: storage
+            persistentVolumeClaim:
+              claimName: RELEASE-NAME-claim
   2: |
     apiVersion: v1
     data:

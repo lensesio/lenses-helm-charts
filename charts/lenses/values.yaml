@@ -3,9 +3,6 @@
 ### LENSES WILL USE TO DEPLOY. SEE:
 ### https://docs.lenses.io/install_setup/deployment-options/kubernetes-deployment.html
 
-# Basic info
-replicaCount: 1
-
 image:
   repository: lensesio/lenses
   pullPolicy: IfNotPresent
@@ -44,7 +41,7 @@ serviceAccount: default
 
 # If you use Data Policies module enable a Persistent Volume to keep your data policies rule.
 persistence:
-  enabled: false
+  enabled: true
   accessModes:
     - ReadWriteOnce
   size: 5Gi

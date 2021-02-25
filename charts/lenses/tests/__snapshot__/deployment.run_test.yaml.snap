@@ -147,6 +147,8 @@ should add custom annotations:
             - mountPath: /mnt/settings/lenses.append.conf
               name: config
               subPath: lenses.append.conf
+            - mountPath: /data/storage
+              name: storage
           serviceAccountName: default
           volumes:
           - name: secrets
@@ -178,6 +180,9 @@ should add custom annotations:
           - configMap:
               name: RELEASE-NAME
             name: config
+          - name: storage
+            persistentVolumeClaim:
+              claimName: RELEASE-NAME-claim
 should add custom labels:
   1: |
     apiVersion: apps/v1
@@ -328,6 +333,8 @@ should add custom labels:
             - mountPath: /mnt/settings/lenses.append.conf
               name: config
               subPath: lenses.append.conf
+            - mountPath: /data/storage
+              name: storage
           serviceAccountName: default
           volumes:
           - name: secrets
@@ -359,6 +366,9 @@ should add custom labels:
           - configMap:
               name: RELEASE-NAME
             name: config
+          - name: storage
+            persistentVolumeClaim:
+              claimName: RELEASE-NAME-claim
 should test default values:
   1: |
     apiVersion: apps/v1
@@ -507,6 +517,8 @@ should test default values:
             - mountPath: /mnt/settings/lenses.append.conf
               name: config
               subPath: lenses.append.conf
+            - mountPath: /data/storage
+              name: storage
           serviceAccountName: default
           volumes:
           - name: secrets
@@ -538,6 +550,9 @@ should test default values:
           - configMap:
               name: RELEASE-NAME
             name: config
+          - name: storage
+            persistentVolumeClaim:
+              claimName: RELEASE-NAME-claim
 should test docker image tag override:
   1: |
     apiVersion: apps/v1
@@ -686,6 +701,8 @@ should test docker image tag override:
             - mountPath: /mnt/settings/lenses.append.conf
               name: config
               subPath: lenses.append.conf
+            - mountPath: /data/storage
+              name: storage
           serviceAccountName: default
           volumes:
           - name: secrets
@@ -717,7 +734,10 @@ should test docker image tag override:
           - configMap:
               name: RELEASE-NAME
             name: config
-should test replica set override:
+          - name: storage
+            persistentVolumeClaim:
+              claimName: RELEASE-NAME-claim
+should test replica set cannot be overriden:
   1: |
     apiVersion: apps/v1
     kind: Deployment
@@ -733,7 +753,7 @@ should test replica set override:
         release: RELEASE-NAME
       name: RELEASE-NAME
     spec:
-      replicas: 10
+      replicas: 1
       selector:
         matchLabels:
           app: RELEASE-NAME
@@ -865,6 +885,8 @@ should test replica set override:
             - mountPath: /mnt/settings/lenses.append.conf
               name: config
               subPath: lenses.append.conf
+            - mountPath: /data/storage
+              name: storage
           serviceAccountName: default
           volumes:
           - name: secrets
@@ -896,6 +918,9 @@ should test replica set override:
           - configMap:
               name: RELEASE-NAME
             name: config
+          - name: storage
+            persistentVolumeClaim:
+              claimName: RELEASE-NAME-claim
 when override release name is overriden metadata.name should change:
   1: |
     apiVersion: apps/v1
@@ -1044,6 +1069,8 @@ when override release name is overriden metadata.name should change:
             - mountPath: /mnt/settings/lenses.append.conf
               name: config
               subPath: lenses.append.conf
+            - mountPath: /data/storage
+              name: storage
           serviceAccountName: default
           volumes:
           - name: secrets
@@ -1075,3 +1102,6 @@ when override release name is overriden metadata.name should change:
           - configMap:
               name: bar
             name: config
+          - name: storage
+            persistentVolumeClaim:
+              claimName: bar-claim

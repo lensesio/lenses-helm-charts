@@ -1,32 +1,30 @@
-suite: enable existing volume claim and check the changes in deployment
+suite: enable existing Volume claim and check the changes in deployment
 templates:
   - deployment.yaml
-  - volume-claim.yaml
 tests:
-  - it: should work
+  - it: should work when persistence enabled is false
     set:
       persistence:
-        existingClaim: foobar
+        enabled: false
     asserts:
       # Check the rendered manifest has not changed
       # Review the changes and if they are verified use `helm unittest -u .` to update the manifest
       # Writing tests that cover this chaneg is highly recommended
-      - template: deployment.yaml
-        matchSnapshot: {}
+      - matchSnapshot: {}
       # deployment.yaml
       - template: deployment.yaml
         isKind:
           of: Deployment
       - template: deployment.yaml
-        contains:
+        notContains:
           path: spec.template.spec.containers[0].volumeMounts
           content:
             mountPath: /data/storage
             name: storage
       - template: deployment.yaml
-        contains:
+        notContains:
           path: spec.template.spec.volumes
           content:
             name: storage
             persistentVolumeClaim:
-              claimName: foobar
+              claimName: RELEASE-NAME-claim
