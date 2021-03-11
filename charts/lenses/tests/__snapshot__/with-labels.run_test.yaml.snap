@@ -6,7 +6,7 @@ should work:
       annotations: null
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.1.5
+        chart: lenses-4.2.0
         component: lenses
         foo: bar
         heritage: Helm
@@ -116,7 +116,7 @@ should work:
             - name: LT_PACKAGE
               value: helm
             - name: LT_PACKAGE_VERSION
-              value: 4.1.5
+              value: 4.2.0
             image: lensesio/lenses:4.1.3
             imagePullPolicy: IfNotPresent
             livenessProbe:
@@ -148,6 +148,8 @@ should work:
             - mountPath: /mnt/settings/lenses.append.conf
               name: config
               subPath: lenses.append.conf
+            - mountPath: /data/storage
+              name: storage
           serviceAccountName: default
           volumes:
           - name: secrets
@@ -179,6 +181,9 @@ should work:
           - configMap:
               name: RELEASE-NAME
             name: config
+          - name: storage
+            persistentVolumeClaim:
+              claimName: RELEASE-NAME-claim
   2: |
     apiVersion: extensions/v1beta1
     kind: Ingress
@@ -187,7 +192,7 @@ should work:
         kubernetes.io/ingress.class: traefik
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.1.5
+        chart: lenses-4.2.0
         component: lenses
         foo: bar
         heritage: Helm
@@ -210,7 +215,7 @@ should work:
     metadata:
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.1.5
+        chart: lenses-4.2.0
         component: lenses
         foo: bar
         heritage: Helm
