@@ -189,6 +189,7 @@ should work:
         app: RELEASE-NAME
         chart: lenses-4.1.4
         component: lenses
+        foo: bar
         heritage: Helm
         lenses.io/app: RELEASE-NAME
         lenses.io/app.type: lenses-ingress
@@ -211,6 +212,7 @@ should work:
         app: RELEASE-NAME
         chart: lenses-4.1.4
         component: lenses
+        foo: bar
         heritage: Helm
         lenses.io/app: RELEASE-NAME
         lenses.io/app.type: lenses-service

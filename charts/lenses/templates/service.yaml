@@ -23,7 +23,7 @@ spec:
   type: "{{ .Values.service.type }}"
   ports:
   - name: lenses
-    port: {{ .Values.servicePort }} 
+    port: {{ .Values.servicePort }}
     {{- if .Values.nodePort }}
     nodePort: {{ .Values.nodePort }}
     {{- end }}

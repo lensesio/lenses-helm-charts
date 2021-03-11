@@ -20,7 +20,7 @@ metadata:
   {{- end }}
 spec:
   rules:
-  - host: {{ .Values.ingress.host }}
+  - host: {{ .Values.ingress.host | quote }}
     http:
       paths:
       - path: {{if .Values.ingress.path }}{{ .Values.ingress.path }}{{else}}"/"{{end}}
@@ -30,11 +30,11 @@ spec:
   {{- if .Values.ingress.tls.enabled }}
   tls:
     - hosts:
-      - "{{ .Values.ingress.host }}"
+      - {{ .Values.ingress.host | quote }}
       {{- if .Values.ingress.tls.secretName }}
       secretName: {{ .Values.ingress.tls.secretName }}
       {{- else }}
-      secretName: {{ include "fullname" . | quote }}    
+      secretName: {{ include "fullname" . | quote }}
       {{- end }}
   {{- end -}}
-{{- end -}}        
+{{- end -}}
