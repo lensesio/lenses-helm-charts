@@ -54,7 +54,6 @@ pipeline {
                 anyOf {
                     branch 'release/3.2'
                     branch 'release/4.0'
-                    branch 'release/4.1'
                 }
             }
             environment {
