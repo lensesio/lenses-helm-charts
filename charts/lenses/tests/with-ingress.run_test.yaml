@@ -1,4 +1,4 @@
-suite: enable ingress and check that hosts is required and escaped correclty
+suite: enable ingress and check that host is escaped correclty
 templates:
   - ingress.yaml
 tests:
