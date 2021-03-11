@@ -1,0 +1,52 @@
+should work:
+  1: |
+    apiVersion: extensions/v1beta1
+    kind: Ingress
+    metadata:
+      annotations:
+        kubernetes.io/ingress.class: traefik
+      labels:
+        app: RELEASE-NAME
+        chart: lenses-4.1.5
+        component: lenses
+        foo: bar
+        heritage: Helm
+        lenses.io/app: RELEASE-NAME
+        lenses.io/app.type: lenses-ingress
+        release: RELEASE-NAME
+      name: RELEASE-NAME
+    spec:
+      rules:
+      - host: example.com
+        http:
+          paths:
+          - backend:
+              serviceName: RELEASE-NAME
+              servicePort: 80
+            path: /
+should work with asterisk:
+  1: |
+    apiVersion: extensions/v1beta1
+    kind: Ingress
+    metadata:
+      annotations:
+        kubernetes.io/ingress.class: traefik
+      labels:
+        app: RELEASE-NAME
+        chart: lenses-4.1.5
+        component: lenses
+        foo: bar
+        heritage: Helm
+        lenses.io/app: RELEASE-NAME
+        lenses.io/app.type: lenses-ingress
+        release: RELEASE-NAME
+      name: RELEASE-NAME
+    spec:
+      rules:
+      - host: '*.example.com'
+        http:
+          paths:
+          - backend:
+              serviceName: RELEASE-NAME
+              servicePort: 80
+            path: /

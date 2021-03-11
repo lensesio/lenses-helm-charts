@@ -12,6 +12,9 @@ metadata:
     release: {{ .Release.Name }}
     lenses.io/app: {{ include "fullname" . }}
     lenses.io/app.type: lenses-service
+    {{- range $key, $value := .Values.labels }}
+    {{ $key }}: {{ $value | quote }}
+    {{- end }}
 {{- if .Values.service.annotations }}
   annotations:
 {{ toYaml .Values.service.annotations | indent 4 }}
@@ -20,7 +23,7 @@ spec:
   type: "{{ .Values.service.type }}"
   ports:
   - name: lenses
-    port: {{ .Values.servicePort }} 
+    port: {{ .Values.servicePort }}
     {{- if .Values.nodePort }}
     nodePort: {{ .Values.nodePort }}
     {{- end }}

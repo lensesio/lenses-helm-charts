@@ -1,6 +1,3 @@
-should fail if jaasFileData and jaasConfig co-exist:
-  1: |
-    raw: Both jaasFileData and jaasConfig are defined, pick one.
 should work:
   1: |
     apiVersion: apps/v1
@@ -11,6 +8,7 @@ should work:
         app: RELEASE-NAME
         chart: lenses-4.1.5
         component: lenses
+        foo: bar
         heritage: Helm
         lenses.io/app: RELEASE-NAME
         lenses.io/app.type: lenses
@@ -33,6 +31,7 @@ should work:
             app: RELEASE-NAME
             component: lenses
             containerPort: "3030"
+            foo: bar
             hostPort: "3030"
         spec:
           containers:
@@ -49,7 +48,7 @@ should work:
             - name: LENSES_JMX_PORT
               value: "9101"
             - name: LENSES_KAFKA_BROKERS
-              value: SASL_PLAINTEXT://kafka:9095
+              value: PLAINTEXT://kafka:9092
             - name: LENSES_SCHEMA_REGISTRY_URLS
               value: ""
             - name: LENSES_SCHEMA_REGISTRY_MODE
@@ -103,7 +102,7 @@ should work:
             - name: LENSES_KAFKA_SETTINGS_CLIENT_BASIC_AUTH_USER_INFO
               value: ""
             - name: LENSES_KAFKA_SETTINGS_CLIENT_SECURITY_PROTOCOL
-              value: SASL_PLAINTEXT
+              value: PLAINTEXT
             - name: LENSES_KAFKA_SETTINGS_CLIENT_SASL_MECHANISM
               value: GSSAPI
             - name: LENSES_DEPLOYMENTS_EVENTS_BUFFER_SIZE
@@ -149,9 +148,6 @@ should work:
             - mountPath: /mnt/settings/lenses.append.conf
               name: config
               subPath: lenses.append.conf
-            - mountPath: /etc/krb5.conf
-              name: config
-              subPath: krb5.conf
           serviceAccountName: default
           volumes:
           - name: secrets
@@ -184,38 +180,52 @@ should work:
               name: RELEASE-NAME
             name: config
   2: |
-    apiVersion: v1
-    data:
-      krb5.conf: foo
-      lenses.append.conf: |2-
-
-        lenses.kafka.settings.client.sasl.jaas.config="""bar
-        """
-    kind: ConfigMap
+    apiVersion: extensions/v1beta1
+    kind: Ingress
     metadata:
+      annotations:
+        kubernetes.io/ingress.class: traefik
       labels:
         app: RELEASE-NAME
         chart: lenses-4.1.5
+        component: lenses
+        foo: bar
         heritage: Helm
         lenses.io/app: RELEASE-NAME
-        lenses.io/app.type: lenses-configmap
+        lenses.io/app.type: lenses-ingress
         release: RELEASE-NAME
       name: RELEASE-NAME
+    spec:
+      rules:
+      - host: example.com
+        http:
+          paths:
+          - backend:
+              serviceName: RELEASE-NAME
+              servicePort: 80
+            path: /
   3: |
     apiVersion: v1
-    data:
-      krb5.conf: foo
-      lenses.append.conf: |2-
-
-        lenses.kafka.settings.client.sasl.jaas.config="""bar
-        """
-    kind: ConfigMap
+    kind: Service
     metadata:
       labels:
         app: RELEASE-NAME
         chart: lenses-4.1.5
+        component: lenses
+        foo: bar
         heritage: Helm
         lenses.io/app: RELEASE-NAME
-        lenses.io/app.type: lenses-configmap
+        lenses.io/app.type: lenses-service
         release: RELEASE-NAME
       name: RELEASE-NAME
+    spec:
+      ports:
+      - name: lenses
+        port: 80
+        targetPort: 3030
+      - name: http-metrics
+        port: 9102
+      selector:
+        app: RELEASE-NAME
+        component: lenses
+      type: ClusterIP
