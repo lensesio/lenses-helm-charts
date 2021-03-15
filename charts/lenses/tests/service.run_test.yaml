@@ -1,0 +1,44 @@
+suite: test service resource
+templates:
+  - service.yaml
+tests:
+  - it: should have ClusterIP type by default
+    set:
+      service:
+        enabled: true
+    asserts:
+      # Check the rendered manifest has not changed
+      # Review the changes and if they are verified use `helm unittest -u .` to update the manifest
+      # Writing tests that cover this chaneg is highly recommended
+      - matchSnapshot: {}
+      - equal:
+          path: spec.type
+          value: ClusterIP
+  - it: should have NodePort type if specified
+    set:
+      service:
+        enabled: true
+        type: NodePort
+    asserts:
+      # Check the rendered manifest has not changed
+      # Review the changes and if they are verified use `helm unittest -u .` to update the manifest
+      # Writing tests that cover this chaneg is highly recommended
+      - matchSnapshot: {}
+      - equal:
+          path: spec.type
+          value: NodePort
+  - it: should have custom annotations if specified
+    set:
+      service:
+        enabled: true
+        type: NodePort
+        annotations:
+          externalTrafficPolicy: Local
+    asserts:
+      # Check the rendered manifest has not changed
+      # Review the changes and if they are verified use `helm unittest -u .` to update the manifest
+      # Writing tests that cover this chaneg is highly recommended
+      - matchSnapshot: {}
+      - equal:
+          path: metadata.annotations.externalTrafficPolicy
+          value: Local

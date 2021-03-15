@@ -8,6 +8,7 @@ should work:
         app: RELEASE-NAME
         chart: lenses-4.2.0
         component: lenses
+        foo: bar
         heritage: Helm
         lenses.io/app: RELEASE-NAME
         lenses.io/app.type: lenses
@@ -30,6 +31,7 @@ should work:
             app: RELEASE-NAME
             component: lenses
             containerPort: "3030"
+            foo: bar
             hostPort: "3030"
         spec:
           containers:
@@ -46,7 +48,7 @@ should work:
             - name: LENSES_JMX_PORT
               value: "9101"
             - name: LENSES_KAFKA_BROKERS
-              value: SASL_SSL://kafka:9094
+              value: PLAINTEXT://kafka:9092
             - name: LENSES_SCHEMA_REGISTRY_URLS
               value: ""
             - name: LENSES_SCHEMA_REGISTRY_MODE
@@ -100,28 +102,9 @@ should work:
             - name: LENSES_KAFKA_SETTINGS_CLIENT_BASIC_AUTH_USER_INFO
               value: ""
             - name: LENSES_KAFKA_SETTINGS_CLIENT_SECURITY_PROTOCOL
-              value: SASL_SSL
+              value: PLAINTEXT
             - name: LENSES_KAFKA_SETTINGS_CLIENT_SASL_MECHANISM
               value: GSSAPI
-            - name: LENSES_KAFKA_SETTINGS_CLIENT_SSL_TRUSTSTORE_LOCATION
-              value: /mnt/secrets/client.truststore.jks
-            - name: LENSES_KAFKA_SETTINGS_CLIENT_SSL_KEYSTORE_LOCATION
-              value: /mnt/secrets/client.keystore.jks
-            - name: LENSES_KAFKA_SETTINGS_CLIENT_SSL_TRUSTSTORE_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  key: client.truststore.password
-                  name: RELEASE-NAME
-            - name: LENSES_KAFKA_SETTINGS_CLIENT_SSL_KEYSTORE_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  key: client.keystore.password
-                  name: RELEASE-NAME
-            - name: LENSES_KAFKA_SETTINGS_CLIENT_SSL_KEY_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  key: client.key.password
-                  name: RELEASE-NAME
             - name: LENSES_DEPLOYMENTS_EVENTS_BUFFER_SIZE
               value: "10000"
             - name: LENSES_DEPLOYMENTS_ERRORS_BUFFER_SIZE
@@ -165,9 +148,6 @@ should work:
             - mountPath: /mnt/settings/lenses.append.conf
               name: config
               subPath: lenses.append.conf
-            - mountPath: /etc/krb5.conf
-              name: config
-              subPath: krb5.conf
             - mountPath: /data/storage
               name: storage
           serviceAccountName: default
@@ -205,65 +185,52 @@ should work:
             persistentVolumeClaim:
               claimName: RELEASE-NAME-claim
   2: |
-    apiVersion: v1
-    data:
-      krb5.conf: foo
-      lenses.append.conf: |2-
-
-        lenses.kafka.settings.client.sasl.jaas.config="""bar
-        """
-    kind: ConfigMap
+    apiVersion: extensions/v1beta1
+    kind: Ingress
     metadata:
+      annotations:
+        kubernetes.io/ingress.class: traefik
       labels:
         app: RELEASE-NAME
         chart: lenses-4.2.0
+        component: lenses
+        foo: bar
         heritage: Helm
         lenses.io/app: RELEASE-NAME
-        lenses.io/app.type: lenses-configmap
+        lenses.io/app.type: lenses-ingress
         release: RELEASE-NAME
       name: RELEASE-NAME
+    spec:
+      rules:
+      - host: example.com
+        http:
+          paths:
+          - backend:
+              serviceName: RELEASE-NAME
+              servicePort: 80
+            path: /
   3: |
     apiVersion: v1
-    data:
-      client.keystore.jks: bar
-      client.truststore.jks: foo
-      keytab: ""
-      lenses.keytab: ""
-      lenses.opts.keystore.jks: ""
-      lenses.opts.truststore.jks: ""
-      lenses.tls.keystore.jks: ""
-      lenses.tls.truststore.jks: ""
-      saml.idp.xml: ""
-      saml.keystore.jks: ""
-    kind: Secret
+    kind: Service
     metadata:
       labels:
         app: RELEASE-NAME
         chart: lenses-4.2.0
+        component: lenses
+        foo: bar
         heritage: Helm
         lenses.io/app: RELEASE-NAME
-        lenses.io/app.type: lenses-secret
+        lenses.io/app.type: lenses-service
         release: RELEASE-NAME
       name: RELEASE-NAME
-    stringData:
-      client.key.password: foobarPass
-      client.keystore.password: barPass
-      client.truststore.password: fooPass
-      connect.clusters: ""
-      jaas.conf: ""
-      jvm.truststore.jks: ""
-      jvm.truststore.password: ""
-      lenses.opts.keystore.password: ""
-      lenses.opts.truststore.password: ""
-      lenses.tls.key.password: ""
-      lenses.tls.keystore.password: ""
-      lenses.tls.truststore.password: ""
-      license: ""
-      schema.registry.key.password: ""
-      schema.registry.keystore.jks: ""
-      schema.registry.keystore.password: ""
-      schema.registry.password: ""
-      schema.registry.truststore.jks: ""
-      schema.registry.truststore.password: ""
-      security.append.conf: ""
-      security.conf: ""
+    spec:
+      ports:
+      - name: lenses
+        port: 80
+        targetPort: 3030
+      - name: http-metrics
+        port: 9102
+      selector:
+        app: RELEASE-NAME
+        component: lenses
+      type: ClusterIP

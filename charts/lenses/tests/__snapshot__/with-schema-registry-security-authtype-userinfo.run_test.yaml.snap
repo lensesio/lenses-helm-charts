@@ -124,7 +124,7 @@ should work with security enabled and with specific authType other than USER_INF
               value: helm
             - name: LT_PACKAGE_VERSION
               value: 4.2.0
-            image: lensesio/lenses:4.1.2
+            image: lensesio/lenses:4.1.3
             imagePullPolicy: IfNotPresent
             livenessProbe:
               httpGet:
@@ -155,6 +155,8 @@ should work with security enabled and with specific authType other than USER_INF
             - mountPath: /mnt/settings/lenses.append.conf
               name: config
               subPath: lenses.append.conf
+            - mountPath: /data/storage
+              name: storage
           serviceAccountName: default
           volumes:
           - name: secrets
@@ -186,6 +188,9 @@ should work with security enabled and with specific authType other than USER_INF
           - configMap:
               name: RELEASE-NAME
             name: config
+          - name: storage
+            persistentVolumeClaim:
+              claimName: RELEASE-NAME-claim
 should work with security enabled but without specific authType:
   1: |
     apiVersion: apps/v1
@@ -306,7 +311,7 @@ should work with security enabled but without specific authType:
               value: helm
             - name: LT_PACKAGE_VERSION
               value: 4.2.0
-            image: lensesio/lenses:4.1.2
+            image: lensesio/lenses:4.1.3
             imagePullPolicy: IfNotPresent
             livenessProbe:
               httpGet:
@@ -337,6 +342,8 @@ should work with security enabled but without specific authType:
             - mountPath: /mnt/settings/lenses.append.conf
               name: config
               subPath: lenses.append.conf
+            - mountPath: /data/storage
+              name: storage
           serviceAccountName: default
           volumes:
           - name: secrets
@@ -368,6 +375,9 @@ should work with security enabled but without specific authType:
           - configMap:
               name: RELEASE-NAME
             name: config
+          - name: storage
+            persistentVolumeClaim:
+              claimName: RELEASE-NAME-claim
 should work with security enabled, specific authType USER_INFO, username password:
   1: |
     apiVersion: apps/v1
@@ -488,7 +498,7 @@ should work with security enabled, specific authType USER_INFO, username passwor
               value: helm
             - name: LT_PACKAGE_VERSION
               value: 4.2.0
-            image: lensesio/lenses:4.1.2
+            image: lensesio/lenses:4.1.3
             imagePullPolicy: IfNotPresent
             livenessProbe:
               httpGet:
@@ -519,6 +529,8 @@ should work with security enabled, specific authType USER_INFO, username passwor
             - mountPath: /mnt/settings/lenses.append.conf
               name: config
               subPath: lenses.append.conf
+            - mountPath: /data/storage
+              name: storage
           serviceAccountName: default
           volumes:
           - name: secrets
@@ -550,6 +562,9 @@ should work with security enabled, specific authType USER_INFO, username passwor
           - configMap:
               name: RELEASE-NAME
             name: config
+          - name: storage
+            persistentVolumeClaim:
+              claimName: RELEASE-NAME-claim
 should work without security enabled:
   1: |
     apiVersion: apps/v1
@@ -670,7 +685,7 @@ should work without security enabled:
               value: helm
             - name: LT_PACKAGE_VERSION
               value: 4.2.0
-            image: lensesio/lenses:4.1.2
+            image: lensesio/lenses:4.1.3
             imagePullPolicy: IfNotPresent
             livenessProbe:
               httpGet:
@@ -701,6 +716,8 @@ should work without security enabled:
             - mountPath: /mnt/settings/lenses.append.conf
               name: config
               subPath: lenses.append.conf
+            - mountPath: /data/storage
+              name: storage
           serviceAccountName: default
           volumes:
           - name: secrets
@@ -732,3 +749,6 @@ should work without security enabled:
           - configMap:
               name: RELEASE-NAME
             name: config
+          - name: storage
+            persistentVolumeClaim:
+              claimName: RELEASE-NAME-claim

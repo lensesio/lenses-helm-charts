@@ -122,7 +122,7 @@ should work with default.port:
               value: helm
             - name: LT_PACKAGE_VERSION
               value: 4.2.0
-            image: lensesio/lenses:4.1.2
+            image: lensesio/lenses:4.1.3
             imagePullPolicy: IfNotPresent
             livenessProbe:
               httpGet:
@@ -153,6 +153,8 @@ should work with default.port:
             - mountPath: /mnt/settings/lenses.append.conf
               name: config
               subPath: lenses.append.conf
+            - mountPath: /data/storage
+              name: storage
           serviceAccountName: default
           volumes:
           - name: secrets
@@ -184,6 +186,9 @@ should work with default.port:
           - configMap:
               name: RELEASE-NAME
             name: config
+          - name: storage
+            persistentVolumeClaim:
+              claimName: RELEASE-NAME-claim
 should work with multiple ports:
   1: |
     apiVersion: apps/v1
@@ -319,7 +324,7 @@ should work with multiple ports:
               value: helm
             - name: LT_PACKAGE_VERSION
               value: 4.2.0
-            image: lensesio/lenses:4.1.2
+            image: lensesio/lenses:4.1.3
             imagePullPolicy: IfNotPresent
             livenessProbe:
               httpGet:
@@ -350,6 +355,8 @@ should work with multiple ports:
             - mountPath: /mnt/settings/lenses.append.conf
               name: config
               subPath: lenses.append.conf
+            - mountPath: /data/storage
+              name: storage
           serviceAccountName: default
           volumes:
           - name: secrets
@@ -381,6 +388,9 @@ should work with multiple ports:
           - configMap:
               name: RELEASE-NAME
             name: config
+          - name: storage
+            persistentVolumeClaim:
+              claimName: RELEASE-NAME-claim
 should work with multiple ports and type AWS:
   1: |
     apiVersion: apps/v1
@@ -514,7 +524,7 @@ should work with multiple ports and type AWS:
               value: helm
             - name: LT_PACKAGE_VERSION
               value: 4.2.0
-            image: lensesio/lenses:4.1.2
+            image: lensesio/lenses:4.1.3
             imagePullPolicy: IfNotPresent
             livenessProbe:
               httpGet:
@@ -545,6 +555,8 @@ should work with multiple ports and type AWS:
             - mountPath: /mnt/settings/lenses.append.conf
               name: config
               subPath: lenses.append.conf
+            - mountPath: /data/storage
+              name: storage
           serviceAccountName: default
           volumes:
           - name: secrets
@@ -576,3 +588,6 @@ should work with multiple ports and type AWS:
           - configMap:
               name: RELEASE-NAME
             name: config
+          - name: storage
+            persistentVolumeClaim:
+              claimName: RELEASE-NAME-claim

@@ -18,7 +18,8 @@ metadata:
     {{ $key }}: {{ $value | quote }}
     {{- end }}
 spec:
-  replicas: {{ .Values.replicaCount }}
+  # Horizontal scaling is not yet supported
+  replicas: 1
   selector:
     matchLabels:
       app: {{ include "fullname" . | quote }}
