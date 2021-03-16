@@ -1,5 +1,13 @@
 # Release notes for Lenses Helm chart
 
+## Release 4.2.0
+
+### Changes
+
+- `persistence.enabled` is by default set to `true`. Lenses is a stateful application and needs to store its state. By default we use sqlite which is saved in the mounted volume. If you use postgres as Lenses persistence layer, the mounted volume is still used for caching but its usage is optional and can be set to `false`.
+- `replicas` is hardcoded to `1` until Lenses supports high availability (HA).
+- Helm deploy command output, generated from `NOTES.txt`, reported a wrong url; it is now fixed.
+
 ## Release 4.1.0
 
 ### Breaking changes
