@@ -63,6 +63,8 @@ service:
   type: ClusterIP
   annotations: {}
 
+  externalTrafficPolicy:
+
   # If you want to make it available as a node port, then add nodePort: <somePort>
   # Warning: this should not be used with servicePort:
   # nodePort:

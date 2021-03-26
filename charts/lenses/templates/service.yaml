@@ -21,6 +21,9 @@ metadata:
 {{- end }}
 spec:
   type: "{{ .Values.service.type }}"
+  {{- if .Values.service.externalTrafficPolicy }}
+  externalTrafficPolicy: {{ toYaml .Values.service.externalTrafficPolicy }}
+  {{- end }}
   ports:
   - name: lenses
     port: {{ .Values.servicePort }}
