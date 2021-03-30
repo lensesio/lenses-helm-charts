@@ -317,7 +317,8 @@ lenses:
     security:
       enabled: false
 
-      # Authenticate using BasicAuth
+      # Authenticate against a protected cluster
+      # For BasicAuth set authType to `USER_INFO`
       authType:
       username:
       password:
