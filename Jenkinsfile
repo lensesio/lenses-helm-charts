@@ -52,8 +52,7 @@ pipeline {
         stage('Upload Helm Chart to public repo') {
             when {
                 anyOf {
-                    branch 'release/3.2'
-                    branch 'release/4.0'
+                    branch 'release/4.2'
                 }
             }
             environment {
@@ -79,7 +78,7 @@ pipeline {
         stage('Upload Helm Chart to private repo') {
             when {
                 anyOf {
-                    branch 'release/4.1'
+                    branch 'release/4.2'
                     not { branch 'release/**' }
                 }
             }
