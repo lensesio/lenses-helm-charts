@@ -85,7 +85,6 @@ tests:
       # Check the rendered manifest has not changed
       # Review the changes and if they are verified use `helm unittest -u .` to update the manifest
       # Writing tests that cover this chaneg is highly recommended
-      - matchSnapshot: {}
       - failedTemplate:
           errorMessage: When Schema registry security auth type is USER_INFO then username should be provided.
   - it: should fail with security enabled and with specific authType USER_INFO but without password
@@ -103,7 +102,6 @@ tests:
       # Check the rendered manifest has not changed
       # Review the changes and if they are verified use `helm unittest -u .` to update the manifest
       # Writing tests that cover this chaneg is highly recommended
-      - matchSnapshot: {}
       - failedTemplate:
           errorMessage: When Schema registry security auth type is USER_INFO then password should be provided.
   - it: should work with security enabled, specific authType USER_INFO, username password

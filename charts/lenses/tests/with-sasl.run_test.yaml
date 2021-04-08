@@ -53,7 +53,5 @@ tests:
       # Review the changes and if they are verified use `helm unittest -u .` to update the manifest
       # Writing tests that cover this chaneg is highly recommended
       - template: deployment.yaml
-        matchSnapshot: {}
-      - template: deployment.yaml
         failedTemplate:
           errorMessage: Both jaasFileData and jaasConfig are defined, pick one.
