@@ -1,9 +1,3 @@
-should fail with security enabled and with specific authType USER_INFO but without password:
-  1: |
-    raw: When Schema registry security auth type is USER_INFO then password should be provided.
-should fail with security enabled and with specific authType USER_INFO but without username:
-  1: |
-    raw: When Schema registry security auth type is USER_INFO then username should be provided.
 should work with security enabled and with specific authType other than USER_INFO:
   1: |
     apiVersion: apps/v1
@@ -124,7 +118,7 @@ should work with security enabled and with specific authType other than USER_INF
               value: helm
             - name: LT_PACKAGE_VERSION
               value: 4.2.0
-            image: lensesio/lenses:4.1.3
+            image: lensesio/lenses:4.2.0
             imagePullPolicy: IfNotPresent
             livenessProbe:
               httpGet:
@@ -311,7 +305,7 @@ should work with security enabled but without specific authType:
               value: helm
             - name: LT_PACKAGE_VERSION
               value: 4.2.0
-            image: lensesio/lenses:4.1.3
+            image: lensesio/lenses:4.2.0
             imagePullPolicy: IfNotPresent
             livenessProbe:
               httpGet:
@@ -498,7 +492,7 @@ should work with security enabled, specific authType USER_INFO, username passwor
               value: helm
             - name: LT_PACKAGE_VERSION
               value: 4.2.0
-            image: lensesio/lenses:4.1.3
+            image: lensesio/lenses:4.2.0
             imagePullPolicy: IfNotPresent
             livenessProbe:
               httpGet:
@@ -685,7 +679,7 @@ should work without security enabled:
               value: helm
             - name: LT_PACKAGE_VERSION
               value: 4.2.0
-            image: lensesio/lenses:4.1.3
+            image: lensesio/lenses:4.2.0
             imagePullPolicy: IfNotPresent
             livenessProbe:
               httpGet:

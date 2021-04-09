@@ -13,6 +13,7 @@ strategy: {}
 nodeSelector: {}
 tolerations: {}
 affinity: {}
+securityContext: {}
 
 # Monitoring
 monitoring:
@@ -62,6 +63,8 @@ service:
   enabled: true
   type: ClusterIP
   annotations: {}
+
+  externalTrafficPolicy:
 
   # If you want to make it available as a node port, then add nodePort: <somePort>
   # Warning: this should not be used with servicePort:
@@ -314,7 +317,8 @@ lenses:
     security:
       enabled: false
 
-      # Authenticate using BasicAuth
+      # Authenticate against a protected cluster
+      # For BasicAuth set authType to `USER_INFO`
       authType:
       username:
       password:

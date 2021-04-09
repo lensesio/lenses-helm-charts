@@ -1,4 +1,4 @@
-should work:
+should honor securityContext:
   1: |
     apiVersion: apps/v1
     kind: Deployment
@@ -148,6 +148,10 @@ should work:
               subPath: lenses.append.conf
             - mountPath: /data/storage
               name: storage
+          securityContext:
+            fsGroup: 2000
+            runAsGroup: 3000
+            runAsUser: 1000
           serviceAccountName: default
           volumes:
           - name: secrets
@@ -181,4 +185,4 @@ should work:
             name: config
           - name: storage
             persistentVolumeClaim:
-              claimName: foobar
+              claimName: RELEASE-NAME-claim
