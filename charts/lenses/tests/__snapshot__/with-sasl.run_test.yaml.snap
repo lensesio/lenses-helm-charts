@@ -1,6 +1,3 @@
-should fail if jaasFileData and jaasConfig co-exist:
-  1: |
-    raw: Both jaasFileData and jaasConfig are defined, pick one.
 should work:
   1: |
     apiVersion: apps/v1
