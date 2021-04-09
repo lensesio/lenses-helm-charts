@@ -1,5 +1,3 @@
-[![Build Status](https://travis-ci.com/lensesio/kafka-helm-charts.svg?branch=master)](https://travis-ci.com/lensesio/kafka-helm-charts)
-
 # Helm Charts for Lenses, Lenses SQL Runners and Apache Kafka Connect and other components
 
 This repo contains Helm Charts Apache Kafka components
@@ -7,7 +5,7 @@ This repo contains Helm Charts Apache Kafka components
 Add the repo:
 
 ```bash
-helm repo add lensesio https://lensesio.github.io/kafka-helm-charts/
+helm repo add lensesio https://helm.repo.lenses.io/
 helm repo update
 ```
 
