@@ -1,9 +1,3 @@
-should fail with security enabled and with specific authType USER_INFO but without password:
-  1: |
-    raw: When Schema registry security auth type is USER_INFO then password should be provided.
-should fail with security enabled and with specific authType USER_INFO but without username:
-  1: |
-    raw: When Schema registry security auth type is USER_INFO then username should be provided.
 should work with security enabled and with specific authType other than USER_INFO:
   1: |
     apiVersion: apps/v1
