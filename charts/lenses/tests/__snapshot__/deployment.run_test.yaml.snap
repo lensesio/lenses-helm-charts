@@ -7,7 +7,7 @@ should add custom annotations:
         foo: bar
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.2.0
+        chart: lenses-4.2.1
         component: lenses
         heritage: Helm
         lenses.io/app: RELEASE-NAME
@@ -115,8 +115,8 @@ should add custom annotations:
             - name: LT_PACKAGE
               value: helm
             - name: LT_PACKAGE_VERSION
-              value: 4.2.0
-            image: lensesio/lenses:4.2.0
+              value: 4.2.1
+            image: lensesio/lenses:4.2.1
             imagePullPolicy: IfNotPresent
             livenessProbe:
               httpGet:
@@ -191,7 +191,7 @@ should add custom labels:
       annotations: null
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.2.0
+        chart: lenses-4.2.1
         component: lenses
         foo: bar
         heritage: Helm
@@ -301,8 +301,8 @@ should add custom labels:
             - name: LT_PACKAGE
               value: helm
             - name: LT_PACKAGE_VERSION
-              value: 4.2.0
-            image: lensesio/lenses:4.2.0
+              value: 4.2.1
+            image: lensesio/lenses:4.2.1
             imagePullPolicy: IfNotPresent
             livenessProbe:
               httpGet:
@@ -377,7 +377,7 @@ should test default values:
       annotations: null
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.2.0
+        chart: lenses-4.2.1
         component: lenses
         heritage: Helm
         lenses.io/app: RELEASE-NAME
@@ -485,8 +485,8 @@ should test default values:
             - name: LT_PACKAGE
               value: helm
             - name: LT_PACKAGE_VERSION
-              value: 4.2.0
-            image: lensesio/lenses:4.2.0
+              value: 4.2.1
+            image: lensesio/lenses:4.2.1
             imagePullPolicy: IfNotPresent
             livenessProbe:
               httpGet:
@@ -561,7 +561,7 @@ should test docker image tag override:
       annotations: null
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.2.0
+        chart: lenses-4.2.1
         component: lenses
         heritage: Helm
         lenses.io/app: RELEASE-NAME
@@ -669,7 +669,7 @@ should test docker image tag override:
             - name: LT_PACKAGE
               value: helm
             - name: LT_PACKAGE_VERSION
-              value: 4.2.0
+              value: 4.2.1
             image: lensesio/lenses:bar
             imagePullPolicy: IfNotPresent
             livenessProbe:
@@ -745,7 +745,7 @@ should test replica set cannot be overriden:
       annotations: null
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.2.0
+        chart: lenses-4.2.1
         component: lenses
         heritage: Helm
         lenses.io/app: RELEASE-NAME
@@ -853,8 +853,8 @@ should test replica set cannot be overriden:
             - name: LT_PACKAGE
               value: helm
             - name: LT_PACKAGE_VERSION
-              value: 4.2.0
-            image: lensesio/lenses:4.2.0
+              value: 4.2.1
+            image: lensesio/lenses:4.2.1
             imagePullPolicy: IfNotPresent
             livenessProbe:
               httpGet:
@@ -929,7 +929,7 @@ when override release name is overriden metadata.name should change:
       annotations: null
       labels:
         app: bar
-        chart: lenses-4.2.0
+        chart: lenses-4.2.1
         component: lenses
         heritage: Helm
         lenses.io/app: bar
@@ -1037,8 +1037,8 @@ when override release name is overriden metadata.name should change:
             - name: LT_PACKAGE
               value: helm
             - name: LT_PACKAGE_VERSION
-              value: 4.2.0
-            image: lensesio/lenses:4.2.0
+              value: 4.2.1
+            image: lensesio/lenses:4.2.1
             imagePullPolicy: IfNotPresent
             livenessProbe:
               httpGet:
