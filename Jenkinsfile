@@ -73,6 +73,11 @@ pipeline {
                     }
                 }
             }
+            post {
+                always {
+                    jiraSendDeploymentInfo site: 'landoop.atlassian.net', environmentId: "ans-ci-backend-eu-01.landoop.com.", environmentName: 'helm.repo.lenses.io', environmentType: 'production'
+                }
+            }
         }
 
         stage('Upload Helm Chart to private repo') {
@@ -99,6 +104,10 @@ pipeline {
     post {
         always {
             cleanWs()
+            script {
+                env.JIRA_BRANCH = "${env.CHANGE_BRANCH ? "${env.CHANGE_BRANCH}" : "${env.BRANCH_NAME}"}"
+                jiraSendBuildInfo site: 'landoop.atlassian.net', branch: "${env.JIRA_BRANCH}"
+            }
         }
     }
 }
