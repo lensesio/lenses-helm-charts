@@ -46,6 +46,7 @@ persistence:
   accessModes:
     - ReadWriteOnce
   size: 5Gi
+  # persistentVolumeReclaimPolicy: Retain
   # Target an pre-existing volume claim to use it as Lenses Persistent volume
   # existingClaim:
 
