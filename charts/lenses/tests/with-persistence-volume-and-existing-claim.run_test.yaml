@@ -31,3 +31,17 @@ tests:
             name: storage
             persistentVolumeClaim:
               claimName: foobar
+  - it: should work with persistentVolumeReclaimPolicy
+    set:
+      persistence:
+        enabled: true
+        persistentVolumeReclaimPolicy: Retain
+    asserts:
+      # Check the rendered manifest has not changed
+      # Review the changes and if they are verified use `helm unittest -u .` to update the manifest
+      # Writing tests that cover this chaneg is highly recommended
+      - matchSnapshot: {}
+      - template: volume-claim.yaml
+        equal:
+          path: spec.persistentVolumeReclaimPolicy
+          value: Retain
