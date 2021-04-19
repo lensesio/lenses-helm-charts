@@ -6,7 +6,7 @@ should work with security enabled and with specific authType other than USER_INF
       annotations: null
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.1.5
+        chart: lenses-4.1.6
         component: lenses
         heritage: Helm
         lenses.io/app: RELEASE-NAME
@@ -117,7 +117,7 @@ should work with security enabled and with specific authType other than USER_INF
             - name: LT_PACKAGE
               value: helm
             - name: LT_PACKAGE_VERSION
-              value: 4.1.5
+              value: 4.1.6
             image: lensesio/lenses:4.1.3
             imagePullPolicy: IfNotPresent
             livenessProbe:
@@ -188,7 +188,7 @@ should work with security enabled but without specific authType:
       annotations: null
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.1.5
+        chart: lenses-4.1.6
         component: lenses
         heritage: Helm
         lenses.io/app: RELEASE-NAME
@@ -299,7 +299,7 @@ should work with security enabled but without specific authType:
             - name: LT_PACKAGE
               value: helm
             - name: LT_PACKAGE_VERSION
-              value: 4.1.5
+              value: 4.1.6
             image: lensesio/lenses:4.1.3
             imagePullPolicy: IfNotPresent
             livenessProbe:
@@ -370,7 +370,7 @@ should work with security enabled, specific authType USER_INFO, username passwor
       annotations: null
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.1.5
+        chart: lenses-4.1.6
         component: lenses
         heritage: Helm
         lenses.io/app: RELEASE-NAME
@@ -481,7 +481,7 @@ should work with security enabled, specific authType USER_INFO, username passwor
             - name: LT_PACKAGE
               value: helm
             - name: LT_PACKAGE_VERSION
-              value: 4.1.5
+              value: 4.1.6
             image: lensesio/lenses:4.1.3
             imagePullPolicy: IfNotPresent
             livenessProbe:
@@ -552,7 +552,7 @@ should work without security enabled:
       annotations: null
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.1.5
+        chart: lenses-4.1.6
         component: lenses
         heritage: Helm
         lenses.io/app: RELEASE-NAME
@@ -663,7 +663,7 @@ should work without security enabled:
             - name: LT_PACKAGE
               value: helm
             - name: LT_PACKAGE_VERSION
-              value: 4.1.5
+              value: 4.1.6
             image: lensesio/lenses:4.1.3
             imagePullPolicy: IfNotPresent
             livenessProbe:

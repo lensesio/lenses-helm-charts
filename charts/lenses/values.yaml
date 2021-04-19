@@ -50,6 +50,7 @@ persistence:
   size: 5Gi
   # Target an pre-existing volume claim to use it as Lenses Persistent volume
   # existingClaim:
+  # persistentVolumeReclaimPolicy: Retain
 
   ## Policies data Persistent Volume Storage Class
   ## If defined, storageClassName: <storageClass>
