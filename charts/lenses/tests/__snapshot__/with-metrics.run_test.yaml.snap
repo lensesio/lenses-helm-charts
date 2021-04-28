@@ -6,7 +6,7 @@ should work with default.port:
       annotations: null
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.2.2
+        chart: lenses-4.2.3
         component: lenses
         heritage: Helm
         lenses.io/app: RELEASE-NAME
@@ -121,7 +121,7 @@ should work with default.port:
             - name: LT_PACKAGE
               value: helm
             - name: LT_PACKAGE_VERSION
-              value: 4.2.2
+              value: 4.2.3
             image: lensesio/lenses:4.2.1
             imagePullPolicy: IfNotPresent
             livenessProbe:
@@ -197,7 +197,7 @@ should work with multiple ports:
       annotations: null
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.2.2
+        chart: lenses-4.2.3
         component: lenses
         heritage: Helm
         lenses.io/app: RELEASE-NAME
@@ -323,7 +323,7 @@ should work with multiple ports:
             - name: LT_PACKAGE
               value: helm
             - name: LT_PACKAGE_VERSION
-              value: 4.2.2
+              value: 4.2.3
             image: lensesio/lenses:4.2.1
             imagePullPolicy: IfNotPresent
             livenessProbe:
@@ -399,7 +399,7 @@ should work with multiple ports and type AWS:
       annotations: null
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.2.2
+        chart: lenses-4.2.3
         component: lenses
         heritage: Helm
         lenses.io/app: RELEASE-NAME
@@ -523,7 +523,7 @@ should work with multiple ports and type AWS:
             - name: LT_PACKAGE
               value: helm
             - name: LT_PACKAGE_VERSION
-              value: 4.2.2
+              value: 4.2.3
             image: lensesio/lenses:4.2.1
             imagePullPolicy: IfNotPresent
             livenessProbe:
