@@ -16,7 +16,6 @@ metadata:
     lenses.io/app: {{ template "name" . }}
     lenses.io/app.type: lenses-volume-claim
 spec:
-  {{ if .Values.persistence.persistentVolumeReclaimPolicy }}persistentVolumeReclaimPolicy: {{ .Values.persistence.persistentVolumeReclaimPolicy }}{{ end }}
   accessModes:
 {{ toYaml .Values.persistence.accessModes | indent 4 }}
 {{- if .Values.persistence.storageClass }}
