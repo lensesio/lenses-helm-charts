@@ -30,26 +30,32 @@ setup_helm() {
 }
 
 package_all() {
-    mkdir -p "${SCRIPTS_DIR}/../build/"
+    mkdir -p "${WORKSPACE}/build/"
+    mkdir -p "${WORKSPACE}/junit/"
 
     for CHART_DIR in "${SCRIPTS_DIR}/../charts"/*; do
         package "${CHART_DIR}"
     done
 
-    ls -lsa "${SCRIPTS_DIR}/../build/"
+    ls -lsa "${WORKSPACE}/build/"
+    ls -lsa "${WORKSPACE}/junit/"
 }
 
 package() {
     pushd "$1"
+
+    local CHART_NAME
+    CHART_NAME="$(basename ${PWD})"
+
     if [ -f './.disable-package' ]; then
-        echo "=== Packaging was disabled for chart $(basename ${PWD})"
+        echo "=== Packaging was disabled for chart ${CHART_NAME}"
         popd
         return
     fi
 
-    run_tests
+    run_tests "${CHART_NAME}"
 
-    echo -e "\n\n === Packaging $(basename ${PWD})"
+    echo -e "\n\n === Packaging ${CHART_NAME}"
     if [[ "${BUILD_MODE}" == 'development' ]]; then
         set_development_chart_version
     fi
@@ -78,8 +84,15 @@ run_lint() {
 }
 
 run_tests() {
+    local CHART_NAME
+    CHART_NAME="$1"
+
     if [ -d "./tests" ]; then
-        helm unittest -3 .
+        helm unittest \
+            -3 \
+            --output-file "${WORKSPACE}/junit/junit-${CHART_NAME}.xml" \
+            --output-type "JUnit" \
+            .
     fi
 }
 
@@ -101,8 +114,11 @@ set_development_chart_version() {
 }
 
 publish_all() {
-    for CHART_DIR in "${SCRIPTS_DIR}/../build"/*.tgz; do
-        jfrog rt u "${CHART_DIR}" ${HELM_REPOSITORY} --url=${ARTIFACTORY_URL} --apikey=${ARTIFACTORY_API_KEY}
+    for CHART_DIR in "${WORKSPACE}/build"/*.tgz; do
+        jfrog rt u "${CHART_DIR}" \
+            "${HELM_REPOSITORY}" \
+            --url="${ARTIFACTORY_URL}" \
+            --apikey="${ARTIFACTORY_API_KEY}"
     done
 }
 

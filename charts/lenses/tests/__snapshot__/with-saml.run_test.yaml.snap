@@ -6,7 +6,7 @@ should work:
       annotations: null
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.2.7
+        chart: lenses-4.2.8
         component: lenses
         heritage: Helm
         lenses.io/app: RELEASE-NAME
@@ -36,11 +36,6 @@ should work:
           - env:
             - name: LENSES_OPTS
               value: ""
-            - name: LICENSE
-              valueFrom:
-                secretKeyRef:
-                  key: license
-                  name: RELEASE-NAME
             - name: LENSES_PORT
               value: "3030"
             - name: LENSES_JMX_PORT
@@ -88,16 +83,7 @@ should work:
               value: /mnt/secrets/security.conf
             - name: LENSES_SCHEMA_REGISTRY_AUTH
               value: ""
-            - name: LENSES_SCHEMA_REGISTRY_USERNAME
-              value: ""
-            - name: LENSES_SCHEMA_REGISTRY_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  key: schema.registry.password
-                  name: RELEASE-NAME
             - name: LENSES_KAFKA_SETTINGS_CLIENT_BASIC_AUTH_CREDENTIALS_SOURCE
-              value: ""
-            - name: LENSES_KAFKA_SETTINGS_CLIENT_BASIC_AUTH_USER_INFO
               value: ""
             - name: LENSES_KAFKA_SETTINGS_CLIENT_SECURITY_PROTOCOL
               value: PLAINTEXT
@@ -111,10 +97,12 @@ should work:
               value: 30 second
             - name: LENSES_DEPLOYMENT_CONNECT_ACTIONS_BUFFER_SIZE
               value: "1000"
+            - name: LC_KUBERNETES_MODE
+              value: "true"
             - name: LT_PACKAGE
               value: helm
             - name: LT_PACKAGE_VERSION
-              value: 4.2.7
+              value: 4.2.8
             image: lensesio/lenses:4.2.4
             imagePullPolicy: IfNotPresent
             livenessProbe:
@@ -203,7 +191,7 @@ should work:
     metadata:
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.2.7
+        chart: lenses-4.2.8
         heritage: Helm
         lenses.io/app: RELEASE-NAME
         lenses.io/app.type: lenses-secret
@@ -226,7 +214,6 @@ should work:
       schema.registry.key.password: ""
       schema.registry.keystore.jks: ""
       schema.registry.keystore.password: ""
-      schema.registry.password: ""
       schema.registry.truststore.jks: ""
       schema.registry.truststore.password: ""
       security.append.conf: ""
@@ -255,7 +242,7 @@ should work:
     metadata:
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.2.7
+        chart: lenses-4.2.8
         heritage: Helm
         lenses.io/app: RELEASE-NAME
         lenses.io/app.type: lenses-secret
@@ -278,7 +265,6 @@ should work:
       schema.registry.key.password: ""
       schema.registry.keystore.jks: ""
       schema.registry.keystore.password: ""
-      schema.registry.password: ""
       schema.registry.truststore.jks: ""
       schema.registry.truststore.password: ""
       security.append.conf: ""
