@@ -1,4 +1,4 @@
-should honor custom Service Account:
+should pass with external username/password:
   1: |
     apiVersion: apps/v1
     kind: Deployment
@@ -103,6 +103,16 @@ should honor custom Service Account:
               value: helm
             - name: LT_PACKAGE_VERSION
               value: 4.2.8
+            - name: LENSES_SECURITY_USER
+              valueFrom:
+                secretKeyRef:
+                  key: lenses-security-username
+                  name: lenses-super-secrets
+            - name: LENSES_SECURITY_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: lenses-security-password
+                  name: lenses-super-secrets
             image: lensesio/lenses:4.2.4
             imagePullPolicy: IfNotPresent
             livenessProbe:
@@ -136,7 +146,7 @@ should honor custom Service Account:
               subPath: lenses.append.conf
             - mountPath: /data/storage
               name: storage
-          serviceAccountName: foo_bar
+          serviceAccountName: default
           volumes:
           - name: secrets
             secret:
@@ -170,7 +180,51 @@ should honor custom Service Account:
           - name: storage
             persistentVolumeClaim:
               claimName: RELEASE-NAME-claim
-should work with default values:
+  2: |
+    apiVersion: v1
+    data:
+      client.keystore.jks: ""
+      client.truststore.jks: ""
+      keytab: ""
+      lenses.keytab: ""
+      lenses.opts.keystore.jks: ""
+      lenses.opts.truststore.jks: ""
+      lenses.tls.keystore.jks: ""
+      lenses.tls.truststore.jks: ""
+      saml.idp.xml: ""
+      saml.keystore.jks: ""
+    kind: Secret
+    metadata:
+      labels:
+        app: RELEASE-NAME
+        chart: lenses-4.2.8
+        heritage: Helm
+        lenses.io/app: RELEASE-NAME
+        lenses.io/app.type: lenses-secret
+        release: RELEASE-NAME
+      name: RELEASE-NAME
+    stringData:
+      client.key.password: ""
+      client.keystore.password: ""
+      client.truststore.password: ""
+      connect.clusters: ""
+      jaas.conf: ""
+      jvm.truststore.jks: ""
+      jvm.truststore.password: ""
+      lenses.opts.keystore.password: ""
+      lenses.opts.truststore.password: ""
+      lenses.tls.key.password: ""
+      lenses.tls.keystore.password: ""
+      lenses.tls.truststore.password: ""
+      license: ""
+      schema.registry.key.password: ""
+      schema.registry.keystore.jks: ""
+      schema.registry.keystore.password: ""
+      schema.registry.truststore.jks: ""
+      schema.registry.truststore.password: ""
+      security.append.conf: ""
+      security.conf: ""
+should pass with username/password:
   1: |
     apiVersion: apps/v1
     kind: Deployment
@@ -342,3 +396,50 @@ should work with default values:
           - name: storage
             persistentVolumeClaim:
               claimName: RELEASE-NAME-claim
+  2: |
+    apiVersion: v1
+    data:
+      client.keystore.jks: ""
+      client.truststore.jks: ""
+      keytab: ""
+      lenses.keytab: ""
+      lenses.opts.keystore.jks: ""
+      lenses.opts.truststore.jks: ""
+      lenses.tls.keystore.jks: ""
+      lenses.tls.truststore.jks: ""
+      saml.idp.xml: ""
+      saml.keystore.jks: ""
+    kind: Secret
+    metadata:
+      labels:
+        app: RELEASE-NAME
+        chart: lenses-4.2.8
+        heritage: Helm
+        lenses.io/app: RELEASE-NAME
+        lenses.io/app.type: lenses-secret
+        release: RELEASE-NAME
+      name: RELEASE-NAME
+    stringData:
+      client.key.password: ""
+      client.keystore.password: ""
+      client.truststore.password: ""
+      connect.clusters: ""
+      jaas.conf: ""
+      jvm.truststore.jks: ""
+      jvm.truststore.password: ""
+      lenses.opts.keystore.password: ""
+      lenses.opts.truststore.password: ""
+      lenses.tls.key.password: ""
+      lenses.tls.keystore.password: ""
+      lenses.tls.truststore.password: ""
+      license: ""
+      schema.registry.key.password: ""
+      schema.registry.keystore.jks: ""
+      schema.registry.keystore.password: ""
+      schema.registry.truststore.jks: ""
+      schema.registry.truststore.password: ""
+      security.append.conf: ""
+      security.conf: |2-
+
+        lenses.security.user="foo"
+        lenses.security.password="bar"
