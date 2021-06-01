@@ -6,7 +6,7 @@ should work when custom env vars is set:
       annotations: null
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.2.8
+        chart: lenses-4.2.9
         component: lenses
         heritage: Helm
         lenses.io/app: RELEASE-NAME
@@ -102,7 +102,7 @@ should work when custom env vars is set:
             - name: LT_PACKAGE
               value: helm
             - name: LT_PACKAGE_VERSION
-              value: 4.2.8
+              value: 4.2.9
             - name: FOO
               value: bar
             image: lensesio/lenses:4.2.4
@@ -180,7 +180,7 @@ should work when custom multiline env vars is set:
       annotations: null
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.2.8
+        chart: lenses-4.2.9
         component: lenses
         heritage: Helm
         lenses.io/app: RELEASE-NAME
@@ -276,7 +276,7 @@ should work when custom multiline env vars is set:
             - name: LT_PACKAGE
               value: helm
             - name: LT_PACKAGE_VERSION
-              value: 4.2.8
+              value: 4.2.9
             - name: LENSES_CONNECTORS_INFO
               value: |
                 [

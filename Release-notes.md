@@ -1,5 +1,12 @@
 # Release notes for Lenses Helm chart
 
+## Release 4.2.9
+
+This small feature adds the support for setting explicitly Connect metrics URL
+whereas previously it was infered using Helm telmplating and certain
+other keys. These keys ('metrics.type' and 'metrics.'port') are no
+longer required and will be deprecated.
+
 ## Release 4.2.7
 
 ### Changes

@@ -373,17 +373,24 @@ lenses:
         aes256:
           - key: PasswordPasswordPasswordPassword
 
-        hosts:
-          - host: connect-worker-1
-            # JMX/JOLOKIA Metrics
-            # metrics:
-            #   type: "JMX"
-            #   port: 9102
-            #   username:
-            #   password:
-            #   ssl:
-          - host: connect-worker-2
-          - host: connect-worker-3
+        # hosts:
+        #   - host: connect-worker-1
+        #      JMX/JOLOKIA Metrics
+        #      metrics:
+        #        # 'url' is a newly introduced key which explicitly sets the URL
+        #        # of the metrics host. Previously Helm templating was
+        #        # used to construct the URL from 'host', 'metrics.type' and
+        #        # 'metrics.port'. Example values for 'url':
+        #        # - for JMX 'url: <host>:<port>,
+        #        # - for JOLOKIA 'url: http(s)://<host>:<port>
+        #        url:
+        #        ssl:
+        #        username:
+        #        password:
+        #        type: "JMX" # Note: this will be deprecated in version 5.0, see 'url' above
+        #        port: 9102 # Note: this will be deprecated in version 5.0, see 'url' above
+        #   - host: connect-worker-2
+        #   - host: connect-worker-3
 
   storage:
     postgres:

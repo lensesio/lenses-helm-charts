@@ -320,7 +320,9 @@ PLAINTEXT
         url: "{{$protocol}}://{{$host.host}}:{{$port}}"
         {{- if $host.metrics -}},
         metrics: {
-          {{- if eq $host.metrics.type "JMX" }}
+          {{- if $host.metrics.url }}
+          url: "{{ $host.metrics.url }}"
+          {{- else if eq $host.metrics.type "JMX" }}
           url: "{{$host.host}}:{{$host.metrics.port}}"
           {{- else }}
           url: "{{$protocol}}://{{$host.host}}:{{$host.metrics.port}}"
