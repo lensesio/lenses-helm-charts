@@ -1,11 +1,11 @@
 # Helm unittests
 
-> Repo: [lrills/helm-unittest](https://github.com/lrills/helm-unittest)
+> Repo: [quintush/helm-unittest](https://github.com/quintush/helm-unittest)
 
 ## Installation
 
 ```shell
-helm plugin install https://github.com/lrills/helm-unittest
+helm plugin install https://github.com/quintush/helm-unittest
 ```
 
 ## Usage
