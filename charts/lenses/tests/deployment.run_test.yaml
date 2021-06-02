@@ -12,7 +12,7 @@ tests:
           of: Deployment
       - equal:
           path: spec.template.spec.containers[0].image
-          value: lensesio/lenses:4.2.4
+          value: lensesio/lenses:4.3.0
       - isEmpty:
           path: metadata.annotations
       - contains:
