@@ -16,7 +16,7 @@ should work:
     metadata:
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.2.2
+        chart: lenses-4.2.9
         heritage: Helm
         lenses.io/app: RELEASE-NAME
         lenses.io/app.type: lenses-secret
@@ -80,7 +80,72 @@ should work:
       schema.registry.key.password: ""
       schema.registry.keystore.jks: ""
       schema.registry.keystore.password: ""
-      schema.registry.password: ""
+      schema.registry.truststore.jks: ""
+      schema.registry.truststore.password: ""
+      security.append.conf: ""
+      security.conf: ""
+should work with explicit Connect metrics URL:
+  1: |
+    apiVersion: v1
+    data:
+      client.keystore.jks: ""
+      client.truststore.jks: ""
+      keytab: ""
+      lenses.keytab: ""
+      lenses.opts.keystore.jks: ""
+      lenses.opts.truststore.jks: ""
+      lenses.tls.keystore.jks: ""
+      lenses.tls.truststore.jks: ""
+      saml.idp.xml: ""
+      saml.keystore.jks: ""
+    kind: Secret
+    metadata:
+      labels:
+        app: RELEASE-NAME
+        chart: lenses-4.2.9
+        heritage: Helm
+        lenses.io/app: RELEASE-NAME
+        lenses.io/app.type: lenses-secret
+        release: RELEASE-NAME
+      name: RELEASE-NAME
+    stringData:
+      client.key.password: ""
+      client.keystore.password: ""
+      client.truststore.password: ""
+      connect.clusters: |-
+        [
+          {
+            name: "streamreactor",
+            statuses: "connect-status",
+            configs: "connect-configs",
+            offsets: "connect-offsets",
+            aes256: { key: "PasswordPasswordPasswordPassword" },
+            urls: [
+              {
+                url: "http://connect-worker-1:8083",
+                metrics: {
+                  url: "http://connect-worker-1:8080/metrics",
+                  type: "JMX",
+                  ssl: false,
+                  user: "admin",
+                  password: "admin"
+                }
+              }
+            ]
+          }
+        ]
+      jaas.conf: ""
+      jvm.truststore.jks: ""
+      jvm.truststore.password: ""
+      lenses.opts.keystore.password: ""
+      lenses.opts.truststore.password: ""
+      lenses.tls.key.password: ""
+      lenses.tls.keystore.password: ""
+      lenses.tls.truststore.password: ""
+      license: ""
+      schema.registry.key.password: ""
+      schema.registry.keystore.jks: ""
+      schema.registry.keystore.password: ""
       schema.registry.truststore.jks: ""
       schema.registry.truststore.password: ""
       security.append.conf: ""

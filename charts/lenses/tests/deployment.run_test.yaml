@@ -12,7 +12,7 @@ tests:
           of: Deployment
       - equal:
           path: spec.template.spec.containers[0].image
-          value: lensesio/lenses:4.2.1
+          value: lensesio/lenses:4.2.4
       - isEmpty:
           path: metadata.annotations
       - contains:
@@ -106,3 +106,32 @@ tests:
       - equal:
           path: spec.template.metadata.labels.foo
           value: bar
+
+  - it: should remove livenessProbe if disabled
+    set:
+      lenses:
+        livenessProbe:
+          enabled: false
+    asserts:
+      # Check the rendered manifest has not changed
+      # Review the changes and if they are verified use `helm unittest -u .` to update the manifest
+      # Writing tests that cover this chaneg is highly recommended
+      - matchSnapshot: {}
+      - isEmpty:
+          path: spec.template.spec.containers[0].livenessProbe
+
+  - it: should add pauseExec if enabled
+    set:
+      lenses:
+        pauseExec:
+          enabled: true
+    asserts:
+      # Check the rendered manifest has not changed
+      # Review the changes and if they are verified use `helm unittest -u .` to update the manifest
+      # Writing tests that cover this chaneg is highly recommended
+      - matchSnapshot: {}
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: PAUSE_EXEC
+            value: "true"
