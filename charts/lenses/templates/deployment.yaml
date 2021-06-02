@@ -115,6 +115,7 @@ spec:
         {{- end }}
         ports:
         - containerPort: {{ .Values.restPort }}
+        {{- if .Values.lenses.livenessProbe.enabled }}
         livenessProbe:
           httpGet:
             path: /
@@ -124,6 +125,8 @@ spec:
           {{- end }}
           initialDelaySeconds: 300
           periodSeconds: 10
+        {{- end }}
+
         volumeMounts:
           - name: secrets
             mountPath: "/mnt/secrets"
@@ -243,11 +246,13 @@ spec:
         - name: LENSES_PERFORMANCE_OPTS
           value: {{ .Values.lenses.jvm.performanceOpts | quote }}
         {{- end }}
+        {{- if and .Values.lenses.license (not (eq (default "not-external" .Values.lenses.license) "external")) }}
         - name: LICENSE
           valueFrom:
             secretKeyRef:
               name: {{ include "fullname" . | quote }}
               key: "license"
+        {{- end }}
         - name: LENSES_PORT
           value: {{ .Values.restPort | quote }}
         - name: LENSES_JMX_PORT
@@ -337,17 +342,23 @@ spec:
           value: "/mnt/secrets/security.conf"
         - name: LENSES_SCHEMA_REGISTRY_AUTH
           value: {{ default "" .Values.lenses.schemaRegistries.security.authType | quote }}
+        {{- if and .Values.lenses.schemaRegistries.security.username (not (eq (default "not-external" .Values.lenses.schemaRegistries.security.username) "external")) }}
         - name: LENSES_SCHEMA_REGISTRY_USERNAME
-          value: {{ default "" .Values.lenses.schemaRegistries.security.username | quote }}
+          value: {{ .Values.lenses.schemaRegistries.security.username | quote }}
+        {{- end }}
+        {{- if and .Values.lenses.schemaRegistries.security.password (not (eq (default "not-external" .Values.lenses.schemaRegistries.security.password) "external")) }}
         - name: LENSES_SCHEMA_REGISTRY_PASSWORD
           valueFrom:
             secretKeyRef:
               name: {{ include "fullname" . | quote }}
               key: "schema.registry.password"
+        {{- end }}
         - name: LENSES_KAFKA_SETTINGS_CLIENT_BASIC_AUTH_CREDENTIALS_SOURCE
           value: {{ default "" .Values.lenses.schemaRegistries.security.authType | quote }}
+        {{- if and .Values.lenses.schemaRegistries.security.username (not (eq (default "not-external" .Values.lenses.schemaRegistries.security.username) "external")) .Values.lenses.schemaRegistries.security.password (not (eq (default "not-external" .Values.lenses.schemaRegistries.security.password) "external")) }}
         - name: LENSES_KAFKA_SETTINGS_CLIENT_BASIC_AUTH_USER_INFO
-          value: {{ include "kafkaSchemaBasicAuth" . | quote }}
+          value: {{ printf "%s:%s" .Values.lenses.schemaRegistries.security.username .Values.lenses.schemaRegistries.security.password | quote }}
+        {{- end }}
 
         # ssl/sasl
         {{- if .Values.lenses.jvm.trustStoreFileData }}
@@ -463,23 +474,36 @@ spec:
           value: {{ .Values.lenses.deployments.connect.actionsBufferSize | quote }}
         {{- end }}
 
-        # Custom env variables
-        {{- range $key, $value := .Values.lenses.env }}
-        - name: {{ $key | quote }}
-          value: {{ $value | quote }}
-        {{- end }}
+        # Lenses configuration flags
+        - name: LC_KUBERNETES_MODE
+          value: "true"
 
-        # extras configs
-        {{- range $key, $value := .Values.lenses.configOverrides }}
-        - name: {{ printf "%s" $key | replace "." "_" | upper | quote }}
-          value: {{ $value | quote }}
-        {{- end }}
-
+        # Lenses telemetry flags
         - name: LT_PACKAGE
           value: "helm"
 
         - name: LT_PACKAGE_VERSION
           value: "{{ .Chart.Version }}"
+
+        {{- if .Values.lenses.pauseExec.enabled }}
+        - name: PAUSE_EXEC
+          value: "true"
+        {{- end }}
+
+        {{- range $key, $value := .Values.lenses.env }}
+        - name: {{ $key | quote }}
+          value: {{ $value | quote }}
+        {{- end }}
+
+        {{- range $key, $value := .Values.lenses.configOverrides }}
+        - name: {{ printf "%s" $key | replace "." "_" | upper | quote }}
+          value: {{ $value | quote }}
+        {{- end }}
+
+        # Additional env variables
+        {{- if .Values.lenses.additionalEnv }}
+        {{- toYaml .Values.lenses.additionalEnv | nindent 8 }}
+        {{- end }}
 
       {{- if .Values.sidecarContainers }}
       {{- toYaml .Values.sidecarContainers | nindent 6 }}

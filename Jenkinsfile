@@ -42,6 +42,12 @@ pipeline {
                     sh("_cicd/functions.sh setup_helm")
                     sh("_cicd/functions.sh package_all")
 
+                    echo "==== Recording test results"
+                    junit (
+                        testResults: 'junit/*.xml',
+                        allowEmptyResults: false
+                    )
+
                     dir('build') {
                         archiveArtifacts '*.tgz'
                     }

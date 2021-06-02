@@ -1,5 +1,83 @@
 # Release notes for Lenses Helm chart
 
+## Release 4.2.9
+
+This small feature adds the support for setting explicitly Connect metrics URL
+whereas previously it was infered using Helm telmplating and certain
+other keys. These keys ('metrics.type' and 'metrics.'port') are no
+longer required and will be deprecated.
+
+## Release 4.2.7
+
+### Changes
+
+- Sensitive values used in passwords while configuring Lenses can be taken from external Kubernetes resources using the underlying mechanism of transforming env vars to Lenses configuration. <br/> Supported sensitive values:
+  - Schema registry Basic Auth username/password
+  - Postgres username/password
+  - Lenses default user username/password
+  - License
+  - Jaas config
+
+### Deprecation notes
+
+In version 5.0 we will stop supporting the following keys:
+
+#### `lenses.env`
+
+Currently used to inject custom env vars using key/value pairs:
+
+```yaml
+lenses:
+  env:
+    CUSTOM_ENV_VAR: "foo"
+```
+
+Should be migrated to:
+
+```yaml
+lenses:
+  additionalEnv:
+    - name: CUSTOM_ENV_VAR
+      value: "foo"
+```
+
+#### `lenses.licenseUrl`
+
+Currently used as a url pointing to the Lenses license:
+
+```yaml
+lenses:
+  licenseUrl: example.com
+```
+
+Should be migrated to:
+
+```yaml
+lenses:
+  additionalEnv:
+    - name: LICENSE_URL
+      value: "example.com"
+```
+
+#### `lenses.configOverrides`
+
+Currently used as extra configurations that will be append to the `lenses.conf`:
+
+```yaml
+lenses:
+  configOverrides:
+    LENSES_PROPERTY: value
+```
+
+Should be migrated to:
+
+```yaml
+lenses:
+  append:
+    conf: |-
+      lenses.property=value
+```
+
 ## Release 4.2.0
 
 ### Changes

@@ -187,14 +187,6 @@ PLAINTEXT
 {{- end -}}
 {{- end -}}
 
-{{- define "kafkaSchemaBasicAuth" -}}
-  {{- if and .Values.lenses.schemaRegistries.security.enabled .Values.lenses.schemaRegistries.security.authType -}}
-    {{- if eq ((.Values.lenses.schemaRegistries.security | default (dict "authType" "")).authType) "USER_INFO" -}}
-      {{- required "When Schema registry security auth type is USER_INFO then username should be provided." .Values.lenses.schemaRegistries.security.username -}}:{{- required "When Schema registry security auth type is USER_INFO then password should be provided." .Values.lenses.schemaRegistries.security.password -}}
-    {{- end -}}
-  {{- end -}}
-{{- end -}}
-
 {{- define "jmxBrokers" -}}
 [
   {{ range $index, $element := .Values.lenses.kafka.jmxBrokers }}
@@ -328,7 +320,9 @@ PLAINTEXT
         url: "{{$protocol}}://{{$host.host}}:{{$port}}"
         {{- if $host.metrics -}},
         metrics: {
-          {{- if eq $host.metrics.type "JMX" }}
+          {{- if $host.metrics.url }}
+          url: "{{ $host.metrics.url }}"
+          {{- else if eq $host.metrics.type "JMX" }}
           url: "{{$host.host}}:{{$host.metrics.port}}"
           {{- else }}
           url: "{{$protocol}}://{{$host.host}}:{{$host.metrics.port}}"
@@ -375,7 +369,9 @@ lenses.security.kerberos.debug={{ .Values.lenses.security.kerberos.debug | quote
 {{- if .Values.lenses.storage.postgres.enabled }}
 lenses.storage.postgres.host={{ required "PostgreSQL 'host' value is mandatory" .Values.lenses.storage.postgres.host | quote }}
 lenses.storage.postgres.database={{ required "PostgreSQL 'database' value is mandatory" .Values.lenses.storage.postgres.database | quote }}
+{{- if not (eq (default "not-external" .Values.lenses.storage.postgres.username) "external") }}
 lenses.storage.postgres.username={{ required "PostgreSQL 'username' value is mandatory" .Values.lenses.storage.postgres.username | quote }}
+{{- end }}
 {{- if .Values.lenses.storage.postgres.port }}
 lenses.storage.postgres.port={{  .Values.lenses.storage.postgres.port | quote }}
 {{- end }}
@@ -383,11 +379,7 @@ lenses.storage.postgres.port={{  .Values.lenses.storage.postgres.port | quote }}
 lenses.storage.postgres.schema={{ .Values.lenses.storage.postgres.schema | quote }}
 {{- end }}
 {{- end }}
-{{- if and .Values.lenses.kafka.sasl.enabled (not .Values.lenses.kafka.sasl.jaasConfig) }}
-{{/* Deliberately fail helm deployment if sasl enabled and jaasConfig is missing */}}
-{{ required "SASL is enabled but lenses.kafka.sasl.jaasConfig is not set." nil }}
-{{- end }}
-{{- if and .Values.lenses.kafka.sasl.enabled .Values.lenses.kafka.sasl.jaasConfig }}
+{{- if and .Values.lenses.kafka.sasl.enabled .Values.lenses.kafka.sasl.jaasConfig (not (eq (default "not-external" .Values.lenses.kafka.sasl.jaasConfig) "external")) }}
 lenses.kafka.settings.client.sasl.jaas.config="""{{ .Values.lenses.kafka.sasl.jaasConfig }}
 """
 {{- end }}
@@ -395,9 +387,13 @@ lenses.kafka.settings.client.sasl.jaas.config="""{{ .Values.lenses.kafka.sasl.ja
 {{- end -}}
 
 {{- define "securityConf" -}}
-{{- if .Values.lenses.security.defaultUser -}}
-lenses.security.user={{ .Values.lenses.security.defaultUser.username | quote }}
-lenses.security.password={{ .Values.lenses.security.defaultUser.password | quote }}
+{{- if .Values.lenses.security.defaultUser }}
+{{- if not (eq (default "not-external" .Values.lenses.security.defaultUser.username) "external") }}
+lenses.security.user={{ required "'username' for Lenses defaultUser is mandatory if 'password' is set" .Values.lenses.security.defaultUser.username | quote }}
+{{- end -}}
+{{- if not (eq (default "not-external" .Values.lenses.security.defaultUser.password) "external") }}
+lenses.security.password={{ required "'password' for Lenses defaultUser is mandatory if 'username' is set" .Values.lenses.security.defaultUser.password | quote }}
+{{- end -}}
 {{- end -}}
 {{- if .Values.lenses.security.ldap.enabled }}
 lenses.security.ldap.url={{ .Values.lenses.security.ldap.url | quote }}
@@ -424,8 +420,10 @@ lenses.security.saml.key.password={{ .Values.lenses.security.saml.keyPassword | 
 {{- if .Values.lenses.security.kerberos.enabled -}}
 {{ include "kerberos" .}}
 {{- end -}}
-{{- if .Values.lenses.storage.postgres.enabled }}
+{{- if and .Values.lenses.storage.postgres.enabled .Values.lenses.storage.postgres.password }}
+{{- if not (eq (default "not-external" .Values.lenses.storage.postgres.password) "external") }}
 lenses.storage.postgres.password={{ required "PostgreSQL 'password' value is mandatory" .Values.lenses.storage.postgres.password | quote }}
+{{- end -}}
 {{- end -}}
 {{- end -}}
 

@@ -46,7 +46,6 @@ persistence:
   accessModes:
     - ReadWriteOnce
   size: 5Gi
-  # persistentVolumeReclaimPolicy: Retain
   # Target an pre-existing volume claim to use it as Lenses Persistent volume
   # existingClaim:
 
@@ -216,10 +215,18 @@ lenses:
       # Note: this will be deprecated in favor of jaasConfig
       jaasFileData: |-
 
-      # jaasConfig
+      # JAAS config
       # This configuration is used inline, so do not enclose it in 'KafkaClient{ }'
       # jaasConfig: |-
       #   com.sun.security.auth.module.Krb5LoginModule required useKeyTab=true keyTab="lenses.keytab" storeKey=true useTicketCache=false serviceName=kafka principal="lenses@TESTING.LENSES.IO";
+      # Use the value "external" to bypass the Helm validation and handle the jaas config externally.
+      # The common use case for using "external" is to take the actual value from a Kubernetes Secret resource already deployed.
+      # To do so, add the following definition under 'lenses.additionalEnv' key:
+      # - name: LENSES_KAFKA_SETTINGS_CLIENT_SASL_JAAS_CONFIG
+      #   valueFrom:
+      #     secretKeyRef:
+      #       name: [SECRET_RESOURCE_NAME]
+      #       key: [SECRET_RESOURCE_KEY]
       jaasConfig: |-
 
       # krb5Conf is the kerberos config data to be mounted into /etc
@@ -321,7 +328,27 @@ lenses:
       # Authenticate against a protected cluster
       # For BasicAuth set authType to `USER_INFO`
       authType:
+
+      # Set the username for Schema registry connection
+      # Use the value "external" to bypass the Helm validation and handle the username externally.
+      # The common use case for using "external" is to take the actual value from a Kubernetes Secret resource already deployed.
+      # To do so, add the following definition under 'lenses.additionalEnv' key:
+      # - name: LENSES_SCHEMA_REGISTRY_USERNAME
+      #   valueFrom:
+      #     secretKeyRef:
+      #       name: [SECRET_RESOURCE_NAME]
+      #       key: [SECRET_RESOURCE_KEY]
       username:
+
+      # Set the password for Schema registry connection
+      # Use the value "external" to bypass the Helm validation and handle the password externally.
+      # The common use case for using "external" is to take the actual value from a Kubernetes Secret resource already deployed.
+      # To do so, add the following definition under 'lenses.additionalEnv' key:
+      # - name: LENSES_SCHEMA_REGISTRY_PASSWORD
+      #   valueFrom:
+      #     secretKeyRef:
+      #       name: [SECRET_RESOURCE_NAME]
+      #       key: [SECRET_RESOURCE_KEY]
       password:
 
   connectClusters:
@@ -346,26 +373,53 @@ lenses:
         aes256:
           - key: PasswordPasswordPasswordPassword
 
-        hosts:
-          - host: connect-worker-1
-            # JMX/JOLOKIA Metrics
-            # metrics:
-            #   type: "JMX"
-            #   port: 9102
-            #   protocol:
-            #   username:
-            #   password:
-            #   ssl:
-          - host: connect-worker-2
-          - host: connect-worker-3
+        # hosts:
+        #   - host: connect-worker-1
+        #      JMX/JOLOKIA Metrics
+        #      metrics:
+        #        # 'url' is a newly introduced key which explicitly sets the URL
+        #        # of the metrics host. Previously Helm templating was
+        #        # used to construct the URL from 'host', 'metrics.type' and
+        #        # 'metrics.port'. Example values for 'url':
+        #        # - for JMX 'url: <host>:<port>,
+        #        # - for JOLOKIA 'url: http(s)://<host>:<port>
+        #        url:
+        #        ssl:
+        #        username:
+        #        password:
+        #        type: "JMX" # Note: this will be deprecated in version 5.0, see 'url' above
+        #        port: 9102 # Note: this will be deprecated in version 5.0, see 'url' above
+        #   - host: connect-worker-2
+        #   - host: connect-worker-3
 
   storage:
     postgres:
       enabled: false
       host:
       port:               # optional, defaults to 5432
-      username:
-      password:
+
+      # Set the username for postgres connection
+      # Use the value "external" to bypass the Helm validation and handle the username externally.
+      # The common use case for using "external" is to take the actual value from a Kubernetes Secret resource already deployed.
+      # To do so, add the following definition under 'lenses.additionalEnv' key:
+      # - name: LENSES_STORAGE_POSTGRES_USERNAME
+      #   valueFrom:
+      #     secretKeyRef:
+      #       name: [SECRET_RESOURCE_NAME]
+      #       key: [SECRET_RESOURCE_KEY]
+      username:           # use "external" to manage it using secrets
+
+      # Set the password for postgres connection
+      # Use the value "external" to bypass the Helm validation and handle the password externally.
+      # The common use case for using "external" is to take the actual value from a Kubernetes Secret resource already deployed.
+      # To do so, add the following definition under 'lenses.additionalEnv' key:
+      # - name: LENSES_STORAGE_POSTGRES_PASSWORD
+      #   valueFrom:
+      #     secretKeyRef:
+      #       name: [SECRET_RESOURCE_NAME]
+      #       key: [SECRET_RESOURCE_KEY]
+      password:           # use "external" to manage it using secrets
+
       database:
       schema:             # optional, defaults to public schema
 
@@ -423,12 +477,31 @@ lenses:
     suffix:
 
   security:
-    # Change Default Lenses user credentials.
-    # Username: admin / Password:admin
-    defaultUser:
-    # Example
-    #  username: admin
-    #  password: admin
+    defaultUser: {}
+      # Change Default Lenses user credentials.
+      # Username: admin / Password:admin
+
+      # Set the username for Lenses admin
+      # Use the value "external" to bypass the Helm validation and handle the username externally.
+      # The common use case for using "external" is to take the actual value from a Kubernetes Secret resource already deployed.
+      # To do so, add the following definition under 'lenses.additionalEnv' key:
+      # - name: LENSES_SECURITY_USER
+      #   valueFrom:
+      #     secretKeyRef:
+      #       name: [SECRET_RESOURCE_NAME]
+      #       key: [SECRET_RESOURCE_KEY]
+      # username: admin
+
+      # Set the password for Lenses admin
+      # Use the value "external" to bypass the Helm validation and handle the username externally.
+      # The common use case for using "external" is to take the actual value from a Kubernetes Secret resource already deployed.
+      # To do so, add the following definition under 'lenses.additionalEnv' key:
+      # - name: LENSES_SECURITY_PASSWORD
+      #   valueFrom:
+      #     secretKeyRef:
+      #       name: [SECRET_RESOURCE_NAME]
+      #       key: [SECRET_RESOURCE_KEY]
+      # password: admin
 
     # SPNEGO for incoming connections to Lenses
     kerberos:
@@ -493,21 +566,47 @@ lenses:
     append:
       conf: |-
 
-  # license is the Lenses license
+  # Set the license for Lenses
+  # Use the value "external" to bypass the Helm validation and handle the license externally.
+  # The common use case for using "external" is to take the actual value from a Kubernetes Secret resource already deployed.
+  # To do so, add the following definition under 'lenses.additionalEnv' key:
+  # - name: LICENSE
+  #   valueFrom:
+  #     secretKeyRef:
+  #       name: [SECRET_RESOURCE_NAME]
+  #       key: [SECRET_RESOURCE_KEY]
   license: |-
 
+  # Note: this will be deprecated in version 5.0
   # licenseUrl is a url pointing to the Lenses license
   licenseUrl:
 
-  # Uncomment to inject custom env vars if needed
-#  env:
-#    CUSTOM_ENV_VAR: "foo"
+  # Additional env variables appended to deployment
+  # Follows the format of [EnvVar spec](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.21/#envvar-v1-core)
+  additionalEnv:
+    # - name: FOO
+    #   value: bar
 
+  # Note: this will be deprecated in version 5.0
+  # Uncomment to inject custom env vars if needed
+  # env:
+  #   CUSTOM_ENV_VAR: "foo"
+
+  # Note: this will be deprecated in version 5.0
   # extra configurations that will be append to the lenses.conf file mounted in /mnt/settings
   ## keys must be uppercase and underscores for separators suit for use as environment variables
   ## see https://docs.lenses.io/install_setup/configuration/lenses-config.html#option-reference
   configOverrides: {}
     #LENSES_PROPERTY : value
+
+  # Disable livenessProbe, used while debugging
+  livenessProbe:
+    enabled: true
+
+  # Pause execution of Lenses start up script to allow the user to login into the container and
+  # check the running environment, used while debugging
+  pauseExec:
+    enabled: false
 
 sidecarContainers:
   # - name: sidecar-example
