@@ -1,5 +1,13 @@
 # Release notes for Lenses Helm chart
 
+## Release 4.2.10
+
+Previously, Connect URL was inferred from `protocol`, `host` and
+`port`. With this new addition, user is now given the option to
+construct it explicitly using the newly introduced `url`  key which
+precedes `host` (marked for deprecation in next major release). This
+allows for adding custom paths e.g. `https://connect-worker-1:8083/custom/path`.
+
 ## Release 4.2.9
 
 This small feature adds the support for setting explicitly Connect metrics URL
