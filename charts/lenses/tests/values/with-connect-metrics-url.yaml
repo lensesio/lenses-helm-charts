@@ -18,3 +18,4 @@ lenses:
               username: admin
               password: admin
               ssl:
+          - url: http://connect-worker-2:8083/custom/path

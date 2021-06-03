@@ -130,6 +130,9 @@ should work with explicit Connect metrics URL:
                   user: "admin",
                   password: "admin"
                 }
+              },
+              {
+                url: "http://connect-worker-2:8083/custom/path"
               }
             ]
           }

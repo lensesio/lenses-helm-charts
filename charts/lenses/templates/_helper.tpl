@@ -317,7 +317,11 @@ PLAINTEXT
       {{- if $key -}},
       {{ end -}}
       {
+        {{- if $host.url }}
+        url: "{{ $host.url }}"
+        {{- else }}
         url: "{{$protocol}}://{{$host.host}}:{{$port}}"
+        {{- end }}
         {{- if $host.metrics -}},
         metrics: {
           {{- if $host.metrics.url }}
