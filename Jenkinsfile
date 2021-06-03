@@ -14,7 +14,16 @@ pipeline {
         parallelsAlwaysFailFast()
         timeout(time: 10, unit: 'MINUTES')
     }
+    environment {
+        BRANCH_VERSION = env.BRANCH_NAME
+            .trim()
+            .toLowerCase()
+            .replaceAll(' ','-')
+            .replaceAll('/','-')
+            .replaceAll('\\.','-')
 
+        BUILD_MODE = "${env.BRANCH_NAME ==~ /^release\/[0-9]+\.[0-9]$/ ? 'release' : 'development'}"
+    }
     stages {
         stage('Build Helm Charts') {
             agent {
@@ -25,32 +34,17 @@ pipeline {
                 }
             }
             steps {
-                script {
+                sh("_cicd/functions.sh setup_helm")
+                sh("_cicd/functions.sh package_all")
 
-                    env.BRANCH_VERSION = env.BRANCH_NAME
-                        .trim()
-                        .toLowerCase()
-                        .replaceAll(' ','-')
-                        .replaceAll('/','-')
-                        .replaceAll('\\.','-')
+                echo "==== Recording test results"
+                junit (
+                    testResults: 'junit/*.xml',
+                    allowEmptyResults: false
+                )
 
-                    env.BUILD_MODE = 'development'
-                    if (env.BRANCH_NAME =~ /^release/) {
-                        env.BUILD_MODE = 'release'
-                    }
-
-                    sh("_cicd/functions.sh setup_helm")
-                    sh("_cicd/functions.sh package_all")
-
-                    echo "==== Recording test results"
-                    junit (
-                        testResults: 'junit/*.xml',
-                        allowEmptyResults: false
-                    )
-
-                    dir('build') {
-                        archiveArtifacts '*.tgz'
-                    }
+                dir('build') {
+                    archiveArtifacts '*.tgz'
                 }
             }
         }
@@ -81,7 +75,10 @@ pipeline {
             }
             post {
                 always {
-                    jiraSendDeploymentInfo site: 'landoop.atlassian.net', environmentId: "ans-ci-backend-eu-01.landoop.com.", environmentName: 'helm.repo.lenses.io', environmentType: 'production'
+                    jiraSendDeploymentInfo site: 'landoop.atlassian.net',
+                        environmentId: "ans-ci-backend-eu-01.landoop.com.",
+                        environmentName: 'helm.repo.lenses.io',
+                        environmentType: 'production'
                 }
             }
         }
@@ -113,6 +110,24 @@ pipeline {
             script {
                 env.JIRA_BRANCH = "${env.CHANGE_BRANCH ? "${env.CHANGE_BRANCH}" : "${env.BRANCH_NAME}"}"
                 jiraSendBuildInfo site: 'landoop.atlassian.net', branch: "${env.JIRA_BRANCH}"
+            }
+        }
+        failure {
+            script {
+                if (env.BUILD_MODE == 'release') {
+                    slackSend(
+                        channel: "#dev-ops",
+                            message: """
+*:warning: :warning: ${currentBuild.currentResult} :warning: :warning:*
+
+Failed build ${BUILD_ID} for commit `${CI_COMMIT_SHORT}` by <mailto:${CI_COMMIT_AUTHOR_EMAIL}|${CI_COMMIT_AUTHOR}>
+from <${GIT_URL}|${GIT_URL[8..-5]}>, branch <${GIT_URL[0..-5]}/tree/${BRANCH_NAME}|${BRANCH_NAME}>.
+
+• <${RUN_DISPLAY_URL}|Build log, Unit Tests Report, Artifacts>
+""",
+                        sendAsText: true
+                    )
+                }
             }
         }
     }
