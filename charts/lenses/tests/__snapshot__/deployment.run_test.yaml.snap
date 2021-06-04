@@ -7,7 +7,7 @@ should add custom annotations:
         foo: bar
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.2.9
+        chart: lenses-4.2.10
         component: lenses
         heritage: Helm
         lenses.io/app: RELEASE-NAME
@@ -103,7 +103,7 @@ should add custom annotations:
             - name: LT_PACKAGE
               value: helm
             - name: LT_PACKAGE_VERSION
-              value: 4.2.9
+              value: 4.2.10
             image: lensesio/lenses:4.2.4
             imagePullPolicy: IfNotPresent
             livenessProbe:
@@ -179,7 +179,7 @@ should add custom labels:
       annotations: null
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.2.9
+        chart: lenses-4.2.10
         component: lenses
         foo: bar
         heritage: Helm
@@ -277,7 +277,7 @@ should add custom labels:
             - name: LT_PACKAGE
               value: helm
             - name: LT_PACKAGE_VERSION
-              value: 4.2.9
+              value: 4.2.10
             image: lensesio/lenses:4.2.4
             imagePullPolicy: IfNotPresent
             livenessProbe:
@@ -353,7 +353,7 @@ should add pauseExec if enabled:
       annotations: null
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.2.9
+        chart: lenses-4.2.10
         component: lenses
         heritage: Helm
         lenses.io/app: RELEASE-NAME
@@ -449,7 +449,7 @@ should add pauseExec if enabled:
             - name: LT_PACKAGE
               value: helm
             - name: LT_PACKAGE_VERSION
-              value: 4.2.9
+              value: 4.2.10
             - name: PAUSE_EXEC
               value: "true"
             image: lensesio/lenses:4.2.4
@@ -527,7 +527,7 @@ should remove livenessProbe if disabled:
       annotations: null
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.2.9
+        chart: lenses-4.2.10
         component: lenses
         heritage: Helm
         lenses.io/app: RELEASE-NAME
@@ -623,7 +623,7 @@ should remove livenessProbe if disabled:
             - name: LT_PACKAGE
               value: helm
             - name: LT_PACKAGE_VERSION
-              value: 4.2.9
+              value: 4.2.10
             image: lensesio/lenses:4.2.4
             imagePullPolicy: IfNotPresent
             name: lenses
@@ -693,7 +693,7 @@ should test default values:
       annotations: null
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.2.9
+        chart: lenses-4.2.10
         component: lenses
         heritage: Helm
         lenses.io/app: RELEASE-NAME
@@ -789,7 +789,7 @@ should test default values:
             - name: LT_PACKAGE
               value: helm
             - name: LT_PACKAGE_VERSION
-              value: 4.2.9
+              value: 4.2.10
             image: lensesio/lenses:4.2.4
             imagePullPolicy: IfNotPresent
             livenessProbe:
@@ -865,7 +865,7 @@ should test docker image tag override:
       annotations: null
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.2.9
+        chart: lenses-4.2.10
         component: lenses
         heritage: Helm
         lenses.io/app: RELEASE-NAME
@@ -961,7 +961,7 @@ should test docker image tag override:
             - name: LT_PACKAGE
               value: helm
             - name: LT_PACKAGE_VERSION
-              value: 4.2.9
+              value: 4.2.10
             image: lensesio/lenses:bar
             imagePullPolicy: IfNotPresent
             livenessProbe:
@@ -1037,7 +1037,7 @@ should test replica set cannot be overriden:
       annotations: null
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.2.9
+        chart: lenses-4.2.10
         component: lenses
         heritage: Helm
         lenses.io/app: RELEASE-NAME
@@ -1133,7 +1133,7 @@ should test replica set cannot be overriden:
             - name: LT_PACKAGE
               value: helm
             - name: LT_PACKAGE_VERSION
-              value: 4.2.9
+              value: 4.2.10
             image: lensesio/lenses:4.2.4
             imagePullPolicy: IfNotPresent
             livenessProbe:
@@ -1209,7 +1209,7 @@ when override release name is overriden metadata.name should change:
       annotations: null
       labels:
         app: bar
-        chart: lenses-4.2.9
+        chart: lenses-4.2.10
         component: lenses
         heritage: Helm
         lenses.io/app: bar
@@ -1305,7 +1305,7 @@ when override release name is overriden metadata.name should change:
             - name: LT_PACKAGE
               value: helm
             - name: LT_PACKAGE_VERSION
-              value: 4.2.9
+              value: 4.2.10
             image: lensesio/lenses:4.2.4
             imagePullPolicy: IfNotPresent
             livenessProbe:

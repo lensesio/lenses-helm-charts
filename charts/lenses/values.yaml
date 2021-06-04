@@ -24,10 +24,12 @@ monitoring:
 
 # Resource management
 resources:
-  limits:
-    memory: 5Gi
   requests:
+  #   cpu: 1
     memory: 4Gi
+  limits:
+  #   cpu: 2
+    memory: 5Gi
 
 # rbacEnable indicates if a the cluster has rbac enabled and a cluster role
 # and rolebinding should be created for the service account
@@ -374,23 +376,28 @@ lenses:
           - key: PasswordPasswordPasswordPassword
 
         # hosts:
-        #   - host: connect-worker-1
-        #      JMX/JOLOKIA Metrics
-        #      metrics:
-        #        # 'url' is a newly introduced key which explicitly sets the URL
-        #        # of the metrics host. Previously Helm templating was
-        #        # used to construct the URL from 'host', 'metrics.type' and
-        #        # 'metrics.port'. Example values for 'url':
-        #        # - for JMX 'url: <host>:<port>,
-        #        # - for JOLOKIA 'url: http(s)://<host>:<port>
-        #        url:
-        #        ssl:
-        #        username:
-        #        password:
-        #        type: "JMX" # Note: this will be deprecated in version 5.0, see 'url' above
-        #        port: 9102 # Note: this will be deprecated in version 5.0, see 'url' above
-        #   - host: connect-worker-2
-        #   - host: connect-worker-3
+        #   # 'url' is a newly introduced key which sets explicitly the URL of the
+        #   # Connect host including protocol, host, port and optional path.
+        #   # Previously, Connect URL was constructed from `cluster.protocol`,
+        #   # `hosts[i].host` and `cluster.protocol`.
+        #   - url: http://connect-worker-1:8083/custom/path
+        #     # host: connect-worker-1 # Note: this will be deprecated in version 5.0, see 'url' above
+        #     # JMX/JOLOKIA Metrics
+        #     metrics:
+        #       # 'url' is a newly introduced key which explicitly sets the URL
+        #       # of the metrics host. Previously Helm templating was
+        #       # used to construct the URL from 'host', 'metrics.type' and
+        #       # 'metrics.port'. Example values for 'url':
+        #       # - for JMX 'url: <host>:<port>,
+        #       # - for JOLOKIA 'url: http(s)://<host>:<port>
+        #       url:
+        #       ssl:
+        #       username:
+        #       password:
+        #       type: "JMX" # Note: this will be deprecated in version 5.0, see 'url' above
+        #       port: 9102 # Note: this will be deprecated in version 5.0, see 'url' above
+        #   - url: connect-worker-2
+        #   - url: connect-worker-3
 
   storage:
     postgres:

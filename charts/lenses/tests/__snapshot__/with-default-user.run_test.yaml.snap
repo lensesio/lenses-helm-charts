@@ -6,7 +6,7 @@ should pass with external username/password:
       annotations: null
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.2.9
+        chart: lenses-4.2.10
         component: lenses
         heritage: Helm
         lenses.io/app: RELEASE-NAME
@@ -102,7 +102,7 @@ should pass with external username/password:
             - name: LT_PACKAGE
               value: helm
             - name: LT_PACKAGE_VERSION
-              value: 4.2.9
+              value: 4.2.10
             - name: LENSES_SECURITY_USER
               valueFrom:
                 secretKeyRef:
@@ -197,7 +197,7 @@ should pass with external username/password:
     metadata:
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.2.9
+        chart: lenses-4.2.10
         heritage: Helm
         lenses.io/app: RELEASE-NAME
         lenses.io/app.type: lenses-secret
@@ -232,7 +232,7 @@ should pass with username/password:
       annotations: null
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.2.9
+        chart: lenses-4.2.10
         component: lenses
         heritage: Helm
         lenses.io/app: RELEASE-NAME
@@ -328,7 +328,7 @@ should pass with username/password:
             - name: LT_PACKAGE
               value: helm
             - name: LT_PACKAGE_VERSION
-              value: 4.2.9
+              value: 4.2.10
             image: lensesio/lenses:4.2.4
             imagePullPolicy: IfNotPresent
             livenessProbe:
@@ -413,7 +413,7 @@ should pass with username/password:
     metadata:
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.2.9
+        chart: lenses-4.2.10
         heritage: Helm
         lenses.io/app: RELEASE-NAME
         lenses.io/app.type: lenses-secret
