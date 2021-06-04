@@ -24,10 +24,12 @@ monitoring:
 
 # Resource management
 resources:
-  limits:
-    memory: 5Gi
   requests:
+  #   cpu: 1
     memory: 4Gi
+  limits:
+  #   cpu: 2
+    memory: 5Gi
 
 # rbacEnable indicates if a the cluster has rbac enabled and a cluster role
 # and rolebinding should be created for the service account
@@ -375,7 +377,7 @@ lenses:
 
         # hosts:
         #   # 'url' is a newly introduced key which sets explicitly the URL of the
-        #   # Connect host including protocol, host, port and optional path. 
+        #   # Connect host including protocol, host, port and optional path.
         #   # Previously, Connect URL was constructed from `cluster.protocol`,
         #   # `hosts[i].host` and `cluster.protocol`.
         #   - url: http://connect-worker-1:8083/custom/path

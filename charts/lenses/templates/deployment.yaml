@@ -152,7 +152,7 @@ spec:
             mountPath: "/data/storage"
           {{- end }}
         resources:
-{{ toYaml .Values.resources | indent 10 }}
+          {{- toYaml .Values.resources | nindent 10 }}
         env:
         {{- if .Values.lenses.tls.enabled }}
         {{- if .Values.lenses.tls.keyStoreFileData }}
