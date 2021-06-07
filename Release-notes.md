@@ -1,6 +1,6 @@
 # Release notes for Lenses Helm chart
 
-## Release 4.2.10
+## Release 4.2.11
 
 Previously, Connect URL was inferred from `protocol`, `host` and
 `port`. With this new addition, user is now given the option to
