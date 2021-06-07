@@ -1,0 +1,46 @@
+suite: use user defined lenses.append.conf / security.append.conf
+templates:
+  - configmap.yaml
+tests:
+  - it: should work when lenses append is used
+    set:
+      lenses:
+        append:
+          conf: |
+            lenses.kubernetes.namespaces = {
+              incluster = [role-binding,ci-fperezp,foobar],
+            }
+    asserts:
+      - equal:
+          path: data.lenses\.append\.conf
+          value: |-
+
+            lenses.kubernetes.namespaces = {
+              incluster = [role-binding,ci-fperezp,foobar],
+            }
+  - it: should work when lenses append is used along with postgres
+    set:
+      lenses:
+        storage:
+          postgres:
+            enabled: true
+            host: example.com
+            database: sample-db
+            username: foo
+            password: bar
+        append:
+          conf: |
+            lenses.kubernetes.namespaces = {
+              incluster = [role-binding,ci-fperezp,foobar],
+            }
+    asserts:
+      - equal:
+          path: data.lenses\.append\.conf
+          value: |-
+
+            lenses.storage.postgres.host="example.com"
+            lenses.storage.postgres.database="sample-db"
+            lenses.storage.postgres.username="foo"
+            lenses.kubernetes.namespaces = {
+              incluster = [role-binding,ci-fperezp,foobar],
+            }
