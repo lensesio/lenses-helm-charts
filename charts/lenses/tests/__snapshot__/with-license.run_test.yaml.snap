@@ -6,7 +6,7 @@ should work with a license:
       annotations: null
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.2.10
+        chart: lenses-4.2.11
         component: lenses
         heritage: Helm
         lenses.io/app: RELEASE-NAME
@@ -107,8 +107,8 @@ should work with a license:
             - name: LT_PACKAGE
               value: helm
             - name: LT_PACKAGE_VERSION
-              value: 4.2.10
-            image: lensesio/lenses:4.2.4
+              value: 4.2.11
+            image: lensesio/lenses:4.2.5
             imagePullPolicy: IfNotPresent
             livenessProbe:
               httpGet:
@@ -192,7 +192,7 @@ should work with a license:
     metadata:
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.2.10
+        chart: lenses-4.2.11
         heritage: Helm
         lenses.io/app: RELEASE-NAME
         lenses.io/app.type: lenses-secret
@@ -227,7 +227,7 @@ should work with a license set to external:
       annotations: null
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.2.10
+        chart: lenses-4.2.11
         component: lenses
         heritage: Helm
         lenses.io/app: RELEASE-NAME
@@ -323,13 +323,13 @@ should work with a license set to external:
             - name: LT_PACKAGE
               value: helm
             - name: LT_PACKAGE_VERSION
-              value: 4.2.10
+              value: 4.2.11
             - name: LICENSE
               valueFrom:
                 secretKeyRef:
                   key: lenses-license
                   name: lenses-super-secrets
-            image: lensesio/lenses:4.2.4
+            image: lensesio/lenses:4.2.5
             imagePullPolicy: IfNotPresent
             livenessProbe:
               httpGet:
@@ -413,7 +413,7 @@ should work with a license set to external:
     metadata:
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.2.10
+        chart: lenses-4.2.11
         heritage: Helm
         lenses.io/app: RELEASE-NAME
         lenses.io/app.type: lenses-secret
@@ -448,7 +448,7 @@ should work without license:
       annotations: null
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.2.10
+        chart: lenses-4.2.11
         component: lenses
         heritage: Helm
         lenses.io/app: RELEASE-NAME
@@ -544,8 +544,8 @@ should work without license:
             - name: LT_PACKAGE
               value: helm
             - name: LT_PACKAGE_VERSION
-              value: 4.2.10
-            image: lensesio/lenses:4.2.4
+              value: 4.2.11
+            image: lensesio/lenses:4.2.5
             imagePullPolicy: IfNotPresent
             livenessProbe:
               httpGet:
@@ -629,7 +629,7 @@ should work without license:
     metadata:
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.2.10
+        chart: lenses-4.2.11
         heritage: Helm
         lenses.io/app: RELEASE-NAME
         lenses.io/app.type: lenses-secret
