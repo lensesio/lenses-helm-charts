@@ -1,4 +1,4 @@
-suite: use user defined lenses.append.conf / security.append.conf
+suite: use user defined security.append.conf
 templates:
   - secrets.yaml
 tests:
