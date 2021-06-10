@@ -630,8 +630,6 @@ should work with security enabled, specific authType USER_INFO, username and pas
                   name: RELEASE-NAME
             - name: LENSES_KAFKA_SETTINGS_CLIENT_BASIC_AUTH_CREDENTIALS_SOURCE
               value: USER_INFO
-            - name: LENSES_KAFKA_SETTINGS_CLIENT_BASIC_AUTH_USER_INFO
-              value: foo:bar
             - name: LENSES_KAFKA_SETTINGS_CLIENT_SECURITY_PROTOCOL
               value: PLAINTEXT
             - name: LENSES_KAFKA_SETTINGS_CLIENT_SASL_MECHANISM
