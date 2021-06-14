@@ -6,7 +6,7 @@ should work:
       annotations: null
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.2.11
+        chart: lenses-4.2.12
         component: lenses
         heritage: Helm
         lenses.io/app: RELEASE-NAME
@@ -102,8 +102,8 @@ should work:
             - name: LT_PACKAGE
               value: helm
             - name: LT_PACKAGE_VERSION
-              value: 4.2.11
-            image: lensesio/lenses:4.2.5
+              value: 4.2.12
+            image: lensesio/lenses:4.2.6
             imagePullPolicy: IfNotPresent
             livenessProbe:
               httpGet:
@@ -185,7 +185,7 @@ should work:
     metadata:
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.2.11
+        chart: lenses-4.2.12
         heritage: Helm
         lenses.io/app: RELEASE-NAME
         lenses.io/app.type: lenses-configmap
@@ -203,7 +203,7 @@ should work:
     metadata:
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.2.11
+        chart: lenses-4.2.12
         heritage: Helm
         lenses.io/app: RELEASE-NAME
         lenses.io/app.type: lenses-configmap
@@ -217,7 +217,7 @@ should work with external jaas:
       annotations: null
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.2.11
+        chart: lenses-4.2.12
         component: lenses
         heritage: Helm
         lenses.io/app: RELEASE-NAME
@@ -313,13 +313,13 @@ should work with external jaas:
             - name: LT_PACKAGE
               value: helm
             - name: LT_PACKAGE_VERSION
-              value: 4.2.11
+              value: 4.2.12
             - name: LENSES_KAFKA_SETTINGS_CLIENT_SASL_JAAS_CONFIG
               valueFrom:
                 secretKeyRef:
                   key: lenses-kafka-settings-client-sasl-jaas-config
                   name: lenses-super-secrets
-            image: lensesio/lenses:4.2.5
+            image: lensesio/lenses:4.2.6
             imagePullPolicy: IfNotPresent
             livenessProbe:
               httpGet:
@@ -394,7 +394,7 @@ should work with external jaas:
     metadata:
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.2.11
+        chart: lenses-4.2.12
         heritage: Helm
         lenses.io/app: RELEASE-NAME
         lenses.io/app.type: lenses-configmap
