@@ -104,6 +104,9 @@ spec:
           persistentVolumeClaim:
             claimName: {{ .Values.persistence.existingClaim | default (printf "%s-claim" (include "fullname" .)) }}
         {{- end }}
+        {{- if .Values.additionalVolumes }}
+          {{- toYaml .Values.additionalVolumes | nindent 8 }}
+        {{- end }}
       serviceAccountName: {{ .Values.serviceAccount }}
       containers:
       - name: {{ .Chart.Name }}
@@ -150,6 +153,9 @@ spec:
           {{- if .Values.persistence.enabled }}
           - name: storage
             mountPath: "/data/storage"
+          {{- end }}
+          {{- if .Values.additionalVolumeMounts }}
+            {{- toYaml .Values.additionalVolumeMounts | nindent 10 }}
           {{- end }}
         resources:
           {{- toYaml .Values.resources | nindent 10 }}
