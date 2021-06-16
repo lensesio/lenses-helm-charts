@@ -60,7 +60,18 @@ persistence:
   ##
   # storageClass: "-"
 
-#service
+# Additional volumes to use in Lenses delpoyments, for example to load additional plugins (UDFs) in Lenses
+#   Note: PersistentVolumeClaim should already exist before deploying Helm chart
+additionalVolumes:
+  # - name: lenses-plugins
+  #   persistentVolumeClaim:
+  #     claimName: lenses-plugins
+# Additional volume mounts to use in Lenses delpoyments, for example to load additional plugins (UDFs) in Lenses
+additionalVolumeMounts:
+  # - name: lenses-plugins
+  #   mountPath: "/data/plugins"
+
+# Lenses service
 service:
   enabled: true
   type: ClusterIP
