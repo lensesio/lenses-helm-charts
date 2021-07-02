@@ -152,16 +152,12 @@ lenses:
     # openssl base64 < kafka.truststore.jks | tr -d '\n'
     trustStoreFileData: |-
 
-    # base64 trust store password
-    # echo "$password" | tr -d '\n' | base64
     trustStorePassword: |-
 
     # base64 encoded truststore data
     # openssl base64 < kafka.truststore.jks | tr -d '\n'
     keyStoreFileData: |-
 
-    # base64 keystore password
-    # echo "$password" | tr -d '\n' | base64
     keyStorePassword: |-
 
   tls:
@@ -172,12 +168,8 @@ lenses:
     # openssl base64 < kafka.truststore.jks | tr -d '\n'
     keyStoreFileData: |-
 
-    # base64 keystore password
-    # echo "$password" | tr -d '\n' | base64
     keyStorePassword: |-
 
-    # base64 key password
-    # echo "$password" | tr -d '\n' | base64
     keyPassword: |-
 
     # Authenticate to Lenses with client authentication
@@ -187,8 +179,6 @@ lenses:
     # openssl base64 < kafka.truststore.jks | tr -d '\n'
     trustStoreFileData: |-
 
-    # base64 trust store password
-    # echo "$password" | tr -d '\n' | base64
     trustStorePassword: |-
 
   # Broker details
@@ -199,7 +189,7 @@ lenses:
   # kafka ssl
   # The keytab, key and truststores file data are the base64 encoded contents of the files. YOU MUST PROVIDE THE DATA BASE64 encoded
   # openssl base64 < client.keystore.jks | tr -d '\n'
-  # The passwords will be base64enc by the secret
+  # The passwords will be base64 encoded by the secret resource
   # and added to the kafka secret and mounted into /mnt/secrets
   kafka:
     ssl:
@@ -325,7 +315,6 @@ lenses:
       # base64 encoded truststore data
       trustStoreFileData: |-
 
-      # password strings
       trustStorePassword:
 
       ## Authentication via TLS certificates
