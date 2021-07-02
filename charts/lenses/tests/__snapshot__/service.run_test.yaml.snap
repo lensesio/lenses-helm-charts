@@ -5,7 +5,7 @@ should have ClusterIP type by default:
     metadata:
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.2.13
+        chart: lenses-4.2.14
         component: lenses
         heritage: Helm
         lenses.io/app: RELEASE-NAME
@@ -30,7 +30,7 @@ should have NodePort type if specified:
     metadata:
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.2.13
+        chart: lenses-4.2.14
         component: lenses
         heritage: Helm
         lenses.io/app: RELEASE-NAME
@@ -57,7 +57,7 @@ should have custom annotations if specified:
         foo: bar
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.2.13
+        chart: lenses-4.2.14
         component: lenses
         heritage: Helm
         lenses.io/app: RELEASE-NAME
@@ -82,7 +82,7 @@ should have custom externalTrafficPolicy if specified:
     metadata:
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.2.13
+        chart: lenses-4.2.14
         component: lenses
         heritage: Helm
         lenses.io/app: RELEASE-NAME

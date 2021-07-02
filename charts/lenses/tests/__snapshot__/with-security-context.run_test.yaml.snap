@@ -6,7 +6,7 @@ should honor securityContext:
       annotations: null
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.2.13
+        chart: lenses-4.2.14
         component: lenses
         heritage: Helm
         lenses.io/app: RELEASE-NAME
@@ -102,7 +102,7 @@ should honor securityContext:
             - name: LT_PACKAGE
               value: helm
             - name: LT_PACKAGE_VERSION
-              value: 4.2.13
+              value: 4.2.14
             image: lensesio/lenses:4.2.6
             imagePullPolicy: IfNotPresent
             livenessProbe:
