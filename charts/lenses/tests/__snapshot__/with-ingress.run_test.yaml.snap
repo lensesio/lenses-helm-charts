@@ -7,7 +7,7 @@ should work:
         kubernetes.io/ingress.class: traefik
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.2.13
+        chart: lenses-4.2.14
         component: lenses
         foo: bar
         heritage: Helm
@@ -33,7 +33,7 @@ should work with asterisk:
         kubernetes.io/ingress.class: traefik
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.2.13
+        chart: lenses-4.2.14
         component: lenses
         foo: bar
         heritage: Helm
