@@ -6,7 +6,7 @@ should work:
       annotations: null
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.2.14
+        chart: lenses-4.2.15
         component: lenses
         heritage: Helm
         lenses.io/app: RELEASE-NAME
@@ -102,8 +102,8 @@ should work:
             - name: LT_PACKAGE
               value: helm
             - name: LT_PACKAGE_VERSION
-              value: 4.2.14
-            image: lensesio/lenses:4.2.6
+              value: 4.2.15
+            image: lensesio/lenses:4.2.7
             imagePullPolicy: IfNotPresent
             livenessProbe:
               httpGet:
