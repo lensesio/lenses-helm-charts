@@ -1,0 +1,14 @@
+# Build custom connect Docker image with specified SQL processor connector'
+
+# timeout: 300s
+steps:
+- name: 'gcr.io/cloud-builders/docker'
+  args:
+  - 'build'
+  - '--build-arg=HELM_REPO_URL=${_HELM_REPO_URL}'
+  - '--build-arg=BUILD_INFO=${_BUILD_INFO}'
+  - '--tag=${_DOCKER_IMAGE}'
+  - '--file=Dockerfile'
+  - '.'
+
+images: ['${_DOCKER_IMAGE}']
