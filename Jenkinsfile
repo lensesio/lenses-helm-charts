@@ -66,7 +66,7 @@ pipeline {
         stage('Upload Helm Chart to public repo') {
             when {
                 anyOf {
-                    branch 'release/4.2'
+                    branch 'release/4.3'
                 }
             }
             environment {
