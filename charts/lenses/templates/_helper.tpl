@@ -244,8 +244,8 @@ PLAINTEXT
 {{- define "registries" -}}
 {{- if .Values.lenses.schemaRegistries.enabled -}}
 [
-  {{ range $index, $element := .Values.lenses.schemaRegistries.hosts }}
-  {{- if not $index -}}{url: "{{$element.protocol}}://{{$element.host}}:{{$element.port}}{{$element.path}}"
+  {{ range $index, $element := .Values.lenses.schemaRegistries.hosts -}}
+  {url: "{{$element.protocol}}://{{$element.host}}:{{$element.port}}{{$element.path}}"
   {{- if $element.metrics -}}, metrics: {
     {{- if eq $element.metrics.type "JMX" -}}
     url: "{{$element.host}}:{{$element.metrics.port}}",
@@ -261,24 +261,6 @@ PLAINTEXT
     password: {{$element.metrics.password | quote}}
     {{- end }}
   }{{- end}}}
-  {{- else}},
-  {url: "{{$element.protocol}}://{{$element.host}}:{{$element.port}}"
-  {{- if $element.metrics -}}, metrics: {
-    {{- if eq $element.metrics.type "JMX" -}}
-    url: "{{$element.host}}:{{$element.metrics.port}}",
-    {{- else }}
-    url: "{{$element.protocol}}://{{$element.host}}:{{$element.metrics.port}}",
-    {{- end }}
-    type: "{{default "JMX" $element.metrics.type}}",
-    ssl: {{default false $element.ssl}}
-    {{- if $element.metrics.username -}},
-    user: {{$element.metrics.username | quote}},
-    {{- end }}
-    {{- if $element.metrics.password -}}
-    password: {{$element.metrics.password | quote}}
-    {{- end }}
-  }{{- end}}}
-  {{- end}}
 {{- end}}
 ]
 {{- end -}}
