@@ -1,0 +1,21 @@
+suite: with JVM truststore set
+templates:
+  - deployment.yaml
+  - secrets.yaml
+tests:
+  - it: should pass with trustStoreFileData
+    set:
+      lenses:
+        jvm:
+          trustStoreFileData: bGFsYQ==
+    asserts:
+      - template: deployment.yaml
+        contains:
+          path: spec.template.spec.volumes[0].secret.items
+          content:
+            key: jvm.truststore.jks
+            path: jvm.truststore.jks
+      - template: secrets.yaml
+        equal:
+          path: data.jvm\.truststore\.jks
+          value: bGFsYQ==
