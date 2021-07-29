@@ -61,6 +61,8 @@ spec:
           secret:
             secretName: {{ include "fullname" . | quote }}
             items:
+              - key: jvm.truststore.jks
+                path: jvm.truststore.jks
               - key: security.conf
                 path: security.conf
               - key: security.append.conf
@@ -368,18 +370,19 @@ spec:
 
         # ssl/sasl
         {{- if .Values.lenses.jvm.trustStoreFileData }}
-        - name: FILECONTENT_JVM_SSL_TRUSTSTORE
-          valueFrom:
-            secretKeyRef:
-              name: {{ include "fullname" . | quote }}
-              key:  "jvm.truststore.jks"
-        {{- end }}
-        {{- if .Values.lenses.jvm.trustStorePassword }}
-        - name: FILECONTENT_JVM_SSL_TRUSTSTORE_PASSWORD
+        # Remove "LENSES_" prefix to avoid env. var. auto-detection which results
+        # in lenses.conf entry.
+        - name: JVM_TRUSTSTORE_LOCATION
+          value: "/mnt/secrets/jvm.truststore.jks"
+        - name: LENSES_OPTS
+          value: "$(LENSES_OPTS) -Djavax.net.ssl.trustStore=$(JVM_TRUSTSTORE_LOCATION)"
+        - name: JVM_TRUSTSTORE_PASSWORD
           valueFrom:
             secretKeyRef:
               name: {{ include "fullname" . | quote }}
               key:  "jvm.truststore.password"
+        - name: LENSES_OPTS
+          value: "$(LENSES_OPTS) -Djavax.net.ssl.trustStorePassword=$(JVM_TRUSTSTORE_PASSWORD)"
         {{- end }}
         - name: LENSES_KAFKA_SETTINGS_CLIENT_SECURITY_PROTOCOL
           value: {{ include "securityProtocol" . | quote }}

@@ -7,7 +7,7 @@ should add custom annotations:
         foo: bar
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.2.16
+        chart: lenses-4.2.17
         component: lenses
         heritage: Helm
         lenses.io/app: RELEASE-NAME
@@ -103,7 +103,7 @@ should add custom annotations:
             - name: LT_PACKAGE
               value: helm
             - name: LT_PACKAGE_VERSION
-              value: 4.2.16
+              value: 4.2.17
             image: lensesio/lenses:4.2.7
             imagePullPolicy: IfNotPresent
             livenessProbe:
@@ -142,6 +142,8 @@ should add custom annotations:
           - name: secrets
             secret:
               items:
+              - key: jvm.truststore.jks
+                path: jvm.truststore.jks
               - key: security.conf
                 path: security.conf
               - key: security.append.conf
@@ -179,7 +181,7 @@ should add custom labels:
       annotations: null
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.2.16
+        chart: lenses-4.2.17
         component: lenses
         foo: bar
         heritage: Helm
@@ -277,7 +279,7 @@ should add custom labels:
             - name: LT_PACKAGE
               value: helm
             - name: LT_PACKAGE_VERSION
-              value: 4.2.16
+              value: 4.2.17
             image: lensesio/lenses:4.2.7
             imagePullPolicy: IfNotPresent
             livenessProbe:
@@ -316,6 +318,8 @@ should add custom labels:
           - name: secrets
             secret:
               items:
+              - key: jvm.truststore.jks
+                path: jvm.truststore.jks
               - key: security.conf
                 path: security.conf
               - key: security.append.conf
@@ -353,7 +357,7 @@ should add pauseExec if enabled:
       annotations: null
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.2.16
+        chart: lenses-4.2.17
         component: lenses
         heritage: Helm
         lenses.io/app: RELEASE-NAME
@@ -449,7 +453,7 @@ should add pauseExec if enabled:
             - name: LT_PACKAGE
               value: helm
             - name: LT_PACKAGE_VERSION
-              value: 4.2.16
+              value: 4.2.17
             - name: PAUSE_EXEC
               value: "true"
             image: lensesio/lenses:4.2.7
@@ -490,6 +494,8 @@ should add pauseExec if enabled:
           - name: secrets
             secret:
               items:
+              - key: jvm.truststore.jks
+                path: jvm.truststore.jks
               - key: security.conf
                 path: security.conf
               - key: security.append.conf
@@ -527,7 +533,7 @@ should remove livenessProbe if disabled:
       annotations: null
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.2.16
+        chart: lenses-4.2.17
         component: lenses
         heritage: Helm
         lenses.io/app: RELEASE-NAME
@@ -623,7 +629,7 @@ should remove livenessProbe if disabled:
             - name: LT_PACKAGE
               value: helm
             - name: LT_PACKAGE_VERSION
-              value: 4.2.16
+              value: 4.2.17
             image: lensesio/lenses:4.2.7
             imagePullPolicy: IfNotPresent
             name: lenses
@@ -656,6 +662,8 @@ should remove livenessProbe if disabled:
           - name: secrets
             secret:
               items:
+              - key: jvm.truststore.jks
+                path: jvm.truststore.jks
               - key: security.conf
                 path: security.conf
               - key: security.append.conf
@@ -693,7 +701,7 @@ should test default values:
       annotations: null
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.2.16
+        chart: lenses-4.2.17
         component: lenses
         heritage: Helm
         lenses.io/app: RELEASE-NAME
@@ -789,7 +797,7 @@ should test default values:
             - name: LT_PACKAGE
               value: helm
             - name: LT_PACKAGE_VERSION
-              value: 4.2.16
+              value: 4.2.17
             image: lensesio/lenses:4.2.7
             imagePullPolicy: IfNotPresent
             livenessProbe:
@@ -828,6 +836,8 @@ should test default values:
           - name: secrets
             secret:
               items:
+              - key: jvm.truststore.jks
+                path: jvm.truststore.jks
               - key: security.conf
                 path: security.conf
               - key: security.append.conf
@@ -865,7 +875,7 @@ should test docker image tag override:
       annotations: null
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.2.16
+        chart: lenses-4.2.17
         component: lenses
         heritage: Helm
         lenses.io/app: RELEASE-NAME
@@ -961,7 +971,7 @@ should test docker image tag override:
             - name: LT_PACKAGE
               value: helm
             - name: LT_PACKAGE_VERSION
-              value: 4.2.16
+              value: 4.2.17
             image: lensesio/lenses:bar
             imagePullPolicy: IfNotPresent
             livenessProbe:
@@ -1000,6 +1010,8 @@ should test docker image tag override:
           - name: secrets
             secret:
               items:
+              - key: jvm.truststore.jks
+                path: jvm.truststore.jks
               - key: security.conf
                 path: security.conf
               - key: security.append.conf
@@ -1037,7 +1049,7 @@ should test replica set cannot be overriden:
       annotations: null
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.2.16
+        chart: lenses-4.2.17
         component: lenses
         heritage: Helm
         lenses.io/app: RELEASE-NAME
@@ -1133,7 +1145,7 @@ should test replica set cannot be overriden:
             - name: LT_PACKAGE
               value: helm
             - name: LT_PACKAGE_VERSION
-              value: 4.2.16
+              value: 4.2.17
             image: lensesio/lenses:4.2.7
             imagePullPolicy: IfNotPresent
             livenessProbe:
@@ -1172,6 +1184,8 @@ should test replica set cannot be overriden:
           - name: secrets
             secret:
               items:
+              - key: jvm.truststore.jks
+                path: jvm.truststore.jks
               - key: security.conf
                 path: security.conf
               - key: security.append.conf
@@ -1209,7 +1223,7 @@ when override release name is overriden metadata.name should change:
       annotations: null
       labels:
         app: bar
-        chart: lenses-4.2.16
+        chart: lenses-4.2.17
         component: lenses
         heritage: Helm
         lenses.io/app: bar
@@ -1305,7 +1319,7 @@ when override release name is overriden metadata.name should change:
             - name: LT_PACKAGE
               value: helm
             - name: LT_PACKAGE_VERSION
-              value: 4.2.16
+              value: 4.2.17
             image: lensesio/lenses:4.2.7
             imagePullPolicy: IfNotPresent
             livenessProbe:
@@ -1344,6 +1358,8 @@ when override release name is overriden metadata.name should change:
           - name: secrets
             secret:
               items:
+              - key: jvm.truststore.jks
+                path: jvm.truststore.jks
               - key: security.conf
                 path: security.conf
               - key: security.append.conf

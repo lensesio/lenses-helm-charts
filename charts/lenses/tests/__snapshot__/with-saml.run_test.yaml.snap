@@ -6,7 +6,7 @@ should work:
       annotations: null
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.2.16
+        chart: lenses-4.2.17
         component: lenses
         heritage: Helm
         lenses.io/app: RELEASE-NAME
@@ -102,7 +102,7 @@ should work:
             - name: LT_PACKAGE
               value: helm
             - name: LT_PACKAGE_VERSION
-              value: 4.2.16
+              value: 4.2.17
             image: lensesio/lenses:4.2.7
             imagePullPolicy: IfNotPresent
             livenessProbe:
@@ -141,6 +141,8 @@ should work:
           - name: secrets
             secret:
               items:
+              - key: jvm.truststore.jks
+                path: jvm.truststore.jks
               - key: security.conf
                 path: security.conf
               - key: security.append.conf
@@ -179,6 +181,7 @@ should work:
     data:
       client.keystore.jks: ""
       client.truststore.jks: ""
+      jvm.truststore.jks: ""
       keytab: ""
       lenses.keytab: ""
       lenses.opts.keystore.jks: ""
@@ -187,11 +190,13 @@ should work:
       lenses.tls.truststore.jks: ""
       saml.idp.xml: "123"
       saml.keystore.jks: "234"
+      schema.registry.keystore.jks: ""
+      schema.registry.truststore.jks: ""
     kind: Secret
     metadata:
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.2.16
+        chart: lenses-4.2.17
         heritage: Helm
         lenses.io/app: RELEASE-NAME
         lenses.io/app.type: lenses-secret
@@ -203,8 +208,6 @@ should work:
       client.truststore.password: ""
       connect.clusters: ""
       jaas.conf: ""
-      jvm.truststore.jks: ""
-      jvm.truststore.password: ""
       lenses.opts.keystore.password: ""
       lenses.opts.truststore.password: ""
       lenses.tls.key.password: ""
@@ -212,9 +215,7 @@ should work:
       lenses.tls.truststore.password: ""
       license: ""
       schema.registry.key.password: ""
-      schema.registry.keystore.jks: ""
       schema.registry.keystore.password: ""
-      schema.registry.truststore.jks: ""
       schema.registry.truststore.password: ""
       security.append.conf: ""
       security.conf: |2-
@@ -230,6 +231,7 @@ should work:
     data:
       client.keystore.jks: ""
       client.truststore.jks: ""
+      jvm.truststore.jks: ""
       keytab: ""
       lenses.keytab: ""
       lenses.opts.keystore.jks: ""
@@ -238,11 +240,13 @@ should work:
       lenses.tls.truststore.jks: ""
       saml.idp.xml: "123"
       saml.keystore.jks: "234"
+      schema.registry.keystore.jks: ""
+      schema.registry.truststore.jks: ""
     kind: Secret
     metadata:
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.2.16
+        chart: lenses-4.2.17
         heritage: Helm
         lenses.io/app: RELEASE-NAME
         lenses.io/app.type: lenses-secret
@@ -254,8 +258,6 @@ should work:
       client.truststore.password: ""
       connect.clusters: ""
       jaas.conf: ""
-      jvm.truststore.jks: ""
-      jvm.truststore.password: ""
       lenses.opts.keystore.password: ""
       lenses.opts.truststore.password: ""
       lenses.tls.key.password: ""
@@ -263,9 +265,7 @@ should work:
       lenses.tls.truststore.password: ""
       license: ""
       schema.registry.key.password: ""
-      schema.registry.keystore.jks: ""
       schema.registry.keystore.password: ""
-      schema.registry.truststore.jks: ""
       schema.registry.truststore.password: ""
       security.append.conf: ""
       security.conf: |2-

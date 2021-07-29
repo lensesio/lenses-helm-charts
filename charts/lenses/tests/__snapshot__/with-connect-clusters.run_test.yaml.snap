@@ -4,6 +4,7 @@ should work:
     data:
       client.keystore.jks: ""
       client.truststore.jks: ""
+      jvm.truststore.jks: ""
       keytab: ""
       lenses.keytab: ""
       lenses.opts.keystore.jks: ""
@@ -12,11 +13,13 @@ should work:
       lenses.tls.truststore.jks: ""
       saml.idp.xml: ""
       saml.keystore.jks: ""
+      schema.registry.keystore.jks: ""
+      schema.registry.truststore.jks: ""
     kind: Secret
     metadata:
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.2.16
+        chart: lenses-4.2.17
         heritage: Helm
         lenses.io/app: RELEASE-NAME
         lenses.io/app.type: lenses-secret
@@ -69,8 +72,6 @@ should work:
           }
         ]
       jaas.conf: ""
-      jvm.truststore.jks: ""
-      jvm.truststore.password: ""
       lenses.opts.keystore.password: ""
       lenses.opts.truststore.password: ""
       lenses.tls.key.password: ""
@@ -78,9 +79,7 @@ should work:
       lenses.tls.truststore.password: ""
       license: ""
       schema.registry.key.password: ""
-      schema.registry.keystore.jks: ""
       schema.registry.keystore.password: ""
-      schema.registry.truststore.jks: ""
       schema.registry.truststore.password: ""
       security.append.conf: ""
       security.conf: ""
@@ -90,6 +89,7 @@ should work with explicit Connect metrics URL:
     data:
       client.keystore.jks: ""
       client.truststore.jks: ""
+      jvm.truststore.jks: ""
       keytab: ""
       lenses.keytab: ""
       lenses.opts.keystore.jks: ""
@@ -98,11 +98,13 @@ should work with explicit Connect metrics URL:
       lenses.tls.truststore.jks: ""
       saml.idp.xml: ""
       saml.keystore.jks: ""
+      schema.registry.keystore.jks: ""
+      schema.registry.truststore.jks: ""
     kind: Secret
     metadata:
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.2.16
+        chart: lenses-4.2.17
         heritage: Helm
         lenses.io/app: RELEASE-NAME
         lenses.io/app.type: lenses-secret
@@ -138,8 +140,6 @@ should work with explicit Connect metrics URL:
           }
         ]
       jaas.conf: ""
-      jvm.truststore.jks: ""
-      jvm.truststore.password: ""
       lenses.opts.keystore.password: ""
       lenses.opts.truststore.password: ""
       lenses.tls.key.password: ""
@@ -147,9 +147,7 @@ should work with explicit Connect metrics URL:
       lenses.tls.truststore.password: ""
       license: ""
       schema.registry.key.password: ""
-      schema.registry.keystore.jks: ""
       schema.registry.keystore.password: ""
-      schema.registry.truststore.jks: ""
       schema.registry.truststore.password: ""
       security.append.conf: ""
       security.conf: ""
