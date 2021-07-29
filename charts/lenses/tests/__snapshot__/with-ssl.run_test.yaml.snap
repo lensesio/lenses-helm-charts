@@ -237,7 +237,6 @@ should work:
       client.truststore.password: fooPass
       connect.clusters: ""
       jaas.conf: ""
-      jvm.truststore.password: ""
       lenses.opts.keystore.password: ""
       lenses.opts.truststore.password: ""
       lenses.tls.key.password: ""
@@ -295,7 +294,6 @@ should work:
       client.truststore.password: fooPass
       connect.clusters: ""
       jaas.conf: ""
-      jvm.truststore.password: ""
       lenses.opts.keystore.password: ""
       lenses.opts.truststore.password: ""
       lenses.tls.key.password: ""

@@ -3,11 +3,21 @@ templates:
   - deployment.yaml
   - secrets.yaml
 tests:
-  - it: should pass with trustStoreFileData
+  - it: should fail with trustStoreFileData and without trustStorePassword
     set:
       lenses:
         jvm:
           trustStoreFileData: bGFsYQ==
+    asserts:
+      - template: secrets.yaml
+        failedTemplate:
+          errorMessage: When you set trustStoreFileData, you also needto set trustStorePassword
+  - it: should pass with trustStoreFileData and trustStorePassword
+    set:
+      lenses:
+        jvm:
+          trustStoreFileData: bGFsYQ==
+          trustStorePassword: 123
     asserts:
       - template: deployment.yaml
         contains:
@@ -19,3 +29,7 @@ tests:
         equal:
           path: data.jvm\.truststore\.jks
           value: bGFsYQ==
+      - template: secrets.yaml
+        equal:
+          path: stringData.jvm\.truststore\.password
+          value: "123"

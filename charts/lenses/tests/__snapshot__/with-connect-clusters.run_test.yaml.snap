@@ -72,7 +72,6 @@ should work:
           }
         ]
       jaas.conf: ""
-      jvm.truststore.password: ""
       lenses.opts.keystore.password: ""
       lenses.opts.truststore.password: ""
       lenses.tls.key.password: ""
@@ -141,7 +140,6 @@ should work with explicit Connect metrics URL:
           }
         ]
       jaas.conf: ""
-      jvm.truststore.password: ""
       lenses.opts.keystore.password: ""
       lenses.opts.truststore.password: ""
       lenses.tls.key.password: ""
