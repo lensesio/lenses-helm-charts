@@ -6,7 +6,7 @@ should work when persistence enabled is false:
       annotations: null
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.3.0
+        chart: lenses-4.3.1
         component: lenses
         heritage: Helm
         lenses.io/app: RELEASE-NAME
@@ -102,7 +102,7 @@ should work when persistence enabled is false:
             - name: LT_PACKAGE
               value: helm
             - name: LT_PACKAGE_VERSION
-              value: 4.3.0
+              value: 4.3.1
             image: lensesio/lenses:4.3.0
             imagePullPolicy: IfNotPresent
             livenessProbe:
