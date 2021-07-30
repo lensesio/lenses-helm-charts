@@ -34,3 +34,16 @@ tests:
         equal:
           path: spec.resources.requests.storage
           value: 5Gi
+  - it: should work with additional annotations values
+    set:
+      persistence:
+        annotations:
+          foo: bar
+    asserts:
+      - template: volume-claim.yaml
+        isKind:
+          of: PersistentVolumeClaim
+      - template: volume-claim.yaml
+        equal:
+          path: metadata.annotations.foo
+          value: bar

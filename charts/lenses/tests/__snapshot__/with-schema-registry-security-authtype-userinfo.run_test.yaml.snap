@@ -6,7 +6,7 @@ should work with security enabled and with specific authType other than USER_INF
       annotations: null
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.3.0
+        chart: lenses-4.3.1
         component: lenses
         heritage: Helm
         lenses.io/app: RELEASE-NAME
@@ -45,7 +45,9 @@ should work with security enabled and with specific authType other than USER_INF
             - name: LENSES_SCHEMA_REGISTRY_URLS
               value: |-
                 [
-                  {url: "http://schema-registry:8081"}
+                  {
+                    url: "http://schema-registry:8081"
+                  }
                 ]
             - name: LENSES_SCHEMA_REGISTRY_MODE
               value: ""
@@ -105,7 +107,7 @@ should work with security enabled and with specific authType other than USER_INF
             - name: LT_PACKAGE
               value: helm
             - name: LT_PACKAGE_VERSION
-              value: 4.3.0
+              value: 4.3.1
             image: lensesio/lenses:4.3.0
             imagePullPolicy: IfNotPresent
             livenessProbe:
@@ -144,6 +146,8 @@ should work with security enabled and with specific authType other than USER_INF
           - name: secrets
             secret:
               items:
+              - key: jvm.truststore.jks
+                path: jvm.truststore.jks
               - key: security.conf
                 path: security.conf
               - key: security.append.conf
@@ -181,7 +185,7 @@ should work with security enabled but without specific authType:
       annotations: null
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.3.0
+        chart: lenses-4.3.1
         component: lenses
         heritage: Helm
         lenses.io/app: RELEASE-NAME
@@ -220,7 +224,9 @@ should work with security enabled but without specific authType:
             - name: LENSES_SCHEMA_REGISTRY_URLS
               value: |-
                 [
-                  {url: "http://schema-registry:8081"}
+                  {
+                    url: "http://schema-registry:8081"
+                  }
                 ]
             - name: LENSES_SCHEMA_REGISTRY_MODE
               value: ""
@@ -280,7 +286,7 @@ should work with security enabled but without specific authType:
             - name: LT_PACKAGE
               value: helm
             - name: LT_PACKAGE_VERSION
-              value: 4.3.0
+              value: 4.3.1
             image: lensesio/lenses:4.3.0
             imagePullPolicy: IfNotPresent
             livenessProbe:
@@ -319,6 +325,8 @@ should work with security enabled but without specific authType:
           - name: secrets
             secret:
               items:
+              - key: jvm.truststore.jks
+                path: jvm.truststore.jks
               - key: security.conf
                 path: security.conf
               - key: security.append.conf
@@ -356,7 +364,7 @@ should work with security enabled, specific authType USER_INFO, and username and
       annotations: null
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.3.0
+        chart: lenses-4.3.1
         component: lenses
         heritage: Helm
         lenses.io/app: RELEASE-NAME
@@ -395,7 +403,9 @@ should work with security enabled, specific authType USER_INFO, and username and
             - name: LENSES_SCHEMA_REGISTRY_URLS
               value: |-
                 [
-                  {url: "http://schema-registry:8081"}
+                  {
+                    url: "http://schema-registry:8081"
+                  }
                 ]
             - name: LENSES_SCHEMA_REGISTRY_MODE
               value: ""
@@ -455,7 +465,7 @@ should work with security enabled, specific authType USER_INFO, and username and
             - name: LT_PACKAGE
               value: helm
             - name: LT_PACKAGE_VERSION
-              value: 4.3.0
+              value: 4.3.1
             - name: LENSES_SCHEMA_REGISTRY_USERNAME
               valueFrom:
                 secretKeyRef:
@@ -504,6 +514,8 @@ should work with security enabled, specific authType USER_INFO, and username and
           - name: secrets
             secret:
               items:
+              - key: jvm.truststore.jks
+                path: jvm.truststore.jks
               - key: security.conf
                 path: security.conf
               - key: security.append.conf
@@ -541,7 +553,7 @@ should work with security enabled, specific authType USER_INFO, username and pas
       annotations: null
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.3.0
+        chart: lenses-4.3.1
         component: lenses
         heritage: Helm
         lenses.io/app: RELEASE-NAME
@@ -580,7 +592,9 @@ should work with security enabled, specific authType USER_INFO, username and pas
             - name: LENSES_SCHEMA_REGISTRY_URLS
               value: |-
                 [
-                  {url: "http://schema-registry:8081"}
+                  {
+                    url: "http://schema-registry:8081"
+                  }
                 ]
             - name: LENSES_SCHEMA_REGISTRY_MODE
               value: ""
@@ -630,8 +644,6 @@ should work with security enabled, specific authType USER_INFO, username and pas
                   name: RELEASE-NAME
             - name: LENSES_KAFKA_SETTINGS_CLIENT_BASIC_AUTH_CREDENTIALS_SOURCE
               value: USER_INFO
-            - name: LENSES_KAFKA_SETTINGS_CLIENT_BASIC_AUTH_USER_INFO
-              value: foo:bar
             - name: LENSES_KAFKA_SETTINGS_CLIENT_SECURITY_PROTOCOL
               value: PLAINTEXT
             - name: LENSES_KAFKA_SETTINGS_CLIENT_SASL_MECHANISM
@@ -649,7 +661,7 @@ should work with security enabled, specific authType USER_INFO, username and pas
             - name: LT_PACKAGE
               value: helm
             - name: LT_PACKAGE_VERSION
-              value: 4.3.0
+              value: 4.3.1
             image: lensesio/lenses:4.3.0
             imagePullPolicy: IfNotPresent
             livenessProbe:
@@ -688,6 +700,8 @@ should work with security enabled, specific authType USER_INFO, username and pas
           - name: secrets
             secret:
               items:
+              - key: jvm.truststore.jks
+                path: jvm.truststore.jks
               - key: security.conf
                 path: security.conf
               - key: security.append.conf
@@ -725,7 +739,7 @@ should work without security enabled:
       annotations: null
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.3.0
+        chart: lenses-4.3.1
         component: lenses
         heritage: Helm
         lenses.io/app: RELEASE-NAME
@@ -764,7 +778,9 @@ should work without security enabled:
             - name: LENSES_SCHEMA_REGISTRY_URLS
               value: |-
                 [
-                  {url: "http://schema-registry:8081"}
+                  {
+                    url: "http://schema-registry:8081"
+                  }
                 ]
             - name: LENSES_SCHEMA_REGISTRY_MODE
               value: ""
@@ -824,7 +840,7 @@ should work without security enabled:
             - name: LT_PACKAGE
               value: helm
             - name: LT_PACKAGE_VERSION
-              value: 4.3.0
+              value: 4.3.1
             image: lensesio/lenses:4.3.0
             imagePullPolicy: IfNotPresent
             livenessProbe:
@@ -863,6 +879,8 @@ should work without security enabled:
           - name: secrets
             secret:
               items:
+              - key: jvm.truststore.jks
+                path: jvm.truststore.jks
               - key: security.conf
                 path: security.conf
               - key: security.append.conf

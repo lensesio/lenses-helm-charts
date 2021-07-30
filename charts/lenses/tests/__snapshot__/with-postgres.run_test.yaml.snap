@@ -10,7 +10,7 @@ should render with postgres enabled and host, database set and username, passwor
     metadata:
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.3.0
+        chart: lenses-4.3.1
         heritage: Helm
         lenses.io/app: RELEASE-NAME
         lenses.io/app.type: lenses-configmap
@@ -23,7 +23,7 @@ should render with postgres enabled and host, database set and username, passwor
       annotations: null
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.3.0
+        chart: lenses-4.3.1
         component: lenses
         heritage: Helm
         lenses.io/app: RELEASE-NAME
@@ -119,7 +119,7 @@ should render with postgres enabled and host, database set and username, passwor
             - name: LT_PACKAGE
               value: helm
             - name: LT_PACKAGE_VERSION
-              value: 4.3.0
+              value: 4.3.1
             - name: LENSES_STORAGE_POSTGRES_USERNAME
               valueFrom:
                 secretKeyRef:
@@ -168,6 +168,8 @@ should render with postgres enabled and host, database set and username, passwor
           - name: secrets
             secret:
               items:
+              - key: jvm.truststore.jks
+                path: jvm.truststore.jks
               - key: security.conf
                 path: security.conf
               - key: security.append.conf
@@ -202,6 +204,7 @@ should render with postgres enabled and host, database set and username, passwor
     data:
       client.keystore.jks: ""
       client.truststore.jks: ""
+      jvm.truststore.jks: ""
       keytab: ""
       lenses.keytab: ""
       lenses.opts.keystore.jks: ""
@@ -210,11 +213,13 @@ should render with postgres enabled and host, database set and username, passwor
       lenses.tls.truststore.jks: ""
       saml.idp.xml: ""
       saml.keystore.jks: ""
+      schema.registry.keystore.jks: ""
+      schema.registry.truststore.jks: ""
     kind: Secret
     metadata:
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.3.0
+        chart: lenses-4.3.1
         heritage: Helm
         lenses.io/app: RELEASE-NAME
         lenses.io/app.type: lenses-secret
@@ -226,8 +231,6 @@ should render with postgres enabled and host, database set and username, passwor
       client.truststore.password: ""
       connect.clusters: ""
       jaas.conf: ""
-      jvm.truststore.jks: ""
-      jvm.truststore.password: ""
       lenses.opts.keystore.password: ""
       lenses.opts.truststore.password: ""
       lenses.tls.key.password: ""
@@ -235,9 +238,7 @@ should render with postgres enabled and host, database set and username, passwor
       lenses.tls.truststore.password: ""
       license: ""
       schema.registry.key.password: ""
-      schema.registry.keystore.jks: ""
       schema.registry.keystore.password: ""
-      schema.registry.truststore.jks: ""
       schema.registry.truststore.password: ""
       security.append.conf: ""
       security.conf: ""
@@ -254,7 +255,7 @@ should render with postgres enabled and host, database, username, password is se
     metadata:
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.3.0
+        chart: lenses-4.3.1
         heritage: Helm
         lenses.io/app: RELEASE-NAME
         lenses.io/app.type: lenses-configmap
@@ -267,7 +268,7 @@ should render with postgres enabled and host, database, username, password is se
       annotations: null
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.3.0
+        chart: lenses-4.3.1
         component: lenses
         heritage: Helm
         lenses.io/app: RELEASE-NAME
@@ -363,7 +364,7 @@ should render with postgres enabled and host, database, username, password is se
             - name: LT_PACKAGE
               value: helm
             - name: LT_PACKAGE_VERSION
-              value: 4.3.0
+              value: 4.3.1
             image: lensesio/lenses:4.3.0
             imagePullPolicy: IfNotPresent
             livenessProbe:
@@ -402,6 +403,8 @@ should render with postgres enabled and host, database, username, password is se
           - name: secrets
             secret:
               items:
+              - key: jvm.truststore.jks
+                path: jvm.truststore.jks
               - key: security.conf
                 path: security.conf
               - key: security.append.conf
@@ -436,6 +439,7 @@ should render with postgres enabled and host, database, username, password is se
     data:
       client.keystore.jks: ""
       client.truststore.jks: ""
+      jvm.truststore.jks: ""
       keytab: ""
       lenses.keytab: ""
       lenses.opts.keystore.jks: ""
@@ -444,11 +448,13 @@ should render with postgres enabled and host, database, username, password is se
       lenses.tls.truststore.jks: ""
       saml.idp.xml: ""
       saml.keystore.jks: ""
+      schema.registry.keystore.jks: ""
+      schema.registry.truststore.jks: ""
     kind: Secret
     metadata:
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.3.0
+        chart: lenses-4.3.1
         heritage: Helm
         lenses.io/app: RELEASE-NAME
         lenses.io/app.type: lenses-secret
@@ -460,8 +466,6 @@ should render with postgres enabled and host, database, username, password is se
       client.truststore.password: ""
       connect.clusters: ""
       jaas.conf: ""
-      jvm.truststore.jks: ""
-      jvm.truststore.password: ""
       lenses.opts.keystore.password: ""
       lenses.opts.truststore.password: ""
       lenses.tls.key.password: ""
@@ -469,9 +473,7 @@ should render with postgres enabled and host, database, username, password is se
       lenses.tls.truststore.password: ""
       license: ""
       schema.registry.key.password: ""
-      schema.registry.keystore.jks: ""
       schema.registry.keystore.password: ""
-      schema.registry.truststore.jks: ""
       schema.registry.truststore.password: ""
       security.append.conf: ""
       security.conf: |2-
@@ -486,7 +488,7 @@ should work without postgres enabled:
     metadata:
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.3.0
+        chart: lenses-4.3.1
         heritage: Helm
         lenses.io/app: RELEASE-NAME
         lenses.io/app.type: lenses-configmap
@@ -499,7 +501,7 @@ should work without postgres enabled:
       annotations: null
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.3.0
+        chart: lenses-4.3.1
         component: lenses
         heritage: Helm
         lenses.io/app: RELEASE-NAME
@@ -595,7 +597,7 @@ should work without postgres enabled:
             - name: LT_PACKAGE
               value: helm
             - name: LT_PACKAGE_VERSION
-              value: 4.3.0
+              value: 4.3.1
             image: lensesio/lenses:4.3.0
             imagePullPolicy: IfNotPresent
             livenessProbe:
@@ -634,6 +636,8 @@ should work without postgres enabled:
           - name: secrets
             secret:
               items:
+              - key: jvm.truststore.jks
+                path: jvm.truststore.jks
               - key: security.conf
                 path: security.conf
               - key: security.append.conf
@@ -668,6 +672,7 @@ should work without postgres enabled:
     data:
       client.keystore.jks: ""
       client.truststore.jks: ""
+      jvm.truststore.jks: ""
       keytab: ""
       lenses.keytab: ""
       lenses.opts.keystore.jks: ""
@@ -676,11 +681,13 @@ should work without postgres enabled:
       lenses.tls.truststore.jks: ""
       saml.idp.xml: ""
       saml.keystore.jks: ""
+      schema.registry.keystore.jks: ""
+      schema.registry.truststore.jks: ""
     kind: Secret
     metadata:
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.3.0
+        chart: lenses-4.3.1
         heritage: Helm
         lenses.io/app: RELEASE-NAME
         lenses.io/app.type: lenses-secret
@@ -692,8 +699,6 @@ should work without postgres enabled:
       client.truststore.password: ""
       connect.clusters: ""
       jaas.conf: ""
-      jvm.truststore.jks: ""
-      jvm.truststore.password: ""
       lenses.opts.keystore.password: ""
       lenses.opts.truststore.password: ""
       lenses.tls.key.password: ""
@@ -701,9 +706,7 @@ should work without postgres enabled:
       lenses.tls.truststore.password: ""
       license: ""
       schema.registry.key.password: ""
-      schema.registry.keystore.jks: ""
       schema.registry.keystore.password: ""
-      schema.registry.truststore.jks: ""
       schema.registry.truststore.password: ""
       security.append.conf: ""
       security.conf: ""

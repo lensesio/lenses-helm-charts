@@ -38,6 +38,9 @@ tests:
                       user: "admin",
                       password: "admin"
                     }
+                  },
+                  {
+                    url: "http://connect-worker-2:8083/custom/path"
                   }
                 ]
               }
