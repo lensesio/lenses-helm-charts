@@ -4,6 +4,7 @@ should work:
     data:
       client.keystore.jks: ""
       client.truststore.jks: ""
+      jvm.truststore.jks: ""
       keytab: ""
       lenses.keytab: ""
       lenses.opts.keystore.jks: ""
@@ -12,6 +13,8 @@ should work:
       lenses.tls.truststore.jks: ""
       saml.idp.xml: ""
       saml.keystore.jks: ""
+      schema.registry.keystore.jks: ""
+      schema.registry.truststore.jks: ""
     kind: Secret
     metadata:
       labels:
@@ -69,8 +72,6 @@ should work:
           }
         ]
       jaas.conf: ""
-      jvm.truststore.jks: ""
-      jvm.truststore.password: ""
       lenses.opts.keystore.password: ""
       lenses.opts.truststore.password: ""
       lenses.tls.key.password: ""
@@ -78,9 +79,7 @@ should work:
       lenses.tls.truststore.password: ""
       license: ""
       schema.registry.key.password: ""
-      schema.registry.keystore.jks: ""
       schema.registry.keystore.password: ""
-      schema.registry.truststore.jks: ""
       schema.registry.truststore.password: ""
       security.append.conf: ""
       security.conf: ""
@@ -90,6 +89,7 @@ should work with explicit Connect metrics URL:
     data:
       client.keystore.jks: ""
       client.truststore.jks: ""
+      jvm.truststore.jks: ""
       keytab: ""
       lenses.keytab: ""
       lenses.opts.keystore.jks: ""
@@ -98,6 +98,8 @@ should work with explicit Connect metrics URL:
       lenses.tls.truststore.jks: ""
       saml.idp.xml: ""
       saml.keystore.jks: ""
+      schema.registry.keystore.jks: ""
+      schema.registry.truststore.jks: ""
     kind: Secret
     metadata:
       labels:
@@ -130,13 +132,14 @@ should work with explicit Connect metrics URL:
                   user: "admin",
                   password: "admin"
                 }
+              },
+              {
+                url: "http://connect-worker-2:8083/custom/path"
               }
             ]
           }
         ]
       jaas.conf: ""
-      jvm.truststore.jks: ""
-      jvm.truststore.password: ""
       lenses.opts.keystore.password: ""
       lenses.opts.truststore.password: ""
       lenses.tls.key.password: ""
@@ -144,9 +147,7 @@ should work with explicit Connect metrics URL:
       lenses.tls.truststore.password: ""
       license: ""
       schema.registry.key.password: ""
-      schema.registry.keystore.jks: ""
       schema.registry.keystore.password: ""
-      schema.registry.truststore.jks: ""
       schema.registry.truststore.password: ""
       security.append.conf: ""
       security.conf: ""

@@ -168,6 +168,8 @@ should render with postgres enabled and host, database set and username, passwor
           - name: secrets
             secret:
               items:
+              - key: jvm.truststore.jks
+                path: jvm.truststore.jks
               - key: security.conf
                 path: security.conf
               - key: security.append.conf
@@ -202,6 +204,7 @@ should render with postgres enabled and host, database set and username, passwor
     data:
       client.keystore.jks: ""
       client.truststore.jks: ""
+      jvm.truststore.jks: ""
       keytab: ""
       lenses.keytab: ""
       lenses.opts.keystore.jks: ""
@@ -210,6 +213,8 @@ should render with postgres enabled and host, database set and username, passwor
       lenses.tls.truststore.jks: ""
       saml.idp.xml: ""
       saml.keystore.jks: ""
+      schema.registry.keystore.jks: ""
+      schema.registry.truststore.jks: ""
     kind: Secret
     metadata:
       labels:
@@ -226,8 +231,6 @@ should render with postgres enabled and host, database set and username, passwor
       client.truststore.password: ""
       connect.clusters: ""
       jaas.conf: ""
-      jvm.truststore.jks: ""
-      jvm.truststore.password: ""
       lenses.opts.keystore.password: ""
       lenses.opts.truststore.password: ""
       lenses.tls.key.password: ""
@@ -235,9 +238,7 @@ should render with postgres enabled and host, database set and username, passwor
       lenses.tls.truststore.password: ""
       license: ""
       schema.registry.key.password: ""
-      schema.registry.keystore.jks: ""
       schema.registry.keystore.password: ""
-      schema.registry.truststore.jks: ""
       schema.registry.truststore.password: ""
       security.append.conf: ""
       security.conf: ""
@@ -402,6 +403,8 @@ should render with postgres enabled and host, database, username, password is se
           - name: secrets
             secret:
               items:
+              - key: jvm.truststore.jks
+                path: jvm.truststore.jks
               - key: security.conf
                 path: security.conf
               - key: security.append.conf
@@ -436,6 +439,7 @@ should render with postgres enabled and host, database, username, password is se
     data:
       client.keystore.jks: ""
       client.truststore.jks: ""
+      jvm.truststore.jks: ""
       keytab: ""
       lenses.keytab: ""
       lenses.opts.keystore.jks: ""
@@ -444,6 +448,8 @@ should render with postgres enabled and host, database, username, password is se
       lenses.tls.truststore.jks: ""
       saml.idp.xml: ""
       saml.keystore.jks: ""
+      schema.registry.keystore.jks: ""
+      schema.registry.truststore.jks: ""
     kind: Secret
     metadata:
       labels:
@@ -460,8 +466,6 @@ should render with postgres enabled and host, database, username, password is se
       client.truststore.password: ""
       connect.clusters: ""
       jaas.conf: ""
-      jvm.truststore.jks: ""
-      jvm.truststore.password: ""
       lenses.opts.keystore.password: ""
       lenses.opts.truststore.password: ""
       lenses.tls.key.password: ""
@@ -469,9 +473,7 @@ should render with postgres enabled and host, database, username, password is se
       lenses.tls.truststore.password: ""
       license: ""
       schema.registry.key.password: ""
-      schema.registry.keystore.jks: ""
       schema.registry.keystore.password: ""
-      schema.registry.truststore.jks: ""
       schema.registry.truststore.password: ""
       security.append.conf: ""
       security.conf: |2-
@@ -634,6 +636,8 @@ should work without postgres enabled:
           - name: secrets
             secret:
               items:
+              - key: jvm.truststore.jks
+                path: jvm.truststore.jks
               - key: security.conf
                 path: security.conf
               - key: security.append.conf
@@ -668,6 +672,7 @@ should work without postgres enabled:
     data:
       client.keystore.jks: ""
       client.truststore.jks: ""
+      jvm.truststore.jks: ""
       keytab: ""
       lenses.keytab: ""
       lenses.opts.keystore.jks: ""
@@ -676,6 +681,8 @@ should work without postgres enabled:
       lenses.tls.truststore.jks: ""
       saml.idp.xml: ""
       saml.keystore.jks: ""
+      schema.registry.keystore.jks: ""
+      schema.registry.truststore.jks: ""
     kind: Secret
     metadata:
       labels:
@@ -692,8 +699,6 @@ should work without postgres enabled:
       client.truststore.password: ""
       connect.clusters: ""
       jaas.conf: ""
-      jvm.truststore.jks: ""
-      jvm.truststore.password: ""
       lenses.opts.keystore.password: ""
       lenses.opts.truststore.password: ""
       lenses.tls.key.password: ""
@@ -701,9 +706,7 @@ should work without postgres enabled:
       lenses.tls.truststore.password: ""
       license: ""
       schema.registry.key.password: ""
-      schema.registry.keystore.jks: ""
       schema.registry.keystore.password: ""
-      schema.registry.truststore.jks: ""
       schema.registry.truststore.password: ""
       security.append.conf: ""
       security.conf: ""

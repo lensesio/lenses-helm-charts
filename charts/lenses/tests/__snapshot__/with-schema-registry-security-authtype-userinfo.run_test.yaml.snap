@@ -45,7 +45,9 @@ should work with security enabled and with specific authType other than USER_INF
             - name: LENSES_SCHEMA_REGISTRY_URLS
               value: |-
                 [
-                  {url: "http://schema-registry:8081"}
+                  {
+                    url: "http://schema-registry:8081"
+                  }
                 ]
             - name: LENSES_SCHEMA_REGISTRY_MODE
               value: ""
@@ -144,6 +146,8 @@ should work with security enabled and with specific authType other than USER_INF
           - name: secrets
             secret:
               items:
+              - key: jvm.truststore.jks
+                path: jvm.truststore.jks
               - key: security.conf
                 path: security.conf
               - key: security.append.conf
@@ -220,7 +224,9 @@ should work with security enabled but without specific authType:
             - name: LENSES_SCHEMA_REGISTRY_URLS
               value: |-
                 [
-                  {url: "http://schema-registry:8081"}
+                  {
+                    url: "http://schema-registry:8081"
+                  }
                 ]
             - name: LENSES_SCHEMA_REGISTRY_MODE
               value: ""
@@ -319,6 +325,8 @@ should work with security enabled but without specific authType:
           - name: secrets
             secret:
               items:
+              - key: jvm.truststore.jks
+                path: jvm.truststore.jks
               - key: security.conf
                 path: security.conf
               - key: security.append.conf
@@ -395,7 +403,9 @@ should work with security enabled, specific authType USER_INFO, and username and
             - name: LENSES_SCHEMA_REGISTRY_URLS
               value: |-
                 [
-                  {url: "http://schema-registry:8081"}
+                  {
+                    url: "http://schema-registry:8081"
+                  }
                 ]
             - name: LENSES_SCHEMA_REGISTRY_MODE
               value: ""
@@ -504,6 +514,8 @@ should work with security enabled, specific authType USER_INFO, and username and
           - name: secrets
             secret:
               items:
+              - key: jvm.truststore.jks
+                path: jvm.truststore.jks
               - key: security.conf
                 path: security.conf
               - key: security.append.conf
@@ -580,7 +592,9 @@ should work with security enabled, specific authType USER_INFO, username and pas
             - name: LENSES_SCHEMA_REGISTRY_URLS
               value: |-
                 [
-                  {url: "http://schema-registry:8081"}
+                  {
+                    url: "http://schema-registry:8081"
+                  }
                 ]
             - name: LENSES_SCHEMA_REGISTRY_MODE
               value: ""
@@ -688,6 +702,8 @@ should work with security enabled, specific authType USER_INFO, username and pas
           - name: secrets
             secret:
               items:
+              - key: jvm.truststore.jks
+                path: jvm.truststore.jks
               - key: security.conf
                 path: security.conf
               - key: security.append.conf
@@ -764,7 +780,9 @@ should work without security enabled:
             - name: LENSES_SCHEMA_REGISTRY_URLS
               value: |-
                 [
-                  {url: "http://schema-registry:8081"}
+                  {
+                    url: "http://schema-registry:8081"
+                  }
                 ]
             - name: LENSES_SCHEMA_REGISTRY_MODE
               value: ""
@@ -863,6 +881,8 @@ should work without security enabled:
           - name: secrets
             secret:
               items:
+              - key: jvm.truststore.jks
+                path: jvm.truststore.jks
               - key: security.conf
                 path: security.conf
               - key: security.append.conf

@@ -146,6 +146,8 @@ should work with a license:
           - name: secrets
             secret:
               items:
+              - key: jvm.truststore.jks
+                path: jvm.truststore.jks
               - key: security.conf
                 path: security.conf
               - key: security.append.conf
@@ -180,6 +182,7 @@ should work with a license:
     data:
       client.keystore.jks: ""
       client.truststore.jks: ""
+      jvm.truststore.jks: ""
       keytab: ""
       lenses.keytab: ""
       lenses.opts.keystore.jks: ""
@@ -188,6 +191,8 @@ should work with a license:
       lenses.tls.truststore.jks: ""
       saml.idp.xml: ""
       saml.keystore.jks: ""
+      schema.registry.keystore.jks: ""
+      schema.registry.truststore.jks: ""
     kind: Secret
     metadata:
       labels:
@@ -204,8 +209,6 @@ should work with a license:
       client.truststore.password: ""
       connect.clusters: ""
       jaas.conf: ""
-      jvm.truststore.jks: ""
-      jvm.truststore.password: ""
       lenses.opts.keystore.password: ""
       lenses.opts.truststore.password: ""
       lenses.tls.key.password: ""
@@ -213,9 +216,7 @@ should work with a license:
       lenses.tls.truststore.password: ""
       license: foobar
       schema.registry.key.password: ""
-      schema.registry.keystore.jks: ""
       schema.registry.keystore.password: ""
-      schema.registry.truststore.jks: ""
       schema.registry.truststore.password: ""
       security.append.conf: ""
       security.conf: ""
@@ -367,6 +368,8 @@ should work with a license set to external:
           - name: secrets
             secret:
               items:
+              - key: jvm.truststore.jks
+                path: jvm.truststore.jks
               - key: security.conf
                 path: security.conf
               - key: security.append.conf
@@ -401,6 +404,7 @@ should work with a license set to external:
     data:
       client.keystore.jks: ""
       client.truststore.jks: ""
+      jvm.truststore.jks: ""
       keytab: ""
       lenses.keytab: ""
       lenses.opts.keystore.jks: ""
@@ -409,6 +413,8 @@ should work with a license set to external:
       lenses.tls.truststore.jks: ""
       saml.idp.xml: ""
       saml.keystore.jks: ""
+      schema.registry.keystore.jks: ""
+      schema.registry.truststore.jks: ""
     kind: Secret
     metadata:
       labels:
@@ -425,8 +431,6 @@ should work with a license set to external:
       client.truststore.password: ""
       connect.clusters: ""
       jaas.conf: ""
-      jvm.truststore.jks: ""
-      jvm.truststore.password: ""
       lenses.opts.keystore.password: ""
       lenses.opts.truststore.password: ""
       lenses.tls.key.password: ""
@@ -434,9 +438,7 @@ should work with a license set to external:
       lenses.tls.truststore.password: ""
       license: external
       schema.registry.key.password: ""
-      schema.registry.keystore.jks: ""
       schema.registry.keystore.password: ""
-      schema.registry.truststore.jks: ""
       schema.registry.truststore.password: ""
       security.append.conf: ""
       security.conf: ""
@@ -583,6 +585,8 @@ should work without license:
           - name: secrets
             secret:
               items:
+              - key: jvm.truststore.jks
+                path: jvm.truststore.jks
               - key: security.conf
                 path: security.conf
               - key: security.append.conf
@@ -617,6 +621,7 @@ should work without license:
     data:
       client.keystore.jks: ""
       client.truststore.jks: ""
+      jvm.truststore.jks: ""
       keytab: ""
       lenses.keytab: ""
       lenses.opts.keystore.jks: ""
@@ -625,6 +630,8 @@ should work without license:
       lenses.tls.truststore.jks: ""
       saml.idp.xml: ""
       saml.keystore.jks: ""
+      schema.registry.keystore.jks: ""
+      schema.registry.truststore.jks: ""
     kind: Secret
     metadata:
       labels:
@@ -641,8 +648,6 @@ should work without license:
       client.truststore.password: ""
       connect.clusters: ""
       jaas.conf: ""
-      jvm.truststore.jks: ""
-      jvm.truststore.password: ""
       lenses.opts.keystore.password: ""
       lenses.opts.truststore.password: ""
       lenses.tls.key.password: ""
@@ -650,9 +655,7 @@ should work without license:
       lenses.tls.truststore.password: ""
       license: ""
       schema.registry.key.password: ""
-      schema.registry.keystore.jks: ""
       schema.registry.keystore.password: ""
-      schema.registry.truststore.jks: ""
       schema.registry.truststore.password: ""
       security.append.conf: ""
       security.conf: ""

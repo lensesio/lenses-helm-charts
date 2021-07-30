@@ -24,10 +24,12 @@ monitoring:
 
 # Resource management
 resources:
-  limits:
-    memory: 5Gi
   requests:
+  #   cpu: 1
     memory: 4Gi
+  limits:
+  #   cpu: 2
+    memory: 5Gi
 
 # rbacEnable indicates if a the cluster has rbac enabled and a cluster role
 # and rolebinding should be created for the service account
@@ -58,7 +60,18 @@ persistence:
   ##
   # storageClass: "-"
 
-#service
+# Additional volumes to use in Lenses delpoyments, for example to load additional plugins (UDFs) in Lenses
+#   Note: PersistentVolumeClaim should already exist before deploying Helm chart
+additionalVolumes:
+  # - name: lenses-plugins
+  #   persistentVolumeClaim:
+  #     claimName: lenses-plugins
+# Additional volume mounts to use in Lenses delpoyments, for example to load additional plugins (UDFs) in Lenses
+additionalVolumeMounts:
+  # - name: lenses-plugins
+  #   mountPath: "/data/plugins"
+
+# Lenses service
 service:
   enabled: true
   type: ClusterIP
@@ -139,16 +152,12 @@ lenses:
     # openssl base64 < kafka.truststore.jks | tr -d '\n'
     trustStoreFileData: |-
 
-    # base64 trust store password
-    # echo "$password" | tr -d '\n' | base64
     trustStorePassword: |-
 
     # base64 encoded truststore data
     # openssl base64 < kafka.truststore.jks | tr -d '\n'
     keyStoreFileData: |-
 
-    # base64 keystore password
-    # echo "$password" | tr -d '\n' | base64
     keyStorePassword: |-
 
   tls:
@@ -159,12 +168,8 @@ lenses:
     # openssl base64 < kafka.truststore.jks | tr -d '\n'
     keyStoreFileData: |-
 
-    # base64 keystore password
-    # echo "$password" | tr -d '\n' | base64
     keyStorePassword: |-
 
-    # base64 key password
-    # echo "$password" | tr -d '\n' | base64
     keyPassword: |-
 
     # Authenticate to Lenses with client authentication
@@ -174,8 +179,6 @@ lenses:
     # openssl base64 < kafka.truststore.jks | tr -d '\n'
     trustStoreFileData: |-
 
-    # base64 trust store password
-    # echo "$password" | tr -d '\n' | base64
     trustStorePassword: |-
 
   # Broker details
@@ -186,7 +189,7 @@ lenses:
   # kafka ssl
   # The keytab, key and truststores file data are the base64 encoded contents of the files. YOU MUST PROVIDE THE DATA BASE64 encoded
   # openssl base64 < client.keystore.jks | tr -d '\n'
-  # The passwords will be base64enc by the secret
+  # The passwords will be base64 encoded by the secret resource
   # and added to the kafka secret and mounted into /mnt/secrets
   kafka:
     ssl:
@@ -312,7 +315,6 @@ lenses:
       # base64 encoded truststore data
       trustStoreFileData: |-
 
-      # password strings
       trustStorePassword:
 
       ## Authentication via TLS certificates
@@ -374,23 +376,28 @@ lenses:
           - key: PasswordPasswordPasswordPassword
 
         # hosts:
-        #   - host: connect-worker-1
-        #      JMX/JOLOKIA Metrics
-        #      metrics:
-        #        # 'url' is a newly introduced key which explicitly sets the URL
-        #        # of the metrics host. Previously Helm templating was
-        #        # used to construct the URL from 'host', 'metrics.type' and
-        #        # 'metrics.port'. Example values for 'url':
-        #        # - for JMX 'url: <host>:<port>,
-        #        # - for JOLOKIA 'url: http(s)://<host>:<port>
-        #        url:
-        #        ssl:
-        #        username:
-        #        password:
-        #        type: "JMX" # Note: this will be deprecated in version 5.0, see 'url' above
-        #        port: 9102 # Note: this will be deprecated in version 5.0, see 'url' above
-        #   - host: connect-worker-2
-        #   - host: connect-worker-3
+        #   # 'url' is a newly introduced key which sets explicitly the URL of the
+        #   # Connect host including protocol, host, port and optional path.
+        #   # Previously, Connect URL was constructed from `cluster.protocol`,
+        #   # `hosts[i].host` and `cluster.protocol`.
+        #   - url: http://connect-worker-1:8083/custom/path
+        #     # host: connect-worker-1 # Note: this will be deprecated in version 5.0, see 'url' above
+        #     # JMX/JOLOKIA Metrics
+        #     metrics:
+        #       # 'url' is a newly introduced key which explicitly sets the URL
+        #       # of the metrics host. Previously Helm templating was
+        #       # used to construct the URL from 'host', 'metrics.type' and
+        #       # 'metrics.port'. Example values for 'url':
+        #       # - for JMX 'url: <host>:<port>,
+        #       # - for JOLOKIA 'url: http(s)://<host>:<port>
+        #       url:
+        #       ssl:
+        #       username:
+        #       password:
+        #       type: "JMX" # Note: this will be deprecated in version 5.0, see 'url' above
+        #       port: 9102 # Note: this will be deprecated in version 5.0, see 'url' above
+        #   - url: connect-worker-2
+        #   - url: connect-worker-3
 
   storage:
     postgres:
