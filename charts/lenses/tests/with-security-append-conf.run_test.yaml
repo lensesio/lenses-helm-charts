@@ -1,0 +1,15 @@
+suite: use user defined security.append.conf
+templates:
+  - secrets.yaml
+tests:
+  - it: should work when security append is used
+    set:
+      lenses:
+        security:
+          append:
+            conf: |
+              lenses.security.user=foobar
+    asserts:
+      - equal:
+          path: stringData.security\.append\.conf
+          value: lenses.security.user=foobar
