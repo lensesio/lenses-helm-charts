@@ -6,7 +6,7 @@ should work:
       annotations: null
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.3.1
+        chart: lenses-4.3.2
         component: lenses
         heritage: Helm
         lenses.io/app: RELEASE-NAME
@@ -121,8 +121,8 @@ should work:
             - name: LT_PACKAGE
               value: helm
             - name: LT_PACKAGE_VERSION
-              value: 4.3.1
-            image: lensesio/lenses:4.3.0
+              value: 4.3.2
+            image: lensesio/lenses:4.3.1
             imagePullPolicy: IfNotPresent
             livenessProbe:
               httpGet:
@@ -199,7 +199,7 @@ should work:
     metadata:
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.3.1
+        chart: lenses-4.3.2
         heritage: Helm
         lenses.io/app: RELEASE-NAME
         lenses.io/app.type: lenses-configmap
@@ -225,7 +225,7 @@ should work:
     metadata:
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.3.1
+        chart: lenses-4.3.2
         heritage: Helm
         lenses.io/app: RELEASE-NAME
         lenses.io/app.type: lenses-secret
@@ -256,7 +256,7 @@ should work:
     metadata:
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.3.1
+        chart: lenses-4.3.2
         heritage: Helm
         lenses.io/app: RELEASE-NAME
         lenses.io/app.type: lenses-configmap
@@ -282,7 +282,7 @@ should work:
     metadata:
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.3.1
+        chart: lenses-4.3.2
         heritage: Helm
         lenses.io/app: RELEASE-NAME
         lenses.io/app.type: lenses-secret

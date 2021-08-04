@@ -6,7 +6,7 @@ should pass with external username/password:
       annotations: null
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.3.1
+        chart: lenses-4.3.2
         component: lenses
         heritage: Helm
         lenses.io/app: RELEASE-NAME
@@ -102,7 +102,7 @@ should pass with external username/password:
             - name: LT_PACKAGE
               value: helm
             - name: LT_PACKAGE_VERSION
-              value: 4.3.1
+              value: 4.3.2
             - name: LENSES_SECURITY_USER
               valueFrom:
                 secretKeyRef:
@@ -113,7 +113,7 @@ should pass with external username/password:
                 secretKeyRef:
                   key: lenses-security-password
                   name: lenses-super-secrets
-            image: lensesio/lenses:4.3.0
+            image: lensesio/lenses:4.3.1
             imagePullPolicy: IfNotPresent
             livenessProbe:
               httpGet:
@@ -202,7 +202,7 @@ should pass with external username/password:
     metadata:
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.3.1
+        chart: lenses-4.3.2
         heritage: Helm
         lenses.io/app: RELEASE-NAME
         lenses.io/app.type: lenses-secret
@@ -233,7 +233,7 @@ should pass with username/password:
       annotations: null
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.3.1
+        chart: lenses-4.3.2
         component: lenses
         heritage: Helm
         lenses.io/app: RELEASE-NAME
@@ -329,8 +329,8 @@ should pass with username/password:
             - name: LT_PACKAGE
               value: helm
             - name: LT_PACKAGE_VERSION
-              value: 4.3.1
-            image: lensesio/lenses:4.3.0
+              value: 4.3.2
+            image: lensesio/lenses:4.3.1
             imagePullPolicy: IfNotPresent
             livenessProbe:
               httpGet:
@@ -419,7 +419,7 @@ should pass with username/password:
     metadata:
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.3.1
+        chart: lenses-4.3.2
         heritage: Helm
         lenses.io/app: RELEASE-NAME
         lenses.io/app.type: lenses-secret

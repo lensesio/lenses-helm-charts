@@ -6,7 +6,7 @@ should work:
       annotations: null
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.3.1
+        chart: lenses-4.3.2
         component: lenses
         foo: bar
         heritage: Helm
@@ -104,8 +104,8 @@ should work:
             - name: LT_PACKAGE
               value: helm
             - name: LT_PACKAGE_VERSION
-              value: 4.3.1
-            image: lensesio/lenses:4.3.0
+              value: 4.3.2
+            image: lensesio/lenses:4.3.1
             imagePullPolicy: IfNotPresent
             livenessProbe:
               httpGet:
@@ -182,7 +182,7 @@ should work:
         kubernetes.io/ingress.class: traefik
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.3.1
+        chart: lenses-4.3.2
         component: lenses
         foo: bar
         heritage: Helm
@@ -205,7 +205,7 @@ should work:
     metadata:
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.3.1
+        chart: lenses-4.3.2
         component: lenses
         foo: bar
         heritage: Helm
