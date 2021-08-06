@@ -10,6 +10,7 @@ WORKDIR /www
 RUN wget -m https://lenses.jfrog.io/artifactory/helm-charts/
 # Replace the absolute url in index.yaml
 RUN sed "s|https://lenses.jfrog.io/artifactory/api/helm/helm-charts|${HELM_REPO_URL}|" -i lenses.jfrog.io/artifactory/helm-charts/index.yaml
+RUN sed "s|https://lenses.jfrog.io/lenses-helm-charts|${HELM_REPO_URL}|" -i lenses.jfrog.io/artifactory/helm-charts/index.yaml
 RUN mv lenses.jfrog.io/artifactory/helm-charts/* .
 RUN rm -rf lenses.jfrog.io/ index.html
 RUN echo "${BUILD_INFO}" > build.info
