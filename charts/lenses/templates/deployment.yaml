@@ -270,17 +270,17 @@ spec:
         {{- if.Values.lenses.kafka.metrics.enabled }}
         - name: LENSES_KAFKA_METRICS
           value: |-
-{{ include "kafkaMetrics" . | indent 12 }}
+          {{- include "kafkaMetrics" . | nindent 12 }}
         {{- end }}
         {{- if.Values.lenses.jmxBrokers}}
         - name: LENSES_JMX_BROKERS
           value: |-
-{{ include "jmxBrokers" . | indent 12 }}
+          {{- include "jmxBrokers" . | nindent 12 }}
         {{- end }}
         {{- if .Values.lenses.zookeepers.enabled }}
         - name: LENSES_ZOOKEEPER_HOSTS
           value: |-
-{{ include "zookeepers" . | indent 12 }}
+          {{- include "zookeepers" . | nindent 12 }}
         {{- end }}
 
         {{- if .Values.lenses.zookeepers.chroot }}
@@ -291,22 +291,23 @@ spec:
         # Schema Registries
         - name: LENSES_SCHEMA_REGISTRY_URLS
           value: |-
-{{ include "registries" . | indent 12 }}
+            {{- include "registries" . | nindent 12 }}
         - name: LENSES_SCHEMA_REGISTRY_MODE
           value: {{ default "" .Values.lenses.schemaRegistries.mode | quote }}
+        {{- if not .Values.lenses.connectClusters.external }}
         # from secrets as might contain basic auth credentials
         - name: LENSES_KAFKA_CONNECT_CLUSTERS
           valueFrom:
             secretKeyRef:
               name: {{ include "fullname" . | quote }}
               key: "connect.clusters"
-
+        {{- end }}
         - name: LENSES_ALERT_CONSUMERS_LAG_THRESHOLD
           value: {{ .Values.lenses.alerts.consumersLagThreshold | quote }}
         {{- if .Values.lenses.alerts.enabled }}
         - name: LENSES_ALERT_PLUGINS
           value: |-
-{{ include "alertPlugins" . | indent 12 }}
+            {{- include "alertPlugins" . | nindent 12 }}
         {{- end }}
         {{- if .Values.lenses.grafanaUrl }}
         - name: LENSES_GRAFANA
