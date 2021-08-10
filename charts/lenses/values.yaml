@@ -360,9 +360,9 @@ lenses:
 
   connectClusters:
     enabled: false
-    # Set external to true to to manage clusters configuration it using secrets
-    # The common use case for using "external" is to take the actual value from a Kubernetes Secret resource already deployed.
-    # To fill the value follow the documentation: https://docs.lenses.io/4.3/configuration/connect/
+    # Set external to true to manage clusters configuration using secrets (if this is true we ignore any connectClusters configuration given using the values.yaml)
+    # The common use case for using external mode is to take the actual value from a Kubernetes Secret resource already deployed.
+    # You will need to provide the whole configuration for Connect clusters; to fill the value follow the documentation: https://docs.lenses.io/4.3/configuration/connect/
     # To do so, add the following definition under 'lenses.additionalEnv' key:
     # - name: LENSES_KAFKA_CONNECT_CLUSTERS
     #   valueFrom:
