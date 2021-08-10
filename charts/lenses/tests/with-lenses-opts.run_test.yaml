@@ -86,6 +86,16 @@ tests:
           content:
             name: LENSES_OPTS
             value: ' -Djava.security.auth.login.config="/mnt/secrets/jaas.conf"'
+  - it: should succeed custom logback xml
+    set:
+      lenses:
+        logbackXml: /opt/lenses/logback-debug.xml
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: LENSES_OPTS
+            value: ' -Dlogback.configurationFile="file:/opt/lenses/logback-debug.xml"'
   - it: should succeed with a combination of the above options
     set:
       lenses:

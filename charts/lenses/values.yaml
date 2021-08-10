@@ -145,6 +145,11 @@ lenses:
     # trust store password
     trustStorePassword:
 
+  # Override the default logback xml
+  # Used primarily to load a Lenses provided xml with debug level set for Lenses libs
+  # Can be used to load your custom logback if needed
+  # logbackXml: /opt/lenses/logback-debug.xml
+
   # TODO: Replace with docker implementation
   # Global truststore/keystore for the JVM
   opts:

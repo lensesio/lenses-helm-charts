@@ -423,6 +423,7 @@ lenses.storage.postgres.password={{ required "PostgreSQL 'password' value is man
 {{- if .Values.lenses.opts.trustStoreFileData }} -Djavax.net.ssl.trustStore="/mnt/secrets/lenses.opts.truststore.jks" {{- end }}
 {{- if .Values.lenses.opts.trustStorePassword }} -Djavax.net.ssl.trustStorePassword="$(CLIENT_OPTS_TRUSTSTORE_PASSWORD)" {{- end }}
 {{- if and .Values.lenses.kafka.sasl.enabled .Values.lenses.kafka.sasl.jaasFileData }} -Djava.security.auth.login.config="/mnt/secrets/jaas.conf" {{- end }}
+{{- if .Values.lenses.logbackXml }} -Dlogback.configurationFile="file:{{ .Values.lenses.logbackXml}}" {{- end }}
 {{- end -}}
 
 {{/*
