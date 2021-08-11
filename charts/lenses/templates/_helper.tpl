@@ -257,7 +257,6 @@ PLAINTEXT
 {{- end -}}
 
 {{- define "connect" -}}
-{{- if .Values.lenses.connectClusters.enabled -}}
 [
 {{- range $clusterCount, $cluster := .Values.lenses.connectClusters.clusters -}}
   {{- $port := $cluster.port -}}
@@ -317,7 +316,6 @@ PLAINTEXT
   }
 {{- end}}
 ]
-{{- end -}}
 {{- end -}}
 
 

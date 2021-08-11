@@ -233,7 +233,6 @@ should work:
       client.key.password: foobarPass
       client.keystore.password: barPass
       client.truststore.password: fooPass
-      connect.clusters: ""
       jaas.conf: ""
       lenses.opts.keystore.password: ""
       lenses.opts.truststore.password: ""
@@ -290,7 +289,6 @@ should work:
       client.key.password: foobarPass
       client.keystore.password: barPass
       client.truststore.password: fooPass
-      connect.clusters: ""
       jaas.conf: ""
       lenses.opts.keystore.password: ""
       lenses.opts.truststore.password: ""

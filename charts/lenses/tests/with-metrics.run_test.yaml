@@ -129,7 +129,7 @@ tests:
                   }
                 }
               ]
-  - it: should work with url
+  - it: should work with zookeeper metrics with url
     set:
       lenses:
         zookeepers:
@@ -260,6 +260,91 @@ tests:
                     url: "schema-registry2:9103",
                     type: "JMX",
                     ssl: false
+                  }
+                }
+              ]
+  - it: should work with zk, schema-registry metrics, all with urls
+    set:
+      lenses:
+        zookeepers:
+          enabled: true
+          hosts:
+            - host: zookeeper1
+              port: 2181
+              metrics:
+                url: metrics.zookeeper1:9112
+                type: "JMX"
+                port: 9102
+                username: foo
+                password: bar
+                ssl: true
+            - host: zookeeper2
+              port: 2181
+              metrics:
+                type: "JMX"
+                port: 9103
+        schemaRegistries:
+          enabled: true
+          hosts:
+            - host: schema-registry1
+              port: 8081
+              metrics:
+                url: metrics.schema-registry1:9102
+                type: "JMX"
+                username: foo
+                password: bar
+                ssl: true
+            - host: schema-registry2
+              port: 8081
+              metrics:
+                type: "JMX"
+                port: 9103
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: LENSES_SCHEMA_REGISTRY_URLS
+            value: |-
+              [
+                {
+                  url: "http://schema-registry1:8081",
+                  metrics: {
+                    url: "metrics.schema-registry1:9102",
+                    type: "JMX",
+                    ssl: false,
+                    user: "foo",
+                    password: "bar"
+                  }
+                },
+                {
+                  url: "http://schema-registry2:8081",
+                  metrics: {
+                    url: "schema-registry2:9103",
+                    type: "JMX",
+                    ssl: false
+                  }
+                }
+              ]
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: LENSES_ZOOKEEPER_HOSTS
+            value: |-
+              [
+                {
+                  url: "zookeeper1:2181",
+                  metrics: {
+                    url: "metrics.zookeeper1:9112",
+                    type: "JMX",
+                    ssl: true,user: "foo",password: "bar",
+                  }
+                },
+                {
+                  url: "zookeeper2:2181",
+                  metrics: {
+                    url: "zookeeper2:9103",
+                    type: "JMX",
+                    ssl: false,
                   }
                 }
               ]
