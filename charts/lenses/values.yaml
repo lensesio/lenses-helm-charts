@@ -287,6 +287,7 @@ lenses:
         # JMX/JOLOKIA Metrics
         # metrics:
         #   # 'url' is the preffered way to setup metrics endpoints.
+        #   # Read more here: https://docs.lenses.io/4.3/configuration/zookeeper/
         #   # In previous versions Helm templating was used to construct the URL from 'host',
         #   #  'metrics.type' and 'metrics.port'. Example values for 'url':
         #   # - for JMX 'url: <host>:<port>,
@@ -314,6 +315,13 @@ lenses:
         path:
         # JMX/JOLOKIA Metrics
         # metrics:
+        #   # 'url' is the preffered way to setup metrics endpoints.
+        #   # Read more here: https://docs.lenses.io/4.3/configuration/schema-registry/
+        #   # In previous versions Helm templating was used to construct the URL from 'host',
+        #   #  'metrics.type' and 'metrics.port'. Example values for 'url':
+        #   # - for JMX 'url: <host>:<port>,
+        #   # - for JOLOKIA 'url: http(s)://<host>:<port>/<suffix>
+        #   url:
         #   type: "JMX"
         #   port: 9102
         #   protocol:

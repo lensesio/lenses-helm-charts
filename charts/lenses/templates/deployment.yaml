@@ -276,9 +276,11 @@ spec:
         {{- end }}
 
         # Schema Registries
+        {{- if .Values.lenses.schemaRegistries.enabled }}
         - name: LENSES_SCHEMA_REGISTRY_URLS
           value: |-
             {{- include "registries" . | nindent 12 }}
+        {{- end }}
         - name: LENSES_SCHEMA_REGISTRY_MODE
           value: {{ default "" .Values.lenses.schemaRegistries.mode | quote }}
         {{- if not .Values.lenses.connectClusters.external }}

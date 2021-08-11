@@ -228,32 +228,32 @@ PLAINTEXT
 {{- end -}}
 
 {{- define "registries" -}}
-{{- if .Values.lenses.schemaRegistries.enabled -}}
 [
-{{- range $index, $element := .Values.lenses.schemaRegistries.hosts -}}
-{{- if gt $index 0 -}},{{- end}}
+  {{- range $srIndex, $sr := .Values.lenses.schemaRegistries.hosts -}}
+  {{- if $srIndex }},{{ end }}
   {
-    url: "{{$element.protocol}}://{{$element.host}}:{{$element.port}}{{$element.path}}"
-  {{- if $element.metrics -}},
+    url: "{{ $sr.protocol | default "http" }}://{{$sr.host}}:{{$sr.port}}"
+    {{- if $sr.metrics -}},
     metrics: {
-      {{- if eq $element.metrics.type "JMX" }}
-      url: "{{$element.host}}:{{$element.metrics.port}}",
+      {{- if $sr.metrics.url }}
+      url: {{ $sr.metrics.url | quote }},
+      {{- else if eq $sr.metrics.type "JMX" }}
+      url: "{{$sr.host}}:{{$sr.metrics.port}}",
       {{- else }}
-      url: "{{default $element.protocol $element.metrics.protocol}}://{{$element.host}}:{{$element.metrics.port}}",
+      url: "{{$sr.protocol}}://{{$sr.host}}:{{$sr.metrics.port}}",
       {{- end }}
-      type: "{{default "JMX" $element.metrics.type}}",
-      ssl: {{default false $element.metrics.ssl}}
-      {{- if $element.metrics.username }},
-      user: {{$element.metrics.username | quote}},
+      type: "{{default "JMX" $sr.metrics.type}}",
+      ssl: {{default false $sr.ssl}}
+      {{- if $sr.metrics.username }},
+      user: {{$sr.metrics.username | quote}}
       {{- end }}
-      {{- if $element.metrics.password }}
-      password: {{$element.metrics.password | quote}}
+      {{- if $sr.metrics.password }},
+      password: {{$sr.metrics.password | quote}}
       {{- end }}
     }{{- end}}
   }
-{{- end}}
+  {{- end}}
 ]
-{{- end -}}
 {{- end -}}
 
 {{- define "connect" -}}

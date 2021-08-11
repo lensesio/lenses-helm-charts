@@ -173,3 +173,93 @@ tests:
                   }
                 }
               ]
+  - it: should work with schema-registry metrics
+    set:
+      lenses:
+        schemaRegistries:
+          enabled: true
+          hosts:
+            - host: schema-registry1
+              port: 8081
+              metrics:
+                type: "JMX"
+                port: 9102
+                username: foo
+                password: bar
+                ssl: true
+            - host: schema-registry2
+              port: 8081
+              metrics:
+                type: "JMX"
+                port: 9103
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: LENSES_SCHEMA_REGISTRY_URLS
+            value: |-
+              [
+                {
+                  url: "http://schema-registry1:8081",
+                  metrics: {
+                    url: "schema-registry1:9102",
+                    type: "JMX",
+                    ssl: false,
+                    user: "foo",
+                    password: "bar"
+                  }
+                },
+                {
+                  url: "http://schema-registry2:8081",
+                  metrics: {
+                    url: "schema-registry2:9103",
+                    type: "JMX",
+                    ssl: false
+                  }
+                }
+              ]
+  - it: should work with schema-registry metrics with url
+    set:
+      lenses:
+        schemaRegistries:
+          enabled: true
+          hosts:
+            - host: schema-registry1
+              port: 8081
+              metrics:
+                url: metrics.schema-registry1:9102
+                type: "JMX"
+                username: foo
+                password: bar
+                ssl: true
+            - host: schema-registry2
+              port: 8081
+              metrics:
+                type: "JMX"
+                port: 9103
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: LENSES_SCHEMA_REGISTRY_URLS
+            value: |-
+              [
+                {
+                  url: "http://schema-registry1:8081",
+                  metrics: {
+                    url: "metrics.schema-registry1:9102",
+                    type: "JMX",
+                    ssl: false,
+                    user: "foo",
+                    password: "bar"
+                  }
+                },
+                {
+                  url: "http://schema-registry2:8081",
+                  metrics: {
+                    url: "schema-registry2:9103",
+                    type: "JMX",
+                    ssl: false
+                  }
+                }
+              ]

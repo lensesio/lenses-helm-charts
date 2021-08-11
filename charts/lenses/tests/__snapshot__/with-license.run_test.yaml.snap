@@ -47,8 +47,6 @@ should work with a license:
               value: "9101"
             - name: LENSES_KAFKA_BROKERS
               value: PLAINTEXT://kafka:9092
-            - name: LENSES_SCHEMA_REGISTRY_URLS
-              value: ""
             - name: LENSES_SCHEMA_REGISTRY_MODE
               value: ""
             - name: LENSES_KAFKA_CONNECT_CLUSTERS
@@ -264,8 +262,6 @@ should work with a license set to external:
               value: "9101"
             - name: LENSES_KAFKA_BROKERS
               value: PLAINTEXT://kafka:9092
-            - name: LENSES_SCHEMA_REGISTRY_URLS
-              value: ""
             - name: LENSES_SCHEMA_REGISTRY_MODE
               value: ""
             - name: LENSES_KAFKA_CONNECT_CLUSTERS
@@ -486,8 +482,6 @@ should work without license:
               value: "9101"
             - name: LENSES_KAFKA_BROKERS
               value: PLAINTEXT://kafka:9092
-            - name: LENSES_SCHEMA_REGISTRY_URLS
-              value: ""
             - name: LENSES_SCHEMA_REGISTRY_MODE
               value: ""
             - name: LENSES_KAFKA_CONNECT_CLUSTERS
