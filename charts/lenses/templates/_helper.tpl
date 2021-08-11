@@ -199,46 +199,32 @@ PLAINTEXT
 {{- end -}}
 
 {{- define "zookeepers" -}}
-{{- if .Values.lenses.zookeepers.enabled -}}
 [
-  {{ range $index, $element := .Values.lenses.zookeepers.hosts }}
-  {{- if not $index -}}{url: "{{$element.host}}:{{$element.port}}"
-  {{- if $element.metrics -}}, metrics: {
-    {{- if eq $element.metrics.type "JMX" -}}
-    url: "{{$element.host}}:{{$element.metrics.port}}",
-    {{- else }}
-    url: "{{$element.protocol}}://{{$element.host}}:{{$element.metrics.port}}",
-    {{- end }}
-    type: "{{$element.metrics.type}}",
-    ssl: {{default false $element.metrics.ssl}},
-    {{- if $element.metrics.username -}}
-    user: {{$element.metrics.username | quote}},
-    {{- end }}
-    {{- if $element.metrics.password -}}
-    password: {{$element.metrics.password | quote}},
-    {{- end }}
-  }{{- end}}}
-  {{- else}},
-  {url: "{{$element.host}}:{{$element.port}}"
-  {{- if $element.metrics -}}, metrics: {
-    {{- if eq $element.metrics.type "JMX" -}}
-    url: "{{$element.host}}:{{$element.metrics.port}}",
-    {{- else }}
-    url: "{{$element.protocol}}://{{$element.host}}:{{$element.metrics.port}}",
-    {{- end }}
-    type: "{{default "JMX" $element.metrics.type}}",
-    ssl: {{default false $element.ssl}},
-    {{- if $element.metrics.username -}}
-    user: {{$element.metrics.username | quote}},
-    {{- end }}
-    {{- if $element.metrics.password -}}
-    password: {{$element.metrics.password | quote}}
-    {{- end }}
-  }{{- end}}}
-  {{- end}}
+  {{- range $zkIndex, $zk := .Values.lenses.zookeepers.hosts -}}
+  {{- if $zkIndex }},{{ end }}
+  {
+    url: "{{$zk.host}}:{{$zk.port}}"
+  {{- if $zk.metrics -}},
+    metrics: {
+      {{- if $zk.metrics.url }}
+      url: {{$zk.metrics.url | quote}},
+      {{- else if eq $zk.metrics.type "JMX" }}
+      url: "{{$zk.host}}:{{$zk.metrics.port}}",
+      {{- else }}
+      url: "{{$zk.protocol}}://{{$zk.host}}:{{$zk.metrics.port}}",
+      {{- end }}
+      type: "{{$zk.metrics.type}}",
+      ssl: {{default false $zk.metrics.ssl}},
+      {{- if $zk.metrics.username -}}
+      user: {{$zk.metrics.username | quote}},
+      {{- end }}
+      {{- if $zk.metrics.password -}}
+      password: {{$zk.metrics.password | quote}},
+      {{- end }}
+    }{{- end}}
+  }
 {{- end}}
 ]
-{{- end -}}
 {{- end -}}
 
 {{- define "registries" -}}

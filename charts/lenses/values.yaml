@@ -286,6 +286,12 @@ lenses:
         port: 2181
         # JMX/JOLOKIA Metrics
         # metrics:
+        #   # 'url' is the preffered way to setup metrics endpoints.
+        #   # In previous versions Helm templating was used to construct the URL from 'host',
+        #   #  'metrics.type' and 'metrics.port'. Example values for 'url':
+        #   # - for JMX 'url: <host>:<port>,
+        #   # - for JOLOKIA 'url: http(s)://<host>:<port>/<suffix>
+        #   url:
         #   type: "JMX"
         #   port: 9102
         #   protocol:
@@ -399,12 +405,11 @@ lenses:
         #     # host: connect-worker-1 # Note: this will be deprecated in version 5.0, see 'url' above
         #     # JMX/JOLOKIA Metrics
         #     metrics:
-        #       # 'url' is a newly introduced key which explicitly sets the URL
-        #       # of the metrics host. Previously Helm templating was
-        #       # used to construct the URL from 'host', 'metrics.type' and
-        #       # 'metrics.port'. Example values for 'url':
+        #       # 'url' is the preffered way to setup metrics endpoints.
+        #       # In previous versions Helm templating was used to construct the URL from 'host',
+        #       #  'metrics.type' and 'metrics.port'. Example values for 'url':
         #       # - for JMX 'url: <host>:<port>,
-        #       # - for JOLOKIA 'url: http(s)://<host>:<port>
+        #       # - for JOLOKIA 'url: http(s)://<host>:<port>/<suffix>
         #       url:
         #       ssl:
         #       username:

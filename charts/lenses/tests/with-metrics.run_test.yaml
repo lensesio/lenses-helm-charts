@@ -9,10 +9,16 @@ tests:
           metrics:
             enabled: true
     asserts:
-      # Check the rendered manifest has not changed
-      # Review the changes and if they are verified use `helm unittest -u .` to update the manifest
-      # Writing tests that cover this chaneg is highly recommended
-      - matchSnapshot: {}
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: LENSES_KAFKA_METRICS
+            value: |-
+              {
+                type: "JMX",
+                ssl: false,
+                default.port: 9102
+              }
   - it: should work with multiple ports
     set:
       lenses:
@@ -27,10 +33,27 @@ tests:
                 port: 9104
                 host: example2
     asserts:
-      # Check the rendered manifest has not changed
-      # Review the changes and if they are verified use `helm unittest -u .` to update the manifest
-      # Writing tests that cover this chaneg is highly recommended
-      - matchSnapshot: {}
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: LENSES_KAFKA_METRICS
+            value: |-
+              {
+                type: "JMX",
+                ssl: false,
+                port: [
+                  {
+                    host: "example1",
+                    id: "foo",
+                    port: "9103",
+                  },
+                  {
+                    host: "example2",
+                    id: "bar",
+                    port: "9104",
+                  }
+                ]
+              }
   - it: should work with multiple ports and type AWS
     set:
       lenses:
@@ -44,7 +67,109 @@ tests:
               - id: bar
                 url: example2:9104
     asserts:
-      # Check the rendered manifest has not changed
-      # Review the changes and if they are verified use `helm unittest -u .` to update the manifest
-      # Writing tests that cover this chaneg is highly recommended
-      - matchSnapshot: {}
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: LENSES_KAFKA_METRICS
+            value: |-
+              {
+                type: "AWS",
+                ssl: false,
+                port: [
+                  {
+                    id: "foo",
+                    url: "example1:9103",
+                  },
+                  {
+                    id: "bar",
+                    url: "example2:9104",
+                  }
+                ]
+              }
+  - it: should work with zookeeper metrics
+    set:
+      lenses:
+        zookeepers:
+          enabled: true
+          hosts:
+            - host: zookeeper1
+              port: 2181
+              metrics:
+                type: "JMX"
+                port: 9102
+                username: foo
+                password: bar
+                ssl: true
+            - host: zookeeper2
+              port: 2181
+              metrics:
+                type: "JMX"
+                port: 9103
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: LENSES_ZOOKEEPER_HOSTS
+            value: |-
+              [
+                {
+                  url: "zookeeper1:2181",
+                  metrics: {
+                    url: "zookeeper1:9102",
+                    type: "JMX",
+                    ssl: true,user: "foo",password: "bar",
+                  }
+                },
+                {
+                  url: "zookeeper2:2181",
+                  metrics: {
+                    url: "zookeeper2:9103",
+                    type: "JMX",
+                    ssl: false,
+                  }
+                }
+              ]
+  - it: should work with url
+    set:
+      lenses:
+        zookeepers:
+          enabled: true
+          hosts:
+            - host: zookeeper1
+              port: 2181
+              metrics:
+                url: metrics.zookeeper1:9112
+                type: "JMX"
+                port: 9102
+                username: foo
+                password: bar
+                ssl: true
+            - host: zookeeper2
+              port: 2181
+              metrics:
+                type: "JMX"
+                port: 9103
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: LENSES_ZOOKEEPER_HOSTS
+            value: |-
+              [
+                {
+                  url: "zookeeper1:2181",
+                  metrics: {
+                    url: "metrics.zookeeper1:9112",
+                    type: "JMX",
+                    ssl: true,user: "foo",password: "bar",
+                  }
+                },
+                {
+                  url: "zookeeper2:2181",
+                  metrics: {
+                    url: "zookeeper2:9103",
+                    type: "JMX",
+                    ssl: false,
+                  }
+                }
+              ]
