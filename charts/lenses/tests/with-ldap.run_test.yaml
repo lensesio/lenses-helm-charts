@@ -1,0 +1,94 @@
+suite: check LDAP configuration and how it is depicted in Lenses' secret resource
+templates:
+  - secrets.yaml
+  - deployment.yaml
+tests:
+  - it: security.conf should be empty without LDAP configuration
+    set:
+      lenses:
+        security:
+          ldap:
+            enabled: false # default value
+    asserts:
+      - template: secrets.yaml
+        equal:
+          path: stringData.security\.conf
+          value: ""
+  - it: security.conf should contain LDAP configuration when LDAP values are set
+    set:
+      lenses:
+        security:
+          ldap:
+            enabled: true
+            url: ldap://ldap.example.com
+            base: ou=Users,dc=ldap,dc=example,dc=local
+            password: foobar
+            user: uid=foosvc,ou=Users,dc=ldap,dc=example,dc=local
+            filter: "(&((cn=<user>)(uid=<user>)))"
+            # ldap plugins
+            plugin:
+              class: io.lenses.security.ldap.LdapMemberOfUserGroupPlugin
+              memberofKey: "memberOf"
+              groupExtractRegex: "(?i)cn=(\\w+),ou=Groups,dc=ldap,dc=example,dc=local$"
+              personNameKey: sn
+    asserts:
+      - template: secrets.yaml
+        equal:
+          path: stringData.security\.conf
+          value: |2-
+
+            lenses.security.ldap.url="ldap://ldap.example.com"
+            lenses.security.ldap.base="ou=Users,dc=ldap,dc=example,dc=local"
+            lenses.security.ldap.user="uid=foosvc,ou=Users,dc=ldap,dc=example,dc=local"
+            lenses.security.ldap.password="foobar"
+            lenses.security.ldap.filter="(&((cn=<user>)(uid=<user>)))"
+            lenses.security.ldap.plugin.class="io.lenses.security.ldap.LdapMemberOfUserGroupPlugin"
+            lenses.security.ldap.plugin.memberof.key="memberOf"
+            lenses.security.ldap.plugin.group.extract.regex="(?i)cn=(\\w+),ou=Groups,dc=ldap,dc=example,dc=local$"
+            lenses.security.ldap.plugin.person.name.key="sn"
+  - it: security.conf should not contain password when LDAP password is set to external
+    set:
+      lenses:
+        security:
+          ldap:
+            enabled: true
+            url: ldap://ldap.example.com
+            base: ou=Users,dc=ldap,dc=example,dc=local
+            password: external
+            user: uid=foosvc,ou=Users,dc=ldap,dc=example,dc=local
+            filter: "(&((cn=<user>)(uid=<user>)))"
+            # ldap plugins
+            plugin:
+              class: io.lenses.security.ldap.LdapMemberOfUserGroupPlugin
+              memberofKey: "memberOf"
+              groupExtractRegex: "(?i)cn=(\\w+),ou=Groups,dc=ldap,dc=example,dc=local$"
+              personNameKey: sn
+        additionalEnv:
+          - name: LENSES_SECURITY_LDAP_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: lenses-super-secrets
+                key: lenses-security-ldap-password
+    asserts:
+      - template: secrets.yaml
+        equal:
+          path: stringData.security\.conf
+          value: |2-
+
+            lenses.security.ldap.url="ldap://ldap.example.com"
+            lenses.security.ldap.base="ou=Users,dc=ldap,dc=example,dc=local"
+            lenses.security.ldap.user="uid=foosvc,ou=Users,dc=ldap,dc=example,dc=local"
+            lenses.security.ldap.filter="(&((cn=<user>)(uid=<user>)))"
+            lenses.security.ldap.plugin.class="io.lenses.security.ldap.LdapMemberOfUserGroupPlugin"
+            lenses.security.ldap.plugin.memberof.key="memberOf"
+            lenses.security.ldap.plugin.group.extract.regex="(?i)cn=(\\w+),ou=Groups,dc=ldap,dc=example,dc=local$"
+            lenses.security.ldap.plugin.person.name.key="sn"
+      - template: deployment.yaml
+        contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: LENSES_SECURITY_LDAP_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: lenses-super-secrets
+                key: lenses-security-ldap-password

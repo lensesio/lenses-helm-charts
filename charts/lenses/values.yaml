@@ -551,6 +551,15 @@ lenses:
       enabled: false
       url: ""
       base: ""
+      # Set LDAP password
+      # Use the value "external" to bypass the Helm validation and handle the password externally.
+      # The common use case for using "external" is to take the actual value from a Kubernetes Secret resource already deployed.
+      # To do so, add the following definition under 'lenses.additionalEnv' key:
+      # - name: LENSES_SECURITY_LDAP_PASSWORD
+      #   valueFrom:
+      #     secretKeyRef:
+      #       name: [SECRET_RESOURCE_NAME]
+      #       key: [SECRET_RESOURCE_KEY]
       password: ""
       user: ""
       filter: ""

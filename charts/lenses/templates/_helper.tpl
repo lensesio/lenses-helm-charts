@@ -372,7 +372,9 @@ lenses.security.password={{ required "'password' for Lenses defaultUser is manda
 lenses.security.ldap.url={{ .Values.lenses.security.ldap.url | quote }}
 lenses.security.ldap.base={{ .Values.lenses.security.ldap.base | quote }}
 lenses.security.ldap.user={{ .Values.lenses.security.ldap.user | quote }}
+{{- if not (eq (default "not-external" .Values.lenses.security.ldap.password) "external") }}
 lenses.security.ldap.password={{ .Values.lenses.security.ldap.password | quote }}
+{{- end }}
 lenses.security.ldap.filter={{ .Values.lenses.security.ldap.filter | quote }}
 lenses.security.ldap.plugin.class={{ .Values.lenses.security.ldap.plugin.class | quote }}
 lenses.security.ldap.plugin.memberof.key={{ .Values.lenses.security.ldap.plugin.memberofKey | quote }}
