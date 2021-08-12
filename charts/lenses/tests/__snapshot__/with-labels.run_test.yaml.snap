@@ -6,7 +6,7 @@ should work:
       annotations: null
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.3.3
+        chart: lenses-4.3.4
         component: lenses
         foo: bar
         heritage: Helm
@@ -180,7 +180,7 @@ should work:
         kubernetes.io/ingress.class: traefik
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.3.3
+        chart: lenses-4.3.4
         component: lenses
         foo: bar
         heritage: Helm
@@ -203,7 +203,7 @@ should work:
     metadata:
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.3.3
+        chart: lenses-4.3.4
         component: lenses
         foo: bar
         heritage: Helm

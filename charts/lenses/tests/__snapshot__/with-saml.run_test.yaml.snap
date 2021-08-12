@@ -186,7 +186,9 @@ should work:
       lenses.opts.truststore.jks: ""
       lenses.tls.keystore.jks: ""
       lenses.tls.truststore.jks: ""
-      saml.idp.xml: "123"
+      saml.idp.xml: |2-
+
+        123
       saml.keystore.jks: "234"
       schema.registry.keystore.jks: ""
       schema.registry.truststore.jks: ""
@@ -235,7 +237,9 @@ should work:
       lenses.opts.truststore.jks: ""
       lenses.tls.keystore.jks: ""
       lenses.tls.truststore.jks: ""
-      saml.idp.xml: "123"
+      saml.idp.xml: |2-
+
+        123
       saml.keystore.jks: "234"
       schema.registry.keystore.jks: ""
       schema.registry.truststore.jks: ""

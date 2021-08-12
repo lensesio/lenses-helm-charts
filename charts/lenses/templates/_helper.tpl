@@ -232,7 +232,7 @@ PLAINTEXT
   {{- range $srIndex, $sr := .Values.lenses.schemaRegistries.hosts -}}
   {{- if $srIndex }},{{ end }}
   {
-    url: "{{ $sr.protocol | default "http" }}://{{$sr.host}}:{{$sr.port}}"
+    url: "{{ default "http" $sr.protocol }}://{{$sr.host}}:{{$sr.port}}{{$sr.path}}"
     {{- if $sr.metrics -}},
     metrics: {
       {{- if $sr.metrics.url }}
@@ -240,10 +240,10 @@ PLAINTEXT
       {{- else if eq $sr.metrics.type "JMX" }}
       url: "{{$sr.host}}:{{$sr.metrics.port}}",
       {{- else }}
-      url: "{{$sr.protocol}}://{{$sr.host}}:{{$sr.metrics.port}}",
+      url: "{{default $sr.protocol $sr.metrics.protocol}}://{{$sr.host}}:{{$sr.metrics.port}}",
       {{- end }}
       type: "{{default "JMX" $sr.metrics.type}}",
-      ssl: {{default false $sr.ssl}}
+      ssl: {{ default false $sr.metrics.ssl }}
       {{- if $sr.metrics.username }},
       user: {{$sr.metrics.username | quote}}
       {{- end }}

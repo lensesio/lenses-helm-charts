@@ -204,7 +204,7 @@ tests:
                   metrics: {
                     url: "schema-registry1:9102",
                     type: "JMX",
-                    ssl: false,
+                    ssl: true,
                     user: "foo",
                     password: "bar"
                   }
@@ -249,7 +249,7 @@ tests:
                   metrics: {
                     url: "metrics.schema-registry1:9102",
                     type: "JMX",
-                    ssl: false,
+                    ssl: true,
                     user: "foo",
                     password: "bar"
                   }
@@ -311,7 +311,7 @@ tests:
                   metrics: {
                     url: "metrics.schema-registry1:9102",
                     type: "JMX",
-                    ssl: false,
+                    ssl: true,
                     user: "foo",
                     password: "bar"
                   }
