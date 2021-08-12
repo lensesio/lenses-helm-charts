@@ -6,7 +6,7 @@ should work:
       annotations: null
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.3.3
+        chart: lenses-4.3.4
         component: lenses
         heritage: Helm
         lenses.io/app: RELEASE-NAME
@@ -100,7 +100,7 @@ should work:
             - name: LT_PACKAGE
               value: helm
             - name: LT_PACKAGE_VERSION
-              value: 4.3.3
+              value: 4.3.4
             image: lensesio/lenses:4.3.2
             imagePullPolicy: IfNotPresent
             livenessProbe:
@@ -185,7 +185,7 @@ should work:
     metadata:
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.3.3
+        chart: lenses-4.3.4
         heritage: Helm
         lenses.io/app: RELEASE-NAME
         lenses.io/app.type: lenses-configmap
@@ -203,7 +203,7 @@ should work:
     metadata:
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.3.3
+        chart: lenses-4.3.4
         heritage: Helm
         lenses.io/app: RELEASE-NAME
         lenses.io/app.type: lenses-configmap
@@ -217,7 +217,7 @@ should work with external jaas:
       annotations: null
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.3.3
+        chart: lenses-4.3.4
         component: lenses
         heritage: Helm
         lenses.io/app: RELEASE-NAME
@@ -311,7 +311,7 @@ should work with external jaas:
             - name: LT_PACKAGE
               value: helm
             - name: LT_PACKAGE_VERSION
-              value: 4.3.3
+              value: 4.3.4
             - name: LENSES_KAFKA_SETTINGS_CLIENT_SASL_JAAS_CONFIG
               valueFrom:
                 secretKeyRef:
@@ -394,7 +394,7 @@ should work with external jaas:
     metadata:
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.3.3
+        chart: lenses-4.3.4
         heritage: Helm
         lenses.io/app: RELEASE-NAME
         lenses.io/app.type: lenses-configmap
