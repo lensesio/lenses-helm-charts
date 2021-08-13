@@ -145,6 +145,11 @@ lenses:
     # trust store password
     trustStorePassword:
 
+  # Override the default logback xml
+  # Used primarily to load a Lenses provided xml with debug level set for Lenses libs
+  # Can be used to load your custom logback if needed
+  # logbackXml: /opt/lenses/logback-debug.xml
+
   # TODO: Replace with docker implementation
   # Global truststore/keystore for the JVM
   opts:
@@ -281,6 +286,13 @@ lenses:
         port: 2181
         # JMX/JOLOKIA Metrics
         # metrics:
+        #   # 'url' is the preffered way to setup metrics endpoints.
+        #   # Read more here: https://docs.lenses.io/4.3/configuration/zookeeper/
+        #   # In previous versions Helm templating was used to construct the URL from 'host',
+        #   #  'metrics.type' and 'metrics.port'. Example values for 'url':
+        #   # - for JMX 'url: <host>:<port>,
+        #   # - for JOLOKIA 'url: http(s)://<host>:<port>/<suffix>
+        #   url:
         #   type: "JMX"
         #   port: 9102
         #   protocol:
@@ -303,6 +315,13 @@ lenses:
         path:
         # JMX/JOLOKIA Metrics
         # metrics:
+        #   # 'url' is the preffered way to setup metrics endpoints.
+        #   # Read more here: https://docs.lenses.io/4.3/configuration/schema-registry/
+        #   # In previous versions Helm templating was used to construct the URL from 'host',
+        #   #  'metrics.type' and 'metrics.port'. Example values for 'url':
+        #   # - for JMX 'url: <host>:<port>,
+        #   # - for JOLOKIA 'url: http(s)://<host>:<port>/<suffix>
+        #   url:
         #   type: "JMX"
         #   port: 9102
         #   protocol:
@@ -355,6 +374,16 @@ lenses:
 
   connectClusters:
     enabled: false
+    # Set external to true to manage clusters configuration using secrets (if this is true we ignore any connectClusters configuration given using the values.yaml)
+    # The common use case for using external mode is to take the actual value from a Kubernetes Secret resource already deployed.
+    # You will need to provide the whole configuration for Connect clusters; to fill the value follow the documentation: https://docs.lenses.io/4.3/configuration/connect/
+    # To do so, add the following definition under 'lenses.additionalEnv' key:
+    # - name: LENSES_KAFKA_CONNECT_CLUSTERS
+    #   valueFrom:
+    #     secretKeyRef:
+    #       name: [SECRET_RESOURCE_NAME]
+    #       key: [SECRET_RESOURCE_KEY]
+    external: false
     clusters:
       - name: streamreactor
         port: 8083
@@ -384,12 +413,11 @@ lenses:
         #     # host: connect-worker-1 # Note: this will be deprecated in version 5.0, see 'url' above
         #     # JMX/JOLOKIA Metrics
         #     metrics:
-        #       # 'url' is a newly introduced key which explicitly sets the URL
-        #       # of the metrics host. Previously Helm templating was
-        #       # used to construct the URL from 'host', 'metrics.type' and
-        #       # 'metrics.port'. Example values for 'url':
+        #       # 'url' is the preffered way to setup metrics endpoints.
+        #       # In previous versions Helm templating was used to construct the URL from 'host',
+        #       #  'metrics.type' and 'metrics.port'. Example values for 'url':
         #       # - for JMX 'url: <host>:<port>,
-        #       # - for JOLOKIA 'url: http(s)://<host>:<port>
+        #       # - for JOLOKIA 'url: http(s)://<host>:<port>/<suffix>
         #       url:
         #       ssl:
         #       username:
@@ -523,6 +551,15 @@ lenses:
       enabled: false
       url: ""
       base: ""
+      # Set LDAP password
+      # Use the value "external" to bypass the Helm validation and handle the password externally.
+      # The common use case for using "external" is to take the actual value from a Kubernetes Secret resource already deployed.
+      # To do so, add the following definition under 'lenses.additionalEnv' key:
+      # - name: LENSES_SECURITY_LDAP_PASSWORD
+      #   valueFrom:
+      #     secretKeyRef:
+      #       name: [SECRET_RESOURCE_NAME]
+      #       key: [SECRET_RESOURCE_KEY]
       password: ""
       user: ""
       filter: ""

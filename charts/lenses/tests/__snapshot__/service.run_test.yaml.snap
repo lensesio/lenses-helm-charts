@@ -5,7 +5,7 @@ should have ClusterIP type by default:
     metadata:
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.3.3
+        chart: lenses-4.3.4
         component: lenses
         heritage: Helm
         lenses.io/app: RELEASE-NAME
@@ -23,81 +23,3 @@ should have ClusterIP type by default:
         app: RELEASE-NAME
         component: lenses
       type: ClusterIP
-should have NodePort type if specified:
-  1: |
-    apiVersion: v1
-    kind: Service
-    metadata:
-      labels:
-        app: RELEASE-NAME
-        chart: lenses-4.3.3
-        component: lenses
-        heritage: Helm
-        lenses.io/app: RELEASE-NAME
-        lenses.io/app.type: lenses-service
-        release: RELEASE-NAME
-      name: RELEASE-NAME
-    spec:
-      ports:
-      - name: lenses
-        port: 80
-        targetPort: 3030
-      - name: http-metrics
-        port: 9102
-      selector:
-        app: RELEASE-NAME
-        component: lenses
-      type: NodePort
-should have custom annotations if specified:
-  1: |
-    apiVersion: v1
-    kind: Service
-    metadata:
-      annotations:
-        foo: bar
-      labels:
-        app: RELEASE-NAME
-        chart: lenses-4.3.3
-        component: lenses
-        heritage: Helm
-        lenses.io/app: RELEASE-NAME
-        lenses.io/app.type: lenses-service
-        release: RELEASE-NAME
-      name: RELEASE-NAME
-    spec:
-      ports:
-      - name: lenses
-        port: 80
-        targetPort: 3030
-      - name: http-metrics
-        port: 9102
-      selector:
-        app: RELEASE-NAME
-        component: lenses
-      type: NodePort
-should have custom externalTrafficPolicy if specified:
-  1: |
-    apiVersion: v1
-    kind: Service
-    metadata:
-      labels:
-        app: RELEASE-NAME
-        chart: lenses-4.3.3
-        component: lenses
-        heritage: Helm
-        lenses.io/app: RELEASE-NAME
-        lenses.io/app.type: lenses-service
-        release: RELEASE-NAME
-      name: RELEASE-NAME
-    spec:
-      externalTrafficPolicy: Cluster
-      ports:
-      - name: lenses
-        port: 80
-        targetPort: 3030
-      - name: http-metrics
-        port: 9102
-      selector:
-        app: RELEASE-NAME
-        component: lenses
-      type: NodePort

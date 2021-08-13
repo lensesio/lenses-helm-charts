@@ -6,7 +6,7 @@ should work:
       annotations: null
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.3.3
+        chart: lenses-4.3.4
         component: lenses
         heritage: Helm
         lenses.io/app: RELEASE-NAME
@@ -42,8 +42,6 @@ should work:
               value: "9101"
             - name: LENSES_KAFKA_BROKERS
               value: PLAINTEXT://kafka:9092
-            - name: LENSES_SCHEMA_REGISTRY_URLS
-              value: ""
             - name: LENSES_SCHEMA_REGISTRY_MODE
               value: ""
             - name: LENSES_KAFKA_CONNECT_CLUSTERS
@@ -102,7 +100,7 @@ should work:
             - name: LT_PACKAGE
               value: helm
             - name: LT_PACKAGE_VERSION
-              value: 4.3.3
+              value: 4.3.4
             image: lensesio/lenses:4.3.2
             imagePullPolicy: IfNotPresent
             livenessProbe:
@@ -188,7 +186,9 @@ should work:
       lenses.opts.truststore.jks: ""
       lenses.tls.keystore.jks: ""
       lenses.tls.truststore.jks: ""
-      saml.idp.xml: "123"
+      saml.idp.xml: |2-
+
+        123
       saml.keystore.jks: "234"
       schema.registry.keystore.jks: ""
       schema.registry.truststore.jks: ""
@@ -196,7 +196,7 @@ should work:
     metadata:
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.3.3
+        chart: lenses-4.3.4
         heritage: Helm
         lenses.io/app: RELEASE-NAME
         lenses.io/app.type: lenses-secret
@@ -206,7 +206,6 @@ should work:
       client.key.password: ""
       client.keystore.password: ""
       client.truststore.password: ""
-      connect.clusters: ""
       jaas.conf: ""
       lenses.opts.keystore.password: ""
       lenses.opts.truststore.password: ""
@@ -238,7 +237,9 @@ should work:
       lenses.opts.truststore.jks: ""
       lenses.tls.keystore.jks: ""
       lenses.tls.truststore.jks: ""
-      saml.idp.xml: "123"
+      saml.idp.xml: |2-
+
+        123
       saml.keystore.jks: "234"
       schema.registry.keystore.jks: ""
       schema.registry.truststore.jks: ""
@@ -246,7 +247,7 @@ should work:
     metadata:
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.3.3
+        chart: lenses-4.3.4
         heritage: Helm
         lenses.io/app: RELEASE-NAME
         lenses.io/app.type: lenses-secret
@@ -256,7 +257,6 @@ should work:
       client.key.password: ""
       client.keystore.password: ""
       client.truststore.password: ""
-      connect.clusters: ""
       jaas.conf: ""
       lenses.opts.keystore.password: ""
       lenses.opts.truststore.password: ""

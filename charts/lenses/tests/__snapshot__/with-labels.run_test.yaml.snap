@@ -6,7 +6,7 @@ should work:
       annotations: null
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.3.3
+        chart: lenses-4.3.4
         component: lenses
         foo: bar
         heritage: Helm
@@ -44,8 +44,6 @@ should work:
               value: "9101"
             - name: LENSES_KAFKA_BROKERS
               value: PLAINTEXT://kafka:9092
-            - name: LENSES_SCHEMA_REGISTRY_URLS
-              value: ""
             - name: LENSES_SCHEMA_REGISTRY_MODE
               value: ""
             - name: LENSES_KAFKA_CONNECT_CLUSTERS
@@ -104,7 +102,7 @@ should work:
             - name: LT_PACKAGE
               value: helm
             - name: LT_PACKAGE_VERSION
-              value: 4.3.3
+              value: 4.3.4
             image: lensesio/lenses:4.3.2
             imagePullPolicy: IfNotPresent
             livenessProbe:
@@ -182,7 +180,7 @@ should work:
         kubernetes.io/ingress.class: traefik
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.3.3
+        chart: lenses-4.3.4
         component: lenses
         foo: bar
         heritage: Helm
@@ -205,7 +203,7 @@ should work:
     metadata:
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.3.3
+        chart: lenses-4.3.4
         component: lenses
         foo: bar
         heritage: Helm

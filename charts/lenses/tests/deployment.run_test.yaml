@@ -30,10 +30,6 @@ tests:
     set:
       image.tag: bar
     asserts:
-      # Check the rendered manifest has not changed
-      # Review the changes and if they are verified use `helm unittest -u .` to update the manifest
-      # Writing tests that cover this chaneg is highly recommended
-      - matchSnapshot: {}
       - isKind:
           of: Deployment
       - equal:
@@ -44,14 +40,13 @@ tests:
     release:
       name: bar
     asserts:
-      # Check the rendered manifest has not changed
-      # Review the changes and if they are verified use `helm unittest -u .` to update the manifest
-      # Writing tests that cover this chaneg is highly recommended
-      - matchSnapshot: {}
       - isKind:
           of: Deployment
       - equal:
           path: metadata.labels.app
+          value: bar
+      - equal:
+          path: metadata.labels.lenses\.io\/app
           value: bar
       - equal:
           path: metadata.name
@@ -64,10 +59,6 @@ tests:
     set:
       replicaCount: 10
     asserts:
-      # Check the rendered manifest has not changed
-      # Review the changes and if they are verified use `helm unittest -u .` to update the manifest
-      # Writing tests that cover this chaneg is highly recommended
-      - matchSnapshot: {}
       - isKind:
           of: Deployment
       - equal:
@@ -79,12 +70,6 @@ tests:
       annotations:
         foo: bar
     asserts:
-      # Check the rendered manifest has not changed
-      # Review the changes and if they are verified use `helm unittest -u .` to update the manifest
-      # Writing tests that cover this chaneg is highly recommended
-      - matchSnapshot: {}
-      - isKind:
-          of: Deployment
       - equal:
           path: metadata.annotations.foo
           value: bar
@@ -94,10 +79,6 @@ tests:
       labels:
         foo: bar
     asserts:
-      # Check the rendered manifest has not changed
-      # Review the changes and if they are verified use `helm unittest -u .` to update the manifest
-      # Writing tests that cover this chaneg is highly recommended
-      - matchSnapshot: {}
       - isKind:
           of: Deployment
       - equal:
@@ -113,10 +94,6 @@ tests:
         livenessProbe:
           enabled: false
     asserts:
-      # Check the rendered manifest has not changed
-      # Review the changes and if they are verified use `helm unittest -u .` to update the manifest
-      # Writing tests that cover this chaneg is highly recommended
-      - matchSnapshot: {}
       - isEmpty:
           path: spec.template.spec.containers[0].livenessProbe
 
@@ -126,10 +103,6 @@ tests:
         pauseExec:
           enabled: true
     asserts:
-      # Check the rendered manifest has not changed
-      # Review the changes and if they are verified use `helm unittest -u .` to update the manifest
-      # Writing tests that cover this chaneg is highly recommended
-      - matchSnapshot: {}
       - contains:
           path: spec.template.spec.containers[0].env
           content:

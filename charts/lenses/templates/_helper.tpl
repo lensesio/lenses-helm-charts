@@ -199,80 +199,64 @@ PLAINTEXT
 {{- end -}}
 
 {{- define "zookeepers" -}}
-{{- if .Values.lenses.zookeepers.enabled -}}
 [
-  {{ range $index, $element := .Values.lenses.zookeepers.hosts }}
-  {{- if not $index -}}{url: "{{$element.host}}:{{$element.port}}"
-  {{- if $element.metrics -}}, metrics: {
-    {{- if eq $element.metrics.type "JMX" -}}
-    url: "{{$element.host}}:{{$element.metrics.port}}",
-    {{- else }}
-    url: "{{$element.protocol}}://{{$element.host}}:{{$element.metrics.port}}",
-    {{- end }}
-    type: "{{$element.metrics.type}}",
-    ssl: {{default false $element.metrics.ssl}},
-    {{- if $element.metrics.username -}}
-    user: {{$element.metrics.username | quote}},
-    {{- end }}
-    {{- if $element.metrics.password -}}
-    password: {{$element.metrics.password | quote}},
-    {{- end }}
-  }{{- end}}}
-  {{- else}},
-  {url: "{{$element.host}}:{{$element.port}}"
-  {{- if $element.metrics -}}, metrics: {
-    {{- if eq $element.metrics.type "JMX" -}}
-    url: "{{$element.host}}:{{$element.metrics.port}}",
-    {{- else }}
-    url: "{{$element.protocol}}://{{$element.host}}:{{$element.metrics.port}}",
-    {{- end }}
-    type: "{{default "JMX" $element.metrics.type}}",
-    ssl: {{default false $element.ssl}},
-    {{- if $element.metrics.username -}}
-    user: {{$element.metrics.username | quote}},
-    {{- end }}
-    {{- if $element.metrics.password -}}
-    password: {{$element.metrics.password | quote}}
-    {{- end }}
-  }{{- end}}}
-  {{- end}}
-{{- end}}
-]
-{{- end -}}
-{{- end -}}
-
-{{- define "registries" -}}
-{{- if .Values.lenses.schemaRegistries.enabled -}}
-[
-{{- range $index, $element := .Values.lenses.schemaRegistries.hosts -}}
-{{- if gt $index 0 -}},{{- end}}
+  {{- range $zkIndex, $zk := .Values.lenses.zookeepers.hosts -}}
+  {{- if $zkIndex }},{{ end }}
   {
-    url: "{{$element.protocol}}://{{$element.host}}:{{$element.port}}{{$element.path}}"
-  {{- if $element.metrics -}},
+    url: "{{$zk.host}}:{{$zk.port}}"
+  {{- if $zk.metrics -}},
     metrics: {
-      {{- if eq $element.metrics.type "JMX" }}
-      url: "{{$element.host}}:{{$element.metrics.port}}",
+      {{- if $zk.metrics.url }}
+      url: {{$zk.metrics.url | quote}},
+      {{- else if eq $zk.metrics.type "JMX" }}
+      url: "{{$zk.host}}:{{$zk.metrics.port}}",
       {{- else }}
-      url: "{{default $element.protocol $element.metrics.protocol}}://{{$element.host}}:{{$element.metrics.port}}",
+      url: "{{$zk.protocol}}://{{$zk.host}}:{{$zk.metrics.port}}",
       {{- end }}
-      type: "{{default "JMX" $element.metrics.type}}",
-      ssl: {{default false $element.metrics.ssl}}
-      {{- if $element.metrics.username }},
-      user: {{$element.metrics.username | quote}},
+      type: "{{$zk.metrics.type}}",
+      ssl: {{default false $zk.metrics.ssl}},
+      {{- if $zk.metrics.username -}}
+      user: {{$zk.metrics.username | quote}},
       {{- end }}
-      {{- if $element.metrics.password }}
-      password: {{$element.metrics.password | quote}}
+      {{- if $zk.metrics.password -}}
+      password: {{$zk.metrics.password | quote}},
       {{- end }}
     }{{- end}}
   }
 {{- end}}
 ]
 {{- end -}}
+
+{{- define "registries" -}}
+[
+  {{- range $srIndex, $sr := .Values.lenses.schemaRegistries.hosts -}}
+  {{- if $srIndex }},{{ end }}
+  {
+    url: "{{ default "http" $sr.protocol }}://{{$sr.host}}:{{$sr.port}}{{$sr.path}}"
+    {{- if $sr.metrics -}},
+    metrics: {
+      {{- if $sr.metrics.url }}
+      url: {{ $sr.metrics.url | quote }},
+      {{- else if eq $sr.metrics.type "JMX" }}
+      url: "{{$sr.host}}:{{$sr.metrics.port}}",
+      {{- else }}
+      url: "{{default $sr.protocol $sr.metrics.protocol}}://{{$sr.host}}:{{$sr.metrics.port}}",
+      {{- end }}
+      type: "{{default "JMX" $sr.metrics.type}}",
+      ssl: {{ default false $sr.metrics.ssl }}
+      {{- if $sr.metrics.username }},
+      user: {{$sr.metrics.username | quote}}
+      {{- end }}
+      {{- if $sr.metrics.password }},
+      password: {{$sr.metrics.password | quote}}
+      {{- end }}
+    }{{- end}}
+  }
+  {{- end}}
+]
 {{- end -}}
 
-
 {{- define "connect" -}}
-{{- if .Values.lenses.connectClusters.enabled -}}
 [
 {{- range $clusterCount, $cluster := .Values.lenses.connectClusters.clusters -}}
   {{- $port := $cluster.port -}}
@@ -333,7 +317,6 @@ PLAINTEXT
 {{- end}}
 ]
 {{- end -}}
-{{- end -}}
 
 
 {{- define "alertPlugins" -}}
@@ -389,7 +372,9 @@ lenses.security.password={{ required "'password' for Lenses defaultUser is manda
 lenses.security.ldap.url={{ .Values.lenses.security.ldap.url | quote }}
 lenses.security.ldap.base={{ .Values.lenses.security.ldap.base | quote }}
 lenses.security.ldap.user={{ .Values.lenses.security.ldap.user | quote }}
+{{- if not (eq (default "not-external" .Values.lenses.security.ldap.password) "external") }}
 lenses.security.ldap.password={{ .Values.lenses.security.ldap.password | quote }}
+{{- end }}
 lenses.security.ldap.filter={{ .Values.lenses.security.ldap.filter | quote }}
 lenses.security.ldap.plugin.class={{ .Values.lenses.security.ldap.plugin.class | quote }}
 lenses.security.ldap.plugin.memberof.key={{ .Values.lenses.security.ldap.plugin.memberofKey | quote }}
@@ -415,6 +400,16 @@ lenses.security.saml.key.password={{ .Values.lenses.security.saml.keyPassword | 
 lenses.storage.postgres.password={{ required "PostgreSQL 'password' value is mandatory" .Values.lenses.storage.postgres.password | quote }}
 {{- end -}}
 {{- end -}}
+{{- end -}}
+
+{{- define "lensesOpts" -}}
+{{- if .Values.lenses.opts.keyStoreFileData }}-Djavax.net.ssl.keyStore="/mnt/secrets/lenses.opts.keystore.jks" {{ end -}}
+{{- if .Values.lenses.opts.keyStorePassword }}-Djavax.net.ssl.keyStorePassword="${CLIENT_OPTS_KEYSTORE_PASSWORD}" {{ end -}}
+{{- if .Values.lenses.opts.trustStoreFileData }}-Djavax.net.ssl.trustStore="/mnt/secrets/lenses.opts.truststore.jks" {{ end -}}
+{{- if .Values.lenses.opts.trustStorePassword }}-Djavax.net.ssl.trustStorePassword="${CLIENT_OPTS_TRUSTSTORE_PASSWORD}" {{ end -}}
+{{- if and .Values.lenses.kafka.sasl.enabled .Values.lenses.kafka.sasl.jaasFileData }}-Djava.security.auth.login.config="/mnt/secrets/jaas.conf" {{ end -}}
+{{- if .Values.lenses.logbackXml }}-Dlogback.configurationFile="file:{{ .Values.lenses.logbackXml}}" {{ end -}}
+{{- if .Values.lenses.lensesOpts }}{{- .Values.lenses.lensesOpts }}{{- end -}}
 {{- end -}}
 
 {{/*

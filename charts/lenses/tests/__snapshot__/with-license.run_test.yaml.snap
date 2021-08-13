@@ -6,7 +6,7 @@ should work with a license:
       annotations: null
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.3.3
+        chart: lenses-4.3.4
         component: lenses
         heritage: Helm
         lenses.io/app: RELEASE-NAME
@@ -47,8 +47,6 @@ should work with a license:
               value: "9101"
             - name: LENSES_KAFKA_BROKERS
               value: PLAINTEXT://kafka:9092
-            - name: LENSES_SCHEMA_REGISTRY_URLS
-              value: ""
             - name: LENSES_SCHEMA_REGISTRY_MODE
               value: ""
             - name: LENSES_KAFKA_CONNECT_CLUSTERS
@@ -107,7 +105,7 @@ should work with a license:
             - name: LT_PACKAGE
               value: helm
             - name: LT_PACKAGE_VERSION
-              value: 4.3.3
+              value: 4.3.4
             image: lensesio/lenses:4.3.2
             imagePullPolicy: IfNotPresent
             livenessProbe:
@@ -197,7 +195,7 @@ should work with a license:
     metadata:
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.3.3
+        chart: lenses-4.3.4
         heritage: Helm
         lenses.io/app: RELEASE-NAME
         lenses.io/app.type: lenses-secret
@@ -207,7 +205,6 @@ should work with a license:
       client.key.password: ""
       client.keystore.password: ""
       client.truststore.password: ""
-      connect.clusters: ""
       jaas.conf: ""
       lenses.opts.keystore.password: ""
       lenses.opts.truststore.password: ""
@@ -228,7 +225,7 @@ should work with a license set to external:
       annotations: null
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.3.3
+        chart: lenses-4.3.4
         component: lenses
         heritage: Helm
         lenses.io/app: RELEASE-NAME
@@ -264,8 +261,6 @@ should work with a license set to external:
               value: "9101"
             - name: LENSES_KAFKA_BROKERS
               value: PLAINTEXT://kafka:9092
-            - name: LENSES_SCHEMA_REGISTRY_URLS
-              value: ""
             - name: LENSES_SCHEMA_REGISTRY_MODE
               value: ""
             - name: LENSES_KAFKA_CONNECT_CLUSTERS
@@ -324,7 +319,7 @@ should work with a license set to external:
             - name: LT_PACKAGE
               value: helm
             - name: LT_PACKAGE_VERSION
-              value: 4.3.3
+              value: 4.3.4
             - name: LICENSE
               valueFrom:
                 secretKeyRef:
@@ -419,7 +414,7 @@ should work with a license set to external:
     metadata:
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.3.3
+        chart: lenses-4.3.4
         heritage: Helm
         lenses.io/app: RELEASE-NAME
         lenses.io/app.type: lenses-secret
@@ -429,7 +424,6 @@ should work with a license set to external:
       client.key.password: ""
       client.keystore.password: ""
       client.truststore.password: ""
-      connect.clusters: ""
       jaas.conf: ""
       lenses.opts.keystore.password: ""
       lenses.opts.truststore.password: ""
@@ -450,7 +444,7 @@ should work without license:
       annotations: null
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.3.3
+        chart: lenses-4.3.4
         component: lenses
         heritage: Helm
         lenses.io/app: RELEASE-NAME
@@ -486,8 +480,6 @@ should work without license:
               value: "9101"
             - name: LENSES_KAFKA_BROKERS
               value: PLAINTEXT://kafka:9092
-            - name: LENSES_SCHEMA_REGISTRY_URLS
-              value: ""
             - name: LENSES_SCHEMA_REGISTRY_MODE
               value: ""
             - name: LENSES_KAFKA_CONNECT_CLUSTERS
@@ -546,7 +538,7 @@ should work without license:
             - name: LT_PACKAGE
               value: helm
             - name: LT_PACKAGE_VERSION
-              value: 4.3.3
+              value: 4.3.4
             image: lensesio/lenses:4.3.2
             imagePullPolicy: IfNotPresent
             livenessProbe:
@@ -636,7 +628,7 @@ should work without license:
     metadata:
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.3.3
+        chart: lenses-4.3.4
         heritage: Helm
         lenses.io/app: RELEASE-NAME
         lenses.io/app.type: lenses-secret
@@ -646,7 +638,6 @@ should work without license:
       client.key.password: ""
       client.keystore.password: ""
       client.truststore.password: ""
-      connect.clusters: ""
       jaas.conf: ""
       lenses.opts.keystore.password: ""
       lenses.opts.truststore.password: ""

@@ -20,10 +20,6 @@ tests:
         enabled: true
         type: NodePort
     asserts:
-      # Check the rendered manifest has not changed
-      # Review the changes and if they are verified use `helm unittest -u .` to update the manifest
-      # Writing tests that cover this chaneg is highly recommended
-      - matchSnapshot: {}
       - equal:
           path: spec.type
           value: NodePort
@@ -35,10 +31,9 @@ tests:
         annotations:
           foo: bar
     asserts:
-      # Check the rendered manifest has not changed
-      # Review the changes and if they are verified use `helm unittest -u .` to update the manifest
-      # Writing tests that cover this chaneg is highly recommended
-      - matchSnapshot: {}
+      - equal:
+          path: spec.type
+          value: NodePort
       - equal:
           path: metadata.annotations.foo
           value: bar
@@ -50,10 +45,9 @@ tests:
         type: NodePort
         externalTrafficPolicy: Cluster
     asserts:
-      # Check the rendered manifest has not changed
-      # Review the changes and if they are verified use `helm unittest -u .` to update the manifest
-      # Writing tests that cover this chaneg is highly recommended
-      - matchSnapshot: {}
+      - equal:
+          path: spec.type
+          value: NodePort
       - equal:
           path: spec.externalTrafficPolicy
           value: Cluster

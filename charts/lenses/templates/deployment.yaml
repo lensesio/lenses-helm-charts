@@ -197,14 +197,11 @@ spec:
               key:  "lenses.tls.truststore.password"
         {{- end }}
         {{- end }}
-
         - name: LENSES_OPTS
-          value: {{ .Values.lenses.lensesOpts | default "" | quote }}
+          value: {{ include "lensesOpts" . | default "" | quote }}
         {{- if .Values.lenses.opts.keyStoreFileData }}
         - name: CLIENT_OPTS_KEYSTORE_FILE
           value: "/mnt/secrets/lenses.opts.keystore.jks"
-        - name: LENSES_OPTS
-          value: "$(LENSES_OPTS) -Djavax.net.ssl.keyStore=$(CLIENT_OPTS_KEYSTORE_FILE)"
         {{- end }}
         {{- if .Values.lenses.opts.keyStorePassword }}
         - name: CLIENT_OPTS_KEYSTORE_PASSWORD
@@ -212,14 +209,10 @@ spec:
             secretKeyRef:
               name: {{ include "fullname" . | quote }}
               key:  "lenses.opts.keystore.password"
-        - name: LENSES_OPTS
-          value: "$(LENSES_OPTS) -Djavax.net.ssl.keyStorePassword=$(CLIENT_OPTS_KEYSTORE_PASSWORD)"
         {{- end }}
         {{- if .Values.lenses.opts.trustStoreFileData }}
         - name: CLIENT_OPTS_TRUSTSTORE_FILE
           value: "/mnt/secrets/lenses.opts.truststore.jks"
-        - name: LENSES_OPTS
-          value: "$(LENSES_OPTS) -Djavax.net.ssl.trustStore=$(CLIENT_OPTS_TRUSTSTORE_FILE)"
         {{- end }}
         {{- if .Values.lenses.opts.trustStorePassword }}
         - name: CLIENT_OPTS_TRUSTSTORE_PASSWORD
@@ -227,8 +220,6 @@ spec:
             secretKeyRef:
               name: {{ include "fullname" . | quote }}
               key:  "lenses.opts.truststore.password"
-        - name: LENSES_OPTS
-          value: "$(LENSES_OPTS) -Djavax.net.ssl.trustStorePassword=$(CLIENT_OPTS_TRUSTSTORE_PASSWORD)"
         {{- end }}
         {{- if .Values.lenses.licenseUrl }}
         - name: LICENSE_URL
@@ -237,10 +228,6 @@ spec:
         {{- if and .Values.lenses.kafka.sasl.jaasFileData .Values.lenses.kafka.sasl.jaasConfig }}
         {{/* Deliberately fail helm deployment if both vaues are set */}}
         {{ required "Both jaasFileData and jaasConfig are defined, pick one." nil }}
-        {{- end }}
-        {{- if and .Values.lenses.kafka.sasl.enabled .Values.lenses.kafka.sasl.jaasFileData }}
-        - name: LENSES_OPTS
-          value: "$(LENSES_OPTS) -Djava.security.auth.login.config=/mnt/secrets/jaas.conf"
         {{- end }}
         {{- if.Values.lenses.jvm.heapOpts}}
         - name: LENSES_HEAP_OPTS
@@ -270,17 +257,17 @@ spec:
         {{- if.Values.lenses.kafka.metrics.enabled }}
         - name: LENSES_KAFKA_METRICS
           value: |-
-{{ include "kafkaMetrics" . | indent 12 }}
+          {{- include "kafkaMetrics" . | nindent 12 }}
         {{- end }}
         {{- if.Values.lenses.jmxBrokers}}
         - name: LENSES_JMX_BROKERS
           value: |-
-{{ include "jmxBrokers" . | indent 12 }}
+          {{- include "jmxBrokers" . | nindent 12 }}
         {{- end }}
         {{- if .Values.lenses.zookeepers.enabled }}
         - name: LENSES_ZOOKEEPER_HOSTS
           value: |-
-{{ include "zookeepers" . | indent 12 }}
+          {{- include "zookeepers" . | nindent 12 }}
         {{- end }}
 
         {{- if .Values.lenses.zookeepers.chroot }}
@@ -289,24 +276,27 @@ spec:
         {{- end }}
 
         # Schema Registries
+        {{- if .Values.lenses.schemaRegistries.enabled }}
         - name: LENSES_SCHEMA_REGISTRY_URLS
           value: |-
-{{ include "registries" . | indent 12 }}
+            {{- include "registries" . | nindent 12 }}
+        {{- end }}
         - name: LENSES_SCHEMA_REGISTRY_MODE
           value: {{ default "" .Values.lenses.schemaRegistries.mode | quote }}
+        {{- if not .Values.lenses.connectClusters.external }}
         # from secrets as might contain basic auth credentials
         - name: LENSES_KAFKA_CONNECT_CLUSTERS
           valueFrom:
             secretKeyRef:
               name: {{ include "fullname" . | quote }}
               key: "connect.clusters"
-
+        {{- end }}
         - name: LENSES_ALERT_CONSUMERS_LAG_THRESHOLD
           value: {{ .Values.lenses.alerts.consumersLagThreshold | quote }}
         {{- if .Values.lenses.alerts.enabled }}
         - name: LENSES_ALERT_PLUGINS
           value: |-
-{{ include "alertPlugins" . | indent 12 }}
+            {{- include "alertPlugins" . | nindent 12 }}
         {{- end }}
         {{- if .Values.lenses.grafanaUrl }}
         - name: LENSES_GRAFANA
