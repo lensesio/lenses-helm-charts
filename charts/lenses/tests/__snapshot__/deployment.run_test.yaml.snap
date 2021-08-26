@@ -6,7 +6,7 @@ should test default values:
       annotations: null
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.3.4
+        chart: lenses-4.3.5
         component: lenses
         heritage: Helm
         lenses.io/app: RELEASE-NAME
@@ -44,11 +44,6 @@ should test default values:
               value: PLAINTEXT://kafka:9092
             - name: LENSES_SCHEMA_REGISTRY_MODE
               value: ""
-            - name: LENSES_KAFKA_CONNECT_CLUSTERS
-              valueFrom:
-                secretKeyRef:
-                  key: connect.clusters
-                  name: RELEASE-NAME
             - name: LENSES_ALERT_CONSUMERS_LAG_THRESHOLD
               value: "50000"
             - name: LENSES_ALERT_PLUGINS
@@ -100,7 +95,7 @@ should test default values:
             - name: LT_PACKAGE
               value: helm
             - name: LT_PACKAGE_VERSION
-              value: 4.3.4
+              value: 4.3.5
             image: lensesio/lenses:4.3.2
             imagePullPolicy: IfNotPresent
             livenessProbe:

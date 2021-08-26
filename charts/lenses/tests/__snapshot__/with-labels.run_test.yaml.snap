@@ -6,7 +6,7 @@ should work:
       annotations: null
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.3.4
+        chart: lenses-4.3.5
         component: lenses
         foo: bar
         heritage: Helm
@@ -46,11 +46,6 @@ should work:
               value: PLAINTEXT://kafka:9092
             - name: LENSES_SCHEMA_REGISTRY_MODE
               value: ""
-            - name: LENSES_KAFKA_CONNECT_CLUSTERS
-              valueFrom:
-                secretKeyRef:
-                  key: connect.clusters
-                  name: RELEASE-NAME
             - name: LENSES_ALERT_CONSUMERS_LAG_THRESHOLD
               value: "50000"
             - name: LENSES_ALERT_PLUGINS
@@ -102,7 +97,7 @@ should work:
             - name: LT_PACKAGE
               value: helm
             - name: LT_PACKAGE_VERSION
-              value: 4.3.4
+              value: 4.3.5
             image: lensesio/lenses:4.3.2
             imagePullPolicy: IfNotPresent
             livenessProbe:
@@ -180,7 +175,7 @@ should work:
         kubernetes.io/ingress.class: traefik
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.3.4
+        chart: lenses-4.3.5
         component: lenses
         foo: bar
         heritage: Helm
@@ -203,7 +198,7 @@ should work:
     metadata:
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.3.4
+        chart: lenses-4.3.5
         component: lenses
         foo: bar
         heritage: Helm
