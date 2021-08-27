@@ -6,7 +6,7 @@ should work:
       annotations: null
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.3.4
+        chart: lenses-4.3.5
         component: lenses
         heritage: Helm
         lenses.io/app: RELEASE-NAME
@@ -44,11 +44,6 @@ should work:
               value: SASL_PLAINTEXT://kafka:9095
             - name: LENSES_SCHEMA_REGISTRY_MODE
               value: ""
-            - name: LENSES_KAFKA_CONNECT_CLUSTERS
-              valueFrom:
-                secretKeyRef:
-                  key: connect.clusters
-                  name: RELEASE-NAME
             - name: LENSES_ALERT_CONSUMERS_LAG_THRESHOLD
               value: "50000"
             - name: LENSES_ALERT_PLUGINS
@@ -100,7 +95,7 @@ should work:
             - name: LT_PACKAGE
               value: helm
             - name: LT_PACKAGE_VERSION
-              value: 4.3.4
+              value: 4.3.5
             image: lensesio/lenses:4.3.2
             imagePullPolicy: IfNotPresent
             livenessProbe:
@@ -185,7 +180,7 @@ should work:
     metadata:
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.3.4
+        chart: lenses-4.3.5
         heritage: Helm
         lenses.io/app: RELEASE-NAME
         lenses.io/app.type: lenses-configmap
@@ -203,7 +198,7 @@ should work:
     metadata:
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.3.4
+        chart: lenses-4.3.5
         heritage: Helm
         lenses.io/app: RELEASE-NAME
         lenses.io/app.type: lenses-configmap
@@ -217,7 +212,7 @@ should work with external jaas:
       annotations: null
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.3.4
+        chart: lenses-4.3.5
         component: lenses
         heritage: Helm
         lenses.io/app: RELEASE-NAME
@@ -255,11 +250,6 @@ should work with external jaas:
               value: SASL_PLAINTEXT://kafka:9095
             - name: LENSES_SCHEMA_REGISTRY_MODE
               value: ""
-            - name: LENSES_KAFKA_CONNECT_CLUSTERS
-              valueFrom:
-                secretKeyRef:
-                  key: connect.clusters
-                  name: RELEASE-NAME
             - name: LENSES_ALERT_CONSUMERS_LAG_THRESHOLD
               value: "50000"
             - name: LENSES_ALERT_PLUGINS
@@ -311,7 +301,7 @@ should work with external jaas:
             - name: LT_PACKAGE
               value: helm
             - name: LT_PACKAGE_VERSION
-              value: 4.3.4
+              value: 4.3.5
             - name: LENSES_KAFKA_SETTINGS_CLIENT_SASL_JAAS_CONFIG
               valueFrom:
                 secretKeyRef:
@@ -394,7 +384,7 @@ should work with external jaas:
     metadata:
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.3.4
+        chart: lenses-4.3.5
         heritage: Helm
         lenses.io/app: RELEASE-NAME
         lenses.io/app.type: lenses-configmap

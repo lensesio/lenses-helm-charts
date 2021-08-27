@@ -283,7 +283,7 @@ spec:
         {{- end }}
         - name: LENSES_SCHEMA_REGISTRY_MODE
           value: {{ default "" .Values.lenses.schemaRegistries.mode | quote }}
-        {{- if not .Values.lenses.connectClusters.external }}
+        {{- if and .Values.lenses.connectClusters.enabled (not .Values.lenses.connectClusters.external) }}
         # from secrets as might contain basic auth credentials
         - name: LENSES_KAFKA_CONNECT_CLUSTERS
           valueFrom:
