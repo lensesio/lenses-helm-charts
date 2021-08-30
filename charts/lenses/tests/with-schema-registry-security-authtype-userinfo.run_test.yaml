@@ -8,10 +8,16 @@ tests:
           schemaRegistries:
             enabled: true
     asserts:
-      # Check the rendered manifest has not changed
-      # Review the changes and if they are verified use `helm unittest -u .` to update the manifest
-      # Writing tests that cover this chaneg is highly recommended
-      - matchSnapshot: {}
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: LENSES_SCHEMA_REGISTRY_URLS
+            value:  |-
+              [
+                {
+                  url: "http://schema-registry:8081"
+                }
+              ]
       - contains:
           path: spec.template.spec.containers[0].env
           content:
@@ -30,10 +36,16 @@ tests:
             security:
               enabled: true
     asserts:
-      # Check the rendered manifest has not changed
-      # Review the changes and if they are verified use `helm unittest -u .` to update the manifest
-      # Writing tests that cover this chaneg is highly recommended
-      - matchSnapshot: {}
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: LENSES_SCHEMA_REGISTRY_URLS
+            value:  |-
+              [
+                {
+                  url: "http://schema-registry:8081"
+                }
+              ]
       - contains:
           path: spec.template.spec.containers[0].env
           content:
@@ -53,10 +65,16 @@ tests:
               enabled: true
               authType: foobar
     asserts:
-      # Check the rendered manifest has not changed
-      # Review the changes and if they are verified use `helm unittest -u .` to update the manifest
-      # Writing tests that cover this chaneg is highly recommended
-      - matchSnapshot: {}
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: LENSES_SCHEMA_REGISTRY_URLS
+            value:  |-
+              [
+                {
+                  url: "http://schema-registry:8081"
+                }
+              ]
       - contains:
           path: spec.template.spec.containers[0].env
           content:
@@ -78,10 +96,24 @@ tests:
               username: foo
               password: bar
     asserts:
-      # Check the rendered manifest has not changed
-      # Review the changes and if they are verified use `helm unittest -u .` to update the manifest
-      # Writing tests that cover this chaneg is highly recommended
-      - matchSnapshot: {}
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: LENSES_SCHEMA_REGISTRY_URLS
+            value:  |-
+              [
+                {
+                  url: "http://schema-registry:8081"
+                }
+              ]
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: LENSES_SCHEMA_REGISTRY_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: RELEASE-NAME
+                key: schema.registry.password
       - contains:
           path: spec.template.spec.containers[0].env
           content:
@@ -101,10 +133,26 @@ tests:
     values:
       - values/with-schema-registry-and-external-secrets.yaml
     asserts:
-      # Check the rendered manifest has not changed
-      # Review the changes and if they are verified use `helm unittest -u .` to update the manifest
-      # Writing tests that cover this chaneg is highly recommended
-      - matchSnapshot: {}
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: LENSES_SCHEMA_REGISTRY_URLS
+            value:  |-
+              [
+                {
+                  url: "http://schema-registry:8081"
+                }
+              ]
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: LENSES_SCHEMA_REGISTRY_AUTH
+            value: USER_INFO
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: LENSES_KAFKA_SETTINGS_CLIENT_BASIC_AUTH_CREDENTIALS_SOURCE
+            value: USER_INFO
       - contains:
           path: spec.template.spec.containers[0].env
           content:
@@ -121,8 +169,3 @@ tests:
               secretKeyRef:
                 name: lenses-super-secrets
                 key: lenses-schema-registry-password
-      - contains:
-          path: spec.template.spec.containers[0].env
-          content:
-            name: LENSES_KAFKA_SETTINGS_CLIENT_BASIC_AUTH_CREDENTIALS_SOURCE
-            value: USER_INFO

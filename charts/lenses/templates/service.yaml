@@ -25,7 +25,7 @@ spec:
   externalTrafficPolicy: {{ toYaml .Values.service.externalTrafficPolicy }}
   {{- end }}
   ports:
-  - name: lenses
+  - name: {{ .Values.servicePortName }}
     port: {{ .Values.servicePort }}
     {{- if .Values.nodePort }}
     nodePort: {{ .Values.nodePort }}
