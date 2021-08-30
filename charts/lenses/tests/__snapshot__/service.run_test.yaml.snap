@@ -5,7 +5,7 @@ should have ClusterIP type by default:
     metadata:
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.3.5
+        chart: lenses-4.3.6
         component: lenses
         heritage: Helm
         lenses.io/app: RELEASE-NAME
