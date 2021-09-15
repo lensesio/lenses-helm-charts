@@ -19,6 +19,9 @@ metadata:
     {{ $key }}: {{ $value | quote }}
   {{- end }}
 spec:
+  {{- if .Values.ingress.ingressClassName }}
+  ingressClassName: {{ .Values.ingress.ingressClassName | quote }}
+  {{- end }}
   rules:
   - host: {{ .Values.ingress.host | quote }}
     http:
