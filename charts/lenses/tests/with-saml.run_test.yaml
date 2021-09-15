@@ -7,10 +7,6 @@ tests:
     values:
       - values/with-saml.yaml
     asserts:
-      # Check the rendered manifest has not changed
-      # Review the changes and if they are verified use `helm unittest -u .` to update the manifest
-      # Writing tests that cover this chaneg is highly recommended
-      - matchSnapshot: {}
       # deployment.yaml
       - template: deployment.yaml
         isKind:
@@ -35,9 +31,6 @@ tests:
           content:
             key: saml.idp.xml
             path: saml.idp.xml
-      # secrets.yaml
-      - template: secrets.yaml
-        matchSnapshot: {}
       - template: secrets.yaml
         isKind:
           of: Secret

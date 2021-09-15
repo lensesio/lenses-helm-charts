@@ -1,0 +1,20 @@
+suite: test ingress resource
+templates:
+  - ingress.yaml
+tests:
+  - it: should not include a ingressClassName by default
+    set:
+      ingress:
+        enabled: true
+    asserts:
+      - isNull:
+          path: spec.ingressClassName
+  - it: should have ingressClassName if set
+    set:
+      ingress:
+        enabled: true
+        ingressClassName: foobar
+    asserts:
+      - equal:
+          path: spec.ingressClassName
+          value: foobar

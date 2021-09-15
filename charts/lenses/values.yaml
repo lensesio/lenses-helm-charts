@@ -105,6 +105,7 @@ ingress:
   ##
   enabled: false
   host:
+  # ingressClassName:
 
   # Ingress annotations
   annotations:

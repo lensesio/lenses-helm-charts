@@ -6,10 +6,6 @@ templates:
 tests:
   - it: should work without postgres enabled
     asserts:
-      # Check the rendered manifest has not changed
-      # Review the changes and if they are verified use `helm unittest -u .` to update the manifest
-      # Writing tests that cover this chaneg is highly recommended
-      - matchSnapshot: {}
       - template: configmap.yaml
         isKind:
           of: ConfigMap
@@ -51,15 +47,40 @@ tests:
     values:
       - values/with-postgres-host-db-username-pwd.yaml
     asserts:
-      # Check the rendered manifest has not changed
-      # Review the changes and if they are verified use `helm unittest -u .` to update the manifest
-      # Writing tests that cover this chaneg is highly recommended
-      - matchSnapshot: {}
+      - template: configmap.yaml
+        equal:
+          path: data.lenses\.append\.conf
+          value: |-
+
+            lenses.storage.postgres.host="example.com"
+            lenses.storage.postgres.database="foo-db"
+            lenses.storage.postgres.username="foo"
   - it: should render with postgres enabled and host, database set and username, password set to external
     values:
       - values/with-postgres-and-external-secrets.yaml
     asserts:
-      # Check the rendered manifest has not changed
-      # Review the changes and if they are verified use `helm unittest -u .` to update the manifest
-      # Writing tests that cover this chaneg is highly recommended
-      - matchSnapshot: {}
+      - template: configmap.yaml
+        equal:
+          path: data.lenses\.append\.conf
+          value: |-
+
+            lenses.storage.postgres.host="example.com"
+            lenses.storage.postgres.database="foo-db"
+      - template: deployment.yaml
+        contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: LENSES_STORAGE_POSTGRES_USERNAME
+            valueFrom:
+              secretKeyRef:
+                key: lenses-storage-postgres-username
+                name: lenses-super-secrets
+      - template: deployment.yaml
+        contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: LENSES_STORAGE_POSTGRES_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: lenses-super-secrets
+                key: lenses-storage-postgres-password
