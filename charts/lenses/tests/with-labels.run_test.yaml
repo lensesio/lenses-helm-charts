@@ -12,7 +12,6 @@ tests:
         enabled: true
         host: example.com
     asserts:
-      # Check the rendered manifest has not changed
-      # Review the changes and if they are verified use `helm unittest -u .` to update the manifest
-      # Writing tests that cover this chaneg is highly recommended
-      - matchSnapshot: {}
+      - equal:
+          path: metadata.labels.foo
+          value: bar
