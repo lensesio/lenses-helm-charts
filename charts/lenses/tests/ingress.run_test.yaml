@@ -9,6 +9,8 @@ tests:
     asserts:
       - isNull:
           path: spec.ingressClassName
+      - isNull:
+          path: metadata.annotations
   - it: should have ingressClassName if set
     set:
       ingress:
@@ -18,3 +20,13 @@ tests:
       - equal:
           path: spec.ingressClassName
           value: foobar
+  - it: should have custom annotations if set
+    set:
+      ingress:
+        enabled: true
+        annotations:
+          kubernetes.io/ingress.class: traefik
+    asserts:
+      - equal:
+          path: metadata.annotations.kubernetes\.io\/ingress\.class
+          value: traefik
