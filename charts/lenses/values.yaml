@@ -108,11 +108,12 @@ ingress:
   # ingressClassName:
 
   # Ingress annotations
-  annotations:
-    kubernetes.io/ingress.class: traefik
-#    kubernetes.io/ingress.class: nginx
-#    kubernetes.io/tls-acme: 'true'
-#    nginx.ingress.kubernetes.io/rewrite-target: /
+  annotations: {}
+    # Optionally add here the annotations related to the ingress provider, see examples below:
+    # kubernetes.io/ingress.class: traefik
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: 'true'
+    # nginx.ingress.kubernetes.io/rewrite-target: /
 
   # TLS if enabled load the tls.crt and tls.keys as a secrets and enable TLS on the ingress
   tls:
