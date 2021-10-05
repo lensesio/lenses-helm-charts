@@ -31,7 +31,7 @@ Lenses has been deployed!
 
 1. Lenses has been started. You can find out the port numbers being used by Lenses by running:
 
-          $ kubectl describe svc {{ include "fullname" . }} --namespace {{ .Release.Namespace }}
+        $ kubectl describe svc {{ include "fullname" . }} --namespace {{ .Release.Namespace }}
 
 2. Configure DNS records corresponding to Kubernetes ingress resources to point to the NODE_IP/NODE_HOST
 {{- end }}
@@ -43,5 +43,5 @@ Lenses has been deployed!
 ==================================================
 Ingress enabled.
 
-Visit the UI at https://{{ .Values.ingress.host }}{{ .Values.ingress.path }}
+Visit the UI at https://{{ .Values.ingress.host }}
 {{- end}}

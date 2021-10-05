@@ -19,11 +19,14 @@ metadata:
     {{ $key }}: {{ $value | quote }}
   {{- end }}
 spec:
+  {{- if .Values.ingress.ingressClassName }}
+  ingressClassName: {{ .Values.ingress.ingressClassName | quote }}
+  {{- end }}
   rules:
   - host: {{ .Values.ingress.host | quote }}
     http:
       paths:
-      - path: {{if .Values.ingress.path }}{{ .Values.ingress.path }}{{else}}"/"{{end}}
+      - path: "/"
         backend:
           serviceName: {{ include "fullname" . | quote }}
           servicePort: {{ .Values.servicePort }}

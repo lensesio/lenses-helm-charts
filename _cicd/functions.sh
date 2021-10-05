@@ -16,6 +16,7 @@ rm -rf /mnt/persistent/helm.repo.lenses.io/lenses.jfrog.io
 cd /mnt/persistent/helm.repo.lenses.io
 wget -m https://lenses.jfrog.io/artifactory/helm-charts/
 sed  's|https://lenses.jfrog.io/artifactory/api/helm/helm-charts|https://helm.repo.lenses.io|' -i lenses.jfrog.io/artifactory/helm-charts/index.yaml
+sed  's|https://lenses.jfrog.io/lenses-helm-charts|https://helm.repo.lenses.io|' -i lenses.jfrog.io/artifactory/helm-charts/index.yaml
 mv lenses.jfrog.io/artifactory/helm-charts/* .
 rm -rf lenses.jfrog.io/ index.html
 wget https://raw.githubusercontent.com/lensesio/kafka-helm-charts/gh-pages/index.html

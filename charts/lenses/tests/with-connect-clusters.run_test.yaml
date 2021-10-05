@@ -6,18 +6,54 @@ tests:
     values:
       - values/with-connect-clusters.yaml
     asserts:
-      # Check the rendered manifest has not changed
-      # Review the changes and if they are verified use `helm unittest -u .` to update the manifest
-      # Writing tests that cover this chaneg is highly recommended
-      - matchSnapshot: {}
+      - equal:
+          path: stringData.connect\.clusters
+          value: |-
+            [
+              {
+                name: "streamreactor",
+                statuses: "connect-status",
+                configs: "connect-configs",
+                offsets: "connect-offsets",
+                aes256: { key: "PasswordPasswordPasswordPassword" },
+                urls: [
+                  {
+                    url: "http://connect-worker-1:8083",
+                    metrics: {
+                      url: "connect-worker-1:9102",
+                      type: "JMX",
+                      ssl: false,
+                      user: "admin",
+                      password: "admin"
+                    }
+                  },
+                  {
+                    url: "http://connect-worker-2:8083"
+                  },
+                  {
+                    url: "http://connect-worker-3:8083"
+                  }
+                ]
+              },
+              {
+                name: "sqllenses",
+                statuses: "connect-sqllenses-status",
+                configs: "connect-sqllenses-configs",
+                offsets: "connect-sqllenses-offsets",
+                urls: [
+                  {
+                    url: "http://sqllenses-worker-1:8084"
+                  },
+                  {
+                    url: "http://sqllenses-worker-2:8084"
+                  }
+                ]
+              }
+            ]
   - it: should work with explicit Connect metrics URL
     values:
       - values/with-connect-metrics-url.yaml
     asserts:
-      # Check the rendered manifest has not changed
-      # Review the changes and if they are verified use `helm unittest -u .` to update the manifest
-      # Writing tests that cover this chaneg is highly recommended
-      - matchSnapshot: {}
       - equal:
           path: stringData.connect\.clusters
           value: |-
@@ -38,9 +74,10 @@ tests:
                       user: "admin",
                       password: "admin"
                     }
+                  },
+                  {
+                    url: "http://connect-worker-2:8083/custom/path"
                   }
                 ]
               }
             ]
-
-

@@ -1,0 +1,115 @@
+suite: test deployment with lenses opts set
+templates:
+  - deployment.yaml
+tests:
+  - it: should succeed without lenses opts set
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: LENSES_OPTS
+            value: ""
+  - it: should succeed with lenses opts arguments
+    set:
+      lenses:
+        lensesOpts: "-Djava.security.krb5.conf=/path/to/krb5.conf"
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: LENSES_OPTS
+            value: "-Djava.security.krb5.conf=/path/to/krb5.conf"
+  - it: should succeed with multiple lenses opts arguments
+    set:
+      lenses:
+        lensesOpts: "-Djava.security.krb5.conf=/path/to/krb5.conf -Dlogback.configurationFile=file:/path/to/logback.xml"
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: LENSES_OPTS
+            value: "-Djava.security.krb5.conf=/path/to/krb5.conf -Dlogback.configurationFile=file:/path/to/logback.xml"
+  - it: should succeed with lenses.opts.keyStoreFileData
+    set:
+      lenses:
+        opts:
+          keyStoreFileData: YmluYXJ5LWRhdGE=
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: LENSES_OPTS
+            value: '-Djavax.net.ssl.keyStore="/mnt/secrets/lenses.opts.keystore.jks" '
+  - it: should succeed lenses.opts.keyStorePassword
+    set:
+      lenses:
+        opts:
+          keyStorePassword: foobar
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: LENSES_OPTS
+            value: '-Djavax.net.ssl.keyStorePassword="${CLIENT_OPTS_KEYSTORE_PASSWORD}" '
+  - it: should succeed with lenses.opts.trustStoreFileData
+    set:
+      lenses:
+        opts:
+          trustStoreFileData: YmluYXJ5LWRhdGE=
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: LENSES_OPTS
+            value: '-Djavax.net.ssl.trustStore="/mnt/secrets/lenses.opts.truststore.jks" '
+  - it: should succeed lenses.opts.trustStorePassword
+    set:
+      lenses:
+        opts:
+          trustStorePassword: foobar
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: LENSES_OPTS
+            value: '-Djavax.net.ssl.trustStorePassword="${CLIENT_OPTS_TRUSTSTORE_PASSWORD}" '
+  - it: should succeed lenses.opts.trustStorePassword
+    set:
+      lenses:
+        kafka:
+          sasl:
+            enabled: true
+            jaasFileData: YmluYXJ5LWRhdGE=
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: LENSES_OPTS
+            value: '-Djava.security.auth.login.config="/mnt/secrets/jaas.conf" '
+  - it: should succeed custom logback xml
+    set:
+      lenses:
+        logbackXml: /opt/lenses/logback-debug.xml
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: LENSES_OPTS
+            value: '-Dlogback.configurationFile="file:/opt/lenses/logback-debug.xml" '
+  - it: should succeed with a combination of the above options
+    set:
+      lenses:
+        kafka:
+          sasl:
+            enabled: true
+            jaasFileData: YmluYXJ5LWRhdGE=
+        lensesOpts: "-Djava.security.krb5.conf=/path/to/krb5.conf"
+        opts:
+          trustStoreFileData: YmluYXJ5LWRhdGE=
+          trustStorePassword: foobar
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: LENSES_OPTS
+            value: '-Djavax.net.ssl.trustStore="/mnt/secrets/lenses.opts.truststore.jks" -Djavax.net.ssl.trustStorePassword="${CLIENT_OPTS_TRUSTSTORE_PASSWORD}" -Djava.security.auth.login.config="/mnt/secrets/jaas.conf" -Djava.security.krb5.conf=/path/to/krb5.conf'

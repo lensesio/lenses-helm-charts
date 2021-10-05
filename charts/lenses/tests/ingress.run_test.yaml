@@ -1,0 +1,32 @@
+suite: test ingress resource
+templates:
+  - ingress.yaml
+tests:
+  - it: should not include a ingressClassName by default
+    set:
+      ingress:
+        enabled: true
+    asserts:
+      - isNull:
+          path: spec.ingressClassName
+      - isNull:
+          path: metadata.annotations
+  - it: should have ingressClassName if set
+    set:
+      ingress:
+        enabled: true
+        ingressClassName: foobar
+    asserts:
+      - equal:
+          path: spec.ingressClassName
+          value: foobar
+  - it: should have custom annotations if set
+    set:
+      ingress:
+        enabled: true
+        annotations:
+          kubernetes.io/ingress.class: traefik
+    asserts:
+      - equal:
+          path: metadata.annotations.kubernetes\.io\/ingress\.class
+          value: traefik
