@@ -31,7 +31,12 @@ EOF
 
 clone_site() {
     # Get index.yaml
-    helm repo add "${REPO_LABEL}" "${SOURCE_HELM_REPO_URL}"
+    local add_args=""
+    if [[ "${BUILD_MODE}" == 'development' ]]; then
+        add_args="--username=${ARTIFACTORY_USER} --password=${ARTIFACTORY_PASSWORD}"
+    fi
+    # shellcheck disable=SC2086
+    helm repo add "${REPO_LABEL}" "${SOURCE_HELM_REPO_URL}" ${add_args}
     helm repo update
 
     # Copy index.yaml
@@ -39,11 +44,10 @@ clone_site() {
     cp "${HELM_CACHE_HOME}/repository/${REPO_LABEL}-index.yaml" index.yaml
     replace_in_index_yaml "https://lenses.jfrog.io/artifactory/api/helm/helm-charts"
     replace_in_index_yaml "https://lenses.jfrog.io/artifactory/api/helm/lenses-private-helm-repo"
-    wget https://raw.githubusercontent.com/lensesio/kafka-helm-charts/gh-pages/index.html
 
     # Pull all charts // all versions
     pull_charts
-    echo "Total files pulled: $(find .| wc -l)"
+    echo "=== Total files pulled: $(find .| wc -l)"
     if [[ "${DEBUG_FLAG:-}" == "true" ]]; then
         cat index.yaml
         ls -sla
@@ -52,7 +56,11 @@ clone_site() {
 
 pull_charts() {
     set +o xtrace
-    CHARTS="$(helm search repo ${REPO_LABEL} | grep "${REPO_LABEL}/" | awk '{print $1}')"
+    local search_args=""
+    if [[ "${BUILD_MODE}" == 'development' ]]; then
+        search_args="--devel"
+    fi
+    CHARTS="$(helm search repo ${REPO_LABEL} ${search_args} | grep "${REPO_LABEL}/" | awk '{print $1}')"
 
     IFS=$'\n'
     for chart in $CHARTS; do
@@ -68,7 +76,11 @@ pull_charts() {
 
 pull_chart_versions() {
     local chart="${1}"
-    CHART_VERSIONS="$(helm search repo "${chart}" --versions | grep "${REPO_LABEL}/" | awk '{print $2}')"
+    local search_args=""
+    if [[ "${BUILD_MODE}" == 'development' ]]; then
+        search_args="--devel"
+    fi
+    CHART_VERSIONS="$(helm search repo "${chart}" --versions ${search_args} | grep "${REPO_LABEL}/" | awk '{print $2}')"
 
     IFS=$'\n'
     for version in $CHART_VERSIONS; do

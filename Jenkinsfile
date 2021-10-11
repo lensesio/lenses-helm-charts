@@ -133,8 +133,16 @@ pipeline {
                     dir('_cicd/image/charts') { deleteDir() }
 
                     dir('_cicd/image/charts') {
-                        // Build the static site by taking index.yaml/charts from jfrog and static index.html from Google bucket
-                        sh "${WORKSPACE}/_cicd/functions.sh clone_site"
+                        withCredentials([
+                            usernamePassword(
+                                credentialsId: '9ab1ec30-daf0-4311-bc77-0e49cec71a42',
+                                usernameVariable: 'ARTIFACTORY_USER',
+                                passwordVariable: 'ARTIFACTORY_PASSWORD'
+                            )
+                        ]) {
+                            // Build the static site by taking index.yaml/charts from jfrog and static index.html from Google bucket
+                            sh "${WORKSPACE}/_cicd/functions.sh clone_site"
+                        }
                         archiveArtifacts '*.yaml'
                     }
                 }
