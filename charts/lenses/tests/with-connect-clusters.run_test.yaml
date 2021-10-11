@@ -2,9 +2,42 @@ suite: enable connect clusters and check the changes in secret
 templates:
   - secrets.yaml
 tests:
-  - it: should work
-    values:
-      - values/with-connect-clusters.yaml
+  - it: should work explicit ports set
+    set:
+      lenses:
+        connectClusters:
+          enabled: true
+          clusters:
+            - name: streamreactor
+              port: 8083
+              jmxPort: 9102
+              protocol: http
+              offsetsTopic: connect-offsets
+              statusTopic: connect-status
+              configTopic: connect-configs
+              aes256:
+                - key: PasswordPasswordPasswordPassword
+              hosts:
+                - host: connect-worker-1
+                  metrics:
+                    type: "JMX"
+                    port: 9102
+                    protocol:
+                    username: admin
+                    password: admin
+                    ssl:
+                - host: connect-worker-2
+                - host: connect-worker-3
+            - name: sqllenses
+              port: 8084
+              jmxPort: 9103
+              protocol: http
+              offsetsTopic: connect-sqllenses-offsets
+              statusTopic: connect-sqllenses-status
+              configTopic: connect-sqllenses-configs
+              hosts:
+                - host: sqllenses-worker-1
+                - host: sqllenses-worker-2
     asserts:
       - equal:
           path: stringData.connect\.clusters
@@ -50,9 +83,30 @@ tests:
                 ]
               }
             ]
+
   - it: should work with explicit Connect metrics URL
-    values:
-      - values/with-connect-metrics-url.yaml
+    set:
+      lenses:
+        connectClusters:
+          enabled: true
+          clusters:
+            - name: streamreactor
+              port: 8083
+              jmxPort: 9102
+              protocol: http
+              offsetsTopic: connect-offsets
+              statusTopic: connect-status
+              configTopic: connect-configs
+              aes256:
+                - key: PasswordPasswordPasswordPassword
+              hosts:
+                - host: connect-worker-1
+                  metrics:
+                    url: "http://connect-worker-1:8080/metrics"
+                    username: admin
+                    password: admin
+                    ssl:
+                - url: http://connect-worker-2:8083/custom/path
     asserts:
       - equal:
           path: stringData.connect\.clusters
@@ -77,6 +131,109 @@ tests:
                   },
                   {
                     url: "http://connect-worker-2:8083/custom/path"
+                  }
+                ]
+              }
+            ]
+
+  - it: should work without port in host or url
+    set:
+      lenses:
+        connectClusters:
+          enabled: true
+          clusters:
+            - name: streamreactor
+              jmxPort: 9102
+              protocol: http
+              offsetsTopic: connect-offsets
+              statusTopic: connect-status
+              configTopic: connect-configs
+              aes256:
+                - key: PasswordPasswordPasswordPassword
+              hosts:
+                - host: connect-worker-1
+                  metrics:
+                    url: http://connect-worker-1/metrics
+                    username: admin
+                    password: admin
+                    ssl:
+                - url: http://connect-worker-2/custom/path
+    asserts:
+      - equal:
+          path: stringData.connect\.clusters
+          value: |-
+            [
+              {
+                name: "streamreactor",
+                statuses: "connect-status",
+                configs: "connect-configs",
+                offsets: "connect-offsets",
+                aes256: { key: "PasswordPasswordPasswordPassword" },
+                urls: [
+                  {
+                    url: "http://connect-worker-1",
+                    metrics: {
+                      url: "http://connect-worker-1/metrics",
+                      type: "JMX",
+                      ssl: false,
+                      user: "admin",
+                      password: "admin"
+                    }
+                  },
+                  {
+                    url: "http://connect-worker-2/custom/path"
+                  }
+                ]
+              }
+            ]
+
+  - it: should work with port in host
+    set:
+      lenses:
+        connectClusters:
+          enabled: true
+          clusters:
+            - name: streamreactor
+              jmxPort: 9102
+              port: 8083
+              protocol: http
+              offsetsTopic: connect-offsets
+              statusTopic: connect-status
+              configTopic: connect-configs
+              aes256:
+                - key: PasswordPasswordPasswordPassword
+              hosts:
+                - host: connect-worker-1
+                  metrics:
+                    url: http://connect-worker-1/metrics
+                    username: admin
+                    password: admin
+                    ssl:
+                - url: http://connect-worker-2/custom/path
+    asserts:
+      - equal:
+          path: stringData.connect\.clusters
+          value: |-
+            [
+              {
+                name: "streamreactor",
+                statuses: "connect-status",
+                configs: "connect-configs",
+                offsets: "connect-offsets",
+                aes256: { key: "PasswordPasswordPasswordPassword" },
+                urls: [
+                  {
+                    url: "http://connect-worker-1:8083",
+                    metrics: {
+                      url: "http://connect-worker-1/metrics",
+                      type: "JMX",
+                      ssl: false,
+                      user: "admin",
+                      password: "admin"
+                    }
+                  },
+                  {
+                    url: "http://connect-worker-2/custom/path"
                   }
                 ]
               }

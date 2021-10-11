@@ -5,22 +5,99 @@ SCRIPTS_DIR=$(dirname "${BASH_SOURCE[0]}")
 set -o errexit
 set -o nounset
 set -o pipefail
-set -o xtrace
+if [[ "${DEBUG_FLAG:-}" == "true" ]]; then
+    set -o xtrace
+fi
 
-clone_site() {
+REPO_LABEL="ephemeral"
+
+upload_site() {
+    # local remote_path="/tmp/helm.repo.lenses.io"
+    local remote_path="/mnt/persistent/helm.repo.lenses.io"
+
     mkdir -p "${HOME}/.ssh"
     ssh-keyscan -t rsa ${SSH_HOST#*@} >> ~/.ssh/known_hosts
 
     cat <<EOF | ssh ${SSH_HOST}
-rm -rf /mnt/persistent/helm.repo.lenses.io/lenses.jfrog.io
-cd /mnt/persistent/helm.repo.lenses.io
-wget -m https://lenses.jfrog.io/artifactory/helm-charts/
-sed  's|https://lenses.jfrog.io/artifactory/api/helm/helm-charts|https://helm.repo.lenses.io|' -i lenses.jfrog.io/artifactory/helm-charts/index.yaml
-sed  's|https://lenses.jfrog.io/lenses-helm-charts|https://helm.repo.lenses.io|' -i lenses.jfrog.io/artifactory/helm-charts/index.yaml
-mv lenses.jfrog.io/artifactory/helm-charts/* .
-rm -rf lenses.jfrog.io/ index.html
-wget https://raw.githubusercontent.com/lensesio/kafka-helm-charts/gh-pages/index.html
+mkdir -p "${remote_path}"
 EOF
+    # Copy all files to proper path
+    # TODO: Use rsync to update only the changed ones
+    scp -r . "${SSH_HOST}:${remote_path}"
+    cat <<EOF | ssh ${SSH_HOST}
+ls -lsa "${remote_path}"
+EOF
+}
+
+clone_site() {
+    # Get index.yaml
+    local add_args=""
+    if [[ "${BUILD_MODE}" == 'development' ]]; then
+        add_args="--username=${ARTIFACTORY_USER} --password=${ARTIFACTORY_PASSWORD}"
+    fi
+    # shellcheck disable=SC2086
+    helm repo add "${REPO_LABEL}" "${SOURCE_HELM_REPO_URL}" ${add_args}
+    helm repo update
+
+    # Copy index.yaml
+    eval "$(helm env)"
+    cp "${HELM_CACHE_HOME}/repository/${REPO_LABEL}-index.yaml" index.yaml
+    replace_in_index_yaml "https://lenses.jfrog.io/artifactory/api/helm/helm-charts"
+    replace_in_index_yaml "https://lenses.jfrog.io/artifactory/api/helm/lenses-private-helm-repo"
+
+    # Pull all charts // all versions
+    pull_charts
+    echo "=== Total files pulled: $(find .| wc -l)"
+    if [[ "${DEBUG_FLAG:-}" == "true" ]]; then
+        cat index.yaml
+        ls -sla
+    fi
+}
+
+pull_charts() {
+    set +o xtrace
+    local search_args=""
+    if [[ "${BUILD_MODE}" == 'development' ]]; then
+        search_args="--devel"
+    fi
+    CHARTS="$(helm search repo ${REPO_LABEL} ${search_args} | grep "${REPO_LABEL}/" | awk '{print $1}')"
+
+    IFS=$'\n'
+    for chart in $CHARTS; do
+        pull_chart_versions "${chart}"
+        # Use for testing
+        # break
+    done
+
+    if [[ "${DEBUG_FLAG:-}" == "true" ]]; then
+        set -o xtrace
+    fi
+}
+
+pull_chart_versions() {
+    local chart="${1}"
+    local search_args=""
+    if [[ "${BUILD_MODE}" == 'development' ]]; then
+        search_args="--devel"
+    fi
+    CHART_VERSIONS="$(helm search repo "${chart}" --versions ${search_args} | grep "${REPO_LABEL}/" | awk '{print $2}')"
+
+    IFS=$'\n'
+    for version in $CHART_VERSIONS; do
+        echo "Pulling ${chart}:${version}"
+        helm pull "${chart}" --version "${version}" || echo "Pulling ${chart}:${version} FAILED!"
+    done
+}
+
+replace_in_index_yaml() {
+    set -o xtrace
+    # TARGET_HELM_REPO_URL is different depending on if it is a release or not
+    # and is populated in Jenkisfile
+    sed "s|${1}|${TARGET_HELM_REPO_URL}|" -i index.yaml
+
+    if [[ "${DEBUG_FLAG:-}" != "true" ]]; then
+        set +o xtrace
+    fi
 }
 
 setup_helm() {

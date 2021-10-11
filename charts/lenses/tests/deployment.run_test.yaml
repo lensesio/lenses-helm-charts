@@ -104,3 +104,22 @@ tests:
           content:
             name: PAUSE_EXEC
             value: "true"
+
+  - it: should add env vars when set
+    set:
+      lenses:
+        additionalEnv:
+          - name: LENSES_CONNECTORS_INFO
+            value: |
+              {
+                "foo": "bar"
+              }
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: LENSES_CONNECTORS_INFO
+            value: |
+              {
+                "foo": "bar"
+              }
