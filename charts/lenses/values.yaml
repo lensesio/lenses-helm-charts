@@ -308,6 +308,8 @@ lenses:
   ## If your schema registries are outside explicitly add them to the hosts.
   schemaRegistries:
     enabled: false
+    # If using Hortonworks Schema registry then set "mode: HORTONWORKS".
+    # Defaults to "CONLFLUENT"
     mode:
     topic:
     hosts:
