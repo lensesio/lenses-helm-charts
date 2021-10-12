@@ -308,7 +308,6 @@ lenses:
   ## If your schema registries are outside explicitly add them to the hosts.
   schemaRegistries:
     enabled: false
-    mode:
     topic:
     hosts:
       - host: schema-registry
