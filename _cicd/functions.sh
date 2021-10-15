@@ -42,6 +42,7 @@ clone_site() {
     # Copy index.yaml
     eval "$(helm env)"
     cp "${HELM_CACHE_HOME}/repository/${REPO_LABEL}-index.yaml" index.yaml
+    replace_in_index_yaml "https://lenses.jfrog.io/lenses-helm-charts"
     replace_in_index_yaml "https://lenses.jfrog.io/artifactory/api/helm/helm-charts"
     replace_in_index_yaml "https://lenses.jfrog.io/artifactory/api/helm/lenses-private-helm-repo"
 
