@@ -351,23 +351,7 @@ spec:
         {{- end }}
         - name: LENSES_KAFKA_SETTINGS_CLIENT_BASIC_AUTH_CREDENTIALS_SOURCE
           value: {{ default "" .Values.lenses.schemaRegistries.security.authType | quote }}
-
         # ssl/sasl
-        {{- if .Values.lenses.jvm.trustStoreFileData }}
-        # Remove "LENSES_" prefix to avoid env. var. auto-detection which results
-        # in lenses.conf entry.
-        - name: JVM_TRUSTSTORE_LOCATION
-          value: "/mnt/secrets/jvm.truststore.jks"
-        - name: LENSES_OPTS
-          value: "$(LENSES_OPTS) -Djavax.net.ssl.trustStore=$(JVM_TRUSTSTORE_LOCATION)"
-        - name: JVM_TRUSTSTORE_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: {{ include "fullname" . | quote }}
-              key:  "jvm.truststore.password"
-        - name: LENSES_OPTS
-          value: "$(LENSES_OPTS) -Djavax.net.ssl.trustStorePassword=$(JVM_TRUSTSTORE_PASSWORD)"
-        {{- end }}
         - name: LENSES_KAFKA_SETTINGS_CLIENT_SECURITY_PROTOCOL
           value: {{ include "securityProtocol" . | quote }}
         - name: LENSES_KAFKA_SETTINGS_CLIENT_SASL_MECHANISM
