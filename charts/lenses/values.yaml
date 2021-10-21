@@ -142,11 +142,10 @@ lenses:
     #performanceOpts are any jvm tuning options to add to the jvm
     performanceOpts:
 
-    # base64 encoded truststore data
-    trustStoreFileData: |-
-
-    # trust store password
-    trustStorePassword:
+    # DEPRECATED in favor of Values.lenses.opts.trustStoreFileData, please use the latter
+    # trustStoreFileData:
+    # DEPRECATED in favor of Values.lenses.opts.trustStorePassword, please use the latter
+    # trustStorePassword:
 
   # Override the default logback xml
   # Used primarily to load a Lenses provided xml with debug level set for Lenses libs
@@ -308,9 +307,6 @@ lenses:
   ## If your schema registries are outside explicitly add them to the hosts.
   schemaRegistries:
     enabled: false
-    # If using Hortonworks Schema registry then set "mode: HORTONWORKS".
-    # Defaults to "CONLFLUENT"
-    mode:
     topic:
     hosts:
       - host: schema-registry

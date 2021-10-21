@@ -289,8 +289,10 @@ PLAINTEXT
       {
         {{- if $host.url }}
         url: "{{ $host.url }}"
-        {{- else }}
+        {{- else if $port }}
         url: "{{$protocol}}://{{$host.host}}:{{$port}}"
+        {{- else }}
+        url: "{{$protocol}}://{{$host.host}}"
         {{- end }}
         {{- if $host.metrics -}},
         metrics: {
