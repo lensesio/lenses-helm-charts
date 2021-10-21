@@ -61,22 +61,12 @@ spec:
           secret:
             secretName: {{ include "fullname" . | quote }}
             items:
-              - key: jvm.truststore.jks
-                path: jvm.truststore.jks
               - key: security.conf
                 path: security.conf
               - key: security.append.conf
                 path: security.append.conf
               - key: lenses.keytab
                 path: lenses.keytab
-              - key: keytab
-                path: keytab
-              - key: client.keystore.jks
-                path: client.keystore.jks
-              - key: client.truststore.jks
-                path: client.truststore.jks
-              - key: jaas.conf
-                path: jaas.conf
               - key: schema.registry.keystore.jks
                 path: schema.registry.keystore.jks
               - key: schema.registry.truststore.jks
@@ -151,11 +141,6 @@ spec:
           - name: config
             mountPath: "/mnt/settings/lenses.append.conf"
             subPath: "lenses.append.conf"
-          {{- if and .Values.lenses.kafka.sasl.enabled .Values.lenses.kafka.sasl.krb5Conf }}
-          - name: config
-            mountPath: "/etc/krb5.conf"
-            subPath: "krb5.conf"
-          {{- end }}
           {{- if .Values.persistence.enabled }}
           - name: storage
             mountPath: "/data/storage"
@@ -229,10 +214,6 @@ spec:
         - name: LICENSE_URL
           value: {{ .Values.lenses.licenseUrl }}
         {{- end }}
-        {{- if and .Values.lenses.kafka.sasl.jaasFileData .Values.lenses.kafka.sasl.jaasConfig }}
-        {{/* Deliberately fail helm deployment if both vaues are set */}}
-        {{ required "Both jaasFileData and jaasConfig are defined, pick one." nil }}
-        {{- end }}
         {{- if.Values.lenses.jvm.heapOpts}}
         - name: LENSES_HEAP_OPTS
           value: {{ .Values.lenses.jvm.heapOpts | quote }}
@@ -256,18 +237,6 @@ spec:
           value: {{ .Values.restPort | quote }}
         - name: LENSES_JMX_PORT
           value: "9101"
-        - name: LENSES_KAFKA_BROKERS
-          value: {{ include "bootstrapBrokers" . | quote }}
-        {{- if.Values.lenses.kafka.metrics.enabled }}
-        - name: LENSES_KAFKA_METRICS
-          value: |-
-          {{- include "kafkaMetrics" . | nindent 12 }}
-        {{- end }}
-        {{- if.Values.lenses.jmxBrokers}}
-        - name: LENSES_JMX_BROKERS
-          value: |-
-          {{- include "jmxBrokers" . | nindent 12 }}
-        {{- end }}
         {{- if .Values.lenses.zookeepers.enabled }}
         - name: LENSES_ZOOKEEPER_HOSTS
           value: |-
@@ -328,10 +297,6 @@ spec:
           value: {{ include "topologyTopic" . | quote }}
         - name: LENSES_SCHEMA_REGISTRY_TOPICS
           value:  {{ .Values.lenses.schemaRegistries.topic | quote }}
-        {{- if .Values.lenses.kafka.jmxPort }}
-        - name: LENSES_JMX_BROKER_PORT
-          value: {{ .Values.lenses.kafka.jmxPort | quote }}
-        {{- end }}
 
         # Kubernetes Processors
         - name: LENSES_SQL_EXECUTION_MODE
@@ -356,39 +321,6 @@ spec:
         - name: LENSES_KAFKA_SETTINGS_CLIENT_BASIC_AUTH_CREDENTIALS_SOURCE
           value: {{ default "" .Values.lenses.schemaRegistries.security.authType | quote }}
         # ssl/sasl
-        - name: LENSES_KAFKA_SETTINGS_CLIENT_SECURITY_PROTOCOL
-          value: {{ include "securityProtocol" . | quote }}
-        - name: LENSES_KAFKA_SETTINGS_CLIENT_SASL_MECHANISM
-          value: {{ default "GSSAPI" .Values.lenses.kafka.sasl.mechanism | quote }}
-        {{- if and .Values.lenses.kafka.ssl.trustStoreFileData .Values.lenses.kafka.ssl.enabled }}
-        - name: LENSES_KAFKA_SETTINGS_CLIENT_SSL_TRUSTSTORE_LOCATION
-          value: "/mnt/secrets/client.truststore.jks"
-        {{- end -}}
-        {{- if and .Values.lenses.kafka.ssl.keyStoreFileData .Values.lenses.kafka.ssl.enabled }}
-        - name: LENSES_KAFKA_SETTINGS_CLIENT_SSL_KEYSTORE_LOCATION
-          value: "/mnt/secrets/client.keystore.jks"
-        {{- end -}}
-        {{- if and .Values.lenses.kafka.ssl.trustStorePassword .Values.lenses.kafka.ssl.enabled }}
-        - name: LENSES_KAFKA_SETTINGS_CLIENT_SSL_TRUSTSTORE_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: {{ include "fullname" . | quote }}
-              key:  "client.truststore.password"
-        {{- end -}}
-        {{- if and .Values.lenses.kafka.ssl.keyStorePassword .Values.lenses.kafka.ssl.enabled }}
-        - name: LENSES_KAFKA_SETTINGS_CLIENT_SSL_KEYSTORE_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: {{ include "fullname" . | quote }}
-              key:  "client.keystore.password"
-        {{- end -}}
-        {{- if and .Values.lenses.kafka.ssl.keyPassword .Values.lenses.kafka.ssl.enabled }}
-        - name: LENSES_KAFKA_SETTINGS_CLIENT_SSL_KEY_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: {{ include "fullname" . | quote }}
-              key:  "client.key.password"
-        {{- end }}
         {{- if .Values.lenses.schemaRegistries.ssl.trustStoreFileData }}
         - name: LENSES_SCHEMA_REGISTRY_SSL_TRUSTSTORE_LOCATION
           value: "/mnt/secrets/schema.registry.truststore.jks"

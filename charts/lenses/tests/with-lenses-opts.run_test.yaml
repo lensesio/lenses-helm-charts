@@ -73,19 +73,6 @@ tests:
           content:
             name: LENSES_OPTS
             value: '-Djavax.net.ssl.trustStorePassword="${CLIENT_OPTS_TRUSTSTORE_PASSWORD}" '
-  - it: should succeed lenses.opts.trustStorePassword
-    set:
-      lenses:
-        kafka:
-          sasl:
-            enabled: true
-            jaasFileData: YmluYXJ5LWRhdGE=
-    asserts:
-      - contains:
-          path: spec.template.spec.containers[0].env
-          content:
-            name: LENSES_OPTS
-            value: '-Djava.security.auth.login.config="/mnt/secrets/jaas.conf" '
   - it: should succeed custom logback xml
     set:
       lenses:
@@ -96,20 +83,3 @@ tests:
           content:
             name: LENSES_OPTS
             value: '-Dlogback.configurationFile="file:/opt/lenses/logback-debug.xml" '
-  - it: should succeed with a combination of the above options
-    set:
-      lenses:
-        kafka:
-          sasl:
-            enabled: true
-            jaasFileData: YmluYXJ5LWRhdGE=
-        lensesOpts: "-Djava.security.krb5.conf=/path/to/krb5.conf"
-        opts:
-          trustStoreFileData: YmluYXJ5LWRhdGE=
-          trustStorePassword: foobar
-    asserts:
-      - contains:
-          path: spec.template.spec.containers[0].env
-          content:
-            name: LENSES_OPTS
-            value: '-Djavax.net.ssl.trustStore="/mnt/secrets/lenses.opts.truststore.jks" -Djavax.net.ssl.trustStorePassword="${CLIENT_OPTS_TRUSTSTORE_PASSWORD}" -Djava.security.auth.login.config="/mnt/secrets/jaas.conf" -Djava.security.krb5.conf=/path/to/krb5.conf'

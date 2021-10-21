@@ -11,16 +11,6 @@ tests:
           value: lensesio/lenses:4.3.4
       - isEmpty:
           path: metadata.annotations
-      - contains:
-          path: spec.template.spec.containers[0].env
-          content:
-            name: LENSES_KAFKA_BROKERS
-            value: PLAINTEXT://kafka:9092
-      - contains:
-          path: spec.template.spec.containers[0].env
-          content:
-            name: LENSES_KAFKA_SETTINGS_CLIENT_SECURITY_PROTOCOL
-            value: PLAINTEXT
 
   - it: should test docker image tag override
     set:
