@@ -1,5 +1,10 @@
 # Release notes for Lenses Helm chart
 
+## Release 4.3.11
+
+- `Values.lenses.jvm.trustStoreFileData` has been deprecated  in favor of `Values.lenses.opts.trustStoreFileData` since they were duplicates, please use the latter.
+- `Values.lenses.jvm.trustStorePassword` has been deprecated  in favor of `Values.lenses.opts.trustStorePassword` since they were duplicates, please use the latter.
+
 ## Release 4.2.12
 
 Previously, Connect URL was inferred from `protocol`, `host` and
