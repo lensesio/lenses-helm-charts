@@ -98,6 +98,10 @@ spec:
               - key: saml.idp.xml
                 path: saml.idp.xml
               {{- end }}
+              {{- if .Values.lenses.provision }}
+              - key: provision.yaml
+                path: provision.yaml
+              {{- end }}
         - name: config
           configMap:
             name: {{ include "fullname" . | quote }}

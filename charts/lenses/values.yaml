@@ -123,6 +123,10 @@ ingress:
     key: |-
 
 lenses:
+  # Set the details to provision Lenses using lenses-cli
+  provision:
+    # Find more details in LINK MISSING
+
   # For generic settings
   # Read more: https://docs.lenses.io/4.0/configuration/jvm/#content
   lensesOpts: |-

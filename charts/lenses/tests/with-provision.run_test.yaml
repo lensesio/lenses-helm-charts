@@ -1,0 +1,34 @@
+suite: enable provision and check the changes in deployment and secret
+templates:
+  - deployment.yaml
+  - secrets.yaml
+tests:
+  - it: should work
+    set:
+      lenses:
+        provision:
+          key: this is valid yaml
+          values:
+            - I can have an array
+            - with 2 elelments
+          moreValues: |-
+            and a multiline
+            text field
+    asserts:
+      - template: deployment.yaml
+        contains:
+          path: spec.template.spec.volumes[0].secret.items
+          content:
+            key: provision.yaml
+            path: provision.yaml
+      - template: secrets.yaml
+        equal:
+          path: stringData.provision\.yaml
+          value: |-
+              key: this is valid yaml
+              moreValues: |-
+                and a multiline
+                text field
+              values:
+              - I can have an array
+              - with 2 elelments
