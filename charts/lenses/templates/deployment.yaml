@@ -40,6 +40,10 @@ spec:
         prometheus.io/port: "9102"
         prometheus.io/path: "/metrics"
     spec:
+      {{- if .Values.image.registrySecretKey }}
+      imagePullSecrets:
+        - name: {{ .Values.image.registrySecretKey }}
+      {{- end }}
       {{- if .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml .Values.nodeSelector | nindent 8 }}
@@ -112,10 +116,6 @@ spec:
       - name: {{ .Chart.Name }}
         image: "{{ .Values.image.repository }}:{{if .Values.image.tag }}{{ .Values.image.tag }}{{else}}{{ .Chart.AppVersion }}{{end}}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
-        {{- if .Values.image.registrySecretKey }}
-        imagePullSecrets:
-        - name: {{ .Values.image.registrySecretKey }}
-        {{- end }}
         ports:
         - containerPort: {{ .Values.restPort }}
         {{- if .Values.lenses.livenessProbe.enabled }}
