@@ -6,6 +6,8 @@
 image:
   repository: lensesio/lenses
   pullPolicy: IfNotPresent
+  # Key to access a private registry
+  # registrySecretKey:
 
 annotations: {}
 labels: {}
