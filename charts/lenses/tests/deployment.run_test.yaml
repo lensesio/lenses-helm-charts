@@ -123,3 +123,12 @@ tests:
               {
                 "foo": "bar"
               }
+
+  - it: should use a private registry for images when set
+    set:
+      image:
+        registrySecretKey: foobar
+    asserts:
+      - equal:
+          path: spec.template.spec.imagePullSecrets[0].name
+          value: foobar
