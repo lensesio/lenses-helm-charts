@@ -110,94 +110,6 @@ _kafka_lenses_processors
 {{- end -}}
 {{- end -}}
 
-{{- define "securityProtocol" -}}
-{{- if and .Values.lenses.kafka.sasl.enabled .Values.lenses.kafka.ssl.enabled -}}
-SASL_SSL
-{{- end -}}
-{{- if and .Values.lenses.kafka.sasl.enabled (not .Values.lenses.kafka.ssl.enabled) -}}
-SASL_PLAINTEXT
-{{- end -}}
-{{- if and .Values.lenses.kafka.ssl.enabled (not .Values.lenses.kafka.sasl.enabled) -}}
-SSL
-{{- end -}}
-{{- if and (not .Values.lenses.kafka.ssl.enabled) (not .Values.lenses.kafka.sasl.enabled) -}}
-PLAINTEXT
-{{- end -}}
-{{- end -}}
-
-{{- define "bootstrapBrokers" -}}
-{{- $protocol := include "securityProtocol" . -}}
-{{ range $index, $element := .Values.lenses.kafka.bootstrapServers }}
-  {{- if $index -}}
-    {{- if eq $protocol "PLAINTEXT" -}}
-  ,{{$protocol}}://{{$element.name}}:{{$element.port}}
-    {{- end -}}
-    {{- if eq $protocol "SSL" -}}
-  ,{{$protocol}}://{{$element.name}}:{{$element.sslPort}}
-    {{- end -}}
-    {{- if eq $protocol "SASL_SSL" -}}
-  ,{{$protocol}}://{{$element.name}}:{{$element.saslSslPort}}
-    {{- end -}}
-    {{- if eq $protocol "SASL_PLAINTEXT" -}}
-  ,{{$protocol}}://{{$element.name}}:{{$element.saslPlainTextPort}}
-    {{- end -}}
-  {{- else -}}
-    {{- if eq $protocol "PLAINTEXT" -}}
-  {{$protocol}}://{{$element.name}}:{{$element.port}}
-    {{- end -}}
-    {{- if eq $protocol "SSL" -}}
-  {{$protocol}}://{{$element.name}}:{{$element.sslPort}}
-    {{- end -}}
-    {{- if eq $protocol "SASL_SSL" -}}
-  {{$protocol}}://{{$element.name}}:{{$element.saslSslPort}}
-    {{- end -}}
-    {{- if eq $protocol "SASL_PLAINTEXT" -}}
-  {{$protocol}}://{{$element.name}}:{{$element.saslPlainTextPort}}
-    {{- end -}}
-  {{- end -}}
-  {{end}}
-{{- end -}}
-
-{{- define "kafkaMetrics" -}}
-{{- if and .Values.lenses.kafka.metrics .Values.lenses.kafka.metrics.enabled -}}
-{
-  type: {{ default "JMX" .Values.lenses.kafka.metrics.type | quote}},
-  ssl: {{ default false .Values.lenses.kafka.metrics.ssl}},
-  {{- if .Values.lenses.kafka.metrics.username}}
-  user: {{ .Values.lenses.kafka.metrics.username | quote}},
-  {{- end }}
-  {{- if .Values.lenses.kafka.metrics.password}}
-  password: {{ .Values.lenses.kafka.metrics.password | quote}},
-  {{- end }}
-  {{- if .Values.lenses.kafka.metrics.ports}}
-  port: [
-    {{- range $portIndex, $portDetails := .Values.lenses.kafka.metrics.ports }}
-    {{- if $portIndex -}},{{- end }}
-    {
-      {{- range $key, $value := $portDetails }}
-      {{ $key }}: {{ $value | quote }},
-      {{- end}}
-    }
-    {{- end}}
-  ]
-  {{- else}}
-  default.port: {{ .Values.lenses.kafka.metrics.port }}
-  {{- end}}
-}
-{{- end -}}
-{{- end -}}
-
-{{- define "jmxBrokers" -}}
-[
-  {{ range $index, $element := .Values.lenses.kafka.jmxBrokers }}
-  {{- if not $index -}}{id: {{$element.id}}, port: {{$element.port}}}
-  {{- else}},
-  {id: {{$element.id}}, port: {{$element.port}}}
-  {{- end}}
-{{- end}}
-]
-{{- end -}}
-
 {{- define "zookeepers" -}}
 [
   {{- range $zkIndex, $zk := .Values.lenses.zookeepers.hosts -}}
@@ -354,10 +266,6 @@ lenses.storage.postgres.port={{  .Values.lenses.storage.postgres.port | quote }}
 lenses.storage.postgres.schema={{ .Values.lenses.storage.postgres.schema | quote }}
 {{- end }}
 {{- end }}
-{{- if and .Values.lenses.kafka.sasl.enabled .Values.lenses.kafka.sasl.jaasConfig (not (eq (default "not-external" .Values.lenses.kafka.sasl.jaasConfig) "external")) }}
-lenses.kafka.settings.client.sasl.jaas.config="""{{ .Values.lenses.kafka.sasl.jaasConfig }}
-"""
-{{- end }}
 {{ default "" .Values.lenses.append.conf }}
 {{- end -}}
 
@@ -409,7 +317,6 @@ lenses.storage.postgres.password={{ required "PostgreSQL 'password' value is man
 {{- if .Values.lenses.opts.keyStorePassword }}-Djavax.net.ssl.keyStorePassword="${CLIENT_OPTS_KEYSTORE_PASSWORD}" {{ end -}}
 {{- if .Values.lenses.opts.trustStoreFileData }}-Djavax.net.ssl.trustStore="/mnt/secrets/lenses.opts.truststore.jks" {{ end -}}
 {{- if .Values.lenses.opts.trustStorePassword }}-Djavax.net.ssl.trustStorePassword="${CLIENT_OPTS_TRUSTSTORE_PASSWORD}" {{ end -}}
-{{- if and .Values.lenses.kafka.sasl.enabled .Values.lenses.kafka.sasl.jaasFileData }}-Djava.security.auth.login.config="/mnt/secrets/jaas.conf" {{ end -}}
 {{- if .Values.lenses.logbackXml }}-Dlogback.configurationFile="file:{{ .Values.lenses.logbackXml}}" {{ end -}}
 {{- if .Values.lenses.lensesOpts }}{{- .Values.lenses.lensesOpts }}{{- end -}}
 {{- end -}}
