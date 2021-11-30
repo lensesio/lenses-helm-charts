@@ -244,14 +244,6 @@ spec:
           value: {{ .Values.lenses.zookeepers.chroot | quote }}
         {{- end }}
 
-        {{- if and .Values.lenses.connectClusters.enabled (not .Values.lenses.connectClusters.external) }}
-        # from secrets as might contain basic auth credentials
-        - name: LENSES_KAFKA_CONNECT_CLUSTERS
-          valueFrom:
-            secretKeyRef:
-              name: {{ include "fullname" . | quote }}
-              key: "connect.clusters"
-        {{- end }}
         - name: LENSES_ALERT_CONSUMERS_LAG_THRESHOLD
           value: {{ .Values.lenses.alerts.consumersLagThreshold | quote }}
         {{- if .Values.lenses.alerts.enabled }}
