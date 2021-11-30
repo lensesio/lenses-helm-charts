@@ -217,47 +217,6 @@ lenses:
         #   password:
         #   ssl:
 
-  # schemaRegistries
-  ## Schema registries should be behind a service, if so set one entry in the hosts
-  ## If your schema registries are outside explicitly add them to the hosts.
-  schemaRegistries:
-    enabled: false
-    topic:
-    hosts:
-      - host: schema-registry
-        protocol: http
-        port: 8081
-        # If your schema registry accepts request in a path eg. <url>:<port>/api/v1
-        path:
-        # JMX/JOLOKIA Metrics
-        # metrics:
-        #   # 'url' is the preffered way to setup metrics endpoints.
-        #   # Read more here: https://docs.lenses.io/4.3/configuration/schema-registry/
-        #   # In previous versions Helm templating was used to construct the URL from 'host',
-        #   #  'metrics.type' and 'metrics.port'. Example values for 'url':
-        #   # - for JMX 'url: <host>:<port>,
-        #   # - for JOLOKIA 'url: http(s)://<host>:<port>/<suffix>
-        #   url:
-        #   type: "JMX"
-        #   port: 9102
-        #   protocol:
-        #   username:
-        #   password:
-        #   ssl:
-
-    ssl:
-      ## Encryption in Transit
-      # base64 encoded truststore data
-      trustStoreFileData: |-
-
-      trustStorePassword:
-
-      ## Authentication via TLS certificates
-      # base64 encoded keystore data
-      keyStoreFileData: |-
-
-      keyStorePassword:
-      keyPassword:
 
     security:
       enabled: false

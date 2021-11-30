@@ -67,10 +67,6 @@ spec:
                 path: security.append.conf
               - key: lenses.keytab
                 path: lenses.keytab
-              - key: schema.registry.keystore.jks
-                path: schema.registry.keystore.jks
-              - key: schema.registry.truststore.jks
-                path: schema.registry.truststore.jks
               - key: lenses.opts.keystore.jks
                 path: lenses.opts.keystore.jks
               - key: lenses.opts.truststore.jks
@@ -248,12 +244,6 @@ spec:
           value: {{ .Values.lenses.zookeepers.chroot | quote }}
         {{- end }}
 
-        # Schema Registries
-        {{- if .Values.lenses.schemaRegistries.enabled }}
-        - name: LENSES_SCHEMA_REGISTRY_URLS
-          value: |-
-            {{- include "registries" . | nindent 12 }}
-        {{- end }}
         {{- if and .Values.lenses.connectClusters.enabled (not .Values.lenses.connectClusters.external) }}
         # from secrets as might contain basic auth credentials
         - name: LENSES_KAFKA_CONNECT_CLUSTERS
@@ -295,8 +285,6 @@ spec:
           value: {{ include "metadataTopic" . | quote }}
         - name: LENSES_TOPICS_EXTERNAL_TOPOLOGY
           value: {{ include "topologyTopic" . | quote }}
-        - name: LENSES_SCHEMA_REGISTRY_TOPICS
-          value:  {{ .Values.lenses.schemaRegistries.topic | quote }}
 
         # Kubernetes Processors
         - name: LENSES_SQL_EXECUTION_MODE
@@ -305,51 +293,6 @@ spec:
         # user secrets
         - name: LENSES_SECRET_FILE
           value: "/mnt/secrets/security.conf"
-        - name: LENSES_SCHEMA_REGISTRY_AUTH
-          value: {{ default "" .Values.lenses.schemaRegistries.security.authType | quote }}
-        {{- if and .Values.lenses.schemaRegistries.security.username (not (eq (default "not-external" .Values.lenses.schemaRegistries.security.username) "external")) }}
-        - name: LENSES_SCHEMA_REGISTRY_USERNAME
-          value: {{ .Values.lenses.schemaRegistries.security.username | quote }}
-        {{- end }}
-        {{- if and .Values.lenses.schemaRegistries.security.password (not (eq (default "not-external" .Values.lenses.schemaRegistries.security.password) "external")) }}
-        - name: LENSES_SCHEMA_REGISTRY_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: {{ include "fullname" . | quote }}
-              key: "schema.registry.password"
-        {{- end }}
-        - name: LENSES_KAFKA_SETTINGS_CLIENT_BASIC_AUTH_CREDENTIALS_SOURCE
-          value: {{ default "" .Values.lenses.schemaRegistries.security.authType | quote }}
-        # ssl/sasl
-        {{- if .Values.lenses.schemaRegistries.ssl.trustStoreFileData }}
-        - name: LENSES_SCHEMA_REGISTRY_SSL_TRUSTSTORE_LOCATION
-          value: "/mnt/secrets/schema.registry.truststore.jks"
-        {{- end -}}
-        {{- if .Values.lenses.schemaRegistries.ssl.keyStoreFileData }}
-        - name: LENSES_SCHEMA_REGISTRY_SSL_KEYSTORE_LOCATION
-          value: "/mnt/secrets/schema.registry.keystore.jks"
-        {{- end -}}
-        {{- if .Values.lenses.schemaRegistries.ssl.trustStorePassword }}
-        - name: LENSES_SCHEMA_REGISTRY_SSL_TRUSTSTORE_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: {{ include "fullname" . | quote }}
-              key:  "schema.registry.truststore.password"
-        {{- end -}}
-        {{- if .Values.lenses.schemaRegistries.ssl.keyStorePassword }}
-        - name: LENSES_SCHEMA_REGISTRY_SSL_KEYSTORE_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: {{ include "fullname" . | quote }}
-              key:  "schema.registry.keystore.password"
-        {{- end -}}
-        {{- if .Values.lenses.schemaRegistries.ssl.keyPassword }}
-        - name: LENSES_SCHEMA_REGISTRY_SSL_KEY_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: {{ include "fullname" . | quote }}
-              key:  "schema.registry.key.password"
-        {{- end }}
 
         # Kubernetes processors
         {{- if eq .Values.lenses.sql.mode "KUBERNETES"}}
