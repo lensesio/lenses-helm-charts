@@ -19,11 +19,11 @@ Lenses has been deployed!
 
      You can watch the status by running:
 
-         $ kubectl get svc {{ include "fullname" . }} --namespace {{ .Release.Namespace }} -w
+         $ kubectl get svc {{ include "fullname" . }} --namespace {{.Release.Namespace}} -w
 
      Once 'EXTERNAL-IP' is no longer '<pending>':
 
-         $ kubectl describe svc {{ include "fullname" . }} --namespace {{ .Release.Namespace }} | grep Lenses | awk '{print $3}'
+         $ kubectl describe svc {{ include "fullname" . }} --namespace {{.Release.Namespace}} | grep Lenses | awk '{print $3}'
 
 2. Configure DNS records corresponding to Kubernetes ingress resources to point to the load balancer IP/hostname found in step 1
 {{- end }}
@@ -31,7 +31,7 @@ Lenses has been deployed!
 
 1. Lenses has been started. You can find out the port numbers being used by Lenses by running:
 
-        $ kubectl describe svc {{ include "fullname" . }} --namespace {{ .Release.Namespace }}
+        $ kubectl describe svc {{ include "fullname" . }} --namespace {{.Release.Namespace}}
 
 2. Configure DNS records corresponding to Kubernetes ingress resources to point to the NODE_IP/NODE_HOST
 {{- end }}

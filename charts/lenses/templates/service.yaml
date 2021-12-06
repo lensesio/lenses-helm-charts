@@ -1,50 +1,49 @@
-{{- if .Values.service.enabled }}
-
+{{if .Values.service.enabled -}}
 kind: Service
 apiVersion: v1
 metadata:
-  name: {{ include "fullname" . }}
+  name: {{include "fullname" .}}
   labels:
-    app: {{ include "fullname" . }}
-    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app: {{include "fullname" .}}
+    chart: {{.Chart.Name}}-{{.Chart.Version}}
     component: "lenses"
-    heritage: {{ .Release.Service }}
-    release: {{ .Release.Name }}
-    lenses.io/app: {{ include "fullname" . }}
+    heritage: {{.Release.Service}}
+    release: {{.Release.Name}}
+    lenses.io/app: {{include "fullname" .}}
     lenses.io/app.type: lenses-service
     {{- range $key, $value := .Values.labels }}
     {{ $key }}: {{ $value | quote }}
     {{- end }}
 {{- if .Values.service.annotations }}
   annotations:
-{{ toYaml .Values.service.annotations | indent 4 }}
+    {{- toYaml .Values.service.annotations | nindent 4 }}
 {{- end }}
 spec:
-  type: "{{ .Values.service.type }}"
+  type: {{.Values.service.type | quote}}
   {{- if .Values.service.externalTrafficPolicy }}
-  externalTrafficPolicy: {{ toYaml .Values.service.externalTrafficPolicy }}
+  externalTrafficPolicy: {{toYaml .Values.service.externalTrafficPolicy}}
   {{- end }}
   ports:
-  - name: {{ .Values.servicePortName }}
-    port: {{ .Values.servicePort }}
+  - name: {{.Values.servicePortName}}
+    port: {{.Values.servicePort}}
     {{- if .Values.nodePort }}
-    nodePort: {{ .Values.nodePort }}
+    nodePort: {{.Values.nodePort}}
     {{- end }}
-    targetPort: {{ .Values.restPort }}
+    targetPort: {{.Values.restPort}}
   - name: http-metrics
-    port: {{ .Values.monitoring.port }}
+    port: {{.Values.monitoring.port}}
   selector:
-    app: {{ include "fullname" . }}
+    app: {{include "fullname" .}}
     component: "lenses"
 
 {{- if contains "LoadBalancer" .Values.service.type }}
   {{- if .Values.service.loadBalancerIP }}
-  loadBalancerIP: {{ .Values.service.loadBalancerIP }}
+  loadBalancerIP: {{.Values.service.loadBalancerIP}}
   {{- end -}}
   {{- if .Values.service.loadBalancerSourceRanges }}
   loadBalancerSourceRanges:
   {{- range .Values.service.loadBalancerSourceRanges }}
-  - {{ . }}
+  - {{.}}
   {{- end }}
   {{- end -}}
 {{- end -}}
