@@ -96,6 +96,11 @@ spec:
           persistentVolumeClaim:
             claimName: {{ .Values.persistence.existingClaim | default (printf "%s-claim" (include "fullname" .)) }}
         {{- end }}
+        {{- if .Values.lenses.provisionSecrets }}
+        - name: provision-secrets
+          secret:
+            secretName: {{ include "fullname" . | quote }}-provision
+        {{- end }}
         {{- if .Values.additionalVolumes }}
           {{- toYaml .Values.additionalVolumes | nindent 8 }}
         {{- end }}

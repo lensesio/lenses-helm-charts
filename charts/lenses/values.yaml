@@ -127,6 +127,13 @@ lenses:
   provision:
     # Find more details in LINK MISSING
 
+  provisionSecrets:
+    # Base64 encoded
+    # data:
+    #   kafka.keystore.jks: |-
+
+    #   kafka.truststore.jks: |-
+
   # For generic settings
   # Read more: https://docs.lenses.io/4.0/configuration/jvm/#content
   lensesOpts: |-
