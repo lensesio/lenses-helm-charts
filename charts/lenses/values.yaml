@@ -125,14 +125,17 @@ ingress:
 lenses:
   # Set the details to provision Lenses using lenses-cli
   provision:
+    enabled: false
+
     # Find more details in LINK MISSING
+    yaml: {}
 
-  provisionSecrets:
-    # Base64 encoded
-    # data:
-    #   kafka.keystore.jks: |-
-
-    #   kafka.truststore.jks: |-
+    secrets: {}
+      # Base64 encoded
+      # data:
+      #   kafka.keystore.jks: |-
+      #   kafka.truststore.jks: |-
+      # stringData:
 
   # For generic settings
   # Read more: https://docs.lenses.io/4.0/configuration/jvm/#content

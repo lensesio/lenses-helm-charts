@@ -14,6 +14,10 @@ We truncate at 24 chars because some Kubernetes name fields are limited to this 
 {{- printf "%s" .Release.Name -}}
 {{- end -}}
 
+{{- define "provisionFullname" -}}
+{{- printf "%s-provision" (include "fullname" .) -}}
+{{- end -}}
+
 {{- define "metricTopic" -}}
 {{- if .Values.lenses.topics.suffix -}}
 _kafka_lenses_metrics_{{ .Values.lenses.topics.suffix }}
