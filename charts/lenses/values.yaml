@@ -128,7 +128,7 @@ lenses:
     enabled: false
 
     # Find more details in LINK MISSING
-    yaml: {}
+    yaml:
 
     secrets: {}
       # Base64 encoded
@@ -136,6 +136,14 @@ lenses:
       #   kafka.keystore.jks: |-
       #   kafka.truststore.jks: |-
       # stringData:
+
+    sidecar:
+      # name:
+      image:
+        repository: lensesio/lenses-cli
+        tag: 5.0.0
+        # pullPolicy: IfNotPresent
+        # registrySecretKey:
 
   # For generic settings
   # Read more: https://docs.lenses.io/4.0/configuration/jvm/#content

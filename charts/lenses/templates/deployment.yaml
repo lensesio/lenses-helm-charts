@@ -354,6 +354,40 @@ spec:
         {{- toYaml .Values.lenses.additionalEnv | nindent 8 }}
         {{- end }}
 
+      {{- if .Values.lenses.provision.enabled}}
+      {{- $provision := .Values.lenses.provision}}
+      - name: {{default "lenses-provision" $provision.name}}
+        image: {{printf "%s:%s" $provision.sidecar.image.repository $provision.sidecar.image.tag}}
+        imagePullPolicy: {{default "IfNotPresent" $provision.sidecar.image.pullPolicy}}
+        {{- if $provision.sidecar.image.registrySecretKey}}
+        imagePullSecrets:
+        - name: {{$provision.sidecar.image.registrySecretKey}}
+        {{- end}}
+        command:
+          - bash
+          - -c
+          - |
+            echo "Wait for Lenses to come up"
+            until curl --silent --head localhost:{{.Values.restPort}} > /dev/null; do
+              echo "Waiting for Lenses"
+              sleep 3
+            done
+            echo "Lenses available"
+
+            lenses-cli beta provision \
+              --host="localhost:{{.Values.restPort}}" \
+              --user={{default "admin" .Values.lenses.security.defaultUser.username | quote}} \
+              --pass={{default "admin" .Values.lenses.security.defaultUser.password | quote}} \
+              /mnt/provision-secrets/provision.yaml \
+              --mode=sidecar
+              # Mode sidecar is used to block the process from exiting
+              # and let the container run in idle state
+
+        volumeMounts:
+          - name: provision-secrets
+            mountPath: "/mnt/provision-secrets"
+      {{- end}}
+
       {{- if .Values.sidecarContainers }}
       {{- toYaml .Values.sidecarContainers | nindent 6 }}
       {{- end }}

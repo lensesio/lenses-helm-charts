@@ -52,6 +52,45 @@ tests:
             name: provision-secrets
             secret:
               secretName: RELEASE-NAME-provision
+      - template: deployment.yaml
+        equal:
+          path: spec.template.spec.containers[1].name
+          value: lenses-provision
+  - it: should fail with provision enabled but without a yaml value
+    set:
+      lenses:
+        provision:
+          enabled: true
+    asserts:
+      - template: provision-secrets.yaml
+        failedTemplate:
+          errorMessage: provision.yaml is required to provision Lenses
+  - it: should work with custom provision image
+    set:
+      lenses:
+        provision:
+          enabled: true
+          yaml:
+            key: this is valid yaml
+          sidecar:
+            image:
+              repository: example.com/cli
+              tag: 0.0.1
+              pullPolicy: IfNotPresent
+              registrySecretKey: foobar
+    asserts:
+      - template: deployment.yaml
+        equal:
+          path: spec.template.spec.containers[1].image
+          value: example.com/cli:0.0.1
+      - template: deployment.yaml
+        equal:
+          path: spec.template.spec.containers[1].imagePullPolicy
+          value: IfNotPresent
+      - template: deployment.yaml
+        equal:
+          path: spec.template.spec.containers[1].imagePullSecrets[0].name
+          value: foobar
   - it: should work with provision secrets set
     set:
       lenses:
