@@ -15,7 +15,7 @@ whereas previously it was infered using Helm telmplating and certain
 other keys. These keys ('metrics.type' and 'metrics.'port') are no
 longer required and will be deprecated.
 
-## Release 4.2.7
+## Release 4.2.8
 
 ### Changes
 
