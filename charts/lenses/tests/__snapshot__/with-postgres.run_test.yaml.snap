@@ -10,7 +10,7 @@ should render with postgres enabled and host, database set and username, passwor
     metadata:
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.2.17
+        chart: lenses-4.2.18
         heritage: Helm
         lenses.io/app: RELEASE-NAME
         lenses.io/app.type: lenses-configmap
@@ -23,7 +23,7 @@ should render with postgres enabled and host, database set and username, passwor
       annotations: null
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.2.17
+        chart: lenses-4.2.18
         component: lenses
         heritage: Helm
         lenses.io/app: RELEASE-NAME
@@ -119,7 +119,7 @@ should render with postgres enabled and host, database set and username, passwor
             - name: LT_PACKAGE
               value: helm
             - name: LT_PACKAGE_VERSION
-              value: 4.2.17
+              value: 4.2.18
             - name: LENSES_STORAGE_POSTGRES_USERNAME
               valueFrom:
                 secretKeyRef:
@@ -130,7 +130,7 @@ should render with postgres enabled and host, database set and username, passwor
                 secretKeyRef:
                   key: lenses-storage-postgres-password
                   name: lenses-super-secrets
-            image: lensesio/lenses:4.2.7
+            image: lensesio/lenses:4.2.8
             imagePullPolicy: IfNotPresent
             livenessProbe:
               httpGet:
@@ -219,7 +219,7 @@ should render with postgres enabled and host, database set and username, passwor
     metadata:
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.2.17
+        chart: lenses-4.2.18
         heritage: Helm
         lenses.io/app: RELEASE-NAME
         lenses.io/app.type: lenses-secret
@@ -255,7 +255,7 @@ should render with postgres enabled and host, database, username, password is se
     metadata:
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.2.17
+        chart: lenses-4.2.18
         heritage: Helm
         lenses.io/app: RELEASE-NAME
         lenses.io/app.type: lenses-configmap
@@ -268,7 +268,7 @@ should render with postgres enabled and host, database, username, password is se
       annotations: null
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.2.17
+        chart: lenses-4.2.18
         component: lenses
         heritage: Helm
         lenses.io/app: RELEASE-NAME
@@ -364,8 +364,8 @@ should render with postgres enabled and host, database, username, password is se
             - name: LT_PACKAGE
               value: helm
             - name: LT_PACKAGE_VERSION
-              value: 4.2.17
-            image: lensesio/lenses:4.2.7
+              value: 4.2.18
+            image: lensesio/lenses:4.2.8
             imagePullPolicy: IfNotPresent
             livenessProbe:
               httpGet:
@@ -454,7 +454,7 @@ should render with postgres enabled and host, database, username, password is se
     metadata:
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.2.17
+        chart: lenses-4.2.18
         heritage: Helm
         lenses.io/app: RELEASE-NAME
         lenses.io/app.type: lenses-secret
@@ -488,7 +488,7 @@ should work without postgres enabled:
     metadata:
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.2.17
+        chart: lenses-4.2.18
         heritage: Helm
         lenses.io/app: RELEASE-NAME
         lenses.io/app.type: lenses-configmap
@@ -501,7 +501,7 @@ should work without postgres enabled:
       annotations: null
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.2.17
+        chart: lenses-4.2.18
         component: lenses
         heritage: Helm
         lenses.io/app: RELEASE-NAME
@@ -597,8 +597,8 @@ should work without postgres enabled:
             - name: LT_PACKAGE
               value: helm
             - name: LT_PACKAGE_VERSION
-              value: 4.2.17
-            image: lensesio/lenses:4.2.7
+              value: 4.2.18
+            image: lensesio/lenses:4.2.8
             imagePullPolicy: IfNotPresent
             livenessProbe:
               httpGet:
@@ -687,7 +687,7 @@ should work without postgres enabled:
     metadata:
       labels:
         app: RELEASE-NAME
-        chart: lenses-4.2.17
+        chart: lenses-4.2.18
         heritage: Helm
         lenses.io/app: RELEASE-NAME
         lenses.io/app.type: lenses-secret
