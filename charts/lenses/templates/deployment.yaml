@@ -1,3 +1,4 @@
+{{include "checkForDeprecatedKeys" .}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -207,10 +208,6 @@ spec:
               name: {{include "fullname" . | quote}}
               key:  "lenses.opts.truststore.password"
         {{- end }}
-        {{- if .Values.lenses.licenseUrl }}
-        - name: LICENSE_URL
-          value: {{ .Values.lenses.licenseUrl }}
-        {{- end }}
         {{- if.Values.lenses.jvm.heapOpts}}
         - name: LENSES_HEAP_OPTS
           value: {{ .Values.lenses.jvm.heapOpts | quote }}
@@ -222,13 +219,6 @@ spec:
         {{- if.Values.lenses.jvm.performanceOpts}}
         - name: LENSES_PERFORMANCE_OPTS
           value: {{ .Values.lenses.jvm.performanceOpts | quote }}
-        {{- end }}
-        {{- if and .Values.lenses.license (not (eq (default "not-external" .Values.lenses.license) "external")) }}
-        - name: LICENSE
-          valueFrom:
-            secretKeyRef:
-              name: {{include "fullname" . | quote}}
-              key: "license"
         {{- end }}
         - name: LENSES_PORT
           value: {{ .Values.restPort | quote }}
@@ -369,7 +359,7 @@ spec:
           - |
             echo "Wait for Lenses to come up"
             until curl --silent --head localhost:{{.Values.restPort}} > /dev/null; do
-              echo "Waiting for Lenses"
+              echo "Waiting for Lenses..."
               sleep 3
             done
             echo "Lenses available"

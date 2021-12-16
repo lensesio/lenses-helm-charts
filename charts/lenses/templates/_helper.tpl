@@ -241,3 +241,25 @@ Return the appropriate apiVersion for ingress.
 {{- print "extensions/v1beta1" -}}
 {{- end -}}
 {{- end -}}
+
+{{/*
+Fail the deployment when deprecated keys are stil used
+*/}}
+{{- define "checkForDeprecatedKeys" -}}
+{{- $errorMessage := "values should be replaced from provision.yaml content" -}}
+{{- if .Values.lenses.license}}
+{{- required (printf ".Values.lenses.license %s" $errorMessage) nil}}
+{{- end}}
+{{- if .Values.lenses.licenseUrl}}
+{{- required (printf ".Values.lenses.licenseUrl %s" $errorMessage) nil}}
+{{- end}}
+{{- if .Values.lenses.kafka}}
+{{- required (printf ".Values.lenses.kafka %s" $errorMessage) nil}}
+{{- end}}
+{{- if .Values.lenses.schemaRegistries}}
+{{- required (printf ".Values.lenses.schemaRegistries %s" $errorMessage) nil}}
+{{- end}}
+{{- if .Values.lenses.connectClusters}}
+{{- required (printf ".Values.lenses.connectClusters %s" $errorMessage) nil}}
+{{- end}}
+{{- end -}}
