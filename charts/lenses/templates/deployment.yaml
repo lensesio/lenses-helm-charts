@@ -106,7 +106,7 @@ spec:
         {{- if .Values.persistence.enabled }}
         - name: storage
           persistentVolumeClaim:
-            claimName: {{ .Values.persistence.existingClaim | default (printf "%s-claim" (include "fullname" .)) }}
+            claimName: {{ default (include "claimName" .) .Values.persistence.existingClaim }}
         {{- end }}
         {{- if .Values.additionalVolumes }}
           {{- toYaml .Values.additionalVolumes | nindent 8 }}

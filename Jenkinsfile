@@ -33,7 +33,7 @@ pipeline {
     }
 
     stages {
-        stage('Build Helm Charts') {
+        stage('Test & build Helm Charts') {
             agent {
                 docker {
                     label 'docker && lightweight'

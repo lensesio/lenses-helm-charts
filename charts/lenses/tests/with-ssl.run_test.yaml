@@ -39,7 +39,7 @@ tests:
             valueFrom:
               secretKeyRef:
                 key: client.truststore.password
-                name: RELEASE-NAME
+                name: RELEASE-NAME-lenses
       - template: deployment.yaml
         contains:
           path: spec.template.spec.containers[0].env
@@ -48,7 +48,7 @@ tests:
             valueFrom:
               secretKeyRef:
                 key: client.keystore.password
-                name: RELEASE-NAME
+                name: RELEASE-NAME-lenses
       - template: deployment.yaml
         contains:
           path: spec.template.spec.containers[0].env
@@ -57,7 +57,7 @@ tests:
             valueFrom:
               secretKeyRef:
                 key: client.key.password
-                name: RELEASE-NAME
+                name: RELEASE-NAME-lenses
 
       - template: secrets.yaml
         equal:

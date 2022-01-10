@@ -32,25 +32,6 @@ tests:
           path: spec.template.spec.containers[0].image
           value: lensesio/lenses:bar
 
-  - it: when override release name is overriden metadata.name should change
-    release:
-      name: bar
-    asserts:
-      - isKind:
-          of: Deployment
-      - equal:
-          path: metadata.labels.app
-          value: bar
-      - equal:
-          path: metadata.labels.lenses\.io\/app
-          value: bar
-      - equal:
-          path: metadata.name
-          value: bar
-      - equal:
-          path: spec.selector.matchLabels.app
-          value: bar
-
   - it: should test replica set cannot be overriden
     set:
       replicaCount: 10

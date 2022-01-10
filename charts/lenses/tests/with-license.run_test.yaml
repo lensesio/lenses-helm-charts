@@ -15,7 +15,7 @@ tests:
             name: LICENSE
             valueFrom:
               secretKeyRef:
-                name: RELEASE-NAME
+                name: RELEASE-NAME-lenses
                 key: "license"
       - template: secrets.yaml
         equal:

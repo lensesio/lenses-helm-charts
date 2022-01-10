@@ -112,7 +112,7 @@ tests:
             name: LENSES_SCHEMA_REGISTRY_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: RELEASE-NAME
+                name: RELEASE-NAME-lenses
                 key: schema.registry.password
       - contains:
           path: spec.template.spec.containers[0].env
