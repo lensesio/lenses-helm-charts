@@ -3,19 +3,39 @@
 Expand the name of the chart.
 */}}
 {{- define "name" -}}
-{{- default .Chart.Name .Values.nameOverride -}}
+{{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{/*
 Create a default fully qualified app name.
-We truncate at 24 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 */}}
 {{- define "fullname" -}}
-{{- printf "%s" .Release.Name -}}
+{{- if .Values.fullnameOverride -}}
+{{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" -}}
+{{- else -}}
+{{- $name := default .Chart.Name .Values.nameOverride -}}
+{{- if contains $name .Release.Name -}}
+{{- .Release.Name | trunc 63 | trimSuffix "-" -}}
+{{- else -}}
+{{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+{{- end -}}
 {{- end -}}
 
 {{- define "provisionFullname" -}}
-{{- printf "%s-provision" (include "fullname" .) -}}
+{{- if .Values.fullnameOverride -}}
+{{- printf "%s-%s" (.Values.fullnameOverride | trunc 53 | trimSuffix "-") "provision" -}}
+{{- else -}}
+{{- printf "%s-%s" (.Release.Name | trunc 53 | trimSuffix "-") "provision" -}}
+{{- end -}}
+{{- end -}}
+
+{{- define "claimName" -}}
+{{- if .Values.fullnameOverride -}}
+{{- printf "%s-%s" (.Values.fullnameOverride | trunc 57 | trimSuffix "-") "claim" -}}
+{{- else -}}
+{{- printf "%s-%s" (.Release.Name | trunc 57 | trimSuffix "-") "claim" -}}
+{{- end -}}
 {{- end -}}
 
 {{- define "metricTopic" -}}
@@ -235,7 +255,9 @@ lenses.storage.postgres.password={{ required "PostgreSQL 'password' value is man
 Return the appropriate apiVersion for ingress.
 */}}
 {{- define "ingress.apiVersion" -}}
-{{- if .Capabilities.APIVersions.Has "networking.k8s.io/v1beta1" -}}
+{{- if .Capabilities.APIVersions.Has "networking.k8s.io/v1/Ingress" -}}
+{{- print "networking.k8s.io/v1" -}}
+{{- else if .Capabilities.APIVersions.Has "networking.k8s.io/v1beta1" -}}
 {{- print "networking.k8s.io/v1beta1" -}}
 {{- else -}}
 {{- print "extensions/v1beta1" -}}

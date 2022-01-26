@@ -3,6 +3,9 @@
 ### LENSES WILL USE TO DEPLOY. SEE:
 ### https://docs.lenses.io/install_setup/deployment-options/kubernetes-deployment.html
 
+nameOverride: ""
+fullnameOverride: ""
+
 image:
   repository: lensesio/lenses
   pullPolicy: IfNotPresent

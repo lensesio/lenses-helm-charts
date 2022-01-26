@@ -2,7 +2,7 @@
 apiVersion: {{include "ingress.apiVersion" .}}
 kind: Ingress
 metadata:
-  name: {{include "fullname" .}}
+  name:  {{include "fullname" .}}
   labels:
     app: {{include "fullname" .}}
     chart: {{printf "%s-%s" .Chart.Name .Chart.Version}}
@@ -13,7 +13,7 @@ metadata:
     lenses.io/app.type: lenses-ingress
     {{- range $key, $value := .Values.labels }}
     {{ $key }}: {{ $value | quote }}
-    {{- end }}
+    {{- end}}
   annotations:
   {{- range $key, $value := .Values.ingress.annotations}}
     {{$key}}: {{$value | quote}}
@@ -27,17 +27,26 @@ spec:
     http:
       paths:
       - path: "/"
+        {{- if .Capabilities.APIVersions.Has "networking.k8s.io/v1/Ingress"}}
+        pathType: Prefix
+        backend:
+          service:
+            name: {{include "fullname" . | quote}}
+            port:
+              number: {{.Values.servicePort}}
+        {{- else}}
         backend:
           serviceName: {{include "fullname" . | quote}}
           servicePort: {{.Values.servicePort}}
+        {{- end}}
   {{- if .Values.ingress.tls.enabled}}
   tls:
     - hosts:
-      - {{.Values.ingress.host | quote}}
+      - {{ .Values.ingress.host | quote}}
       {{- if .Values.ingress.tls.secretName}}
-      secretName: {{.Values.ingress.tls.secretName}}
+      secretName: {{ .Values.ingress.tls.secretName}}
       {{- else}}
-      secretName: {{include "fullname" . | quote}}
+      secretName: {{ include "fullname" . | quote}}
       {{- end}}
   {{- end -}}
 {{- end -}}
