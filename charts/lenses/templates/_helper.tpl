@@ -134,35 +134,6 @@ _kafka_lenses_processors
 {{- end -}}
 {{- end -}}
 
-{{- define "zookeepers" -}}
-[
-  {{- range $zkIndex, $zk := .Values.lenses.zookeepers.hosts -}}
-  {{- if $zkIndex }},{{ end }}
-  {
-    url: "{{$zk.host}}:{{$zk.port}}"
-  {{- if $zk.metrics -}},
-    metrics: {
-      {{- if $zk.metrics.url }}
-      url: {{$zk.metrics.url | quote}},
-      {{- else if eq $zk.metrics.type "JMX" }}
-      url: "{{$zk.host}}:{{$zk.metrics.port}}",
-      {{- else }}
-      url: "{{$zk.protocol}}://{{$zk.host}}:{{$zk.metrics.port}}",
-      {{- end }}
-      type: "{{$zk.metrics.type}}",
-      ssl: {{default false $zk.metrics.ssl}},
-      {{- if $zk.metrics.username -}}
-      user: {{$zk.metrics.username | quote}},
-      {{- end }}
-      {{- if $zk.metrics.password -}}
-      password: {{$zk.metrics.password | quote}},
-      {{- end }}
-    }{{- end}}
-  }
-{{- end}}
-]
-{{- end -}}
-
 {{- define "alertPlugins" -}}
 {{- if .Values.lenses.alerts.plugins -}}
 [
