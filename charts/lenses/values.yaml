@@ -9,6 +9,8 @@ fullnameOverride: ""
 image:
   repository: lensesio/lenses
   pullPolicy: IfNotPresent
+  # Default to Chart AppVersion
+  #tag: 5.0.0
 
 annotations: {}
 labels: {}
@@ -144,7 +146,8 @@ lenses:
       # name:
       image:
         repository: lensesio/lenses-cli
-        tag: 5.0.0
+        # Default to Chart AppVersion
+        #tag: 5.0.0
         # pullPolicy: IfNotPresent
         # registrySecretKey:
 
