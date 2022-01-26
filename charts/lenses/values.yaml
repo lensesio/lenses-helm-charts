@@ -213,30 +213,6 @@ lenses:
 
     trustStorePassword: |-
 
-  # zookeeper
-  ## Zookeepers should be behind a service, if so set one entry in the hosts
-  ## If your zookeepers are outside explicitly add them to the hosts.
-  zookeepers:
-    enabled: false
-    chroot:
-    hosts:
-      - host: zookeeper
-        port: 2181
-        # JMX/JOLOKIA Metrics
-        # metrics:
-        #   # 'url' is the preffered way to setup metrics endpoints.
-        #   # Read more here: https://docs.lenses.io/4.3/configuration/zookeeper/
-        #   # In previous versions Helm templating was used to construct the URL from 'host',
-        #   #  'metrics.type' and 'metrics.port'. Example values for 'url':
-        #   # - for JMX 'url: <host>:<port>,
-        #   # - for JOLOKIA 'url: http(s)://<host>:<port>/<suffix>
-        #   url:
-        #   type: "JMX"
-        #   port: 9102
-        #   protocol:
-        #   username:
-        #   password:
-        #   ssl:
 
   storage:
     postgres:
@@ -420,21 +396,6 @@ lenses:
 
     append:
       conf: |-
-
-  # Set the license for Lenses
-  # Use the value "external" to bypass the Helm validation and handle the license externally.
-  # The common use case for using "external" is to take the actual value from a Kubernetes Secret resource already deployed.
-  # To do so, add the following definition under 'lenses.additionalEnv' key:
-  # - name: LICENSE
-  #   valueFrom:
-  #     secretKeyRef:
-  #       name: [SECRET_RESOURCE_NAME]
-  #       key: [SECRET_RESOURCE_KEY]
-  license: |-
-
-  # Note: this will be deprecated in version 5.0
-  # licenseUrl is a url pointing to the Lenses license
-  licenseUrl:
 
   # Additional env variables appended to deployment
   # Follows the format of [EnvVar spec](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.21/#envvar-v1-core)

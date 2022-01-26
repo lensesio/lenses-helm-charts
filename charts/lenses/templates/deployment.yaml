@@ -1,3 +1,11 @@
+{{/* Deliberately fail helm deployment if these values are set */}}
+{{- $outer := . -}}
+{{- range tuple "zookeepers" "license" "licenseUrl" "schemaRegistries" "connectClusters" "kafka" }}
+  {{- if hasKey $outer.Values.lenses . }}
+    {{ fail "Setting configuration in the chart is deprecated. Please use the provision yaml instead. See documentation here " }}
+  {{ end }}
+{{ end }}
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -207,10 +215,6 @@ spec:
               name: {{include "fullname" . | quote}}
               key:  "lenses.opts.truststore.password"
         {{- end }}
-        {{- if .Values.lenses.licenseUrl }}
-        - name: LICENSE_URL
-          value: {{ .Values.lenses.licenseUrl }}
-        {{- end }}
         {{- if.Values.lenses.jvm.heapOpts}}
         - name: LENSES_HEAP_OPTS
           value: {{ .Values.lenses.jvm.heapOpts | quote }}
@@ -223,28 +227,10 @@ spec:
         - name: LENSES_PERFORMANCE_OPTS
           value: {{ .Values.lenses.jvm.performanceOpts | quote }}
         {{- end }}
-        {{- if and .Values.lenses.license (not (eq (default "not-external" .Values.lenses.license) "external")) }}
-        - name: LICENSE
-          valueFrom:
-            secretKeyRef:
-              name: {{include "fullname" . | quote}}
-              key: "license"
-        {{- end }}
         - name: LENSES_PORT
           value: {{ .Values.restPort | quote }}
         - name: LENSES_JMX_PORT
           value: "9101"
-        {{- if .Values.lenses.zookeepers.enabled }}
-        - name: LENSES_ZOOKEEPER_HOSTS
-          value: |-
-          {{- include "zookeepers" . | nindent 12 }}
-        {{- end }}
-
-        {{- if .Values.lenses.zookeepers.chroot }}
-        - name: LENSES_ZOOKEEPER_CHROOT
-          value: {{ .Values.lenses.zookeepers.chroot | quote }}
-        {{- end }}
-
         - name: LENSES_ALERT_CONSUMERS_LAG_THRESHOLD
           value: {{ .Values.lenses.alerts.consumersLagThreshold | quote }}
         {{- if .Values.lenses.alerts.enabled }}
