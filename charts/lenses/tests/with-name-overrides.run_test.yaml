@@ -115,27 +115,6 @@ tests:
           value: bar-claim
 
   - template: deployment.yaml
-    it: when override release name with over 63 chars, the metadata.name should contain the set value but limited to 63 chars
-    release:
-      # 100 chars
-      name: bm0f9ee5y-zgpo3qvok-9ntof267e-56i7rd29y-glwnknta1-kjbhk72gy-rgt84nngv-743j4q37f-mr047wtu1-mxey6qg78
-    asserts:
-      - equal:
-          path: metadata.name
-          # 63 chars
-          value: bm0f9ee5y-zgpo3qvok-9ntof267e-56i7rd29y-glwnknta1-kjbhk72gy-rgt
-  - template: volume-claim.yaml
-    it: when override release name with over 63 chars, the metadata.name for volume-claim should contain the set value but limited to 63 chars
-    release:
-      # 100 chars
-      name: bm0f9ee5y-zgpo3qvok-9ntof267e-56i7rd29y-glwnknta1-kjbhk72gy-rgt84nngv-743j4q37f-mr047wtu1-mxey6qg78
-    asserts:
-      - equal:
-          path: metadata.name
-          # 63 chars
-          value: bm0f9ee5y-zgpo3qvok-9ntof267e-56i7rd29y-glwnknta1-kjbhk72-claim
-
-  - template: deployment.yaml
     it: when override fullnameOverride with over 63 chars, the metadata.name should contain the set value but limited to 63 chars
     set:
       # 100 chars
