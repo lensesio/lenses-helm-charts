@@ -64,16 +64,24 @@ persistence:
   ##
   # storageClass: "-"
 
-# Additional volumes to use in Lenses delpoyments, for example to load additional plugins (UDFs) in Lenses
-#   Note: PersistentVolumeClaim should already exist before deploying Helm chart
-additionalVolumes:
-  # - name: lenses-plugins
-  #   persistentVolumeClaim:
-  #     claimName: lenses-plugins
 # Additional volume mounts to use in Lenses delpoyments, for example to load additional plugins (UDFs) in Lenses
+# Use it in conjuction with lenses.additionalVolumes
 additionalVolumeMounts:
   # - name: lenses-plugins
   #   mountPath: "/data/plugins"
+
+# Additional volumes to use in Lenses delpoyments either by Lenses for other sidecars like Lenses provisioner.
+# Example usages:
+#   Lenses: load additional plugins (UDFs) in Lenses
+#   Lenses provisioner: load additional files from pre-existing volumes, secrets or vault secrets to use in provisioning
+additionalVolumes:
+  # - name: secrets
+  #   secret:
+  #     secretName: lenses-super-secrets
+  # Note: PersistentVolumeClaim should already exist before deploying Helm chart
+  # - name: lenses-plugins
+  #   persistentVolumeClaim:
+  #     claimName: lenses-plugins
 
 # Lenses service
 service:
@@ -147,6 +155,13 @@ lenses:
         tag: 5.0.0
         # pullPolicy: IfNotPresent
         # registrySecretKey:
+
+      # Additional volume mounts to load additional files from pre-existing volumes, secrets or vault secrets to use in provisioning
+      # Use it in conjuction with lenses.additionalVolumes
+      additionalVolumeMounts:
+        # - name: lenses-super-secrets
+        #   mountPath: "/data/lenses-super-secrets"
+
 
   # For generic settings
   # Read more: https://docs.lenses.io/4.0/configuration/jvm/#content
