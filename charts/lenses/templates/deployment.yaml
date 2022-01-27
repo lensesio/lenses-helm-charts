@@ -111,7 +111,7 @@ spec:
       serviceAccountName: {{ .Values.serviceAccount }}
       containers:
       - name: {{ .Chart.Name }}
-        image: "{{ .Values.image.repository }}:{{if .Values.image.tag }}{{ .Values.image.tag }}{{else}}{{ .Chart.AppVersion }}{{end}}"
+        image: {{include "lensesImage" . | quote }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         {{- if .Values.image.registrySecretKey }}
         imagePullSecrets:
@@ -343,7 +343,7 @@ spec:
       {{- if .Values.lenses.provision.enabled}}
       {{- $provision := .Values.lenses.provision}}
       - name: {{default "lenses-provision" $provision.name}}
-        image: {{printf "%s:%s" $provision.sidecar.image.repository $provision.sidecar.image.tag}}
+        image: {{include "sidecarProvisionImage" . | quote }}
         imagePullPolicy: {{default "IfNotPresent" $provision.sidecar.image.pullPolicy}}
         {{- if $provision.sidecar.image.registrySecretKey}}
         imagePullSecrets:

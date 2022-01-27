@@ -38,6 +38,23 @@ Create a default fully qualified app name.
 {{- end -}}
 {{- end -}}
 
+{{- define "sidecarProvisionImage" -}}
+{{- if .Values.lenses.provision.sidecar.image.tag -}}
+{{- printf "%s:%s" .Values.lenses.provision.sidecar.image.repository .Values.lenses.provision.sidecar.image.tag -}}
+{{- else -}}
+{{- printf "%s:%s" .Values.lenses.provision.sidecar.image.repository (regexFind "\\d+\\.\\d+" .Chart.AppVersion) -}}
+{{- end -}}
+{{- end -}}
+
+{{- define "lensesImage" -}}
+{{- if .Values.image.tag -}}
+{{ printf "%s:%s" .Values.image.repository .Values.image.tag }}
+{{- else -}}
+{{ printf "%s:%s" .Values.image.repository .Chart.AppVersion  }}
+{{- end -}}
+{{- end -}}
+
+
 {{- define "metricTopic" -}}
 {{- if .Values.lenses.topics.suffix -}}
 _kafka_lenses_metrics_{{ .Values.lenses.topics.suffix }}
