@@ -24,3 +24,77 @@ tests:
       - equal:
           path: spec.rules[0].host
           value: "*.example.com"
+  - it: should work with Capability networking.k8s.io/v1 and api group contains Ingress resource
+    capabilities:
+      apiVersions:
+        - networking.k8s.io/v1/Ingress
+    release:
+      name: bar
+    set:
+      ingress:
+        enabled: true
+    asserts:
+      - equal:
+          path: apiVersion
+          value: networking.k8s.io/v1
+      - equal:
+          path: spec.rules[0].http.paths[0].pathType
+          value: Prefix
+      - equal:
+          path: spec.rules[0].http.paths[0].backend.service.name
+          value: bar-lenses
+      - equal:
+          path: spec.rules[0].http.paths[0].backend.service.port.number
+          value: 80
+  - it: should work without special capabilities
+    release:
+      name: bar
+    set:
+      ingress:
+        enabled: true
+    asserts:
+      - equal:
+          path: apiVersion
+          value: extensions/v1beta1
+      - isEmpty:
+          path: spec.rules[0].http.paths[0].pathType
+      - equal:
+          path: spec.rules[0].http.paths[0].backend.serviceName
+          value: bar-lenses
+      - equal:
+          path: spec.rules[0].http.paths[0].backend.servicePort
+          value: 80
+  - it: should work with Capability networking.k8s.io/v1beta1
+    capabilities:
+      apiVersions:
+        - networking.k8s.io/v1beta1
+    release:
+      name: bar
+    set:
+      ingress:
+        enabled: true
+    asserts:
+      - equal:
+          path: apiVersion
+          value: networking.k8s.io/v1beta1
+      - isEmpty:
+          path: spec.rules[0].http.paths[0].pathType
+      - equal:
+          path: spec.rules[0].http.paths[0].backend.serviceName
+          value: bar-lenses
+      - equal:
+          path: spec.rules[0].http.paths[0].backend.servicePort
+          value: 80
+  - it: should work with Capability networking.k8s.io/v1 without Ingress, for clusters on 1.18 version
+    capabilities:
+      apiVersions:
+        - networking.k8s.io/v1
+        - networking.k8s.io/v1beta1
+        - networking.k8s.io/v1beta1/Ingress
+    set:
+      ingress:
+        enabled: true
+    asserts:
+      - equal:
+          path: apiVersion
+          value: networking.k8s.io/v1beta1

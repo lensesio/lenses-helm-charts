@@ -2,18 +2,18 @@
 apiVersion: "v1"
 kind: "PersistentVolumeClaim"
 metadata:
-  name: {{include "fullname" .}}-claim
+  name: {{include "claimName" .}}
 {{- if .Values.persistence.annotations }}
   annotations:
-{{toYaml .Values.persistence.annotations | indent 4}}
+{{ toYaml .Values.persistence.annotations | indent 4 }}
 {{- end }}
   labels:
-    app: {{template "name" .}}
+    app: {{include "name" .}}
     chart: {{printf "%s-%s" .Chart.Name .Chart.Version}}
     component: "lenses"
     heritage: {{.Release.Service}}
     release: {{.Release.Name}}
-    lenses.io/app: {{template "name" .}}
+    lenses.io/app: {{include "name" .}}
     lenses.io/app.type: lenses-volume-claim
 spec:
   accessModes:

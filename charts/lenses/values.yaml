@@ -3,6 +3,9 @@
 ### LENSES WILL USE TO DEPLOY. SEE:
 ### https://docs.lenses.io/install_setup/deployment-options/kubernetes-deployment.html
 
+nameOverride: ""
+fullnameOverride: ""
+
 image:
   repository: lensesio/lenses
   pullPolicy: IfNotPresent
@@ -210,30 +213,6 @@ lenses:
 
     trustStorePassword: |-
 
-  # zookeeper
-  ## Zookeepers should be behind a service, if so set one entry in the hosts
-  ## If your zookeepers are outside explicitly add them to the hosts.
-  zookeepers:
-    enabled: false
-    chroot:
-    hosts:
-      - host: zookeeper
-        port: 2181
-        # JMX/JOLOKIA Metrics
-        # metrics:
-        #   # 'url' is the preffered way to setup metrics endpoints.
-        #   # Read more here: https://docs.lenses.io/4.3/configuration/zookeeper/
-        #   # In previous versions Helm templating was used to construct the URL from 'host',
-        #   #  'metrics.type' and 'metrics.port'. Example values for 'url':
-        #   # - for JMX 'url: <host>:<port>,
-        #   # - for JOLOKIA 'url: http(s)://<host>:<port>/<suffix>
-        #   url:
-        #   type: "JMX"
-        #   port: 9102
-        #   protocol:
-        #   username:
-        #   password:
-        #   ssl:
 
   storage:
     postgres:

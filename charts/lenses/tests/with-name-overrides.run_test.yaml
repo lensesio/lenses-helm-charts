@@ -1,0 +1,247 @@
+suite: using name overrides
+templates:
+  - deployment.yaml
+  - volume-claim.yaml
+  - provision-secrets.yaml
+tests:
+  - template: deployment.yaml
+    it: should work without any overrides
+    asserts:
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-lenses
+
+  - template: volume-claim.yaml
+    it: should work for volume-claim without any overrides
+    asserts:
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-claim
+
+  - template: provision-secrets.yaml
+    it: should work for provision-secrets without any overrides
+    set:
+      lenses:
+        provision:
+          enabled: true
+          yaml: {}
+    asserts:
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-provision
+
+  - template: deployment.yaml
+    it: when override release name is overriden metadata.name should change
+    release:
+      name: bar
+    asserts:
+      - equal:
+          path: metadata.labels.app
+          value: bar-lenses
+      - equal:
+          path: metadata.labels.lenses\.io\/app
+          value: bar-lenses
+      - equal:
+          path: metadata.name
+          value: bar-lenses
+      - equal:
+          path: spec.selector.matchLabels.app
+          value: bar-lenses
+
+  - template: volume-claim.yaml
+    it: when override release name is overriden metadata.name for volume-claim should change
+    release:
+      name: bar
+    asserts:
+      - equal:
+          path: metadata.labels.app
+          value: lenses
+      - equal:
+          path: metadata.labels.lenses\.io\/app
+          value: lenses
+      - equal:
+          path: metadata.name
+          value: bar-claim
+
+  - template: provision-secrets.yaml
+    it: when override release name is overriden metadata.name for provision-secrets should change
+    release:
+      name: bar
+    set:
+      lenses:
+        provision:
+          enabled: true
+          yaml: {}
+    asserts:
+      - equal:
+          path: metadata.labels.app
+          value: bar-lenses
+      - equal:
+          path: metadata.labels.lenses\.io\/app
+          value: bar-lenses
+      - equal:
+          path: metadata.name
+          value: bar-provision
+
+  - template: deployment.yaml
+    it: when override release name and includes 'lenses' metadata.name should change and should not add another 'lenses' suffix
+    release:
+      name: bar-lenses-foo
+    asserts:
+      - equal:
+          path: metadata.labels.app
+          value: bar-lenses-foo
+      - equal:
+          path: metadata.labels.lenses\.io\/app
+          value: bar-lenses-foo
+      - equal:
+          path: metadata.name
+          value: bar-lenses-foo
+      - equal:
+          path: spec.selector.matchLabels.app
+          value: bar-lenses-foo
+
+  - template: volume-claim.yaml
+    it: when override release name and includes 'lenses' metadata.name for volume-claim should change and should not add another 'lenses' suffix
+    release:
+      name: bar-lenses-foo
+    asserts:
+      - equal:
+          path: metadata.labels.app
+          value: lenses
+      - equal:
+          path: metadata.labels.lenses\.io\/app
+          value: lenses
+      - equal:
+          path: metadata.name
+          value: bar-lenses-foo-claim
+
+  - template: provision-secrets.yaml
+    it: when override release name and includes 'lenses' metadata.name for provision-secrets should change and should not add another 'lenses' suffix
+    release:
+      name: bar-lenses-foo
+    set:
+      lenses:
+        provision:
+          enabled: true
+          yaml: {}
+    asserts:
+      - equal:
+          path: metadata.labels.app
+          value: bar-lenses-foo
+      - equal:
+          path: metadata.labels.lenses\.io\/app
+          value: bar-lenses-foo
+      - equal:
+          path: metadata.name
+          value: bar-lenses-foo-provision
+
+  - template: deployment.yaml
+    it: when set nameOverride, metadata.name should change
+    set:
+      nameOverride: bar
+    asserts:
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-bar
+
+  - template: volume-claim.yaml
+    it: when set nameOverride, metadata.name for volume-claim should NOT change
+    set:
+      nameOverride: bar
+    asserts:
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-claim
+
+  - template: provision-secrets.yaml
+    it: when set nameOverride, metadata.name for provision-secrets should NOT change
+    set:
+      nameOverride: bar
+      lenses:
+        provision:
+          enabled: true
+          yaml: {}
+    asserts:
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-provision
+
+  - template: deployment.yaml
+    it: when set fullnameOverride, metadata.name should change
+    set:
+      fullnameOverride: bar
+    asserts:
+      - equal:
+          path: metadata.name
+          value: bar
+
+  - template: volume-claim.yaml
+    it: when set fullnameOverride, metadata.name for volume-claim should change
+    set:
+      fullnameOverride: bar
+    asserts:
+      - equal:
+          path: metadata.name
+          value: bar-claim
+
+  - template: provision-secrets.yaml
+    it: when set fullnameOverride, metadata.name for provision-secrets should change
+    set:
+      fullnameOverride: bar
+      lenses:
+        provision:
+          enabled: true
+          yaml: {}
+    asserts:
+      - equal:
+          path: metadata.name
+          value: bar-provision
+
+  - template: deployment.yaml
+    it: when override fullnameOverride with over 63 chars, the metadata.name should contain the set value but limited to 63 chars
+    set:
+      # 100 chars
+      fullnameOverride: bm0f9ee5y-zgpo3qvok-9ntof267e-56i7rd29y-glwnknta1-kjbhk72gy-rgt84nngv-743j4q37f-mr047wtu1-mxey6qg78
+    asserts:
+      - equal:
+          path: metadata.name
+          # 63 chars
+          value: bm0f9ee5y-zgpo3qvok-9ntof267e-56i7rd29y-glwnknta1-kjbhk72gy-rgt
+
+  - template: volume-claim.yaml
+    it: when override fullnameOverride with over 63 chars, the metadata.name for volume-claim should contain the set value but limited to 63 chars
+    set:
+      # 100 chars
+      fullnameOverride: bm0f9ee5y-zgpo3qvok-9ntof267e-56i7rd29y-glwnknta1-kjbhk72gy-rgt84nngv-743j4q37f-mr047wtu1-mxey6qg78
+    asserts:
+      - equal:
+          path: metadata.name
+          # 63 chars
+          value: bm0f9ee5y-zgpo3qvok-9ntof267e-56i7rd29y-glwnknta1-kjbhk72-claim
+
+  - template: provision-secrets.yaml
+    it: when override fullnameOverride with over 63 chars, the metadata.name for provision-secrets should contain the set value but limited to 63 chars
+    set:
+      # 100 chars
+      fullnameOverride: bm0f9ee5y-zgpo3qvok-9ntof267e-56i7rd29y-glwnknta1-kjbhk72gy-rgt84nngv-743j4q37f-mr047wtu1-mxey6qg78
+      lenses:
+        provision:
+          enabled: true
+          yaml: {}
+    asserts:
+      - equal:
+          path: metadata.name
+          # 63 chars
+          value: bm0f9ee5y-zgpo3qvok-9ntof267e-56i7rd29y-glwnknta1-kjb-provision
+
+  - template: deployment.yaml
+    it: when override nameOverride with over 63 chars, the metadata.name should contain the set value but limited to 63 chars
+    set:
+      # 100 chars
+      nameOverride: bm0f9ee5y-zgpo3qvok-9ntof267e-56i7rd29y-glwnknta1-kjbhk72gy-rgt84nngv-743j4q37f-mr047wtu1-mxey6qg78
+    asserts:
+      - equal:
+          path: metadata.name
+          # 63 chars
+          value: RELEASE-NAME-bm0f9ee5y-zgpo3qvok-9ntof267e-56i7rd29y-glwnknta1

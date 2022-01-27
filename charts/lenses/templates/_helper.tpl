@@ -3,19 +3,39 @@
 Expand the name of the chart.
 */}}
 {{- define "name" -}}
-{{- default .Chart.Name .Values.nameOverride -}}
+{{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{/*
 Create a default fully qualified app name.
-We truncate at 24 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 */}}
 {{- define "fullname" -}}
-{{- printf "%s" .Release.Name -}}
+{{- if .Values.fullnameOverride -}}
+{{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" -}}
+{{- else -}}
+{{- $name := default .Chart.Name .Values.nameOverride -}}
+{{- if contains $name .Release.Name -}}
+{{- .Release.Name | trunc 63 | trimSuffix "-" -}}
+{{- else -}}
+{{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+{{- end -}}
 {{- end -}}
 
 {{- define "provisionFullname" -}}
-{{- printf "%s-provision" (include "fullname" .) -}}
+{{- if .Values.fullnameOverride -}}
+{{- printf "%s-%s" (.Values.fullnameOverride | trunc 53 | trimSuffix "-") "provision" -}}
+{{- else -}}
+{{- printf "%s-%s" (.Release.Name | trunc 53 | trimSuffix "-") "provision" -}}
+{{- end -}}
+{{- end -}}
+
+{{- define "claimName" -}}
+{{- if .Values.fullnameOverride -}}
+{{- printf "%s-%s" (.Values.fullnameOverride | trunc 57 | trimSuffix "-") "claim" -}}
+{{- else -}}
+{{- printf "%s-%s" (.Release.Name | trunc 57 | trimSuffix "-") "claim" -}}
+{{- end -}}
 {{- end -}}
 
 {{- define "metricTopic" -}}
@@ -114,35 +134,6 @@ _kafka_lenses_processors
 {{- end -}}
 {{- end -}}
 
-{{- define "zookeepers" -}}
-[
-  {{- range $zkIndex, $zk := .Values.lenses.zookeepers.hosts -}}
-  {{- if $zkIndex }},{{ end }}
-  {
-    url: "{{$zk.host}}:{{$zk.port}}"
-  {{- if $zk.metrics -}},
-    metrics: {
-      {{- if $zk.metrics.url }}
-      url: {{$zk.metrics.url | quote}},
-      {{- else if eq $zk.metrics.type "JMX" }}
-      url: "{{$zk.host}}:{{$zk.metrics.port}}",
-      {{- else }}
-      url: "{{$zk.protocol}}://{{$zk.host}}:{{$zk.metrics.port}}",
-      {{- end }}
-      type: "{{$zk.metrics.type}}",
-      ssl: {{default false $zk.metrics.ssl}},
-      {{- if $zk.metrics.username -}}
-      user: {{$zk.metrics.username | quote}},
-      {{- end }}
-      {{- if $zk.metrics.password -}}
-      password: {{$zk.metrics.password | quote}},
-      {{- end }}
-    }{{- end}}
-  }
-{{- end}}
-]
-{{- end -}}
-
 {{- define "alertPlugins" -}}
 {{- if .Values.lenses.alerts.plugins -}}
 [
@@ -235,31 +226,11 @@ lenses.storage.postgres.password={{ required "PostgreSQL 'password' value is man
 Return the appropriate apiVersion for ingress.
 */}}
 {{- define "ingress.apiVersion" -}}
-{{- if .Capabilities.APIVersions.Has "networking.k8s.io/v1beta1" -}}
+{{- if .Capabilities.APIVersions.Has "networking.k8s.io/v1/Ingress" -}}
+{{- print "networking.k8s.io/v1" -}}
+{{- else if .Capabilities.APIVersions.Has "networking.k8s.io/v1beta1" -}}
 {{- print "networking.k8s.io/v1beta1" -}}
 {{- else -}}
 {{- print "extensions/v1beta1" -}}
 {{- end -}}
-{{- end -}}
-
-{{/*
-Fail the deployment when deprecated keys are stil used
-*/}}
-{{- define "checkForDeprecatedKeys" -}}
-{{- $errorMessage := "values should be replaced from provision.yaml content" -}}
-{{- if .Values.lenses.license}}
-{{- required (printf ".Values.lenses.license %s" $errorMessage) nil}}
-{{- end}}
-{{- if .Values.lenses.licenseUrl}}
-{{- required (printf ".Values.lenses.licenseUrl %s" $errorMessage) nil}}
-{{- end}}
-{{- if .Values.lenses.kafka}}
-{{- required (printf ".Values.lenses.kafka %s" $errorMessage) nil}}
-{{- end}}
-{{- if .Values.lenses.schemaRegistries}}
-{{- required (printf ".Values.lenses.schemaRegistries %s" $errorMessage) nil}}
-{{- end}}
-{{- if .Values.lenses.connectClusters}}
-{{- required (printf ".Values.lenses.connectClusters %s" $errorMessage) nil}}
-{{- end}}
 {{- end -}}
