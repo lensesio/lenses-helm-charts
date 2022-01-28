@@ -9,7 +9,7 @@ tests:
     asserts:
       - template: deployment.yaml
         failedTemplate:
-          errorMessage: .Values.lenses.license values should be replaced from provision.yaml content
+          errorMessage: Setting configuration value .Values.lenses.license is deprecated. Please use the provision yaml instead. See documentation here.
   - it: should fail if licenseUrl key is still set
     set:
       lenses:
@@ -17,7 +17,7 @@ tests:
     asserts:
       - template: deployment.yaml
         failedTemplate:
-          errorMessage: .Values.lenses.licenseUrl values should be replaced from provision.yaml content
+          errorMessage: Setting configuration value .Values.lenses.licenseUrl is deprecated. Please use the provision yaml instead. See documentation here.
   - it: should fail if kafka key is still set
     set:
       lenses:
@@ -31,7 +31,7 @@ tests:
     asserts:
       - template: deployment.yaml
         failedTemplate:
-          errorMessage: .Values.lenses.kafka values should be replaced from provision.yaml content
+          errorMessage: Setting configuration value .Values.lenses.kafka is deprecated. Please use the provision yaml instead. See documentation here.
   - it: should fail if schemaRegistries key is still set
     set:
       lenses:
@@ -40,7 +40,7 @@ tests:
     asserts:
       - template: deployment.yaml
         failedTemplate:
-          errorMessage: .Values.lenses.schemaRegistries values should be replaced from provision.yaml content
+          errorMessage: Setting configuration value .Values.lenses.schemaRegistries is deprecated. Please use the provision yaml instead. See documentation here.
   - it: should fail if connectClusters key is still set
     set:
       lenses:
@@ -49,4 +49,4 @@ tests:
     asserts:
       - template: deployment.yaml
         failedTemplate:
-          errorMessage: .Values.lenses.connectClusters values should be replaced from provision.yaml content
+          errorMessage: Setting configuration value .Values.lenses.connectClusters is deprecated. Please use the provision yaml instead. See documentation here.

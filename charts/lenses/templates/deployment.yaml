@@ -1,4 +1,11 @@
-{{include "checkForDeprecatedKeys" .}}
+{{/* Deliberately fail helm deployment if these values are set */}}
+{{- $outer := . -}}
+{{- range tuple "zookeepers" "license" "licenseUrl" "schemaRegistries" "connectClusters" "kafka" }}
+  {{- if hasKey $outer.Values.lenses . }}
+    {{ fail (printf "%s%s%s" "Setting configuration value .Values.lenses." . " is deprecated. Please use the provision yaml instead. See documentation here.") }}
+  {{ end }}
+{{ end }}
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -96,7 +103,7 @@ spec:
         {{- if .Values.persistence.enabled }}
         - name: storage
           persistentVolumeClaim:
-            claimName: {{ .Values.persistence.existingClaim | default (printf "%s-claim" (include "fullname" .)) }}
+            claimName: {{ default (include "claimName" .) .Values.persistence.existingClaim }}
         {{- end }}
         {{- if .Values.additionalVolumes }}
           {{- toYaml .Values.additionalVolumes | nindent 8 }}
@@ -104,7 +111,7 @@ spec:
       serviceAccountName: {{ .Values.serviceAccount }}
       containers:
       - name: {{ .Chart.Name }}
-        image: "{{ .Values.image.repository }}:{{if .Values.image.tag }}{{ .Values.image.tag }}{{else}}{{ .Chart.AppVersion }}{{end}}"
+        image: {{include "lensesImage" . | quote }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         {{- if .Values.image.registrySecretKey }}
         imagePullSecrets:
@@ -224,17 +231,6 @@ spec:
           value: {{ .Values.restPort | quote }}
         - name: LENSES_JMX_PORT
           value: "9101"
-        {{- if .Values.lenses.zookeepers.enabled }}
-        - name: LENSES_ZOOKEEPER_HOSTS
-          value: |-
-          {{- include "zookeepers" . | nindent 12 }}
-        {{- end }}
-
-        {{- if .Values.lenses.zookeepers.chroot }}
-        - name: LENSES_ZOOKEEPER_CHROOT
-          value: {{ .Values.lenses.zookeepers.chroot | quote }}
-        {{- end }}
-
         - name: LENSES_ALERT_CONSUMERS_LAG_THRESHOLD
           value: {{ .Values.lenses.alerts.consumersLagThreshold | quote }}
         {{- if .Values.lenses.alerts.enabled }}
@@ -347,7 +343,7 @@ spec:
       {{- if .Values.lenses.provision.enabled}}
       {{- $provision := .Values.lenses.provision}}
       - name: {{default "lenses-provision" $provision.name}}
-        image: {{printf "%s:%s" $provision.sidecar.image.repository $provision.sidecar.image.tag}}
+        image: {{include "sidecarProvisionImage" . | quote }}
         imagePullPolicy: {{default "IfNotPresent" $provision.sidecar.image.pullPolicy}}
         {{- if $provision.sidecar.image.registrySecretKey}}
         imagePullSecrets:
@@ -376,6 +372,9 @@ spec:
         volumeMounts:
           - name: provision-secrets
             mountPath: "/mnt/provision-secrets"
+          {{- if $provision.sidecar.additionalVolumeMounts }}
+            {{- toYaml $provision.sidecar.additionalVolumeMounts | nindent 10 }}
+          {{- end }}
       {{- end}}
 
       {{- if .Values.sidecarContainers }}

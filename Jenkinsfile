@@ -29,15 +29,15 @@ pipeline {
     }
 
     environment {
-        TARGET_RELEASE_BRANCH = 'release/4.3'
+        TARGET_RELEASE_BRANCH = 'release/5.0'
     }
 
     stages {
-        stage('Build Helm Charts') {
+        stage('Test & build Helm Charts') {
             agent {
                 docker {
                     label 'docker && lightweight'
-                    image 'eu.gcr.io/lenses-ci/cicd:helm-with-tools'
+                    image env.HELM_WITH_TOOLS_DOCKER_IMAGE
                     args '-e HOME=/tmp'
                     reuseNode true
                 }
@@ -114,8 +114,7 @@ pipeline {
             agent {
                 docker {
                     label 'docker && lightweight'
-
-                    image 'eu.gcr.io/lenses-ci/cicd:helm-with-tools'
+                    image env.HELM_WITH_TOOLS_DOCKER_IMAGE
                     args '-e HOME=/tmp'
                     reuseNode true
                 }
