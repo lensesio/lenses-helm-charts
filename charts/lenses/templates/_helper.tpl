@@ -54,6 +54,21 @@ Create a default fully qualified app name.
 {{- end -}}
 {{- end -}}
 
+{{- define "nodePort" -}}
+{{- if and .Values.service.nodePort .Values.nodePort -}}
+{{- if eq .Values.service.nodePort .Values.nodePort -}}
+{{- .Values.service.nodePort -}}
+{{- else -}}
+{{ fail "You cannot set two differents nodePort port inside your configuration"}}
+{{- end -}}
+{{- else -}}
+{{- if .Values.nodePort }}
+{{- .Values.nodePort -}}
+{{- else if .Values.service.nodePort -}}
+{{- .Values.service.nodePort -}}
+{{- end -}}
+{{- end -}}
+{{- end -}}
 
 {{- define "metricTopic" -}}
 {{- if .Values.lenses.topics.suffix -}}
