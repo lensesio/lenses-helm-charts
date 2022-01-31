@@ -31,22 +31,6 @@ We truncate at 24 chars because some Kubernetes name fields are limited to this 
 {{- end -}}
 {{- end -}}
 
-{{- define "sidecarProvisionImage" -}}
-{{- if .Values.lenses.provision.sidecar.image.tag -}}
-{{- printf "%s:%s" .Values.lenses.provision.sidecar.image.repository .Values.lenses.provision.sidecar.image.tag -}}
-{{- else -}}
-{{- printf "%s:%s" .Values.lenses.provision.sidecar.image.repository (regexFind "\\d+\\.\\d+" .Chart.AppVersion) -}}
-{{- end -}}
-{{- end -}}
-
-{{- define "lensesImage" -}}
-{{- if .Values.image.tag -}}
-{{ printf "%s:%s" .Values.image.repository .Values.image.tag }}
-{{- else -}}
-{{ printf "%s:%s" .Values.image.repository .Chart.AppVersion  }}
-{{- end -}}
-{{- end -}}
-
 {{- define "nodePort" -}}
 {{- if and .Values.service.nodePort .Values.nodePort -}}
 {{- if eq .Values.service.nodePort .Values.nodePort -}}

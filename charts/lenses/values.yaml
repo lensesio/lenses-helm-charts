@@ -85,9 +85,9 @@ service:
 
   # If you want to make it available as a node port, then add nodePort: <somePort>
   # Warning: this should not be used with servicePort:
-  # Warning nodePort is deprecated and will be removed on next Lenses major version upgrade
+  # Warning nodePort is deprecated and will be removed in future Lenses release
   # nodePort:
-
+  
   externalTrafficPolicy:
 
   ## Load balancer IP address
