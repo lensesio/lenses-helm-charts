@@ -1,7 +1,4 @@
-### TO DEPLOY SQL RUNNERS IN THE CLUSTER
-### FROM LENSES YOU NEED TO PATCH THE SERVICE ACCOUNT
-### LENSES WILL USE TO DEPLOY. SEE:
-### https://docs.lenses.io/current/installation/kubernetes/helm/
+### https://docs.lenses.io/current/installation/kubernetes/helm/ ###
 
 nameOverride: ""
 fullnameOverride: ""
