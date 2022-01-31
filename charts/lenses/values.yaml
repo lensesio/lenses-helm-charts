@@ -1,7 +1,7 @@
 ### TO DEPLOY SQL RUNNERS IN THE CLUSTER
 ### FROM LENSES YOU NEED TO PATCH THE SERVICE ACCOUNT
 ### LENSES WILL USE TO DEPLOY. SEE:
-### https://docs.lenses.io/install_setup/deployment-options/kubernetes-deployment.html
+### https://docs.lenses.io/current/installation/kubernetes/helm/
 
 nameOverride: ""
 fullnameOverride: ""
@@ -20,7 +20,7 @@ tolerations: {}
 affinity: {}
 securityContext: {}
 
-# Monitoring
+# Exposes a Prometheus exporter for Lenses metrics
 monitoring:
   pipeline: lenses
   enabled: true
@@ -49,6 +49,8 @@ servicePortName: lenses
 serviceAccount: default
 
 # If you use Data Policies module enable a Persistent Volume to keep your data policies rule.
+# Also used when lenses.storage.enabled: false, and an H2 local filesystem database is used, instead of Postgresql.
+# https://docs.lenses.io/current/installation/kubernetes/persistence/
 persistence:
   enabled: true
   accessModes:
@@ -140,9 +142,11 @@ lenses:
   provision:
     enabled: false
 
-    # Find more details in LINK MISSING
+    # Find more details in https://docs.lenses.io/current/installation/kubernetes/helm/#helm-provision
+    # About provision.yaml structure: https://docs.lenses.io/current/tools/cli/provision/provision-yaml/
     yaml:
 
+    # Find more details in https://docs.lenses.io/current/installation/kubernetes/helm/#helm-provision-secrets
     secrets: {}
       # Base64 encoded
       # data:
@@ -150,6 +154,7 @@ lenses:
       #   kafka.truststore.jks: |-
       # stringData:
 
+    # Find more details in https://docs.lenses.io/current/installation/kubernetes/helm/#helm-provision-sidecar
     sidecar:
       # name:
       image:
@@ -167,12 +172,12 @@ lenses:
 
 
   # For generic settings
-  # Read more: https://docs.lenses.io/4.0/configuration/jvm/#content
+  # Read more: https://docs.lenses.io/current/configuration/static/jvm/
   lensesOpts: |-
 
   append:
     # Add custom configuration values, will take precedence over the env variables and auto-generated values
-    # Read more: https://docs.lenses.io/3.2/install_setup/deployment-options/docker-deployment.html#configuration-via-files-and-secrets
+    # Read more: https://help.lenses.io/knowledge-base/helm/helm-lenses-append-conf/
     conf: |-
 
   jvm:
@@ -232,6 +237,7 @@ lenses:
     trustStorePassword: |-
 
 
+  # Find more details in https://docs.lenses.io/current/installation/kubernetes/helm/#helm-storage
   storage:
     postgres:
       enabled: false
@@ -264,6 +270,7 @@ lenses:
       schema:             # optional, defaults to public schema
 
   # Data Application Deployment Framework
+  # TODO: Link missing for DAD docs
   deployments:
     eventsBufferSize: 10000
     errorsBufferSize: 1000
@@ -272,10 +279,9 @@ lenses:
       statusInterval: 30 second
       actionsBufferSize: 1000
 
-  # sql
   sql:
-#    processorImage: eu.gcr.io/lenses-container-registry/lenses-sql-processor
-#    processorImageTag: 2.3
+    # processorImage: eu.gcr.io/lenses-container-registry/lenses-sql-processor
+    # processorImageTag: 2.3
     mode: IN_PROC
     heap: 1024M
     minHeap: 128M
