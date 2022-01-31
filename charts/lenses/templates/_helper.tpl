@@ -31,6 +31,38 @@ We truncate at 24 chars because some Kubernetes name fields are limited to this 
 {{- end -}}
 {{- end -}}
 
+{{- define "sidecarProvisionImage" -}}
+{{- if .Values.lenses.provision.sidecar.image.tag -}}
+{{- printf "%s:%s" .Values.lenses.provision.sidecar.image.repository .Values.lenses.provision.sidecar.image.tag -}}
+{{- else -}}
+{{- printf "%s:%s" .Values.lenses.provision.sidecar.image.repository (regexFind "\\d+\\.\\d+" .Chart.AppVersion) -}}
+{{- end -}}
+{{- end -}}
+
+{{- define "lensesImage" -}}
+{{- if .Values.image.tag -}}
+{{ printf "%s:%s" .Values.image.repository .Values.image.tag }}
+{{- else -}}
+{{ printf "%s:%s" .Values.image.repository .Chart.AppVersion  }}
+{{- end -}}
+{{- end -}}
+
+{{- define "nodePort" -}}
+{{- if and .Values.service.nodePort .Values.nodePort -}}
+{{- if eq .Values.service.nodePort .Values.nodePort -}}
+{{- .Values.service.nodePort -}}
+{{- else -}}
+{{ fail "You cannot set two differents nodePort port inside your configuration"}}
+{{- end -}}
+{{- else -}}
+{{- if .Values.nodePort }}
+{{- .Values.nodePort -}}
+{{- else if .Values.service.nodePort -}}
+{{- .Values.service.nodePort -}}
+{{- end -}}
+{{- end -}}
+{{- end -}}
+
 {{- define "metricTopic" -}}
 {{- if .Values.lenses.topics.suffix -}}
 _kafka_lenses_metrics_{{ .Values.lenses.topics.suffix }}

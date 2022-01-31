@@ -19,6 +19,51 @@ tests:
       - equal:
           path: spec.type
           value: NodePort
+
+  - it: should have NodePort if service.nodePort specified
+    set:
+      service:
+        enabled: true
+        type: NodePort
+        nodePort: 8080
+    asserts:
+      - equal:
+          path: spec.ports[0].nodePort
+          value: 8080
+
+  - it: should have NodePort if nodePort specified
+    set:
+      service:
+        enabled: true
+      nodePort: 8080
+    asserts:
+      - equal:
+          path: spec.ports[0].nodePort
+          value: 8080
+
+  - it: should have NodePort if nodePort and service.nodePort are specified and equal
+    set:
+      nodePort: 8080
+      service:
+        enabled: true
+        type: NodePort
+        nodePort: 8080
+    asserts:
+      - equal:
+          path: spec.ports[0].nodePort
+          value: 8080
+
+  - it: should fail if nodePort and service.nodePort are specified and not equal
+    set:
+      nodePort: 8081
+      service:
+        enabled: true
+        type: NodePort
+        nodePort: 8080
+    asserts:
+      - failedTemplate:
+          errorMessage: You cannot set two differents nodePort port inside your configuration
+
   - it: should have custom annotations if specified
     set:
       service:
