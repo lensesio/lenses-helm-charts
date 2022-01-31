@@ -29,7 +29,8 @@ pipeline {
     }
 
     environment {
-        TARGET_RELEASE_BRANCH = 'release/5.0'
+        // If this matches the branch name it will DEPLOY to PUBLIC HELM REPO
+        RELEASE_BRANCH_FOR_PUBLIC = 'release/5.0/DO_NOT_PUBLISH_YET'
     }
 
     stages {
@@ -53,10 +54,15 @@ pipeline {
                         .replaceAll('\\.','-')
 
                     env.BUILD_MODE = 'development'
+                    env.RELEASE_PUBLIC = false
                     if (env.BRANCH_NAME =~ /^release/) {
                         env.BUILD_MODE = 'release'
+                        if (env.BRANCH_NAME == env.RELEASE_BRANCH_FOR_PUBLIC) {
+                            env.RELEASE_PUBLIC = true
+                        }
                     }
                     jenkinsHelper.info("Build mode: ${env.BUILD_MODE}")
+                    jenkinsHelper.info("Release public: ${env.RELEASE_PUBLIC}")
 
                     sh("_cicd/functions.sh setup_helm")
                     sh("_cicd/functions.sh package_all")
@@ -76,9 +82,7 @@ pipeline {
 
         stage('Upload Helm Chart to public JFrog repo') {
             when {
-                anyOf {
-                    branch env.TARGET_RELEASE_BRANCH
-                }
+                environment name: 'RELEASE_PUBLIC', value: 'true'
             }
             environment {
                 HELM_REPOSITORY = 'lenses-helm-charts'
@@ -150,9 +154,7 @@ pipeline {
 
         stage('Upload static assets to production Lenses website') {
             when {
-                anyOf {
-                    branch env.TARGET_RELEASE_BRANCH
-                }
+                environment name: 'RELEASE_PUBLIC', value: 'true'
             }
             environment {
                 SSH_HOST = credentials('ssh-host')
