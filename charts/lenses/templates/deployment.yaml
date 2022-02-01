@@ -348,7 +348,7 @@ spec:
         {{- if $provision.sidecar.image.registrySecretKey}}
         imagePullSecrets:
         - name: {{$provision.sidecar.image.registrySecretKey}}
-        {{- end}}      
+        {{- end}}
         command:
           - bash
           - -c
