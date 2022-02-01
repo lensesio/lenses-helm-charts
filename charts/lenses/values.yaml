@@ -17,10 +17,11 @@ tolerations: {}
 affinity: {}
 securityContext: {}
 
-# Exposes a Prometheus exporter for Lenses metrics
+# Add Prometheus annotations to the pod for Lenses metric scraping
 monitoring:
-  pipeline: lenses
   enabled: true
+  # A label to attach to the pods for include in JMX
+  pipeline: lenses
   port: 9102
   path: "/metrics"
 
@@ -37,8 +38,9 @@ resources:
 # and rolebinding should be created for the service account
 rbacEnable: true
 
-# restPort is the Lenses rest port
+# Lenses container port
 restPort: 3030
+# Lenses service port, service targets restPort
 servicePort: 80
 servicePortName: lenses
 
@@ -168,12 +170,16 @@ lenses:
         #   mountPath: "/data/lenses-super-secrets"
 
 
-  # For generic settings
+  # For additional generic JVM settings
   # Read more: https://docs.lenses.io/current/configuration/static/jvm/
   lensesOpts: |-
 
+  # Each version of the helm chart for Lenses is accompanied by a values.yaml.
+  # This values file contains sane defaults for all the supported Lenses configuration options for that version of the chart.
+  # Although great care has been taken to cover most use cases in the chart, we may encounter situations where a specific configuration option is required but is not available.
+  # To support such cases, Lenses Helm Chart provides the lenses.append.conf mechanism.
   append:
-    # Add custom configuration values, will take precedence over the env variables and auto-generated values
+    # Custom configuration values, will take precedence over the env variables and auto-generated values
     # Read more: https://help.lenses.io/knowledge-base/helm/helm-lenses-append-conf/
     conf: |-
 
@@ -286,7 +292,7 @@ lenses:
     memRequest: 128M
     livenessInitialDelay: 60 seconds
 
-  # alerts
+  # Alert Plugins. Multiple alert plugins are supported.
   alerts:
     enabled: true
     consumersLagThreshold: 50000
@@ -311,7 +317,7 @@ lenses:
 
 
 
-  #grafana
+  # The url to the grafana host
   grafanaUrl:
 
   # topics
