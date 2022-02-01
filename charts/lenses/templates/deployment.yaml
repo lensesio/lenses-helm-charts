@@ -355,7 +355,7 @@ spec:
           - |
             lenses-cli provision \
               --wait-for-lenses \
-              --wizard-mode \
+              --setup-mode \
               --host="localhost:{{.Values.restPort}}" \
               --user={{default "admin" .Values.lenses.security.defaultUser.username | quote}} \
               --pass={{default "admin" .Values.lenses.security.defaultUser.password | quote}} \
