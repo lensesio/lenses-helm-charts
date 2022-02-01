@@ -1,7 +1,4 @@
-### TO DEPLOY SQL RUNNERS IN THE CLUSTER
-### FROM LENSES YOU NEED TO PATCH THE SERVICE ACCOUNT
-### LENSES WILL USE TO DEPLOY. SEE:
-### https://docs.lenses.io/install_setup/deployment-options/kubernetes-deployment.html
+### https://docs.lenses.io/current/installation/kubernetes/helm/ ###
 
 nameOverride: ""
 fullnameOverride: ""
@@ -20,10 +17,11 @@ tolerations: {}
 affinity: {}
 securityContext: {}
 
-# Monitoring
+# Add Prometheus annotations to the pod for Lenses metric scraping
 monitoring:
-  pipeline: lenses
   enabled: true
+  # A label to attach to the pods for include in JMX
+  pipeline: lenses
   port: 9102
   path: "/metrics"
 
@@ -40,8 +38,9 @@ resources:
 # and rolebinding should be created for the service account
 rbacEnable: true
 
-# restPort is the Lenses rest port
+# Lenses container port
 restPort: 3030
+# Lenses service port, service targets restPort
 servicePort: 80
 servicePortName: lenses
 
@@ -49,6 +48,8 @@ servicePortName: lenses
 serviceAccount: default
 
 # If you use Data Policies module enable a Persistent Volume to keep your data policies rule.
+# Also used when lenses.storage.enabled: false, and an H2 local filesystem database is used, instead of Postgresql.
+# https://docs.lenses.io/current/installation/kubernetes/persistence/
 persistence:
   enabled: true
   accessModes:
@@ -140,9 +141,11 @@ lenses:
   provision:
     enabled: false
 
-    # Find more details in LINK MISSING
+    # Find more details in https://docs.lenses.io/current/installation/kubernetes/helm/#helm-provision
+    # About provision.yaml structure: https://docs.lenses.io/current/tools/cli/provision/provision-yaml/
     yaml:
 
+    # Find more details in https://docs.lenses.io/current/installation/kubernetes/helm/#helm-provision-secrets
     secrets: {}
       # Base64 encoded
       # data:
@@ -150,6 +153,7 @@ lenses:
       #   kafka.truststore.jks: |-
       # stringData:
 
+    # Find more details in https://docs.lenses.io/current/installation/kubernetes/helm/#helm-provision-sidecar
     sidecar:
       # name:
       image:
@@ -166,13 +170,17 @@ lenses:
         #   mountPath: "/data/lenses-super-secrets"
 
 
-  # For generic settings
-  # Read more: https://docs.lenses.io/4.0/configuration/jvm/#content
+  # For additional generic JVM settings
+  # Read more: https://docs.lenses.io/current/configuration/static/jvm/
   lensesOpts: |-
 
+  # Each version of the helm chart for Lenses is accompanied by a values.yaml.
+  # This values file contains sane defaults for all the supported Lenses configuration options for that version of the chart.
+  # Although great care has been taken to cover most use cases in the chart, we may encounter situations where a specific configuration option is required but is not available.
+  # To support such cases, Lenses Helm Chart provides the lenses.append.conf mechanism.
   append:
-    # Add custom configuration values, will take precedence over the env variables and auto-generated values
-    # Read more: https://docs.lenses.io/3.2/install_setup/deployment-options/docker-deployment.html#configuration-via-files-and-secrets
+    # Custom configuration values, will take precedence over the env variables and auto-generated values
+    # Read more: https://help.lenses.io/knowledge-base/helm/helm-lenses-append-conf/
     conf: |-
 
   jvm:
@@ -232,6 +240,7 @@ lenses:
     trustStorePassword: |-
 
 
+  # Find more details in https://docs.lenses.io/current/installation/kubernetes/helm/#helm-storage
   storage:
     postgres:
       enabled: false
@@ -264,6 +273,7 @@ lenses:
       schema:             # optional, defaults to public schema
 
   # Data Application Deployment Framework
+  # TODO: Link missing for DAD docs
   deployments:
     eventsBufferSize: 10000
     errorsBufferSize: 1000
@@ -272,10 +282,9 @@ lenses:
       statusInterval: 30 second
       actionsBufferSize: 1000
 
-  # sql
   sql:
-#    processorImage: eu.gcr.io/lenses-container-registry/lenses-sql-processor
-#    processorImageTag: 2.3
+    # processorImage: eu.gcr.io/lenses-container-registry/lenses-sql-processor
+    # processorImageTag: 2.3
     mode: IN_PROC
     heap: 1024M
     minHeap: 128M
@@ -283,7 +292,7 @@ lenses:
     memRequest: 128M
     livenessInitialDelay: 60 seconds
 
-  # alerts
+  # Alert Plugins. Multiple alert plugins are supported.
   alerts:
     enabled: true
     consumersLagThreshold: 50000
@@ -308,7 +317,7 @@ lenses:
 
 
 
-  #grafana
+  # The url to the grafana host
   grafanaUrl:
 
   # topics
