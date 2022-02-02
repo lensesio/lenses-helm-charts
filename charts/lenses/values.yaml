@@ -144,6 +144,7 @@ lenses:
 
     # Find more details in https://docs.lenses.io/current/installation/kubernetes/helm/#helm-provision
     # About provision.yaml structure: https://docs.lenses.io/current/tools/cli/provision/provision-yaml/
+    # GitOps limitations, using lenses.provision https://docs.lenses.io/current/tools/cli/provision/gitops-limitations/
     yaml:
 
     # Find more details in https://docs.lenses.io/current/installation/kubernetes/helm/#helm-provision-secrets
