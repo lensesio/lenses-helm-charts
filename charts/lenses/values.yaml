@@ -148,7 +148,7 @@ lenses:
 
     # Find more details in https://docs.lenses.io/current/installation/kubernetes/helm/#helm-provision-secrets
     secrets: {}
-      # Base64 encoded
+      # Base64 encoded. Read how to convert from .pem to .jks in the article: https://docs.lenses.io/current/configuration/dynamic/pem-to-jks-conversion/
       # data:
       #   kafka.keystore.jks: |-
       #   kafka.truststore.jks: |-
