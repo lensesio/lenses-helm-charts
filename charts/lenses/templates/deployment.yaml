@@ -353,14 +353,9 @@ spec:
           - bash
           - -c
           - |
-            echo "Wait for Lenses to come up"
-            until curl --silent --head localhost:{{.Values.restPort}} > /dev/null; do
-              echo "Waiting for Lenses"
-              sleep 3
-            done
-            echo "Lenses available"
-
-            lenses-cli beta provision \
+            lenses-cli provision \
+              --wait-for-lenses \
+              --setup-mode \
               --host="localhost:{{.Values.restPort}}" \
               --user={{default "admin" .Values.lenses.security.defaultUser.username | quote}} \
               --pass={{default "admin" .Values.lenses.security.defaultUser.password | quote}} \
