@@ -26,9 +26,7 @@ spec:
   ports:
   - name: {{.Values.servicePortName}}
     port: {{.Values.servicePort}}
-    {{- if .Values.nodePort }}
-    nodePort: {{.Values.nodePort}}
-    {{- end }}
+    nodePort: {{ include "nodePort" .}}
     targetPort: {{.Values.restPort}}
   - name: http-metrics
     port: {{.Values.monitoring.port}}

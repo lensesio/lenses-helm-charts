@@ -2,7 +2,7 @@
 {{- $outer := . -}}
 {{- range tuple "zookeepers" "license" "licenseUrl" "schemaRegistries" "connectClusters" "kafka" }}
   {{- if hasKey $outer.Values.lenses . }}
-    {{ fail "Setting configuration in the chart is deprecated. Please use the provision yaml instead. See documentation here " }}
+    {{ fail (printf "%s%s%s" "Setting configuration value .Values.lenses." . " is deprecated. Please use the provision yaml instead. See documentation here.") }}
   {{ end }}
 {{ end }}
 
@@ -361,8 +361,6 @@ spec:
               --pass={{default "admin" .Values.lenses.security.defaultUser.password | quote}} \
               /mnt/provision-secrets/provision.yaml \
               --mode=sidecar
-              # Mode sidecar is used to block the process from exiting
-              # and let the container run in idle state
 
         volumeMounts:
           - name: provision-secrets
