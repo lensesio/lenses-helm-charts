@@ -31,6 +31,22 @@ We truncate at 24 chars because some Kubernetes name fields are limited to this 
 {{- end -}}
 {{- end -}}
 
+{{- define "nodePort" -}}
+{{- if and .Values.service.nodePort .Values.nodePort -}}
+{{- if eq .Values.service.nodePort .Values.nodePort -}}
+{{- .Values.service.nodePort -}}
+{{- else -}}
+{{ fail "You cannot set two differents nodePort port inside your configuration"}}
+{{- end -}}
+{{- else -}}
+{{- if .Values.nodePort }}
+{{- .Values.nodePort -}}
+{{- else if .Values.service.nodePort -}}
+{{- .Values.service.nodePort -}}
+{{- end -}}
+{{- end -}}
+{{- end -}}
+
 {{- define "metricTopic" -}}
 {{- if .Values.lenses.topics.suffix -}}
 _kafka_lenses_metrics_{{ .Values.lenses.topics.suffix }}

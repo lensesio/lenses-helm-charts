@@ -25,12 +25,10 @@ spec:
   externalTrafficPolicy: {{ toYaml .Values.service.externalTrafficPolicy }}
   {{- end }}
   ports:
-  - name: {{ .Values.servicePortName }}
-    port: {{ .Values.servicePort }}
-    {{- if .Values.nodePort }}
-    nodePort: {{ .Values.nodePort }}
-    {{- end }}
-    targetPort: {{ .Values.restPort }}
+  - name: {{.Values.servicePortName}}
+    port: {{.Values.servicePort}}
+    nodePort: {{ include "nodePort" .}}
+    targetPort: {{.Values.restPort}}
   - name: http-metrics
     port: {{ .Values.monitoring.port }}
   selector:
