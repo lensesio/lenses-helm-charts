@@ -140,7 +140,7 @@ ingress:
 lenses:
   # Set the details to provision Lenses using lenses-cli
   provision:
-    enabled: false
+    enabled: true
 
     # Find more details in https://docs.lenses.io/current/installation/kubernetes/helm/#helm-provision
     # About provision.yaml structure: https://docs.lenses.io/current/tools/cli/provision/provision-yaml/
@@ -157,13 +157,13 @@ lenses:
 
     # Find more details in https://docs.lenses.io/current/installation/kubernetes/helm/#helm-provision-sidecar
     sidecar:
-      # name:
+#      name:
       image:
         repository: lensesio/lenses-cli
         # Default to .Chart.AppVersion with major.minor semantic (e.g 5.0)
-        # tag:
-        # pullPolicy: IfNotPresent
-        # registrySecretKey:
+#         tag:
+#         pullPolicy: IfNotPresent
+#         registrySecretKey:
 
       # Additional volume mounts to load additional files from pre-existing volumes, secrets or vault secrets to use in provisioning
       # Use it in conjuction with lenses.additionalVolumes

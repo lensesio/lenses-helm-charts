@@ -48,6 +48,17 @@ spec:
         prometheus.io/port: "9102"
         prometheus.io/path: "/metrics"
     spec:
+      {{- if .Values.image.registrySecretKey }}
+      imagePullSecrets:
+        - name: {{ .Values.image.registrySecretKey }}
+      {{- if .Values.lenses.provision.enabled }}
+      {{- $provision := .Values.lenses.provision }}
+        {{- if $provision.sidecar.image.registrySecretKey }}
+        - name: {{$provision.sidecar.image.registrySecretKey }}
+        {{- end }}
+      {{- end}}
+      {{- end }}
+
       {{- if .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml .Values.nodeSelector | nindent 8 }}
@@ -113,10 +124,6 @@ spec:
       - name: {{ .Chart.Name }}
         image: {{include "lensesImage" . | quote }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
-        {{- if .Values.image.registrySecretKey }}
-        imagePullSecrets:
-        - name: {{ .Values.image.registrySecretKey }}
-        {{- end }}
         ports:
         - containerPort: {{ .Values.restPort }}
         {{- if .Values.lenses.livenessProbe.enabled }}
@@ -345,10 +352,6 @@ spec:
       - name: {{default "lenses-provision" $provision.name}}
         image: {{include "sidecarProvisionImage" . | quote }}
         imagePullPolicy: {{default "IfNotPresent" $provision.sidecar.image.pullPolicy}}
-        {{- if $provision.sidecar.image.registrySecretKey}}
-        imagePullSecrets:
-        - name: {{$provision.sidecar.image.registrySecretKey}}
-        {{- end}}
         command:
           - bash
           - -c
