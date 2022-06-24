@@ -423,6 +423,18 @@ lenses:
       # Password for accessing the private key within the keystore.
       keyPassword:
 
+      # idp settings
+      idp:
+        session:
+          lifetime:
+            max: 100days
+
+     # groups settings
+    groups:
+      enabled: false
+      plugin:
+        class: ""
+
     append:
       conf: |-
 
