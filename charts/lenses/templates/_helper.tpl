@@ -228,8 +228,12 @@ lenses.security.ldap.plugin.person.name.key={{ .Values.lenses.security.ldap.plug
 lenses.security.saml.base.url={{ .Values.lenses.security.saml.baseUrl | quote }}
 lenses.security.saml.idp.provider={{ .Values.lenses.security.saml.provider | quote }}
 lenses.security.saml.idp.metadata.file="/mnt/secrets/saml.idp.xml"
+lenses.security.saml.idp.session.lifetime.max = {{ .Values.lenses.security.saml.idp.session.lifetime.max | quote }}
 lenses.security.saml.keystore.location="/mnt/secrets/saml.keystore.jks"
 lenses.security.saml.keystore.password={{ .Values.lenses.security.saml.keyStorePassword | quote }}
+{{- if .Values.lenses.security.groups.enabled }}
+lenses.security.saml.groups.plugin.class={{ .Values.lenses.security.groups.plugin.class | quote }}
+{{- end -}}
 {{- if .Values.lenses.security.saml.keyAlias }}
 lenses.security.saml.key.alias={{ .Values.lenses.security.saml.keyAlias | quote }}
 {{- end }}
