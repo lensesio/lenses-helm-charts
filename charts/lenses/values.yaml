@@ -427,13 +427,14 @@ lenses:
       idp:
         session:
           lifetime:
-            max: 100days
+            # example: 100days
+            max:
 
-     # groups settings
-    groups:
-      enabled: false
-      plugin:
-        class: ""
+      # groups settings
+      groups:
+        enabled: false
+        plugin:
+          class:
 
     append:
       conf: |-
