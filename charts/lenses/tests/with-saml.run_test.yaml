@@ -42,6 +42,8 @@ tests:
             lenses.security.saml.base.url="https://accounts.google.com/o/saml2/idp?idpid=XXX"
             lenses.security.saml.idp.provider="google"
             lenses.security.saml.idp.metadata.file="/mnt/secrets/saml.idp.xml"
+            lenses.security.saml.idp.session.lifetime.max = "50days"
             lenses.security.saml.keystore.location="/mnt/secrets/saml.keystore.jks"
             lenses.security.saml.keystore.password="changeit1"
+            lenses.security.saml.groups.plugin.class="FooBarClass"
             lenses.security.saml.key.password="changeit2"

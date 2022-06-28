@@ -37,3 +37,15 @@ lenses:
 
       # Password for accessing the private key within the keystore.
       keyPassword: "changeit2"
+
+      # idp settings
+      idp:
+        session:
+          lifetime:
+            max: 50days
+
+      # groups settings
+      groups:
+        enabled: true
+        plugin:
+          class: "FooBarClass"
