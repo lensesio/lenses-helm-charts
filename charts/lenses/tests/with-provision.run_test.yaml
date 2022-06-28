@@ -45,6 +45,14 @@ tests:
               values:
               - I can have an array
               - with 2 elelments
+      - template: provision-secrets.yaml
+        equal:
+          path: stringData.LENSES_ADMIN_USER
+          value: admin
+      - template: provision-secrets.yaml
+        equal:
+          path: stringData.LENSES_ADMIN_PASSWORD
+          value: admin
       - template: deployment.yaml
         contains:
           path: spec.template.spec.volumes
@@ -56,6 +64,38 @@ tests:
         equal:
           path: spec.template.spec.containers[1].name
           value: lenses-provision
+      - template: deployment.yaml
+        equal:
+          path: spec.template.spec.containers[1].command[2]
+          value: |
+            lenses-cli provision \
+              --wait-for-lenses \
+              --setup-mode \
+              --host="localhost:3030" \
+              --user="$LENSES_ADMIN_USER" \
+              --pass="$LENSES_ADMIN_PASSWORD" \
+              /mnt/provision-secrets/provision.yaml \
+              --mode=sidecar
+  - it: should work with provision yaml set and custom Lenses admin user/password
+    set:
+      lenses:
+        provision:
+          enabled: true
+          yaml:
+            key: this is valid yaml
+        security:
+          defaultUser:
+            username: foo
+            password: bar
+    asserts:
+      - template: provision-secrets.yaml
+        equal:
+          path: stringData.LENSES_ADMIN_USER
+          value: foo
+      - template: provision-secrets.yaml
+        equal:
+          path: stringData.LENSES_ADMIN_PASSWORD
+          value: bar
   - it: should fail with provision enabled but without a yaml value
     set:
       lenses:

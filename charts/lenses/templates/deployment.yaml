@@ -357,11 +357,22 @@ spec:
               --wait-for-lenses \
               --setup-mode \
               --host="localhost:{{.Values.restPort}}" \
-              --user={{default "admin" .Values.lenses.security.defaultUser.username | quote}} \
-              --pass={{default "admin" .Values.lenses.security.defaultUser.password | quote}} \
+              --user="$LENSES_ADMIN_USER" \
+              --pass="$LENSES_ADMIN_PASSWORD" \
               /mnt/provision-secrets/provision.yaml \
               --mode=sidecar
 
+        env:
+          - name: LENSES_ADMIN_USER
+            valueFrom:
+              secretKeyRef:
+                name: {{include "provisionFullname" . | quote}}
+                key:  "LENSES_ADMIN_USER"
+          - name: LENSES_ADMIN_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{include "provisionFullname" . | quote}}
+                key:  "LENSES_ADMIN_PASSWORD"
         volumeMounts:
           - name: provision-secrets
             mountPath: "/mnt/provision-secrets"
