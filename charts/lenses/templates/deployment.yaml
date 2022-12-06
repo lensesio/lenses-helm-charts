@@ -5,6 +5,9 @@
     {{ fail (printf "%s%s%s" "Setting configuration value .Values.lenses." . " is deprecated. Please use the provision yaml instead. See documentation here.") }}
   {{ end }}
 {{ end }}
+{{- if and .Values.lenses.provision.enabled .Values.lenses.tls.enabled .Values.lenses.tls.clientAuth}}
+  {{ fail "Provisioning not supported if TLS client authentication (mTLS) is enabled" }}
+{{ end -}}
 
 apiVersion: apps/v1
 kind: Deployment
@@ -356,7 +359,10 @@ spec:
             lenses-cli provision \
               --wait-for-lenses \
               --setup-mode \
-              --host="localhost:{{.Values.restPort}}" \
+              --host="http{{- if .Values.lenses.tls.enabled -}}s{{- end -}}://localhost:{{.Values.restPort}}" \
+              {{- if .Values.lenses.tls.enabled}}
+              --insecure \
+              {{- end}}
               --user="$LENSES_ADMIN_USER" \
               --pass="$LENSES_ADMIN_PASSWORD" \
               /mnt/provision-secrets/provision.yaml \

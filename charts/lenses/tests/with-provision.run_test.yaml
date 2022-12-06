@@ -71,7 +71,7 @@ tests:
             lenses-cli provision \
               --wait-for-lenses \
               --setup-mode \
-              --host="localhost:3030" \
+              --host="http://localhost:3030" \
               --user="$LENSES_ADMIN_USER" \
               --pass="$LENSES_ADMIN_PASSWORD" \
               /mnt/provision-secrets/provision.yaml \
