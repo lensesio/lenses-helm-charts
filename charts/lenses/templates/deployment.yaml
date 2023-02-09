@@ -347,7 +347,7 @@ spec:
       {{- $provision := .Values.lenses.provision}}
       - name: {{default "lenses-provision" $provision.name}}
         image: {{include "sidecarProvisionImage" . | quote }}
-        imagePullPolicy: {{default "IfNotPresent" $provision.sidecar.image.pullPolicy}}
+        imagePullPolicy: {{default "Always" $provision.sidecar.image.pullPolicy}}
         {{- if $provision.sidecar.image.registrySecretKey}}
         imagePullSecrets:
         - name: {{$provision.sidecar.image.registrySecretKey}}
