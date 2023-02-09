@@ -162,7 +162,7 @@ lenses:
         repository: lensesio/lenses-cli
         # Default to .Chart.AppVersion with major.minor semantic (e.g 5.0)
         # tag:
-        # pullPolicy: IfNotPresent
+        # pullPolicy: Always
         # registrySecretKey:
 
       # Additional volume mounts to load additional files from pre-existing volumes, secrets or vault secrets to use in provisioning
