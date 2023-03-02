@@ -1,0 +1,16 @@
+suite: add securityContext and verify that container is honoring them
+templates:
+  - deployment.yaml
+tests:
+  - it: should not contain containerSecurityContext with default values
+    asserts:
+      - isEmpty:
+          path: spec.template.spec.containers[0].securityContext
+  - it: should honor containerSecurityContext
+    set:
+      containerSecurityContext:
+        allowPrivilegeEscalation: false
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].securityContext.allowPrivilegeEscalation
+          value: false

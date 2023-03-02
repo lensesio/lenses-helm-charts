@@ -120,6 +120,8 @@ spec:
         imagePullSecrets:
         - name: {{ .Values.image.registrySecretKey }}
         {{- end }}
+        securityContext:
+          {{- toYaml .Values.containerSecurityContext | nindent 12 }}
         ports:
         - containerPort: {{ .Values.restPort }}
         {{- if .Values.lenses.livenessProbe.enabled }}

@@ -16,6 +16,7 @@ nodeSelector: {}
 tolerations: {}
 affinity: {}
 securityContext: {}
+containerSecurityContext: {}
 
 # Add Prometheus annotations to the pod for Lenses metric scraping
 monitoring:
