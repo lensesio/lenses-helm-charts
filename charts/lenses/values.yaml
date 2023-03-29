@@ -23,6 +23,8 @@ securityContext: {}
 # dnsConfig:
 #   nameservers:
 #     - 1.1.1.1
+# containerSecurityContext: # Optional, plugged in into the both the deployment's main app container and the sidecar.
+#   allowPrivilegeEscalation: false
 
 # Add Prometheus annotations to the pod for Lenses metric scraping
 monitoring:
