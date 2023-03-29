@@ -19,6 +19,10 @@ nodeSelector: {}
 tolerations: {}
 affinity: {}
 securityContext: {}
+# dnsPolicy: "None" # Optional dnsPolicy and dnsConfig to put into the Deployment's PodTemplateSpec.
+# dnsConfig:
+#   nameservers:
+#     - 1.1.1.1
 
 # Add Prometheus annotations to the pod for Lenses metric scraping
 monitoring:
