@@ -114,14 +114,13 @@ spec:
           {{- toYaml .Values.additionalVolumes | nindent 8 }}
         {{- end }}
       serviceAccountName: {{ .Values.serviceAccount }}
+      {{- if .Values.image.imagePullSecrets }}
+      imagePullSecrets: {{ .Values.image.imagePullSecrets | toYaml | nindent 8 }}
+      {{- end }}
       containers:
       - name: {{ .Chart.Name }}
         image: {{include "lensesImage" . | quote }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
-        {{- if .Values.image.registrySecretKey }}
-        imagePullSecrets:
-        - name: {{ .Values.image.registrySecretKey }}
-        {{- end }}
         ports:
         - containerPort: {{ .Values.restPort }}
         {{- if .Values.lenses.livenessProbe.enabled }}
@@ -350,10 +349,6 @@ spec:
       - name: {{default "lenses-provision" $provision.name}}
         image: {{include "sidecarProvisionImage" . | quote }}
         imagePullPolicy: {{default "Always" $provision.sidecar.image.pullPolicy}}
-        {{- if $provision.sidecar.image.registrySecretKey}}
-        imagePullSecrets:
-        - name: {{$provision.sidecar.image.registrySecretKey}}
-        {{- end}}
         command:
           - bash
           - -c

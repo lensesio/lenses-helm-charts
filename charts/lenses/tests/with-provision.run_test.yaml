@@ -38,13 +38,13 @@ tests:
         equal:
           path: stringData.provision\.yaml
           value: |-
-              key: this is valid yaml
-              moreValues: |-
-                and a multiline
-                text field
-              values:
-              - I can have an array
-              - with 2 elelments
+            key: this is valid yaml
+            moreValues: |-
+              and a multiline
+              text field
+            values:
+            - I can have an array
+            - with 2 elelments
       - template: provision-secrets.yaml
         equal:
           path: stringData.LENSES_ADMIN_USER
@@ -117,7 +117,6 @@ tests:
               repository: example.com/cli
               tag: 0.0.1
               pullPolicy: IfNotPresent
-              registrySecretKey: foobar
     asserts:
       - template: deployment.yaml
         equal:
@@ -127,10 +126,6 @@ tests:
         equal:
           path: spec.template.spec.containers[1].imagePullPolicy
           value: IfNotPresent
-      - template: deployment.yaml
-        equal:
-          path: spec.template.spec.containers[1].imagePullSecrets[0].name
-          value: foobar
   - it: should work with provision secrets set
     set:
       lenses:

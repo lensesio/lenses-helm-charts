@@ -6,6 +6,8 @@ fullnameOverride: ""
 image:
   repository: lensesio/lenses
   pullPolicy: IfNotPresent
+  # imagePullSecrets: # any image pull secrets for private registries go here
+  #   - name: regcred
   # Default to .Chart.AppVersion
   # tag:
 
