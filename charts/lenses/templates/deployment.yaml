@@ -52,6 +52,9 @@ spec:
         prometheus.io/scrape: "true"
         prometheus.io/port: "9102"
         prometheus.io/path: "/metrics"
+        {{- range $key, $value := .Values.podTemplateAnnotations }}
+        {{ $key }}: {{ $value | quote }}
+        {{- end }}
     spec:
       {{- if .Values.nodeSelector }}
       nodeSelector:

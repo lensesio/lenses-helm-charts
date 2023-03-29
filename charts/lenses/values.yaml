@@ -12,6 +12,7 @@ image:
   # tag:
 
 annotations: {}
+podTemplateAnnotations: {} # Annotations here go into the PodTemplateSpec at deployment.spec.template.annotations.
 labels: {}
 strategy: {}
 nodeSelector: {}
