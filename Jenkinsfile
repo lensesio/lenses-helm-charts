@@ -30,7 +30,7 @@ pipeline {
 
     environment {
         // If this matches the branch name it will DEPLOY to PUBLIC HELM REPO
-        RELEASE_BRANCH_FOR_PUBLIC = 'release/5.1/do_not_publish'
+        RELEASE_BRANCH_FOR_PUBLIC = 'release/5.1'
     }
 
     stages {
