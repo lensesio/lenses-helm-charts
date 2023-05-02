@@ -29,8 +29,6 @@ securityContext: {}
 # Add Prometheus annotations to the pod for Lenses metric scraping
 monitoring:
   enabled: true
-  # A label to attach to the pods for include in JMX
-  pipeline: lenses
   port: 9102
   path: "/metrics"
 
