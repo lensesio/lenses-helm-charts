@@ -49,9 +49,13 @@ spec:
         {{ $key }}: {{ $value | quote }}
         {{- end }}
       annotations:
+        {{- with .Values.monitoring }}
+        {{- if .enabled }}
         prometheus.io/scrape: "true"
-        prometheus.io/port: "9102"
-        prometheus.io/path: "/metrics"
+        prometheus.io/port: "{{ .port }}"
+        prometheus.io/path: "{{ .path }}"
+        {{- end }}
+        {{- end }}
         {{- range $key, $value := .Values.podTemplateAnnotations }}
         {{ $key }}: {{ $value | quote }}
         {{- end }}
