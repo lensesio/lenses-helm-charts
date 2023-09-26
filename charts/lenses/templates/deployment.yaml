@@ -154,14 +154,14 @@ spec:
         {{- end }}
 
         volumeMounts:
-{{/*          - name: secrets*/}}
-{{/*            mountPath: "/mnt/secrets"*/}}
-{{/*          - name: secrets*/}}
-{{/*            mountPath: "/etc/keytab"*/}}
-{{/*            subPath: "keytab"*/}}
-{{/*          - name: secrets*/}}
-{{/*            mountPath: "/etc/registry.keytab"*/}}
-{{/*            subPath: "registry.keytab"*/}}
+          - name: secrets
+            mountPath: "/mnt/secrets"
+          - name: secrets
+            mountPath: "/etc/keytab"
+            subPath: "keytab"
+          - name: secrets
+            mountPath: "/etc/registry.keytab"
+            subPath: "registry.keytab"
           - name: secrets
             mountPath: "/mnt/settings/security.append.conf"
             subPath: "security.append.conf"

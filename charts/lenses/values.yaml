@@ -149,51 +149,12 @@ lenses:
   # TODO update this comment
   # Set the details to provision Lenses using lenses-cli
   provision:
-    enabled: true
-    path: /mnt/settings
-    version: "2"
-
+    enabled: false
+    version: "1"
     # Find more details in https://docs.lenses.io/current/installation/kubernetes/helm/#helm-provision
     # About provision.yaml structure: https://docs.lenses.io/current/tools/cli/provision/provision-yaml/
     # GitOps limitations, using lenses.provision https://docs.lenses.io/current/tools/cli/provision/gitops-limitations/
-    connections:
-      kafka:
-        - name: kafka
-          version: 1
-          tags: [ ]
-          configuration:
-            kafkaBootstrapServers:
-              value:
-                - PLAINTEXT:///localhost:9092
-            protocol:
-              value: PLAINTEXT
-            metricsPort:
-              value: 9581
-            metricsType:
-              value: JMX
-            metricsSsl:
-              value: false
-            keytab:
-              file: ${LENSES_PROVISIONING_PATH}/keytab
-      confluentSchemaRegistry:
-        - name: schema-registry
-          version: 1
-          tags: []
-          configuration:
-            schemaRegistryUrls:
-              value:
-                - http://localhost:8081
-            metricsPort:
-              value: 9582
-            metricsType:
-              value: JMX
-            metricsSsl:
-              value: false
-    license:
-      source: Landoop LTD
-      clientId: Lenses Dev 4
-      details: kafka-lenses
-      key: eyJhbGciOiJBMTI4S1ciLCJlbmMiOiJBMTI4Q0JDLUhTMjU2In0.AqO6Ax-o-4T0WKFX7eCGFRu329wxplkZuWrGdhyncrhBfh9higjsZA.-uGCXWjULTzb7-3ROfsRhw.olmx6FR7FH7c2adHol0ipokHF6jOo6LTDtoFOSPWfqKxbA3yI-CUqlyo_-Obin7MSA4KqXBLpXOvP72EJhIYuyqkxUVGRoXHF0Oj2V6kzdDcmjJHbMB4VTxdE8YBAYbPXzEXdhq7lZy4fxHHhYxAsRATCtqf7t7TQCE0TWOiSHvLwyD7xMK2X47KiKbnNlNvqeVnnjLUMMd7vzA5dTft48wJm2D5HJNZ0mS32gTaiiExT5nqolToL0KYIOpRiT00MTQkGlBdagVigc-DZBPM0ZTP5wuLkwdk4XbfoQKaWC4qaYA6VpGgQg03Mo1W4ljlqRy0N4cPQ-l4Mi1XV9VK-825-zhyxzPrxef5Zct2nzVEJ9MbWy0-xuf6THX4q2X8zmz_KiHoA-hBWjebv_2R9479ldGj0h-vm9htVD59_6RBOGb0rT4XSS-4_CGYBZzv5PIPpLdnVbkr_qjsxCI0BO7tPKoyxXg2qh4YQbn3wn5MqsE9yR2BbRaso9MSPFlF8PxqR7A4qrKJjn_mPlcrR-XGf0ua2XfWCVe4ngcWpzssYHcJJD80APyZgzneIw2dSaO0enfFYUq6avqGSeoG7VC9zYACfUdofdlULH2azmptJ2Jzw3ggpLR7ZzZ9QrySXTUB2jkzrqiHyM9fqIXUVwAkAJMcBuwF5zY5B_ChA69Uj_-s-S1RITBbg5wtB3LuHyJGtTo4fuYY75F_OL9Cwp7gcpa5u0M_wWZlx70j_6jCb-ogvghALbHY8OPeWz_1-3bvJM9T_jmjKy0FDt6x8FJV1lgMMR0j1RiUeauUMsnd4TNUYAH50mFwtK5PU-Iq.U4LwNfOL2JB4vzBMvo3Hig
+    yaml:
 
     # Find more details in https://docs.lenses.io/current/installation/kubernetes/helm/#helm-provision-secrets
     secrets: {}

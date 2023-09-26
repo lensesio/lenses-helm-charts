@@ -1,0 +1,156 @@
+suite: enable provisioning version 2 and check the changes in deployment and secret
+templates:
+  - deployment.yaml
+  - provision-secrets.yaml
+  - secrets.yaml
+tests:
+  - it: should work with provision disabled (default mode)
+    # set:
+    #   lenses:
+    #     provision:
+    #       enabled: false
+    asserts:
+      - template: provision-secrets.yaml
+        hasDocuments:
+          count: 0
+      - template: deployment.yaml
+        notContains:
+          path: spec.template.spec.volumes
+          content:
+            name: provision-secrets
+            secret:
+              secretName: RELEASE-NAME-provision
+  - it: should work with provision yaml set
+    set:
+      lenses:
+        provision:
+          enabled: true
+          version: "2"
+          connections:
+            key: this is valid yaml
+            values:
+              - I can have an array
+              - with 2 elelments
+            moreValues: |-
+              and a multiline
+              text field
+          license: this is a valid license
+    asserts:
+      - template: provision-secrets.yaml
+        equal:
+          path: stringData.provisioning\.yaml
+          value: |-
+            key: this is valid yaml
+            moreValues: |-
+              and a multiline
+              text field
+            values:
+            - I can have an array
+            - with 2 elelments
+      - template: provision-secrets.yaml
+        equal:
+          path: stringData.LENSES_ADMIN_USER
+          value: admin
+      - template: provision-secrets.yaml
+        equal:
+          path: stringData.LENSES_ADMIN_PASSWORD
+          value: admin
+      - template: deployment.yaml
+        contains:
+          path: spec.template.spec.volumes
+          content:
+            name: provision-secrets
+            secret:
+              secretName: RELEASE-NAME-provision
+
+  - it: should work with provision yaml set and custom Lenses admin user/password
+    set:
+      lenses:
+        provision:
+          enabled: true
+          version: "2"
+          connections:
+            key: this is valid yaml
+          license: this is a valid license
+        security:
+          defaultUser:
+            username: foo
+            password: bar
+    asserts:
+      - template: provision-secrets.yaml
+        equal:
+          path: stringData.LENSES_ADMIN_USER
+          value: foo
+      - template: provision-secrets.yaml
+        equal:
+          path: stringData.LENSES_ADMIN_PASSWORD
+          value: bar
+  - it: should fail with provision enabled but without a yaml value
+    set:
+      lenses:
+        provision:
+          enabled: true
+          version: "2"
+          license: this is a valid license
+    asserts:
+      - template: provision-secrets.yaml
+        failedTemplate:
+          errorMessage: provisioning connections is required to provision Lenses
+  - it: should work with provision secrets set
+    set:
+      lenses:
+        provision:
+          enabled: true
+          version: "2"
+          connections:
+            goo: loo
+          license: this is a valid license
+          secrets:
+            stringData:
+              foo1: bar1
+              foo2: bar2
+              foo3: bar3
+            data:
+              foo: YmFy
+    asserts:
+      - template: provision-secrets.yaml
+        hasDocuments:
+          count: 1
+      - template: provision-secrets.yaml
+        equal:
+          path: stringData.foo1
+          value: bar1
+      - template: provision-secrets.yaml
+        equal:
+          path: data.foo
+          value: YmFy
+
+      - template: deployment.yaml
+        contains:
+          path: spec.template.spec.volumes
+          content:
+            name: provision-secrets
+            secret:
+              secretName: RELEASE-NAME-provision
+
+  - it: should work when custom volumes and volume mounts are used to load additional plugins (UDFs) in Lenses
+    set:
+      lenses:
+        provision:
+          enabled: true
+          version: "2"
+          connections:
+            goo: loo
+          license: this is a valid license
+      additionalVolumes:
+        - name: secrets
+          secret:
+            secretName: lenses-super-secrets
+    asserts:
+      - template: deployment.yaml
+        contains:
+          path: spec.template.spec.volumes
+          content:
+            name: secrets
+            secret:
+              secretName: lenses-super-secrets
