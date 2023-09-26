@@ -199,6 +199,12 @@ lenses.storage.postgres.port={{  .Values.lenses.storage.postgres.port | quote }}
 lenses.storage.postgres.schema={{ .Values.lenses.storage.postgres.schema | quote }}
 {{- end }}
 {{- end }}
+{{- if .Values.lenses.provision.enabled }}
+    lenses.provisioning.path={{ required "Provisioning 'path' value is mandatory" .Values.lenses.provision.path | quote }}
+    {{- if .Values.lenses.provision.interval }}
+        lenses.provisioning.interval={{ .Values.lenses.provision.interval }}
+    {{- end -}}
+{{- end -}}
 {{ default "" .Values.lenses.append.conf }}
 {{- end -}}
 

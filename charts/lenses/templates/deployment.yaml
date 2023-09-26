@@ -132,307 +132,314 @@ spec:
       imagePullSecrets: {{ .Values.image.imagePullSecrets | toYaml | nindent 8 }}
       {{- end }}
       containers:
-        - name: {{ .Chart.Name }}
-          image: {{include "lensesImage" . | quote }}
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+      - name: {{ .Chart.Name }}
+        image: {{include "lensesImage" . | quote }}
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
         {{- if .Values.containerSecurityContext}}
-          securityContext:
+        securityContext:
           {{- toYaml .Values.containerSecurityContext | nindent 10 }}
         {{- end }}
-          ports:
-            - containerPort: {{ .Values.restPort }}
+        ports:
+        - containerPort: {{ .Values.restPort }}
         {{- if .Values.lenses.livenessProbe.enabled }}
-          livenessProbe:
-            httpGet:
-              path: /
-              port: {{ .Values.restPort }}
+        livenessProbe:
+          httpGet:
+            path: /
+            port: {{ .Values.restPort }}
           {{- if .Values.lenses.tls.enabled }}
-              scheme: HTTPS
+            scheme: HTTPS
           {{- end }}
-            initialDelaySeconds: 300
-            periodSeconds: 10
+          initialDelaySeconds: 300
+          periodSeconds: 10
         {{- end }}
 
-          volumeMounts:
-            - name: secrets
-              mountPath: "/mnt/secrets"
-            - name: secrets
-              mountPath: "/etc/keytab"
-              subPath: "keytab"
-            - name: secrets
-              mountPath: "/etc/registry.keytab"
-              subPath: "registry.keytab"
-            - name: secrets
-              mountPath: "/mnt/settings/security.append.conf"
-              subPath: "security.append.conf"
-            - name: config
-              mountPath: "/mnt/settings/lenses.append.conf"
-              subPath: "lenses.append.conf"
+        volumeMounts:
+{{/*          - name: secrets*/}}
+{{/*            mountPath: "/mnt/secrets"*/}}
+{{/*          - name: secrets*/}}
+{{/*            mountPath: "/etc/keytab"*/}}
+{{/*            subPath: "keytab"*/}}
+{{/*          - name: secrets*/}}
+{{/*            mountPath: "/etc/registry.keytab"*/}}
+{{/*            subPath: "registry.keytab"*/}}
+          - name: secrets
+            mountPath: "/mnt/settings/security.append.conf"
+            subPath: "security.append.conf"
+          - name: config
+            mountPath: "/mnt/settings/lenses.append.conf"
+            subPath: "lenses.append.conf"
           {{- if .Values.persistence.enabled }}
-            - name: storage
-              mountPath: "/data/storage"
+          - name: storage
+            mountPath: "/data/storage"
           {{- end }}
           {{- if .Values.additionalVolumeMounts }}
             {{- toYaml .Values.additionalVolumeMounts | nindent 10 }}
           {{- end }}
-          {{- if and .Values.lenses.provision.enabled eq (.Values.lenses.provision.version 2) }}
-            - name: provision-configmap
-              mountPath: "/data/lenses-provisioning/provisioning.yaml"
-            - name: provision-license-configmap
-              mountPath: "/data/lenses-provisioning/license.yaml"
-          {{- end }}
+        {{- if and .Values.lenses.provision.enabled (eq .Values.lenses.provision.version "2") }}
+          - name: provision-secrets
+            mountPath: {{.Values.lenses.provision.path}}
+        {{- end }}
 
-          resources:
-            {{- toYaml .Values.resources | nindent 10 }}
-          env:
+        resources:
+          {{- toYaml .Values.resources | nindent 10 }}
+        env:
         {{- with .Values.lenses.security.defaultUser.usernameSecretKeyRef }}
-            - name: LENSES_SECURITY_USER
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .name }}
-                  key: {{ .key }}
+        - name: LENSES_SECURITY_USER
+          valueFrom:
+            secretKeyRef:
+              name: {{ .name }}
+              key: {{ .key }}
         {{- end }}
         {{- with .Values.lenses.security.defaultUser.passwordSecretKeyRef }}
-            - name: LENSES_SECURITY_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .name }}
-                  key: {{ .key }}
+        - name: LENSES_SECURITY_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ .name }}
+              key: {{ .key }}
         {{- end }}
         {{- if .Values.lenses.tls.enabled }}
         {{- if .Values.lenses.tls.keyStoreFileData }}
-            - name: LENSES_SSL_KEYSTORE_LOCATION
-              value: "/mnt/secrets/lenses.tls.keystore.jks"
+        - name: LENSES_SSL_KEYSTORE_LOCATION
+          value: "/mnt/secrets/lenses.tls.keystore.jks"
         {{- end }}
         {{- if .Values.lenses.tls.keyStorePassword }}
-            - name: LENSES_SSL_KEYSTORE_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{include "fullname" . | quote}}
-                  key: "lenses.tls.keystore.password"
+        - name: LENSES_SSL_KEYSTORE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{include "fullname" . | quote}}
+              key:  "lenses.tls.keystore.password"
         {{- end }}
         {{- if .Values.lenses.tls.keyPassword }}
-            - name: LENSES_SSL_KEY_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{include "fullname" . | quote}}
-                  key: "lenses.tls.key.password"
+        - name: LENSES_SSL_KEY_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{include "fullname" . | quote}}
+              key:  "lenses.tls.key.password"
         {{- end }}
         {{- if .Values.lenses.tls.auth }}
-            - name: LENSES_SSL_CLIENT_AUTH
-              value: {{ .Values.lenses.tls.auth }}
+        - name: LENSES_SSL_CLIENT_AUTH
+          value: {{ .Values.lenses.tls.auth }}
         {{- end }}
         {{- if .Values.lenses.tls.trustStoreFileData }}
-            - name: LENSES_SSL_TRUSTSTORE_LOCATION
-              value: "/mnt/secrets/lenses.tls.truststore.jks"
+        - name: LENSES_SSL_TRUSTSTORE_LOCATION
+          value: "/mnt/secrets/lenses.tls.truststore.jks"
         {{- end }}
         {{- if .Values.lenses.tls.trustStorePassword }}
-            - name: LENSES_SSL_TRUSTSTORE_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{include "fullname" . | quote}}
-                  key: "lenses.tls.truststore.password"
+        - name: LENSES_SSL_TRUSTSTORE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{include "fullname" . | quote}}
+              key:  "lenses.tls.truststore.password"
         {{- end }}
         {{- end }}
-            - name: LENSES_OPTS
-              value: {{include "lensesOpts" . | default "" | quote}}
+        - name: LENSES_OPTS
+          value: {{include "lensesOpts" . | default "" | quote}}
         {{- if .Values.lenses.opts.keyStoreFileData }}
-            - name: CLIENT_OPTS_KEYSTORE_FILE
-              value: "/mnt/secrets/lenses.opts.keystore.jks"
+        - name: CLIENT_OPTS_KEYSTORE_FILE
+          value: "/mnt/secrets/lenses.opts.keystore.jks"
         {{- end }}
         {{- if .Values.lenses.opts.keyStorePassword }}
-            - name: CLIENT_OPTS_KEYSTORE_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{include "fullname" . | quote}}
-                  key: "lenses.opts.keystore.password"
+        - name: CLIENT_OPTS_KEYSTORE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{include "fullname" . | quote}}
+              key:  "lenses.opts.keystore.password"
         {{- end }}
         {{- if .Values.lenses.opts.trustStoreFileData }}
-            - name: CLIENT_OPTS_TRUSTSTORE_FILE
-              value: "/mnt/secrets/lenses.opts.truststore.jks"
+        - name: CLIENT_OPTS_TRUSTSTORE_FILE
+          value: "/mnt/secrets/lenses.opts.truststore.jks"
         {{- end }}
         {{- if .Values.lenses.opts.trustStorePassword }}
-            - name: CLIENT_OPTS_TRUSTSTORE_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{include "fullname" . | quote}}
-                  key: "lenses.opts.truststore.password"
+        - name: CLIENT_OPTS_TRUSTSTORE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{include "fullname" . | quote}}
+              key:  "lenses.opts.truststore.password"
         {{- end }}
         {{- if.Values.lenses.jvm.heapOpts}}
-            - name: LENSES_HEAP_OPTS
-              value: {{ .Values.lenses.jvm.heapOpts | quote }}
+        - name: LENSES_HEAP_OPTS
+          value: {{ .Values.lenses.jvm.heapOpts | quote }}
         {{- end }}
         {{- if.Values.lenses.jvm.logBackOpts}}
-            - name: LENSES_LOG4J_OPTS
-              value: {{ .Values.lenses.jvm.logBackOpts | quote }}
+        - name: LENSES_LOG4J_OPTS
+          value: {{ .Values.lenses.jvm.logBackOpts | quote }}
         {{- end }}
         {{- if.Values.lenses.jvm.performanceOpts}}
-            - name: LENSES_PERFORMANCE_OPTS
-              value: {{ .Values.lenses.jvm.performanceOpts | quote }}
+        - name: LENSES_PERFORMANCE_OPTS
+          value: {{ .Values.lenses.jvm.performanceOpts | quote }}
         {{- end }}
-            - name: LENSES_PORT
-              value: {{ .Values.restPort | quote }}
-            - name: LENSES_JMX_PORT
-              value: "9101"
-            - name: LENSES_ALERT_CONSUMERS_LAG_THRESHOLD
-              value: {{ .Values.lenses.alerts.consumersLagThreshold | quote }}
+        - name: LENSES_PORT
+          value: {{ .Values.restPort | quote }}
+        - name: LENSES_JMX_PORT
+          value: "9101"
+        - name: LENSES_ALERT_CONSUMERS_LAG_THRESHOLD
+          value: {{ .Values.lenses.alerts.consumersLagThreshold | quote }}
         {{- if .Values.lenses.alerts.enabled }}
-            - name: LENSES_ALERT_PLUGINS
-              value: |-
+        - name: LENSES_ALERT_PLUGINS
+          value: |-
             {{- include "alertPlugins" . | nindent 12 }}
         {{- end }}
         {{- if .Values.lenses.grafanaUrl }}
-            - name: LENSES_GRAFANA
-              value: {{ .Values.lenses.grafanaUrl | quote }}
+        - name: LENSES_GRAFANA
+          value: {{ .Values.lenses.grafanaUrl | quote }}
+        {{- end }}
+        {{- if .Values.lenses.provision.enabled }}
+        # Provisioning
+        - name: LENSES_PROVISIONING_PATH
+          value: {{ .Values.lenses.provision.path }}
+        {{- if .Values.lenses.provision.interval }}
+        - name: LENSES_PROVISIONING_INTERVAL
+          value: {{ .Values.lenses.provision.interval }}
+        {{- end }}
         {{- end }}
 
-            # lenses topics
-            - name: LENSES_TOPICS_AUDITS
-              value: {{include "auditTopic" . | quote}}
-            - name: LENSES_TOPICS_METRICS
-              value: {{include "metricTopic" . | quote}}
-            - name: LENSES_TOPICS_PROFILES
-              value: {{include "profileTopic" . | quote}}
-            - name: LENSES_TOPICS_PROCESSORS
-              value: {{include "processorTopic" . | quote}}
-            - name: LENSES_TOPICS_CLUSTER
-              value: {{include "clusterTopic" . | quote}}
-            - name: LENSES_TOPICS_ALERTS_STORAGE
-              value: {{include "alertTopic" . | quote}}
-            - name: LENSES_TOPICS_ALERTS_SETTINGS
-              value: {{include "alertSettingTopic" . | quote}}
-            - name: LENSES_TOPICS_LSQL_STORAGE
-              value: {{include "lsqlTopic" . | quote}}
-            - name: LENSES_TOPICS_METADATA
-              value: {{include "metadataTopic" . | quote}}
-            - name: LENSES_TOPICS_EXTERNAL_TOPOLOGY
-              value: {{include "topologyTopic" . | quote}}
+        # lenses topics
+        - name: LENSES_TOPICS_AUDITS
+          value: {{include "auditTopic" . | quote}}
+        - name: LENSES_TOPICS_METRICS
+          value: {{include "metricTopic" . | quote}}
+        - name: LENSES_TOPICS_PROFILES
+          value: {{include "profileTopic" . | quote}}
+        - name: LENSES_TOPICS_PROCESSORS
+          value: {{include "processorTopic" . | quote}}
+        - name: LENSES_TOPICS_CLUSTER
+          value: {{include "clusterTopic" . | quote}}
+        - name: LENSES_TOPICS_ALERTS_STORAGE
+          value: {{include "alertTopic" . | quote}}
+        - name: LENSES_TOPICS_ALERTS_SETTINGS
+          value: {{include "alertSettingTopic" . | quote}}
+        - name: LENSES_TOPICS_LSQL_STORAGE
+          value: {{include "lsqlTopic" . | quote}}
+        - name: LENSES_TOPICS_METADATA
+          value: {{include "metadataTopic" . | quote}}
+        - name: LENSES_TOPICS_EXTERNAL_TOPOLOGY
+          value: {{include "topologyTopic" . | quote}}
 
-            # Kubernetes Processors
-            - name: LENSES_SQL_EXECUTION_MODE
-              value: {{ .Values.lenses.sql.mode | quote }}
+        # Kubernetes Processors
+        - name: LENSES_SQL_EXECUTION_MODE
+          value: {{ .Values.lenses.sql.mode | quote }}
 
-            # user secrets
-            - name: LENSES_SECRET_FILE
-              value: "/mnt/secrets/security.conf"
+        # user secrets
+        - name: LENSES_SECRET_FILE
+          value: "/mnt/secrets/security.conf"
 
-            # Kubernetes processors
+        # Kubernetes processors
         {{- if eq .Values.lenses.sql.mode "KUBERNETES"}}
-            - name: LENSES_KUBERNETES_PROCESSOR_IMAGE_NAME
-              value: {{ .Values.lenses.sql.processorImage | quote }}
-            - name: LENSES_KUBERNETES_PROCESSOR_IMAGE_TAG
-              value: {{ .Values.lenses.sql.processorImageTag | quote }}
-            - name: LENSES_KUBERNETES_POD_HEAP
-              value: {{ .Values.lenses.sql.heap | quote }}
-            - name: LENSES_KUBERNETES_POD_MIN_HEAP
-              value: {{ .Values.lenses.sql.minHeap | quote }}
-            - name: LENSES_KUBERNETES_POD_MEM_LIMIT
-              value: {{ .Values.lenses.sql.memLimit | quote }}
-            - name: LENSES_KUBERNETES_POD_MEM_REQUEST
-              value: {{ .Values.lenses.sql.memRequest | quote }}
-            - name: LENSES_KUBERNETES_POD_LIVENESS_INITIAL_DELAY
-              value: {{ .Values.lenses.sql.livenessInitialDelay | quote }}
+        - name: LENSES_KUBERNETES_PROCESSOR_IMAGE_NAME
+          value: {{ .Values.lenses.sql.processorImage | quote }}
+        - name: LENSES_KUBERNETES_PROCESSOR_IMAGE_TAG
+          value: {{ .Values.lenses.sql.processorImageTag | quote }}
+        - name: LENSES_KUBERNETES_POD_HEAP
+          value: {{ .Values.lenses.sql.heap | quote }}
+        - name: LENSES_KUBERNETES_POD_MIN_HEAP
+          value: {{ .Values.lenses.sql.minHeap | quote }}
+        - name: LENSES_KUBERNETES_POD_MEM_LIMIT
+          value: {{ .Values.lenses.sql.memLimit | quote }}
+        - name: LENSES_KUBERNETES_POD_MEM_REQUEST
+          value: {{ .Values.lenses.sql.memRequest | quote }}
+        - name: LENSES_KUBERNETES_POD_LIVENESS_INITIAL_DELAY
+          value: {{ .Values.lenses.sql.livenessInitialDelay | quote }}
         {{- end }}
 
-            # Deployments
+        # Deployments
         {{- if.Values.lenses.deployments.eventsBufferSize }}
-            - name: LENSES_DEPLOYMENTS_EVENTS_BUFFER_SIZE
-              value: {{ .Values.lenses.deployments.eventsBufferSize | quote }}
+        - name: LENSES_DEPLOYMENTS_EVENTS_BUFFER_SIZE
+          value: {{ .Values.lenses.deployments.eventsBufferSize | quote }}
         {{- end }}
         {{- if.Values.lenses.deployments.errorsBufferSize }}
-            - name: LENSES_DEPLOYMENTS_ERRORS_BUFFER_SIZE
-              value: {{ .Values.lenses.deployments.errorsBufferSize | quote }}
+        - name: LENSES_DEPLOYMENTS_ERRORS_BUFFER_SIZE
+          value: {{ .Values.lenses.deployments.errorsBufferSize | quote }}
         {{- end }}
         {{- if.Values.lenses.deployments.connect.statusInterval }}
-            - name: LENSES_DEPLOYMENT_CONNECT_STATUS_INTERVAL
-              value: {{ .Values.lenses.deployments.connect.statusInterval | quote }}
+        - name: LENSES_DEPLOYMENT_CONNECT_STATUS_INTERVAL
+          value: {{ .Values.lenses.deployments.connect.statusInterval | quote }}
         {{- end }}
         {{- if.Values.lenses.deployments.connect.actionsBufferSize }}
-            - name: LENSES_DEPLOYMENT_CONNECT_ACTIONS_BUFFER_SIZE
-              value: {{ .Values.lenses.deployments.connect.actionsBufferSize | quote }}
+        - name: LENSES_DEPLOYMENT_CONNECT_ACTIONS_BUFFER_SIZE
+          value: {{ .Values.lenses.deployments.connect.actionsBufferSize | quote }}
         {{- end }}
 
-            # Lenses configuration flags
-            - name: LC_KUBERNETES_MODE
-              value: "true"
+        # Lenses configuration flags
+        - name: LC_KUBERNETES_MODE
+          value: "true"
 
-            # Lenses telemetry flags
-            - name: LT_PACKAGE
-              value: "helm"
+        # Lenses telemetry flags
+        - name: LT_PACKAGE
+          value: "helm"
 
-            - name: LT_PACKAGE_VERSION
-              value: "{{ .Chart.Version }}"
+        - name: LT_PACKAGE_VERSION
+          value: "{{ .Chart.Version }}"
 
         {{- if .Values.lenses.pauseExec.enabled }}
-            - name: PAUSE_EXEC
-              value: "true"
+        - name: PAUSE_EXEC
+          value: "true"
         {{- end }}
 
         {{- range $key, $value := .Values.lenses.env }}
-            - name: {{ $key | quote }}
-              value: {{ $value | quote }}
+        - name: {{ $key | quote }}
+          value: {{ $value | quote }}
         {{- end }}
 
         {{- range $key, $value := .Values.lenses.configOverrides }}
-            - name: {{ printf "%s" $key | replace "." "_" | upper | quote }}
-              value: {{ $value | quote }}
+        - name: {{ printf "%s" $key | replace "." "_" | upper | quote }}
+          value: {{ $value | quote }}
         {{- end }}
 
-          # Additional env variables
+        # Additional env variables
         {{- if .Values.lenses.additionalEnv }}
         {{- toYaml .Values.lenses.additionalEnv | nindent 8 }}
         {{- end }}
 
-        # Lenses sidecar provision is only needed if we are running the pre v5.3.0 provsioning mechanism.
-      {{- if and .Values.lenses.provision.enabled (eq .Values.lenses.provision.version 1) }}
+      {{- if and .Values.lenses.provision.enabled (eq .Values.lenses.provision.version "1") }}
+        # Lenses sidecar provision is only needed if we are running the pre v5.3.0 provisioning mechanism.
       {{- $provision := .Values.lenses.provision}}
-        - name: {{default "lenses-provision" $provision.name}}
-          image: {{include "sidecarProvisionImage" . | quote }}
-          imagePullPolicy: {{default "Always" $provision.sidecar.image.pullPolicy}}
+      - name: {{default "lenses-provision" $provision.name}}
+        image: {{include "sidecarProvisionImage" . | quote }}
+        imagePullPolicy: {{default "Always" $provision.sidecar.image.pullPolicy}}
         {{- if .Values.containerSecurityContext}}
-          securityContext:
+        securityContext:
           {{- toYaml .Values.containerSecurityContext | nindent 10 }}
         {{- end }}
-          command:
-            - bash
-            - -c
-            - |
-              lenses-cli provision \
-                --wait-for-lenses \
-                --setup-mode \
-                --host="http{{- if .Values.lenses.tls.enabled -}}s{{- end -}}://localhost:{{.Values.restPort}}" \
+        command:
+          - bash
+          - -c
+          - |
+            lenses-cli provision \
+              --wait-for-lenses \
+              --setup-mode \
+              --host="http{{- if .Values.lenses.tls.enabled -}}s{{- end -}}://localhost:{{.Values.restPort}}" \
               {{- if .Values.lenses.tls.enabled}}
-                --insecure \
+              --insecure \
               {{- end}}
-                --user="$LENSES_ADMIN_USER" \
-                --pass="$LENSES_ADMIN_PASSWORD" \
-                /mnt/provision-secrets/provision.yaml \
-                --mode=sidecar
+              --user="$LENSES_ADMIN_USER" \
+              --pass="$LENSES_ADMIN_PASSWORD" \
+              /mnt/provision-secrets/provision.yaml \
+              --mode=sidecar
 
-          env:
-            - name: LENSES_ADMIN_USER
-              valueFrom:
-                secretKeyRef:
+        env:
+          - name: LENSES_ADMIN_USER
+            valueFrom:
+              secretKeyRef:
         {{- with .Values.lenses.security.defaultUser.usernameSecretKeyRef }}
-                  name: {{ .name }}
-                  key: {{ .key }}
+                name: {{ .name }}
+                key: {{ .key }}
         {{ else }}
-                  name: {{include "provisionFullname" . | quote}}
-                  key: "LENSES_ADMIN_USER"
+                name: {{include "provisionFullname" . | quote}}
+                key:  "LENSES_ADMIN_USER"
         {{- end }}
-            - name: LENSES_ADMIN_PASSWORD
-              valueFrom:
-                secretKeyRef:
+          - name: LENSES_ADMIN_PASSWORD
+            valueFrom:
+              secretKeyRef:
         {{- with .Values.lenses.security.defaultUser.passwordSecretKeyRef }}
-                  name: {{ .name }}
-                  key: {{ .key }}
+                name: {{ .name }}
+                key: {{ .key }}
         {{ else }}
-                  name: {{include "provisionFullname" . | quote}}
-                  key: "LENSES_ADMIN_PASSWORD"
+                name: {{include "provisionFullname" . | quote}}
+                key:  "LENSES_ADMIN_PASSWORD"
         {{- end }}
-          volumeMounts:
-            - name: provision-secrets
-              mountPath: "/mnt/provision-secrets"
+        volumeMounts:
+          - name: provision-secrets
+            mountPath: "/mnt/provision-secrets"
           {{- if $provision.sidecar.additionalVolumeMounts }}
             {{- toYaml $provision.sidecar.additionalVolumeMounts | nindent 10 }}
           {{- end }}

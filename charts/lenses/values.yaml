@@ -149,8 +149,9 @@ lenses:
   # TODO update this comment
   # Set the details to provision Lenses using lenses-cli
   provision:
-    version: 2
     enabled: true
+    path: /mnt/settings
+    version: "2"
 
     # Find more details in https://docs.lenses.io/current/installation/kubernetes/helm/#helm-provision
     # About provision.yaml structure: https://docs.lenses.io/current/tools/cli/provision/provision-yaml/
@@ -173,7 +174,7 @@ lenses:
             metricsSsl:
               value: false
             keytab:
-              file: keytab
+              file: ${LENSES_PROVISIONING_PATH}/keytab
       confluentSchemaRegistry:
         - name: schema-registry
           version: 1
