@@ -47,6 +47,8 @@ Run ``_cicd/functions.sh package_all`` this in turn calls ``scripts/lint.sh`` wh
 
 If all good, checkin, tag and push the ```docs`` folder. This charts are hosted on the github page.
 
+For further details on how to run tests: [Testing](./charts/lenses/tests/README.md)
+
 # Contribute
 
 Contributions are welcome for any Kafka Connector or any other component that is useful for building Data Streaming pipelines
