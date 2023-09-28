@@ -146,8 +146,12 @@ ingress:
 
 lenses:
 
-  # TODO update this comment
-  # Set the details to provision Lenses using lenses-cli
+  # Set the details to provision Lenses
+  # There are 2 supported versions:
+  # 1: Lenses version <=5.2
+  # 2: Lenses version >=5.3
+    # For more details around v1: https://docs.lenses.io/5.2/installation/getting-started/helm/#helm-lenses-provision
+    # For more details around v2: https://docs.lenses.io/5.3/installation/getting-started/helm/#helm-lenses-provision
   provision:
     enabled: false
     version: "1"

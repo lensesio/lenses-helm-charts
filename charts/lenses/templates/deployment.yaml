@@ -176,8 +176,17 @@ spec:
             {{- toYaml .Values.additionalVolumeMounts | nindent 10 }}
           {{- end }}
         {{- if and .Values.lenses.provision.enabled (eq .Values.lenses.provision.version "2") }}
+            {{ range $fileName, $_ := .Values.lenses.provision.secrets.data }}
           - name: provision-secrets
-            mountPath: {{.Values.lenses.provision.path}}
+            mountPath: {{ $.Values.lenses.provision.path }}/files/{{ $fileName }}
+            subPath: {{ $fileName }}
+            {{- end }}
+          - name: provision-secrets
+            mountPath: {{.Values.lenses.provision.path}}/provisioning.yaml
+            subPath: provisioning.yaml
+          - name: provision-secrets
+            mountPath: {{.Values.lenses.provision.path}}/license.json
+            subPath: license.json
         {{- end }}
 
         resources:
@@ -283,10 +292,12 @@ spec:
         - name: LENSES_GRAFANA
           value: {{ .Values.lenses.grafanaUrl | quote }}
         {{- end }}
-        {{- if .Values.lenses.provision.enabled }}
+        {{- if and .Values.lenses.provision.enabled (eq .Values.lenses.provision.version "2") }}
         # Provisioning
         - name: LENSES_PROVISIONING_PATH
           value: {{ .Values.lenses.provision.path }}
+        - name: LENSES_PROVISIONING_FILES_PATH
+          value: {{ .Values.lenses.provision.path }}/files
         {{- if .Values.lenses.provision.interval }}
         - name: LENSES_PROVISIONING_INTERVAL
           value: {{ .Values.lenses.provision.interval }}
