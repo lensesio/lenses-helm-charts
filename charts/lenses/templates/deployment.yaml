@@ -88,7 +88,15 @@ spec:
         - name: provision-secrets
           secret:
             secretName: {{include "provisionFullname" . | quote}}
+
+        {{- if eq .Values.lenses.provision.version "2" }}
+        - name: provision-secrets-files
+          secret:
+            secretName: {{ (printf "%s-%s" (include "provisionFullname" .) "files") | quote}}
         {{- end }}
+
+        {{- end }}
+
         - name: secrets
           secret:
             secretName: {{include "fullname" . | quote}}
@@ -176,17 +184,10 @@ spec:
             {{- toYaml .Values.additionalVolumeMounts | nindent 10 }}
           {{- end }}
         {{- if and .Values.lenses.provision.enabled (eq .Values.lenses.provision.version "2") }}
-            {{ range $fileName, $_ := .Values.lenses.provision.secrets.data }}
           - name: provision-secrets
-            mountPath: {{ $.Values.lenses.provision.path }}/files/{{ $fileName }}
-            subPath: {{ $fileName }}
-            {{- end }}
-          - name: provision-secrets
-            mountPath: {{.Values.lenses.provision.path}}/provisioning.yaml
-            subPath: provisioning.yaml
-          - name: provision-secrets
-            mountPath: {{.Values.lenses.provision.path}}/license.json
-            subPath: license.json
+            mountPath: {{ $.Values.lenses.provision.path }}
+          - name: provision-secrets-files
+            mountPath: {{ $.Values.lenses.provision.path }}/files
         {{- end }}
 
         resources:
