@@ -2,6 +2,8 @@ suite: enable provisioning version 2 and check the changes in deployment and sec
 templates:
   - deployment.yaml
   - provision-secrets.yaml
+  - provision-secrets-v2.yaml
+  - provision-secrets-v2-files.yaml
   - secrets.yaml
 tests:
   - it: should work with provision disabled (default mode)
@@ -20,7 +22,7 @@ tests:
             name: provision-secrets
             secret:
               secretName: RELEASE-NAME-provision
-  - it: should work with provision yaml set
+  - it: should work with provision connections set
     set:
       lenses:
         provision:
@@ -36,7 +38,7 @@ tests:
               text field
           license: this is a valid license
     asserts:
-      - template: provision-secrets.yaml
+      - template: provision-secrets-v2.yaml
         equal:
           path: stringData.provisioning\.yaml
           value: |-
@@ -47,14 +49,6 @@ tests:
             values:
             - I can have an array
             - with 2 elelments
-      - template: provision-secrets.yaml
-        equal:
-          path: stringData.LENSES_ADMIN_USER
-          value: admin
-      - template: provision-secrets.yaml
-        equal:
-          path: stringData.LENSES_ADMIN_PASSWORD
-          value: admin
       - template: deployment.yaml
         contains:
           path: spec.template.spec.volumes
@@ -63,28 +57,6 @@ tests:
             secret:
               secretName: RELEASE-NAME-provision
 
-  - it: should work with provision yaml set and custom Lenses admin user/password
-    set:
-      lenses:
-        provision:
-          enabled: true
-          version: "2"
-          connections:
-            key: this is valid yaml
-          license: this is a valid license
-        security:
-          defaultUser:
-            username: foo
-            password: bar
-    asserts:
-      - template: provision-secrets.yaml
-        equal:
-          path: stringData.LENSES_ADMIN_USER
-          value: foo
-      - template: provision-secrets.yaml
-        equal:
-          path: stringData.LENSES_ADMIN_PASSWORD
-          value: bar
   - it: should fail with provision enabled but without a yaml value
     set:
       lenses:
@@ -93,7 +65,7 @@ tests:
           version: "2"
           license: this is a valid license
     asserts:
-      - template: provision-secrets.yaml
+      - template: provision-secrets-v2.yaml
         failedTemplate:
           errorMessage: provisioning connections is required to provision Lenses
   - it: should work with provision secrets set
@@ -113,14 +85,14 @@ tests:
             data:
               foo: YmFy
     asserts:
-      - template: provision-secrets.yaml
+      - template: provision-secrets-v2-files.yaml
         hasDocuments:
           count: 1
-      - template: provision-secrets.yaml
+      - template: provision-secrets-v2-files.yaml
         equal:
           path: stringData.foo1
           value: bar1
-      - template: provision-secrets.yaml
+      - template: provision-secrets-v2-files.yaml
         equal:
           path: data.foo
           value: YmFy
