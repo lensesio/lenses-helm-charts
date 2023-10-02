@@ -88,7 +88,15 @@ spec:
         - name: provision-secrets
           secret:
             secretName: {{include "provisionFullname" . | quote}}
+
+        {{- if eq .Values.lenses.provision.version "2" }}
+        - name: provision-secrets-files
+          secret:
+            secretName: {{ (printf "%s-%s" (include "provisionFullname" .) "files") | quote}}
         {{- end }}
+
+        {{- end }}
+
         - name: secrets
           secret:
             secretName: {{include "fullname" . | quote}}
@@ -175,6 +183,13 @@ spec:
           {{- if .Values.additionalVolumeMounts }}
             {{- toYaml .Values.additionalVolumeMounts | nindent 10 }}
           {{- end }}
+        {{- if and .Values.lenses.provision.enabled (eq .Values.lenses.provision.version "2") }}
+          - name: provision-secrets
+            mountPath: {{ $.Values.lenses.provision.path }}
+          - name: provision-secrets-files
+            mountPath: {{ $.Values.lenses.provision.path }}/files
+        {{- end }}
+
         resources:
           {{- toYaml .Values.resources | nindent 10 }}
         env:
@@ -278,6 +293,17 @@ spec:
         - name: LENSES_GRAFANA
           value: {{ .Values.lenses.grafanaUrl | quote }}
         {{- end }}
+        {{- if and .Values.lenses.provision.enabled (eq .Values.lenses.provision.version "2") }}
+        # Provisioning
+        - name: LENSES_PROVISIONING_PATH
+          value: {{ .Values.lenses.provision.path }}
+        - name: LENSES_PROVISIONING_FILES_PATH
+          value: {{ .Values.lenses.provision.path }}/files
+        {{- if .Values.lenses.provision.interval }}
+        - name: LENSES_PROVISIONING_INTERVAL
+          value: {{ .Values.lenses.provision.interval }}
+        {{- end }}
+        {{- end }}
 
         # lenses topics
         - name: LENSES_TOPICS_AUDITS
@@ -376,7 +402,8 @@ spec:
         {{- toYaml .Values.lenses.additionalEnv | nindent 8 }}
         {{- end }}
 
-      {{- if .Values.lenses.provision.enabled}}
+      {{- if and .Values.lenses.provision.enabled (eq .Values.lenses.provision.version "1") }}
+        # Lenses sidecar provision is only needed if we are running the pre v5.3.0 provisioning mechanism.
       {{- $provision := .Values.lenses.provision}}
       - name: {{default "lenses-provision" $provision.name}}
         image: {{include "sidecarProvisionImage" . | quote }}
