@@ -403,7 +403,7 @@ spec:
         {{- end }}
 
       {{- if and .Values.lenses.provision.enabled (eq .Values.lenses.provision.version "1") }}
-        # Lenses sidecar provision is only needed if we are running the pre v5.3.0 provisioning mechanism.
+        # Lenses sidecar provision is only needed if we are running the pre 5.3.0 provisioning mechanism.
       {{- $provision := .Values.lenses.provision}}
       - name: {{default "lenses-provision" $provision.name}}
         image: {{include "sidecarProvisionImage" . | quote }}
