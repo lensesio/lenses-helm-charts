@@ -238,14 +238,18 @@ lenses.security.saml.idp.metadata.file="/mnt/secrets/saml.idp.xml"
 lenses.security.saml.idp.session.lifetime.max = {{ .Values.lenses.security.saml.idp.session.lifetime.max | quote }}
 {{- end }}
 lenses.security.saml.keystore.location="/mnt/secrets/saml.keystore.jks"
+{{- if .Values.lenses.security.saml.keyStorePassword }}
 lenses.security.saml.keystore.password={{ .Values.lenses.security.saml.keyStorePassword | quote }}
+{{- end }}
 {{- if .Values.lenses.security.saml.groups.enabled }}
 lenses.security.saml.groups.plugin.class={{ .Values.lenses.security.saml.groups.plugin.class | quote }}
 {{- end }}
 {{- if .Values.lenses.security.saml.keyAlias }}
 lenses.security.saml.key.alias={{ .Values.lenses.security.saml.keyAlias | quote }}
 {{- end }}
+{{- if .Values.lenses.security.saml.keyPassword}}
 lenses.security.saml.key.password={{ .Values.lenses.security.saml.keyPassword | quote }}
+{{- end }}
 {{- end }}
 {{- if .Values.lenses.security.kerberos.enabled -}}
 {{ include "kerberos" .}}
