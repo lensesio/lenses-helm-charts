@@ -24,6 +24,7 @@ tests:
       lenses:
         provision:
           enabled: true
+          version: "1"
           yaml: {}
     asserts:
       - equal:
@@ -71,6 +72,7 @@ tests:
       lenses:
         provision:
           enabled: true
+          version: "1"
           yaml: {}
     asserts:
       - equal:
@@ -124,6 +126,7 @@ tests:
       lenses:
         provision:
           enabled: true
+          version: "1"
           yaml: {}
     asserts:
       - equal:
@@ -161,6 +164,7 @@ tests:
       lenses:
         provision:
           enabled: true
+          version: "1"
           yaml: {}
     asserts:
       - equal:
@@ -192,6 +196,7 @@ tests:
       lenses:
         provision:
           enabled: true
+          version: "1"
           yaml: {}
     asserts:
       - equal:
@@ -228,6 +233,7 @@ tests:
       lenses:
         provision:
           enabled: true
+          version: "1"
           yaml: {}
     asserts:
       - equal:

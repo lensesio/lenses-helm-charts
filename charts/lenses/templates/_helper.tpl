@@ -78,70 +78,6 @@ _kafka_lenses_metrics
 {{- end -}}
 {{- end -}}
 
-{{- define "auditTopic" -}}
-{{- if .Values.lenses.topics.suffix -}}
-_kafka_lenses_audits_{{ .Values.lenses.topics.suffix }}
-{{- else -}}
-_kafka_lenses_audits
-{{- end -}}
-{{- end -}}
-
-{{- define "processorTopic" -}}
-{{- if .Values.lenses.topics.suffix -}}
-_kafka_lenses_processors_{{ .Values.lenses.topics.suffix }}
-{{- else -}}
-_kafka_lenses_processors
-{{- end -}}
-{{- end -}}
-
-{{- define "alertTopic" -}}
-{{- if .Values.lenses.topics.suffix -}}
-_kafka_lenses_alerts_{{ .Values.lenses.topics.suffix }}
-{{- else -}}
-_kafka_lenses_alerts
-{{- end -}}
-{{- end -}}
-
-{{- define "profileTopic" -}}
-{{- if .Values.lenses.topics.suffix -}}
-_kafka_lenses_profiles_{{ .Values.lenses.topics.suffix }}
-{{- else -}}
-_kafka_lenses_profiles
-{{- end -}}
-{{- end -}}
-
-{{- define "alertSettingTopic" -}}
-{{- if .Values.lenses.topics.suffix -}}
-_kafka_lenses_alert_settings_{{ .Values.lenses.topics.suffix }}
-{{- else -}}
-_kafka_lenses_alert_settings
-{{- end -}}
-{{- end -}}
-
-{{- define "clusterTopic" -}}
-{{- if .Values.lenses.topics.suffix -}}
-_kafka_lenses_cluster_{{ .Values.lenses.topics.suffix }}
-{{- else -}}
-_kafka_lenses_cluster
-{{- end -}}
-{{- end -}}
-
-{{- define "lsqlTopic" -}}
-{{- if .Values.lenses.topics.suffix -}}
-_kafka_lenses_lsql_storage_{{ .Values.lenses.topics.suffix }}
-{{- else -}}
-_kafka_lenses_lsql_storage
-{{- end -}}
-{{- end -}}
-
-{{- define "metadataTopic" -}}
-{{- if .Values.lenses.topics.suffix -}}
-_kafka_lenses_topics_metadata_{{ .Values.lenses.topics.suffix }}
-{{- else -}}
-_kafka_lenses_topics_metadata
-{{- end -}}
-{{- end -}}
-
 {{- define "topologyTopic" -}}
 {{- if .Values.lenses.topics.suffix -}}
 __topology_{{ .Values.lenses.topics.suffix }}
@@ -155,25 +91,6 @@ __topology
 __topology__metrics_{{ .Values.lenses.topics.suffix }}
 {{- else -}}
 __topology__metrics
-{{- end -}}
-{{- end -}}
-
-{{- define "connectorsTopic" -}}
-{{- if .Values.lenses.topics.suffix -}}
-_kafka_lenses_connectors_{{ .Values.lenses.topics.suffix }}
-{{- else -}}
-_kafka_lenses_processors
-{{- end -}}
-{{- end -}}
-
-{{- define "alertPlugins" -}}
-{{- if .Values.lenses.alerts.plugins -}}
-[
-  {{ range $index, $element := .Values.lenses.alerts.plugins }}
-  {{- if not $index -}}{class: "{{$element.class}}", config: {{$element.config}}}
-  {{- else}},{class: "{{$element.class}}", config: {{$element.config}}}{{- end }}
-  {{- end }}
-]
 {{- end -}}
 {{- end -}}
 

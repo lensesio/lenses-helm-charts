@@ -1,13 +1,13 @@
 Lenses has been deployed!
 
   _                                                               _            _  __      __ _
- | |By Landoop                             /\                    | |          | |/ /     / _| |
+ | |By Lenses.io                           /\                    | |          | |/ /     / _| |
  | |     ___ _ __  ___  ___  ___          /  \   _ __   __ _  ___| |__   ___  | ' / __ _| |_| | ____ _TM
  | |    / _ \ '_ \/ __|/ _ \/ __|        / /\ \ | '_ \ / _` |/ __| '_ \ / _ \ |  < / _` |  _| |/ / _` |
  | |___|  __/ | | \__ \  __/\__ \  for  / ____ \| |_) | (_| | (__| | | |  __/ | . \ (_| | | |   < (_| |
  |______\___|_| |_|___/\___||___/      /_/    \_\ .__/ \__,_|\___|_| |_|\___| |_|\_\__,_|_| |_|\_\__,_|
                                                 | |
- with (time-travel) Lenses SQL Engine, REST, WS |_| SSE, JDBC Apis version
+ with (time-travel) Lenses SQL Engine, REST, WS |_| APIs version {{ .Chart.AppVersion }}
 
 {{- if eq .Values.service.type "LoadBalancer" }}
 ==================================================

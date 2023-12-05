@@ -53,7 +53,7 @@ spec:
         {{- if .enabled }}
         prometheus.io/scrape: "true"
         prometheus.io/port: "{{ .port }}"
-        prometheus.io/path: "{{ .path }}"
+        prometheus.io/path: "/metrics"
         {{- end }}
         {{- end }}
         {{- range $key, $value := .Values.podTemplateAnnotations }}
@@ -105,8 +105,10 @@ spec:
                 path: security.conf
               - key: security.append.conf
                 path: security.append.conf
+              {{/* TODO: lenses.keytab is deprecated */}}
               - key: lenses.keytab
                 path: lenses.keytab
+              {{/* TODO: lenses.opts.keystore.jks is deprecated */}}
               - key: lenses.opts.keystore.jks
                 path: lenses.opts.keystore.jks
               - key: lenses.opts.truststore.jks
@@ -164,9 +166,11 @@ spec:
         volumeMounts:
           - name: secrets
             mountPath: "/mnt/secrets"
+          {{/* TODO: this is deprecated */}}
           - name: secrets
             mountPath: "/etc/keytab"
             subPath: "keytab"
+          {{/* TODO: this is deprecated */}}
           - name: secrets
             mountPath: "/etc/registry.keytab"
             subPath: "registry.keytab"
@@ -244,10 +248,12 @@ spec:
         {{- end }}
         - name: LENSES_OPTS
           value: {{include "lensesOpts" . | default "" | quote}}
+        {{/* TODO .Values.lenses.opts.keyStoreFileData is deprecated */}}
         {{- if .Values.lenses.opts.keyStoreFileData }}
         - name: CLIENT_OPTS_KEYSTORE_FILE
           value: "/mnt/secrets/lenses.opts.keystore.jks"
         {{- end }}
+        {{/* TODO .Values.lenses.opts.keyStorePassword is deprecated */}}
         {{- if .Values.lenses.opts.keyStorePassword }}
         - name: CLIENT_OPTS_KEYSTORE_PASSWORD
           valueFrom:
@@ -282,13 +288,6 @@ spec:
           value: {{ .Values.restPort | quote }}
         - name: LENSES_JMX_PORT
           value: "9101"
-        - name: LENSES_ALERT_CONSUMERS_LAG_THRESHOLD
-          value: {{ .Values.lenses.alerts.consumersLagThreshold | quote }}
-        {{- if .Values.lenses.alerts.enabled }}
-        - name: LENSES_ALERT_PLUGINS
-          value: |-
-            {{- include "alertPlugins" . | nindent 12 }}
-        {{- end }}
         {{- if .Values.lenses.grafanaUrl }}
         - name: LENSES_GRAFANA
           value: {{ .Values.lenses.grafanaUrl | quote }}
@@ -303,29 +302,19 @@ spec:
         - name: LENSES_PROVISIONING_INTERVAL
           value: {{ .Values.lenses.provision.interval }}
         {{- end }}
+        {{- if .Values.monitoring.port }}
+        - name: PROMETHEUS_METRICS_PORT
+          value: {{ .Values.monitoring.port | quote }}
+        {{- end }}
         {{- end }}
 
         # lenses topics
-        - name: LENSES_TOPICS_AUDITS
-          value: {{include "auditTopic" . | quote}}
-        - name: LENSES_TOPICS_METRICS
-          value: {{include "metricTopic" . | quote}}
-        - name: LENSES_TOPICS_PROFILES
-          value: {{include "profileTopic" . | quote}}
-        - name: LENSES_TOPICS_PROCESSORS
-          value: {{include "processorTopic" . | quote}}
-        - name: LENSES_TOPICS_CLUSTER
-          value: {{include "clusterTopic" . | quote}}
-        - name: LENSES_TOPICS_ALERTS_STORAGE
-          value: {{include "alertTopic" . | quote}}
-        - name: LENSES_TOPICS_ALERTS_SETTINGS
-          value: {{include "alertSettingTopic" . | quote}}
-        - name: LENSES_TOPICS_LSQL_STORAGE
-          value: {{include "lsqlTopic" . | quote}}
-        - name: LENSES_TOPICS_METADATA
-          value: {{include "metadataTopic" . | quote}}
         - name: LENSES_TOPICS_EXTERNAL_TOPOLOGY
           value: {{include "topologyTopic" . | quote}}
+        - name: LENSES_TOPICS_EXTERNAL_METRICS
+          value: {{include "externalMetricsTopic" . | quote}}
+        - name: LENSES_TOPICS_METRICS
+          value: {{include "metricTopic" . | quote}}
 
         # Kubernetes Processors
         - name: LENSES_SQL_EXECUTION_MODE

@@ -1,15 +1,15 @@
-### https://docs.lenses.io/current/installation/kubernetes/helm/ ###
+### https://docs.lenses.io/5.3/installation/getting-started/helm/ ###
 
 nameOverride: ""
 fullnameOverride: ""
 
 image:
   repository: lensesio/lenses
+  # Default to .Chart.AppVersion
+  # tag:
   pullPolicy: IfNotPresent
   # imagePullSecrets: # any image pull secrets for private registries go here
   #   - name: regcred
-  # Default to .Chart.AppVersion
-  # tag:
 
 annotations: {}
 podTemplateAnnotations: {} # Annotations here go into the PodTemplateSpec at deployment.spec.template.annotations.
@@ -27,12 +27,18 @@ securityContext: {}
 #   allowPrivilegeEscalation: false
 
 # Add Prometheus annotations to the pod for Lenses metric scraping
+# * The metrics path is '/metrics' and is not adjustable
+# * Consumer lag metrics are exposed under 'lenses.url/metrics'. There isn't a standard way to add multiple scrape
+#   targets in the annotations, so you will have to add the lag metrics target manually to your Prometheus instance.
 monitoring:
   enabled: true
   port: 9102
-  path: "/metrics"
 
 # Resource management
+# Lenses itself is bound by the JVM heap settings ('lenses.jvm.heapOpts' in the chart). The default
+# heap space Lenses can use is 3GiB. If you increase the memory resource here, you will need to also
+# adjust 'lenses.jvm.heapOpts'. You should allow for 1-2GiB extra space beyond the heap. So if the
+# memory limit is 10Gi, set 'lenses.jvm.heapOpts' to '-Xmx8g -Xms4g'.
 resources:
   requests:
   #   cpu: 1
@@ -148,20 +154,56 @@ lenses:
 
   # Set the details to provision Lenses
   # There are 2 supported versions:
-  # 1: Lenses version <=5.2
-  # 2: Lenses version >=5.3
-    # For more details around v1: https://docs.lenses.io/5.2/installation/getting-started/helm/#helm-lenses-provision
-    # For more details around v2: https://docs.lenses.io/5.3/installation/getting-started/helm/#helm-lenses-provision
+  # 1: Lenses version <=5.2 (https://docs.lenses.io/5.2/installation/getting-started/helm/#helm-lenses-provision)
+  #    This is oneshot, it only works on a new installation, upon the first deployment
+  # 2: Lenses version >=5.3 (https://docs.lenses.io/5.3/installation/getting-started/helm/#helm-lenses-provision)
+  #    This is applied on every deployment/upgrade of the chart. Any connection or license change in the UI will be
+  #    reverted during an upgrade. *Connections that do not exist here will be deleted*.
   provision:
     enabled: false
-    version: "1"
+    version: "2"
     path: /mnt/provision-secrets
-    # Find more details in https://docs.lenses.io/current/installation/kubernetes/helm/#helm-provision
-    # About provision.yaml structure: https://docs.lenses.io/current/tools/cli/provision/provision-yaml/
-    # GitOps limitations, using lenses.provision https://docs.lenses.io/current/tools/cli/provision/gitops-limitations/
-    yaml:
+    # Find more details in https://docs.lenses.io/5.3/installation/getting-started/helm/#helm-provision
 
-    # Find more details in https://docs.lenses.io/current/installation/kubernetes/helm/#helm-provision-secrets
+    # Paste your license contents as is
+    license: |
+     #  {"key": "...", "source": "...", "details": "...", "clientId": "..."}
+
+    # You can find examples at https://github.com/lensesio/lenses-helm-charts/tree/release/5.3/examples
+    connections:
+      # kafka:
+      #   - name: kafka
+      #     version: 1
+      #     tags: [ 'prod']
+      #     configuration:
+      #       kafkaBootstrapServers:
+      #         value:
+      #           - PLAINTEXT://broker-1.svc.cluster.local:9093
+      #       metricsType:
+      #         value: JMX
+      #       metricsPort:
+      #         value: 9581
+      # confluentSchemaRegistry:
+      #   - name: schema-registry
+      #     version: 1
+      #     tags: [ 'prod' ]
+      #     configuration:
+      #       schemaRegistryUrls:
+      #         value:
+      #           - http://schema-registry-1.svc.cluster.local:8081
+      # connect:
+      #   - name: datalake-connect
+      #     version: 1
+      #     tags: [ 'prod', 'datalake' ]
+      #     configuration:
+      #       workers:
+      #         value:
+      #           - http://connect-worker-1.svc.cluster.local:8083
+      #       metricsType:
+      #         value: JMX
+      #       metricsPort:
+      #         value: 9584
+
     secrets: {}
       # Base64 encoded. Read how to convert from .pem to .jks in the article: https://docs.lenses.io/current/configuration/dynamic/pem-to-jks-conversion/
       # data:
@@ -201,38 +243,27 @@ lenses:
 
   jvm:
     # heapOpts are any overrides for Lenses Heap JVM options
-    heapOpts: |-
-
-    # logBackOpts are any logging options
+    # Please adjust this in sync with 'resources.limits.memory'
+    heapOpts: -Xmx3g -Xms1g
+    # logBackOpts are any logging options. Lenses is using the logback library.
     logBackOpts:
 
     #performanceOpts are any jvm tuning options to add to the jvm
     performanceOpts:
 
-    # DEPRECATED in favor of Values.lenses.opts.trustStoreFileData, please use the latter
-    # trustStoreFileData:
-    # DEPRECATED in favor of Values.lenses.opts.trustStorePassword, please use the latter
-    # trustStorePassword:
-
   # Override the default logback xml
   # Used primarily to load a Lenses provided xml with debug level set for Lenses libs
-  # Can be used to load your custom logback if needed
+  # Can be used to load your custom logback if needed. Uncomment the following line
+  # to switch the log level for Lenses facilities to DEBUG.
   # logbackXml: /opt/lenses/logback-debug.xml
 
-  # TODO: Replace with docker implementation
-  # Global truststore/keystore for the JVM
   opts:
+    # Global truststore/keystore for the JVM
     # base64 encoded truststore data
     # openssl base64 < kafka.truststore.jks | tr -d '\n'
     trustStoreFileData: |-
 
     trustStorePassword: |-
-
-    # base64 encoded truststore data
-    # openssl base64 < kafka.truststore.jks | tr -d '\n'
-    keyStoreFileData: |-
-
-    keyStorePassword: |-
 
   tls:
     # TLS setup for serving Lenses over TLS
@@ -289,7 +320,6 @@ lenses:
       schema:             # optional, defaults to public schema
 
   # Data Application Deployment Framework
-  # TODO: Link missing for DAD docs
   deployments:
     eventsBufferSize: 10000
     errorsBufferSize: 1000
@@ -299,37 +329,14 @@ lenses:
       actionsBufferSize: 1000
 
   sql:
-    # processorImage: eu.gcr.io/lenses-container-registry/lenses-sql-processor
-    # processorImageTag: 2.3
+    # processorImage: lensesioextra/sql-processor
+    # processorImageTag: 5.4
     mode: IN_PROC
     heap: 1024M
     minHeap: 128M
     memLimit: 1152M
     memRequest: 128M
     livenessInitialDelay: 60 seconds
-
-  # Alert Plugins. Multiple alert plugins are supported.
-  alerts:
-    enabled: true
-    consumersLagThreshold: 50000
-
-    # The alert plugins to integrate with Lenses
-    plugins:
-      # Example
-      # - class: "io.lenses.alerts.plugin.slack.SlackAlertsPlugin"
-      #   config: |
-      #     {
-      #       webhook-url="https://your-slack-webhook-url
-      #       username=Lenses™
-      #       channel=lenses-slack-test
-      #     }
-      # - class: "io.lenses.alerts.plugin.am.AlertManagerPlugin"
-      #   config: |
-      #     {
-      #       endpoints="http://your-alert-manager-url"
-      #       source=PROD
-      #       generator-url="http://lenses_prod:port1"
-      #     }
 
   # The url to the grafana host
   grafanaUrl:
@@ -340,9 +347,11 @@ lenses:
     suffix:
 
   security:
+    ## TODO: link to docs or suggest the hash
     defaultUser: {}
       # Change Default Lenses user credentials.
-      # The defaults are: username: admin, password:admin.
+      # The defaults are: username: admin, password:admin. For the password, a sha256 checksum is also supported.
+      # https://docs.lenses.io/5.3/guides/admin/authentication/admin-user/
       # One can change the default credentials by setting the following values:
       #
       # username: my-username
@@ -405,9 +414,10 @@ lenses:
       # Provider type.
       # Supported values:
       # "azure"    - Microsoft Azure
+      # "google"   - Google
+      # "keycloak" - Keycloak
       # "okta"     - Okta
       # "onelogin" - OneLogin
-      # "keycloak" - Keycloak
       provider:
 
       # XML File provided by the external Identity Provider.
@@ -451,18 +461,6 @@ lenses:
   additionalEnv:
     # - name: FOO
     #   value: bar
-
-  # Note: this will be deprecated in version 5.0
-  # Uncomment to inject custom env vars if needed
-  # env:
-  #   CUSTOM_ENV_VAR: "foo"
-
-  # Note: this will be deprecated in version 5.0
-  # extra configurations that will be append to the lenses.conf file mounted in /mnt/settings
-  ## keys must be uppercase and underscores for separators suit for use as environment variables
-  ## see https://docs.lenses.io/install_setup/configuration/lenses-config.html#option-reference
-  configOverrides: {}
-    #LENSES_PROPERTY : value
 
   # Disable livenessProbe, used while debugging
   livenessProbe:

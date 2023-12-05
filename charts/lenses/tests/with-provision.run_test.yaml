@@ -25,6 +25,7 @@ tests:
       lenses:
         provision:
           enabled: true
+          version: "1"
           yaml:
             key: this is valid yaml
             values:
@@ -81,6 +82,7 @@ tests:
       lenses:
         provision:
           enabled: true
+          version: "1"
           yaml:
             key: this is valid yaml
         security:
@@ -101,6 +103,7 @@ tests:
       lenses:
         provision:
           enabled: true
+          version: "1"
     asserts:
       - template: provision-secrets.yaml
         failedTemplate:
@@ -110,6 +113,7 @@ tests:
       lenses:
         provision:
           enabled: true
+          version: "1"
           yaml:
             key: this is valid yaml
           sidecar:
@@ -131,6 +135,7 @@ tests:
       lenses:
         provision:
           enabled: true
+          version: "1"
           yaml:
             goo: loo
           secrets:
@@ -166,6 +171,7 @@ tests:
       lenses:
         provision:
           enabled: true
+          version: "1"
           yaml:
             goo: loo
           sidecar:
