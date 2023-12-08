@@ -1,4 +1,4 @@
-### https://docs.lenses.io/5.3/installation/getting-started/helm/ ###
+### https://docs.lenses.io/5.4/installation/getting-started/helm/ ###
 
 nameOverride: ""
 fullnameOverride: ""
@@ -154,22 +154,22 @@ lenses:
 
   # Set the details to provision Lenses
   # There are 2 supported versions:
-  # 1: Lenses version <=5.2 (https://docs.lenses.io/5.2/installation/getting-started/helm/#helm-lenses-provision)
+  # 1: Lenses version <=5,2 (https://docs.lenses.io/5.2/installation/getting-started/helm/#helm-lenses-provision)
   #    This is oneshot, it only works on a new installation, upon the first deployment
-  # 2: Lenses version >=5.3 (https://docs.lenses.io/5.3/installation/getting-started/helm/#helm-lenses-provision)
+  # 2: Lenses version >=5,3 (https://docs.lenses.io/5.4/installation/getting-started/helm/#helm-lenses-provision)
   #    This is applied on every deployment/upgrade of the chart. Any connection or license change in the UI will be
   #    reverted during an upgrade. *Connections that do not exist here will be deleted*.
   provision:
     enabled: false
     version: "2"
     path: /mnt/provision-secrets
-    # Find more details in https://docs.lenses.io/5.3/installation/getting-started/helm/#helm-provision
+    # Find more details in https://docs.lenses.io/5.4/installation/getting-started/helm/#helm-provision
 
     # Paste your license contents as is
     license: |
      #  {"key": "...", "source": "...", "details": "...", "clientId": "..."}
 
-    # You can find examples at https://github.com/lensesio/lenses-helm-charts/tree/release/5.3/examples
+    # You can find examples at https://github.com/lensesio/lenses-helm-charts/tree/release/5.4/examples
     connections:
       # kafka:
       #   - name: kafka
@@ -347,11 +347,10 @@ lenses:
     suffix:
 
   security:
-    ## TODO: link to docs or suggest the hash
     defaultUser: {}
       # Change Default Lenses user credentials.
-      # The defaults are: username: admin, password:admin. For the password, a sha256 checksum is also supported.
-      # https://docs.lenses.io/5.3/guides/admin/authentication/admin-user/
+      # The defaults are: username: admin, password:admin. For the password, a sha256 checksum is also supported
+      # https://docs.lenses.io/5.4/guides/admin/authentication/admin-user/
       # One can change the default credentials by setting the following values:
       #
       # username: my-username
