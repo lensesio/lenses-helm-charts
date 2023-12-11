@@ -1,0 +1,31 @@
+### Documentation: https://docs.lenses.io/current/installation/kubernetes/helm/
+### All values reference: https://github.com/lensesio/lenses-helm-charts/blob/release/5.4/charts/lenses/values.yaml
+
+# # Lenses container port
+# restPort: 3030
+# # Lenses service port, service targets restPort
+# servicePort: 80
+# servicePortName: lenses
+
+# # Lenses service
+# service:
+#   enabled: true
+#   type: ClusterIP
+#   annotations: {}
+#   externalTrafficPolicy:
+#   # loadBalancerIP: 130.211.x.x
+
+ingress:
+  enabled: true
+  host: marios-playground.dev-envs.k8.data-lenses.io
+  # # Ingress annotations
+  # annotations: {}
+
+# lenses:
+#   security:
+#     # The default user is used for administration
+#     defaultUser:
+#       username: admin
+#       password: admin
+#       # You can also use the sha256 of the password instead
+#       # password: sha256:8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918

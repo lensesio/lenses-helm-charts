@@ -1,0 +1,26 @@
+### Documentation: https://docs.lenses.io/current/installation/kubernetes/helm/
+### All values reference: https://github.com/lensesio/lenses-helm-charts/blob/release/5.4/charts/lenses/values.yaml
+
+lenses:
+  provision:
+    enabled: true
+    version: "2"
+    path: /mnt/provision-secrets
+    connections:
+      connect:
+        # You can add as many Connect clusters as required
+        - name: connect-staging-east
+          version: 1
+          tags: ['staging', 'east', 'datalake']
+          configuration:
+            workers:
+              # Make sure you add all your connect workers to the list
+              value:
+                - http://connect-worker-1.svc.cluster.local:8081
+                - http://connect-worker-2.svc.cluster.local:8081
+                - http://connect-worker-3.svc.cluster.local:8081
+            # Metrics are strongly suggested for Connect
+            metricsType:
+              value: JMX
+            metricsPort:
+              value: 9584

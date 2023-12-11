@@ -1,0 +1,81 @@
+### Documentation: https://docs.lenses.io/current/installation/kubernetes/helm/
+### All values reference: https://github.com/lensesio/lenses-helm-charts/blob/release/5.4/charts/lenses/values.yaml
+
+lenses:
+  provision:
+    enabled: true
+    version: "2"
+    path: /mnt/provision-secrets
+    connections:
+      kafka:
+        # There can only be one Kafka cluster at a time
+        - name: kafka
+          version: 1
+          tags: ['staging', 'pseudo-data-only']
+          configuration:
+            kafkaBootstrapServers:
+              value:
+                - SSL://kafka-1.svc.cluster.local:9093
+                - SSL://kafka-2.svc.cluster.local:9093
+            protocol:
+              value: SSL
+            sslKeystore:
+              file: client.jks
+            sslKeystorePassword:
+              value: ""
+            sslKeyPassword:
+              value: ""
+            sslTruststore:
+              file: truststore.jks
+            sslTruststorePassword:
+              value: ""
+            # Metrics are strongly suggested for Kafka
+            metricsType:
+              value: JMX
+            metricsPort:
+              value: 9581
+    secrets:
+      # Data shoud be base64 encoded. Read how to convert from .pem to .jks in
+      # the article:
+      # https://docs.lenses.io/current/configuration/dynamic/pem-to-jks-conversion/
+      data:
+        client.jks: |
+          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
+        truststore.jks: |
+          /u3+7QAAAAIAAAABAAAAAgAPbGVuc2VzdGVzdGluZ2NhAAABhPfRXOwABVguNTA5AAAD6jCCA+YwggLOoAMCAQICEQCUHvVlNkQIp0kiyW8ccV8MMA0GCSqG
+          SIb3DQEBCwUAMIGFMRUwEwYDVQQGEwxBbmtoLU1vcnBvcmsxGjAYBgNVBAoTEVVuc2VlbiBVbml2ZXJzaXR5MRAwDgYDVQQLEwdMaWJyYXJ5MT4wPAYDVQQD
+          EzVMZW5zZXMuaW8ncyBUZXN0aW5nIFNlbGYgU2lnbmVkIENlcnRpZmljYXRlIEF1dGhvcml0eTAeFw0yMjEyMDkxNjU2NDNaFw0yMzEyMDkyMjU2NDNaMIGF
+          MRUwEwYDVQQGEwxBbmtoLU1vcnBvcmsxGjAYBgNVBAoTEVVuc2VlbiBVbml2ZXJzaXR5MRAwDgYDVQQLEwdMaWJyYXJ5MT4wPAYDVQQDEzVMZW5zZXMuaW8n
+          cyBUZXN0aW5nIFNlbGYgU2lnbmVkIENlcnRpZmljYXRlIEF1dGhvcml0eTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBALB4fyehju/96Kq5fWVQ
+          KgJq8QOsEJLYWRY5oiY+3g296/+GiiqHjcS9V+WKoEnIg4+EvbkBhLbgiSB/sgFGjQtjDJsXKzl6LjHrhge0SU7V+bRTZu08bBUoAmlwOhwbCofZHwJCFVdY
+          o8omWcg2aQgUjOnXm2ltjuxZZNlxx/vTArGxuJX+ZoSFfc+/eOU3FyskzQRynu4L4dVBUpux4n+9xYn4A0/0/2u7IGItgW1+mpg2V4QstpUC5nVfZEHidoXn
+          1DRartgOgWaUMhuweqGD/64LP9qFKLxAUq5NVjSfEc3QtZXILR3lEq/pasVedZrBmXqgJEzJXppIpdnCGnUCAwEAAaNPME0wDgYDVR0PAQH/BAQDAgKkMB0G
+          A1UdJQQWMBQGCCsGAQUFBwMBBggrBgEFBQcDAjAPBgNVHRMBAf8EBTADAQH/MAsGA1UdEQQEMAKCADANBgkqhkiG9w0BAQsFAAOCAQEAjPteSlyWOoLRJxJ5
+          zNAHPRWsdB5TiPO0AvmnSpokGPoDLzB/4O4Wk6MaklvzGKp2n45s+xc4bt95vw62EFqIJr9LVY91rWfYW9GD5AS3n2bhQtIjeZ3I+NK8dHH3ddWwaCiAcXaF
+          u1dyHBQ+XL1RWKc0/QW+weXZPKmrA+au5Zhr0QvcWGmYdbBKjtgb4IAzxI6Mc0PauCQCm36WJaix9d8BrnRQVnl0c19O3ZFJpQcpJd2zeXOjE5obPjgdcDrB
+          THwASM4//3/Io0D3AMVpk7UJpJapelXgzqOgAS53ZyJy3GEVzpKbGFobctiVpDayFYdhEVdIui2l7UHUQtnBdRnE2Ck7j1sidb7P0qeHeBqwIVOV

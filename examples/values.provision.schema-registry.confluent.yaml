@@ -1,0 +1,24 @@
+### Documentation: https://docs.lenses.io/current/installation/kubernetes/helm/
+### All values reference: https://github.com/lensesio/lenses-helm-charts/blob/release/5.4/charts/lenses/values.yaml
+
+lenses:
+  provision:
+    enabled: true
+    version: "2"
+    path: /mnt/provision-secrets
+    connections:
+      confluentSchemaRegistry:
+        # There can only be one schema registry at a time
+        - name: schema-registry
+          version: 1
+          tags: ['staging']
+          configuration:
+            schemaRegistryUrls:
+              value:
+                - http://schema-registry-1.svc.cluster.local:8081
+                - http://schema-registry-2.svc.cluster.local:8081
+            # Usually JMX metrics for the Schema Registry are skipped
+            metricsType:
+              value: JMX
+            metricsPort:
+              value: 9582

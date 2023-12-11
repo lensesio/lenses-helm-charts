@@ -1,0 +1,26 @@
+### Documentation: https://docs.lenses.io/current/installation/kubernetes/helm/
+### All values reference: https://github.com/lensesio/lenses-helm-charts/blob/release/5.4/charts/lenses/values.yaml
+
+lenses:
+  provision:
+    enabled: true
+    version: "2"
+    path: /mnt/provision-secrets
+    connections:
+      kafka:
+        # There can only be one Kafka cluster at a time
+        - name: kafka
+          version: 1
+          tags: ['staging', 'pseudo-data-only']
+          configuration:
+            kafkaBootstrapServers:
+              value:
+                - PLAINTEXT://kafka-1.svc.cluster.local:9092
+                - PLAINTEXT://kafka-2.svc.cluster.local:9092
+            protocol:
+              value: PLAINTEXT
+            # Metrics are strongly suggested for Kafka
+            metricsType:
+              value: JMX
+            metricsPort:
+              value: 9581
