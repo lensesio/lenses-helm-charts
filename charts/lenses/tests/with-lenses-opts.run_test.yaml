@@ -81,5 +81,5 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].env
           content:
-            name: LENSES_OPTS
+            name: LENSES_LOG4J_OPTS
             value: '-Dlogback.configurationFile="file:/opt/lenses/logback-debug.xml" '

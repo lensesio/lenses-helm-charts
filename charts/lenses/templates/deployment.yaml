@@ -276,10 +276,8 @@ spec:
         - name: LENSES_HEAP_OPTS
           value: {{ .Values.lenses.jvm.heapOpts | quote }}
         {{- end }}
-        {{- if.Values.lenses.jvm.logBackOpts}}
         - name: LENSES_LOG4J_OPTS
-          value: {{ .Values.lenses.jvm.logBackOpts | quote }}
-        {{- end }}
+          value: {{include "lensesLogBackOpts" . | default "" | quote}}
         {{- if.Values.lenses.jvm.performanceOpts}}
         - name: LENSES_PERFORMANCE_OPTS
           value: {{ .Values.lenses.jvm.performanceOpts | quote }}
