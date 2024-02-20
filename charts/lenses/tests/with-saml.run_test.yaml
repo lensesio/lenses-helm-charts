@@ -37,7 +37,7 @@ tests:
       - template: secrets.yaml
         equal:
           path: stringData.security\.conf
-          value: |2-
+          value: |2
 
             lenses.security.saml.base.url="https://accounts.google.com/o/saml2/idp?idpid=XXX"
             lenses.security.saml.idp.provider="google"

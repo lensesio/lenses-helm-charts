@@ -14,7 +14,7 @@ tests:
       - template: secrets.yaml
         equal:
           path: stringData.security\.conf
-          value: |-
+          value: |
 
             lenses.security.user="foo"
             lenses.security.password="bar"

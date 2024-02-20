@@ -10,5 +10,5 @@ metadata:
     lenses.io/app: {{include "fullname" .}}
     lenses.io/app.type: lenses-configmap
 data:
-  "lenses.append.conf": |-
+  "lenses.append.conf": |
     {{- include "lensesAppendConf" . | nindent 4 }}

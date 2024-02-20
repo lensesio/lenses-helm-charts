@@ -35,7 +35,7 @@ tests:
       - template: secrets.yaml
         equal:
           path: stringData.security\.conf
-          value: |2-
+          value: |2
 
             lenses.security.ldap.url="ldap://ldap.example.com"
             lenses.security.ldap.base="ou=Users,dc=ldap,dc=example,dc=local"
@@ -73,7 +73,7 @@ tests:
       - template: secrets.yaml
         equal:
           path: stringData.security\.conf
-          value: |2-
+          value: |2
 
             lenses.security.ldap.url="ldap://ldap.example.com"
             lenses.security.ldap.base="ou=Users,dc=ldap,dc=example,dc=local"

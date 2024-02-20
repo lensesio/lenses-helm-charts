@@ -12,4 +12,5 @@ tests:
     asserts:
       - equal:
           path: stringData.security\.append\.conf
-          value: lenses.security.user=foobar
+          value: |
+            lenses.security.user=foobar
