@@ -473,4 +473,9 @@ lenses:
 sidecarContainers:
   # - name: sidecar-example
   #   image: alpine
-  #   command: ["sh", "-c", "watch datetime"]
+  #   command: ["sh", "-c", "watch date"]
+
+# initContainers:
+#   - name: init-example
+#     image: alpine
+#     command: ["sh", "-c", "date"]
