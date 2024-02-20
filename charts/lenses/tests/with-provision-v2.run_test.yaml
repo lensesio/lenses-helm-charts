@@ -41,7 +41,7 @@ tests:
       - template: provision-secrets-v2.yaml
         equal:
           path: stringData.provisioning\.yaml
-          value: |-
+          value: |
             key: this is valid yaml
             moreValues: |-
               and a multiline
