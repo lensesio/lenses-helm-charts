@@ -32,6 +32,29 @@ tests:
           path: spec.replicas
           value: 1
 
+  - it: should provide checksum annotation to trigger pod restart
+    asserts:
+      - equal:
+          path: spec.template.metadata.annotations.checksum/lenses\.append\.conf
+          value: 01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b
+
+  - it: checksum annotation should change with chart keys
+    set:
+      lenses.provision.enabled: true
+    asserts:
+      - equal:
+          path: spec.template.metadata.annotations.checksum/lenses\.append\.conf
+          value: ad9d4894069de891cdef5f82bc1e5f53714a708ab9dd0791cc5099ec8b3f5167
+
+  - it: checksum annotation should change with custom append section
+    set:
+      lenses.append.conf: |
+        lenses.test="true"
+    asserts:
+      - equal:
+          path: spec.template.metadata.annotations.checksum/lenses\.append\.conf
+          value: 1c4431a10feefc92c2a674a99ad606dc2d958605c5c810739cd6661ea5fb23bb
+
   - it: should add custom annotations
     set:
       annotations:

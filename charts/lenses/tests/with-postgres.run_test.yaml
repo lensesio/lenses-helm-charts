@@ -22,7 +22,7 @@ tests:
           postgres:
             enabled: true
     asserts:
-      - template: configmap.yaml
+      - template: deployment.yaml
         failedTemplate:
           errorMessage: PostgreSQL 'host' value is mandatory
   - it: should fail with postgres enabled and only host is set
@@ -33,14 +33,14 @@ tests:
             enabled: true
             host: example.com
     asserts:
-      - template: configmap.yaml
+      - template: deployment.yaml
         failedTemplate:
           errorMessage: PostgreSQL 'database' value is mandatory
   - it: should fail with postgres enabled and only host, database is set
     values:
       - values/with-postgres-host-db.yaml
     asserts:
-      - template: configmap.yaml
+      - template: deployment.yaml
         failedTemplate:
           errorMessage: PostgreSQL 'username' value is mandatory
   - it: should render with postgres enabled and host, database, username, password is set

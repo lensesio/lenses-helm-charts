@@ -59,6 +59,9 @@ spec:
         {{- range $key, $value := .Values.podTemplateAnnotations }}
         {{ $key }}: {{ $value | quote }}
         {{- end }}
+        {{- if  (include "lensesAppendConf" .) }}
+        checksum/lenses.append.conf: {{ include "lensesAppendConf" . | sha256sum }}
+        {{- end }}
     spec:
       {{- if .Values.nodeSelector }}
       nodeSelector:
@@ -294,8 +297,6 @@ spec:
         # Provisioning
         - name: LENSES_PROVISIONING_PATH
           value: {{ .Values.lenses.provision.path }}
-        - name: LENSES_PROVISIONING_FILES_PATH
-          value: {{ .Values.lenses.provision.path }}/files
         {{- if .Values.lenses.provision.interval }}
         - name: LENSES_PROVISIONING_INTERVAL
           value: {{ .Values.lenses.provision.interval }}
