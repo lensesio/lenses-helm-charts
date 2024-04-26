@@ -151,6 +151,12 @@ lenses.security.ldap.plugin.person.name.key={{ .Values.lenses.security.ldap.plug
 lenses.security.saml.base.url={{ .Values.lenses.security.saml.baseUrl | quote }}
 lenses.security.saml.idp.provider={{ .Values.lenses.security.saml.provider | quote }}
 lenses.security.saml.idp.metadata.file="/mnt/secrets/saml.idp.xml"
+{{- if eq .Values.lenses.security.saml.provider "generic"}}
+lenses.security.saml.idp.groups.attribute = {{ required "A value for 'lenses.security.saml.idp.groupsAttribute' is required when provider is set to 'generic' even if the IdP does not send one" .Values.lenses.security.saml.idp.groupsAttribute | quote }}
+{{- if .Values.lenses.security.saml.idp.usernameAttribute }}
+lenses.security.saml.idp.usernameAttribute = {{ .Values.lenses.security.saml.idp.usernameAttribute | quote }}
+{{- end }}
+{{- end }}
 {{- if .Values.lenses.security.saml.idp.session.lifetime.max }}
 lenses.security.saml.idp.session.lifetime.max = {{ .Values.lenses.security.saml.idp.session.lifetime.max | quote }}
 {{- end }}

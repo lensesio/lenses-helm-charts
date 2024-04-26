@@ -413,6 +413,7 @@ lenses:
       # Provider type.
       # Supported values:
       # "azure"    - Microsoft Azure
+      # "generic"  - Generic provider, you must also set groupsAttribute even if the IdP doesn't send one
       # "google"   - Google
       # "keycloak" - Keycloak
       # "okta"     - Okta
@@ -441,12 +442,17 @@ lenses:
 
       # idp settings
       idp:
+        # 'groupsAttribute' and 'usernameAttribute' can be set only when the provider is 'generic'
+        # 'groupsAttribute' is mandatory, even if the generic IdP does not send a group
+        # 'usernameAttribute' is optional for the 'generic' provider, Lenses will default to the profile name
+        groupsAttribute:
+        usernameAttribute:
         session:
           lifetime:
             # example: 100days
             max:
 
-      # groups settings
+      # groups settings for when a custom plugin is used to parse groups from the IdP
       groups:
         enabled: false
         plugin:
