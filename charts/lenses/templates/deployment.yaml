@@ -100,6 +100,12 @@ spec:
 
         {{- end }}
 
+       {{- if and (hasKey .Values "containerSecurityContext") (hasKey .Values.containerSecurityContext "readOnlyRootFilesystem") (eq .Values.containerSecurityContext.readOnlyRootFilesystem true) }}
+        - name: tmp-volume
+          emptyDir: {}
+        - name: data-volume
+          emptyDir: {}
+        {{- end }}
         - name: secrets
           secret:
             secretName: {{include "fullname" . | quote}}
@@ -196,7 +202,12 @@ spec:
           - name: provision-secrets-files
             mountPath: {{ $.Values.lenses.provision.path }}/files
         {{- end }}
-
+        {{- if and (hasKey .Values "containerSecurityContext") (hasKey .Values.containerSecurityContext "readOnlyRootFilesystem") (eq .Values.containerSecurityContext.readOnlyRootFilesystem true) }}
+          - name: tmp-volume
+            mountPath: /tmp
+          - name: data-volume
+            mountPath: /data
+        {{- end }}
         resources:
           {{- toYaml .Values.resources | nindent 10 }}
         env:
@@ -443,7 +454,7 @@ spec:
           {{- if $provision.sidecar.additionalVolumeMounts }}
             {{- toYaml $provision.sidecar.additionalVolumeMounts | nindent 10 }}
           {{- end }}
-      {{- end}}
+      {{- end }}
 
       {{- if .Values.sidecarContainers }}
       {{- toYaml .Values.sidecarContainers | nindent 6 }}
