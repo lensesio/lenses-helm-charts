@@ -142,6 +142,9 @@ spec:
         - name: storage
           persistentVolumeClaim:
             claimName: {{ default (include "claimName" .) .Values.persistence.existingClaim }}
+        - name: logs
+          persistentVolumeClaim:
+            claimName: {{ default (include "logsClaimName" .) .Values.persistence.existingClaim }}
         {{- end }}
         {{- if .Values.additionalVolumes }}
           {{- toYaml .Values.additionalVolumes | nindent 8 }}
@@ -192,6 +195,8 @@ spec:
           {{- if .Values.persistence.enabled }}
           - name: storage
             mountPath: "/data/storage"
+          - name: logs
+            mountPath: "/data/log"
           {{- end }}
           {{- if .Values.additionalVolumeMounts }}
             {{- toYaml .Values.additionalVolumeMounts | nindent 10 }}

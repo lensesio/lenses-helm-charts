@@ -2,6 +2,7 @@ suite: using name overrides
 templates:
   - deployment.yaml
   - volume-claim.yaml
+  - logs-volume-claim.yaml
   - provision-secrets.yaml
 tests:
   - template: deployment.yaml
@@ -17,7 +18,12 @@ tests:
       - equal:
           path: metadata.name
           value: RELEASE-NAME-claim
-
+  - template: logs-volume-claim.yaml
+    it: should work for volume-claim without any overrides
+    asserts:
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-logsclaim
   - template: provision-secrets.yaml
     it: should work for provision-secrets without any overrides
     set:
@@ -63,6 +69,27 @@ tests:
       - equal:
           path: metadata.name
           value: bar-claim
+      - equal:
+          path: metadata.name
+          value: bar-claim
+
+  - template: logs-volume-claim.yaml
+    it: when override release name is overriden metadata.name for logs-volume-claim should change
+    release:
+      name: bar
+    asserts:
+      - equal:
+          path: metadata.labels.app
+          value: lenses
+      - equal:
+          path: metadata.labels.lenses\.io\/app
+          value: lenses
+      - equal:
+          path: metadata.name
+          value: bar-logsclaim
+      - equal:
+          path: metadata.name
+          value: bar-logsclaim
 
   - template: provision-secrets.yaml
     it: when override release name is overriden metadata.name for provision-secrets should change
@@ -118,6 +145,22 @@ tests:
           path: metadata.name
           value: bar-lenses-foo-claim
 
+  - template: logs-volume-claim.yaml
+    it: when override release name and includes 'lenses' metadata.name for logs-volume-claim should change and should not add another 'lenses' suffix
+    release:
+      name: bar-lenses-foo
+    asserts:
+      - equal:
+          path: metadata.labels.app
+          value: lenses
+      - equal:
+          path: metadata.labels.lenses\.io\/app
+          value: lenses
+      - equal:
+          path: metadata.name
+          value: bar-lenses-foo-logsclaim
+
+
   - template: provision-secrets.yaml
     it: when override release name and includes 'lenses' metadata.name for provision-secrets should change and should not add another 'lenses' suffix
     release:
@@ -157,6 +200,15 @@ tests:
           path: metadata.name
           value: RELEASE-NAME-claim
 
+  - template: logs-volume-claim.yaml
+    it: when set nameOverride, metadata.name for logs-volume-claim should NOT change
+    set:
+      nameOverride: bar
+    asserts:
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-logsclaim
+
   - template: provision-secrets.yaml
     it: when set nameOverride, metadata.name for provision-secrets should NOT change
     set:
@@ -188,6 +240,15 @@ tests:
       - equal:
           path: metadata.name
           value: bar-claim
+
+  - template: logs-volume-claim.yaml
+    it: when set fullnameOverride, metadata.name for logs-volume-claim should change
+    set:
+      fullnameOverride: bar
+    asserts:
+      - equal:
+          path: metadata.name
+          value: bar-logsclaim
 
   - template: provision-secrets.yaml
     it: when set fullnameOverride, metadata.name for provision-secrets should change
@@ -224,6 +285,17 @@ tests:
           path: metadata.name
           # 63 chars
           value: bm0f9ee5y-zgpo3qvok-9ntof267e-56i7rd29y-glwnknta1-kjbhk72-claim
+
+  - template: logs-volume-claim.yaml
+    it: when override fullnameOverride with over 67 chars, the metadata.name for logs-volume-claim should contain the set value but limited to 67 chars
+    set:
+      # 100 chars
+      fullnameOverride: bm0f9ee5y-zgpo3qvok-9ntof267e-56i7rd29y-glwnknta1-kjbhk72gy-rgt84nngv-743j4q37f-mr047wtu1-mxey6qg78
+    asserts:
+      - equal:
+          path: metadata.name
+          # 67 chars
+          value: bm0f9ee5y-zgpo3qvok-9ntof267e-56i7rd29y-glwnknta1-kjbhk72-logsclaim
 
   - template: provision-secrets.yaml
     it: when override fullnameOverride with over 63 chars, the metadata.name for provision-secrets should contain the set value but limited to 63 chars

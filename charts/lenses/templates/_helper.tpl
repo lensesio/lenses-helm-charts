@@ -38,6 +38,14 @@ Create a default fully qualified app name.
 {{- end -}}
 {{- end -}}
 
+{{- define "logsClaimName" -}}
+{{- if .Values.fullnameOverride -}}
+{{- printf "%s-%s" (.Values.fullnameOverride | trunc 57 | trimSuffix "-") "logsclaim" -}}
+{{- else -}}
+{{- printf "%s-%s" (.Release.Name | trunc 57 | trimSuffix "-") "logsclaim" -}}
+{{- end -}}
+{{- end -}}
+
 {{- define "sidecarProvisionImage" -}}
 {{- if .Values.lenses.provision.sidecar.image.tag -}}
 {{- printf "%s:%s" .Values.lenses.provision.sidecar.image.repository .Values.lenses.provision.sidecar.image.tag -}}

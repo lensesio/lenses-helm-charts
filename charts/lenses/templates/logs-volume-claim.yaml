@@ -1,11 +1,12 @@
 {{- if and .Values.persistence.enabled (not .Values.persistence.existingClaim) -}}
+
 apiVersion: "v1"
 kind: "PersistentVolumeClaim"
 metadata:
-  name: {{include "claimName" .}}
-{{- if .Values.persistence.annotations }}
+  name: {{include "logsClaimName" .}}
+{{- if .Values.persistence.annotations}}
   annotations:
-{{ toYaml .Values.persistence.annotations | indent 4 }}
+{{toYaml .Values.persistence.annotations | indent 4}}
 {{- end }}
   labels:
     app: {{include "name" .}}
@@ -19,7 +20,7 @@ spec:
   accessModes:
 {{toYaml .Values.persistence.accessModes | indent 4}}
 {{- if .Values.persistence.storageClass }}
-{{- if (eq "-" .Values.persistence.storageClass) }}
+{{- if (eq "-" .Values.persistence.storageClass)}}
   storageClassName: ""
 {{- else }}
   storageClassName: {{.Values.persistence.storageClass}}
@@ -27,6 +28,10 @@ spec:
 {{- end }}
   resources:
     requests:
-      storage: {{.Values.persistence.size | quote}}
+{{- if and (hasKey .Values.persistence "log") (hasKey .Values.persistence.log "size")}}
+     storage: {{.Values.persistence.log.size | quote}}
+{{- else }}
+     storage: "300M"
+{{- end -}}
 
 {{- end -}}
