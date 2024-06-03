@@ -1,4 +1,4 @@
-{{- if and .Values.persistence.enabled (not .Values.persistence.existingClaim) -}}
+{{- if and .Values.persistence.log.enabled (not .Values.persistence.existingClaim) -}}
 
 apiVersion: "v1"
 kind: "PersistentVolumeClaim"
@@ -31,7 +31,7 @@ spec:
 {{- if and (hasKey .Values.persistence "log") (hasKey .Values.persistence.log "size")}}
      storage: {{.Values.persistence.log.size | quote}}
 {{- else }}
-     storage: "300M"
+     storage: "300Mi"
 {{- end -}}
 
 {{- end -}}

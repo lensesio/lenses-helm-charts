@@ -68,6 +68,8 @@ persistence:
   accessModes:
     - ReadWriteOnce
   size: 5Gi
+  log:
+    enabled: true
   # Target an pre-existing volume claim to use it as Lenses Persistent volume
   # existingClaim:
 
