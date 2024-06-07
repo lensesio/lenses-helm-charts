@@ -152,6 +152,12 @@ ingress:
 
     key: |-
 
+# Optionally add this property in case you would like to enforce Read Only Root Filesystem
+# In that case only /data and /tmp directories will extra mounted and be writable 
+# the rest will be mount the container's root filesystem as read-only.
+# containerSecurityContext:
+#   readOnlyRootFilesystem: true
+
 lenses:
 
   # Set the details to provision Lenses
