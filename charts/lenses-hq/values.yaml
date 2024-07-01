@@ -1,0 +1,246 @@
+### https://docs.lenses.io/5.5/installation/getting-started/helm/ ###
+
+nameOverride: ""
+fullnameOverride: ""
+
+podTemplateAnnotations: {} # Annotations here go into the PodTemplateSpec at deployment.spec.template.annotations.
+labels: {}
+strategy: {}
+nodeSelector: {}
+tolerations: {}
+affinity: {}
+securityContext: {}
+# dnsPolicy: "None" # Optional dnsPolicy and dnsConfig to put into the Deployment's PodTemplateSpec.
+# dnsConfig:
+#   nameservers:
+#     - 1.1.1.1
+# containerSecurityContext: # Optional, plugged in into the both the deployment's main app container and the sidecar.
+#   allowPrivilegeEscalation: false
+
+# Add Prometheus annotations to the pod for Lenses metric scraping
+# * The metrics path is '/metrics' and is not adjustable
+# * Consumer lag metrics are exposed under 'lenses.url/metrics'. There isn't a standard way to add multiple scrape
+#   targets in the annotations, so you will have to add the lag metrics target manually to your Prometheus instance.
+
+# Resource management
+# Lenses itself is bound by the JVM heap settings ('lenses.jvm.heapOpts' in the chart). The default
+# heap space Lenses can use is 3GiB. If you increase the memory resource here, you will need to also
+# adjust 'lenses.jvm.heapOpts'. You should allow for 1-2GiB extra space beyond the heap. So if the
+# memory limit is 10Gi, set 'lenses.jvm.heapOpts' to '-Xmx8g -Xms4g'.
+resources:
+  requests:
+  #   cpu: 1
+    memory: 4Gi
+  limits:
+  #   cpu: 2
+    memory: 5Gi
+
+image:
+  repository: 
+  # -- Default to .Chart.AppVersion
+  # tag:
+  pullPolicy: IfNotPresent
+  # -- imagePullSecrets: # any image pull secrets for private registries go here
+  #   - name: regcred
+
+# -- Configures everything involing teh HTTP API.
+apiConfig:
+  address: localhost:80
+  # -- redirToIdp: false
+  # -- accessControlAllowOrigin: "*"
+  # -- secureSessionCookies: true
+  saml:
+    organisationName: "my-company"
+    # -- Example: <?xml version="1.0" ... (big blob of xml) </md:EntityDescriptor>
+    metadata: |-
+
+    # uiRootUrl: ""
+    entityId: ""
+    # groupsAttributeKey: ""
+    # userCreationMode: ""
+    # usersGroupMembershipManagementMode: ""
+
+# -- Controls the agent handling
+agentsConfig:
+  address: "127.0.0.1:3000"
+
+databaseConfig:
+  username:
+  password:
+    externalSecret:
+      ## Optional, defaulting to ClusterSecretStore
+      kind: ClusterSecretStore # SecretStore | ClusterSecretStore
+      key: 
+  host:
+  port:
+  databaseName:
+
+loggerConfig:
+  # -- Options: text | json
+  mode: ""
+  # -- Options: info | debug
+  # level: "info"
+
+# metricsConfig:
+#  prometheusAddress: ":9090"
+
+monitoring:
+  enabled: true
+  port: 9102
+
+
+# rbacEnable indicates if a the cluster has rbac enabled and a cluster role
+# and rolebinding should be created for the service account
+rbacEnable: true
+
+# In case rbac is enabled you can choose to enable namespace scoped roles or 
+# cluster roles to be created 
+namespaceScope: true
+
+# Lenses container port
+restPort: 3030
+# Lenses service port, service targets restPort
+servicePort: 80
+servicePortName: lenses-hq
+
+# serviceAccount is the Service account to be used by Lenses to deploy apps
+serviceAccount: default
+
+# Lenses service
+service:
+  enabled: true
+  type: ClusterIP
+  annotations: {}
+
+  # If you want to make it available as a node port, then add nodePort: <somePort>
+  # Warning: this should not be used with servicePort:
+  # Warning nodePort is deprecated and will be removed on next Lenses major version upgrade
+  # nodePort:
+
+  externalTrafficPolicy:
+
+  ## Load balancer IP address
+  ## Is not required, but allows for static address with
+  ## serviceType LoadBalancer.
+  ## If not supported by cloud provider, this field is ignored.
+  ## Default: nil
+  ##
+  # loadBalancerIP: 130.211.x.x
+
+  ## This will restrict traffic through the cloud-provider load-balancer
+  ## to the specified client IPs.
+  ## If not supported by cloud provider, this field is ignored.
+  ## Default: nil
+  ##
+  # loadBalancerSourceRanges:
+  #   - 0.0.0.0/0
+
+ingress:
+  ## If true, Ingress will be created
+  ##
+  enabled: false
+  host:
+  # ingressClassName:
+
+  # Ingress annotations
+  annotations: {}
+    # Optionally add here the annotations related to the ingress provider, see examples below:
+    # kubernetes.io/ingress.class: traefik
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: 'true'
+    # nginx.ingress.kubernetes.io/rewrite-target: /
+
+  # TLS if enabled load the tls.crt and tls.keys as a secrets and enable TLS on the ingress
+  tls:
+    enabled: false
+    crt: |-
+
+    key: |-
+
+lensesHq:
+
+  # Set the details to provision Lenses
+  # There are 2 supported versions:
+  # 1: Lenses version <=5,2 (https://docs.lenses.io/5.2/installation/getting-started/helm/#helm-lenses-provision)
+  #    This is oneshot, it only works on a new installation, upon the first deployment
+  # 2: Lenses version >=5,3 (https://docs.lenses.io/5.5/installation/getting-started/helm/#helm-lenses-provision)
+  #    This is applied on every deployment/upgrade of the chart. Any connection or license change in the UI will be
+  #    reverted during an upgrade. *Connections that do not exist here will be deleted*
+
+  jvm:
+    # heapOpts are any overrides for Lenses Heap JVM options
+    # Please adjust this in sync with 'resources.limits.memory'
+    heapOpts: -Xmx3g -Xms1g
+    # logBackOpts are any logging options. Lenses is using the logback library.
+    logBackOpts:
+
+    #performanceOpts are any jvm tuning options to add to the jvm
+    performanceOpts:
+
+  # Override the default logback xml
+  # Used primarily to load a Lenses provided xml with debug level set for Lenses libs
+  # Can be used to load your custom logback if needed. Uncomment the following line
+  # to switch the log level for Lenses facilities to DEBUG.
+  # logbackXml: /opt/lenses/logback-debug.xml
+
+  tls:
+    # TLS setup for serving Lenses over TLS
+    enabled: false
+
+    # base64 encoded truststore data
+    # openssl base64 < kafka.truststore.jks | tr -d '\n'
+    keyStoreFileData: |-
+
+    keyStorePassword: |-
+
+    keyPassword: |-
+
+
+
+  # Find more details in https://docs.lenses.io/current/installation/kubernetes/helm/#helm-storage
+  storage:
+    postgres:
+      enabled: false
+      host:
+      port:               # optional, defaults to 5432
+
+      # Set the username for postgres connection
+      # Use the value "external" to bypass the Helm validation and handle the username externally.
+      # The common use case for using "external" is to take the actual value from a Kubernetes Secret resource already deployed.
+      # To do so, add the following definition under 'lenses.additionalEnv' key:
+      # - name: LENSES_STORAGE_POSTGRES_USERNAME
+      #   valueFrom:
+      #     secretKeyRef:
+      #       name: [SECRET_RESOURCE_NAME]
+      #       key: [SECRET_RESOURCE_KEY]
+      username:           # use "external" to manage it using secrets
+
+      # Set the password for postgres connection
+      # Use the value "external" to bypass the Helm validation and handle the password externally.
+      # The common use case for using "external" is to take the actual value from a Kubernetes Secret resource already deployed.
+      # To do so, add the following definition under 'lenses.additionalEnv' key:
+      # - name: LENSES_STORAGE_POSTGRES_PASSWORD
+      #   valueFrom:
+      #     secretKeyRef:
+      #       name: [SECRET_RESOURCE_NAME]
+      #       key: [SECRET_RESOURCE_KEY]
+      password:           # use "external" to manage it using secrets
+
+      database:
+      schema:             # optional, defaults to public schema
+
+
+  # Additional env variables appended to deployment
+  # Follows the format of [EnvVar spec](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.21/#envvar-v1-core)
+  additionalEnv:
+    # - name: FOO
+    #   value: bar
+
+  # Disable livenessProbe, used while debugging
+  livenessProbe:
+    enabled: true
+
+  # Pause execution of Lenses start up script to allow the user to login into the container and
+  # check the running environment, used while debugging
+  pauseExec:
+    enabled: false

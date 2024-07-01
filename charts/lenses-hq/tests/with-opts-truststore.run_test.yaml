@@ -1,0 +1,54 @@
+suite: with opts truststore set
+templates:
+  - deployment.yaml
+  - secrets.yaml
+tests:
+  - it: should fail with trustStoreFileData and without trustStorePassword
+    set:
+      lenses:
+        opts:
+          trustStoreFileData: bGFsYQ==
+    asserts:
+      - template: secrets.yaml
+        failedTemplate:
+          errorMessage: When you set trustStoreFileData, you also need to set trustStorePassword
+  - it: should pass with trustStoreFileData and trustStorePassword
+    set:
+      lenses:
+        opts:
+          trustStoreFileData: bGFsYQ==
+          trustStorePassword: 123
+    asserts:
+      - template: deployment.yaml
+        contains:
+          path: spec.template.spec.volumes[0].secret.items
+          content:
+            key: lenses.opts.truststore.jks
+            path: lenses.opts.truststore.jks
+      - template: secrets.yaml
+        equal:
+          path: data.lenses\.opts\.truststore\.jks
+          value: bGFsYQ==
+      - template: secrets.yaml
+        equal:
+          path: stringData.lenses\.opts\.truststore\.password
+          value: "123"
+
+  - it: should fail with JVM trustStoreFileData
+    set:
+      lenses:
+        jvm:
+          trustStoreFileData: bGFsYQ==
+    asserts:
+      - template: secrets.yaml
+        failedTemplate:
+          errorMessage: .Values.lenses.jvm.trustStoreFileData is deprecated in favor of Values.lenses.opts.trustStoreFileData, please use the latter.
+  - it: should fail with JVM trustStorePassword
+    set:
+      lenses:
+        jvm:
+          trustStorePassword: foobar
+    asserts:
+      - template: secrets.yaml
+        failedTemplate:
+          errorMessage: .Values.lenses.jvm.trustStorePassword is deprecated in favor of Values.lenses.opts.trustStorePassword, please use the latter.

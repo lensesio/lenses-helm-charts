@@ -1,0 +1,52 @@
+suite: check that using any obsolete Lenses keys will fail the Helm deployment
+templates:
+  - deployment.yaml
+tests:
+  - it: should fail if license key is still set
+    set:
+      lenses:
+        license: foobar
+    asserts:
+      - template: deployment.yaml
+        failedTemplate:
+          errorMessage: Setting configuration value .Values.lenses.license is deprecated. Please use the provision yaml instead. See documentation here.
+  - it: should fail if licenseUrl key is still set
+    set:
+      lenses:
+        licenseUrl: foobar
+    asserts:
+      - template: deployment.yaml
+        failedTemplate:
+          errorMessage: Setting configuration value .Values.lenses.licenseUrl is deprecated. Please use the provision yaml instead. See documentation here.
+  - it: should fail if kafka key is still set
+    set:
+      lenses:
+        kafka:
+          bootstrapServers:
+            - name: kafka
+              port: 9092
+              sslPort: 9093
+              saslSslPort: 9094
+              saslPlainTextPort: 9095
+    asserts:
+      - template: deployment.yaml
+        failedTemplate:
+          errorMessage: Setting configuration value .Values.lenses.kafka is deprecated. Please use the provision yaml instead. See documentation here.
+  - it: should fail if schemaRegistries key is still set
+    set:
+      lenses:
+        schemaRegistries:
+          enabled: true
+    asserts:
+      - template: deployment.yaml
+        failedTemplate:
+          errorMessage: Setting configuration value .Values.lenses.schemaRegistries is deprecated. Please use the provision yaml instead. See documentation here.
+  - it: should fail if connectClusters key is still set
+    set:
+      lenses:
+        connectClusters:
+          enabled: true
+    asserts:
+      - template: deployment.yaml
+        failedTemplate:
+          errorMessage: Setting configuration value .Values.lenses.connectClusters is deprecated. Please use the provision yaml instead. See documentation here.

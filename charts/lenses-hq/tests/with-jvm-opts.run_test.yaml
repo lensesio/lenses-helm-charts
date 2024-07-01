@@ -1,0 +1,22 @@
+suite: use user defined JVM opts
+templates:
+  - deployment.yaml
+tests:
+  - it: should work with no overrides
+    asserts:
+      - notContains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: LENSES_HEAP_OPTS
+            value: any value
+  - it: should work with user defined heapOpts
+    set:
+      lenses:
+        jvm:
+          heapOpts: -Xmx8g -Xms8g
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: LENSES_HEAP_OPTS
+            value: -Xmx8g -Xms8g

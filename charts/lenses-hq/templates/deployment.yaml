@@ -1,0 +1,132 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{include "fullname" . | quote}}
+  labels:
+    app: {{include "fullname" . | quote}}
+    chart: {{printf "%s-%s" .Chart.Name .Chart.Version}}
+    release: {{.Release.Name}}
+    heritage: {{.Release.Service}}
+    component: "lenses-hq"
+    lenses.io/app: {{include "fullname" .}}
+    lenses.io/app.type: lenses-gq
+    {{- range $key, $value := .Values.labels }}
+    {{ $key }}: {{ $value | quote }}
+    {{- end }}
+  {{- if .Values.annotations }}
+  annotations:
+    {{- range $key, $value := .Values.annotations }}
+    {{ $key }}: {{ $value | quote }}
+    {{- end }}
+  {{- end }}
+spec:
+  # Horizontal scaling is not yet supported
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{include "fullname" . | quote}}
+  strategy:
+    type: {{ default "Recreate" .Values.strategy.type | quote }}
+  template:
+    metadata:
+      labels:
+        app: {{include "fullname" . | quote}}
+        component: "lenses-hq"
+        hostPort: {{ .Values.restPort | quote }}
+        containerPort: {{ .Values.restPort | quote }}
+        {{- range $key, $value := .Values.labels }}
+        {{ $key }}: {{ $value | quote }}
+        {{- end }}
+      annotations:
+        {{- range $key, $value := .Values.podTemplateAnnotations }}
+        {{ $key }}: {{ $value | quote }}
+        {{- end }}
+    spec:
+      {{- if .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml .Values.nodeSelector | nindent 8 }}
+      {{- end }}
+      {{- if .Values.affinity }}
+      affinity:
+        {{- toYaml .Values.affinity | nindent 8 }}
+      {{- end }}
+      {{- if .Values.tolerations }}
+      tolerations:
+        {{- toYaml .Values.tolerations | nindent 8 }}
+      {{- end }}
+      {{- if .Values.securityContext }}
+      securityContext:
+        {{- toYaml .Values.securityContext | nindent 8 }}
+      {{- end }}
+      {{- if .Values.dnsPolicy }}
+      dnsPolicy: {{ .Values.dnsPolicy }}
+      {{- end }}
+      {{- if .Values.dnsConfig }}
+      dnsConfig:
+        {{- toYaml .Values.dnsConfig | nindent 8 }}
+      {{- end }}
+      volumes:
+        - name: config
+          configMap:
+            name: {{include "fullname" . | quote}}
+        {{- if .Values.additionalVolumes }}
+          {{- toYaml .Values.additionalVolumes | nindent 8 }}
+        {{- end }}
+      serviceAccountName: {{ .Values.serviceAccount }}
+      {{- if .Values.image.imagePullSecrets }}
+      imagePullSecrets: {{ .Values.image.imagePullSecrets | toYaml | nindent 8 }}
+      {{- end }}
+      containers:
+      - name: {{ .Chart.Name }}
+        image: {{include "lensesHqImage" . | quote }}
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        {{- if .Values.containerSecurityContext}}
+        securityContext:
+          {{- toYaml .Values.containerSecurityContext | nindent 10 }}
+        {{- end }}
+        ports:
+        - containerPort: {{ .Values.restPort }}
+        {{- if .Values.lenseshq.livenessProbe.enabled }}
+        livenessProbe:
+          httpGet:
+            path: /
+            port: {{ .Values.restPort }}
+          {{- if .Values.lenseshq.tls.enabled }}
+            scheme: HTTPS
+          {{- end }}
+          initialDelaySeconds: 300
+          periodSeconds: 10
+        {{- end }}
+
+        volumeMounts:
+          - name: config
+            mountPath: /etc/panoptes
+          {{- if .Values.additionalVolumeMounts }}
+            {{- toYaml .Values.additionalVolumeMounts | nindent 10 }}
+          {{- end }}
+        resources:
+          {{- toYaml .Values.resources | nindent 10 }}
+        env:
+        {{- with .Values.lenseshq.security.defaultUser.usernameSecretKeyRef }}
+          - name: LENSESHQ_SECURITY_USER
+            valueFrom:
+              secretKeyRef:
+                name: {{ .name }}
+                key: {{ .key }}
+          {{- end }}
+          {{- with .Values.lenseshq.security.defaultUser.passwordSecretKeyRef }}
+          - name: LENSESHQ_SECURITY_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ .name }}
+                key: {{ .key }}
+          {{- end-}}
+          {{- if .Values.lenseshq.pauseExec.enabled }}
+          - name: PAUSE_EXEC
+            value: "true"
+          - name: PG_PASS
+            valueFrom:
+              secretKeyRef:
+                name: panoptes.postgres.credentials.postgresql.acid.zalan.do
+                key: password
+        {{- end }}

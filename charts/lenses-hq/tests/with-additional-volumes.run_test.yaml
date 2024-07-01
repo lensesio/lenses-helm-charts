@@ -1,0 +1,27 @@
+suite: using custom volumes and volume mounts are depicted in deployment
+templates:
+  - deployment.yaml
+tests:
+  - it: should work when custom volumes and volume mounts are used to load additional plugins (UDFs) in Lenses
+    set:
+      additionalVolumes:
+        - name: lenses-plugins
+          persistentVolumeClaim:
+            claimName: lenses-plugins
+      additionalVolumeMounts:
+        - name: lenses-plugins
+          mountPath: "/data/plugins"
+    asserts:
+      - template: deployment.yaml
+        contains:
+          path: spec.template.spec.containers[0].volumeMounts
+          content:
+            name: lenses-plugins
+            mountPath: "/data/plugins"
+      - template: deployment.yaml
+        contains:
+          path: spec.template.spec.volumes
+          content:
+            name: lenses-plugins
+            persistentVolumeClaim:
+              claimName: lenses-plugins
