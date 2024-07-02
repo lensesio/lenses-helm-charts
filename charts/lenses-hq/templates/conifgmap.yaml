@@ -1,0 +1,34 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: {{include "fullname" .}}
+  labels:
+    app: {{include "fullname" .}}
+    chart: {{printf "%s-%s" .Chart.Name .Chart.Version}}
+    release: {{.Release.Name}}
+    heritage: {{.Release.Service}}
+    lenses.io/app: {{include "fullname" .}}
+    lenses.io/app.type: lenses-hq-configmap
+data:
+  config.toml: |
+    [api]
+    address = {{ .Values.lensesHq.api.address }}
+    access_control_allow_origin = {{ .Values.lensesHq.api.accessControlAllowOrigin }}
+    
+    [api.saml]
+    organisation_name = {{ .Values.lensesHq.api.saml.organisationName }}
+    base_url = {{ .Values.lensesHq.api.saml.baseUrl }}
+    entity_id = {{ .Values.lensesHq.api.saml.entityId }}
+    metadata = {{ .Values.lensesHq.api.saml.metadata }}
+    user_creation_mode = {{ .Values.lensesHq.api.saml.userCreationMode }}
+    users_group_membership_management_mode = {{ .Values.lensesHq.api.saml.usersGroupMembershipManagementMode }}
+    
+    [agents]
+    address = {{ .Values.lensesHq.agents.address }}
+    
+    [database]
+    connection = "postgres://{{ .Values.storage.postgres.username }}:{{ .Values.storage.postgres.secret.secretKey | required "db.secretKey is required" | tpl }}@{{ .Values.storage.postgres.host }}:{{ .Values.storage.postgres.port }}/{{ .Values.storage.postgres.database }}?sslmode=require"
+
+    [logger]
+    mode = {{ .Values.lensesHq.logger.mode }}
+    level = {{ .Values.lensesHq.logger.level }}

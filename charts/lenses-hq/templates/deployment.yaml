@@ -124,9 +124,9 @@ spec:
           {{- if .Values.lenseshq.pauseExec.enabled }}
           - name: PAUSE_EXEC
             value: "true"
-          - name: PG_PASS
+          - name: LENSESHQ_PG_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: panoptes.postgres.credentials.postgresql.acid.zalan.do
-                key: password
+                name: {{ .Values.lensesHq.storage.postgres.secret.name }}
+                key: {{ .Values.lensesHq.storage.postgres.secret.key }}
         {{- end }}

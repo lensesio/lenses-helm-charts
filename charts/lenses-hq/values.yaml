@@ -43,52 +43,6 @@ image:
   # -- imagePullSecrets: # any image pull secrets for private registries go here
   #   - name: regcred
 
-# -- Configures everything involing teh HTTP API.
-apiConfig:
-  address: localhost:80
-  # -- redirToIdp: false
-  # -- accessControlAllowOrigin: "*"
-  # -- secureSessionCookies: true
-  saml:
-    organisationName: "my-company"
-    # -- Example: <?xml version="1.0" ... (big blob of xml) </md:EntityDescriptor>
-    metadata: |-
-
-    # uiRootUrl: ""
-    entityId: ""
-    # groupsAttributeKey: ""
-    # userCreationMode: ""
-    # usersGroupMembershipManagementMode: ""
-
-# -- Controls the agent handling
-agentsConfig:
-  address: "127.0.0.1:3000"
-
-databaseConfig:
-  username:
-  password:
-    externalSecret:
-      ## Optional, defaulting to ClusterSecretStore
-      kind: ClusterSecretStore # SecretStore | ClusterSecretStore
-      key: 
-  host:
-  port:
-  databaseName:
-
-loggerConfig:
-  # -- Options: text | json
-  mode: ""
-  # -- Options: info | debug
-  # level: "info"
-
-# metricsConfig:
-#  prometheusAddress: ":9090"
-
-monitoring:
-  enabled: true
-  port: 9102
-
-
 # rbacEnable indicates if a the cluster has rbac enabled and a cluster role
 # and rolebinding should be created for the service account
 rbacEnable: true
@@ -158,14 +112,37 @@ ingress:
     key: |-
 
 lensesHq:
+  agents:
+    address: ":10000"
+  api:
+    address: ":8080"
+    accessControlAllowOrigin: ""
+    saml:
+      organisationName: "my-company"
+      baseUrl: ""
+      entityId: ""
+      # -- Example: <?xml version="1.0" ... (big blob of xml) </md:EntityDescriptor>
+      metadata: |-
 
-  # Set the details to provision Lenses
-  # There are 2 supported versions:
-  # 1: Lenses version <=5,2 (https://docs.lenses.io/5.2/installation/getting-started/helm/#helm-lenses-provision)
-  #    This is oneshot, it only works on a new installation, upon the first deployment
-  # 2: Lenses version >=5,3 (https://docs.lenses.io/5.5/installation/getting-started/helm/#helm-lenses-provision)
-  #    This is applied on every deployment/upgrade of the chart. Any connection or license change in the UI will be
-  #    reverted during an upgrade. *Connections that do not exist here will be deleted*
+      userCreationMode: ""
+      usersGroupMembershipManagementMode: ""   
+  # Find more details in https://docs.lenses.io/current/installation/kubernetes/helm/#helm-storage
+  ## Postgres template example: "postgres://[username]:[pwd]@[host]:[port]/[database]?sslmode=require"
+  postgres:
+    host:
+    port:
+    username:
+    database:
+    passwordSecret:
+      # secret name
+      name:
+      # secret key where password will be read from
+      key:
+
+  logger:
+    mode: "text"
+    level: "debug"
+
 
   jvm:
     # heapOpts are any overrides for Lenses Heap JVM options
@@ -196,38 +173,6 @@ lensesHq:
     keyPassword: |-
 
 
-
-  # Find more details in https://docs.lenses.io/current/installation/kubernetes/helm/#helm-storage
-  storage:
-    postgres:
-      enabled: false
-      host:
-      port:               # optional, defaults to 5432
-
-      # Set the username for postgres connection
-      # Use the value "external" to bypass the Helm validation and handle the username externally.
-      # The common use case for using "external" is to take the actual value from a Kubernetes Secret resource already deployed.
-      # To do so, add the following definition under 'lenses.additionalEnv' key:
-      # - name: LENSES_STORAGE_POSTGRES_USERNAME
-      #   valueFrom:
-      #     secretKeyRef:
-      #       name: [SECRET_RESOURCE_NAME]
-      #       key: [SECRET_RESOURCE_KEY]
-      username:           # use "external" to manage it using secrets
-
-      # Set the password for postgres connection
-      # Use the value "external" to bypass the Helm validation and handle the password externally.
-      # The common use case for using "external" is to take the actual value from a Kubernetes Secret resource already deployed.
-      # To do so, add the following definition under 'lenses.additionalEnv' key:
-      # - name: LENSES_STORAGE_POSTGRES_PASSWORD
-      #   valueFrom:
-      #     secretKeyRef:
-      #       name: [SECRET_RESOURCE_NAME]
-      #       key: [SECRET_RESOURCE_KEY]
-      password:           # use "external" to manage it using secrets
-
-      database:
-      schema:             # optional, defaults to public schema
 
 
   # Additional env variables appended to deployment
