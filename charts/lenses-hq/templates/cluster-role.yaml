@@ -14,8 +14,8 @@ rules:
 - apiGroups: [""]
   resources:
     - namespaces
-    - persistentvolumes
-    - persistentvolumeclaims
+    #- persistentvolumes
+    #- persistentvolumeclaims
   verbs:
     - list
     - watch
@@ -28,7 +28,7 @@ rules:
     - deployments
     - ingresses
     - secrets
-    - statefulsets
+    #- statefulsets
     - services
   verbs:
     - list

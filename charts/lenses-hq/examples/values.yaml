@@ -116,26 +116,39 @@ lensesHq:
     address: ":8080"
     accessControlAllowOrigin: ""
     saml:
-      organisationName: "my-company"
-      baseUrl: ""
-      entityId: ""
+      organisationName: "hqtesting"
+      baseUrl: "http://10.52.2.184:4000/api/saml/sso"
+      entityId: "https://saml.example.com/entityid"
       # -- Example: <?xml version="1.0" ... (big blob of xml) </md:EntityDescriptor>
-      metadata: |-
-
+      metadata: |
+        <md:EntityDescriptor xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata" entityID="https://saml.example.com/entityid" validUntil="2034-07-03T11:53:19.711Z">
+        <md:IDPSSODescriptor WantAuthnRequestsSigned="true" protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
+        <md:KeyDescriptor use="signing">
+        <ds:KeyInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+        <ds:X509Data>
+        <ds:X509Certificate>MIIDbTCCAlWgAwIBAgIULyIf6AO1dvfjHoWKpmSslSQQSF0wDQYJKoZIhvcNAQEL BQAwRTELMAkGA1UEBhMCSFIxEzARBgNVBAgMClNvbWUtU3RhdGUxITAfBgNVBAoM GEludGVybmV0IFdpZGdpdHMgUHR5IEx0ZDAgFw0yNDA3MDMxMDI2MzZaGA8zMDIz MTEwNDEwMjYzNlowRTELMAkGA1UEBhMCSFIxEzARBgNVBAgMClNvbWUtU3RhdGUx ITAfBgNVBAoMGEludGVybmV0IFdpZGdpdHMgUHR5IEx0ZDCCASIwDQYJKoZIhvcN AQEBBQADggEPADCCAQoCggEBAJrpfUx/Yzl183uKl1w4kDCeMVY9C4RuJ/nJOFUx jJOKAOdHvzEP5ug6gy+nNxhCio+Nbf3jSu6jWF2VaALjY9P23F+QFOpIB2PT7zxj QvOU4JnolQUhuMS+vI1l2/zinY02KPJ1CBQxXwLjj++sl4N1CLCivyCS1ajL3YxN JafRVYCnIkRKLHNRJoOKleT/cqp1y36/Sn3KMWhwxRoBpRiWRK4Iw6HtY3Dv9y04 8pMnAVwMzBsgGloVWA/1OZSmlGncF5q1UI1PRo+zpjuWjZi/n45EuKRhTu2UNmbl orGBUJqK4zYjV9gsVx6PeaGu9+5WkxZ7Hp8AgGML94XtOmECAwEAAaNTMFEwHQYD VR0OBBYEFGOE7o8mH4H2Y5TAU5qg1j0R9tWoMB8GA1UdIwQYMBaAFGOE7o8mH4H2 Y5TAU5qg1j0R9tWoMA8GA1UdEwEB/wQFMAMBAf8wDQYJKoZIhvcNAQELBQADggEB ABpMzJFtOpztRB7DjRWeX3fe3RFRVUTPI/XhZNSPp7YFJY25rvK+V64oarZaFH+f PppwHvawh6lXIfBbyoQW8b/xlUAL8SGrAGa5mS2tCmg9lF0C4Eh/qyECURcW75G1 Mbm5inHg7xKLSJ6bFlYp97K4YH9uUERcFqT+XPHE5i9Wo+2KnY+MGxDDhtLUy2H6 NJcJzBqG7loOQTDuy58HKI33bQc3K7fxswixWA3mAvPXh7DstMDEgOYn5TycdAGH 892g7+SLWgV2D9av/eHMKLC5/YZMYlOEBK8Bckrp5FaVtrgGZljnHOhXje1RkMdc Ji930Ng7/0mk0f2tVh8JWbY=</ds:X509Certificate>
+        </ds:X509Data>
+        </ds:KeyInfo>
+        </md:KeyDescriptor>
+        <md:NameIDFormat>urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress</md:NameIDFormat>
+        <md:SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect" Location="http://10.52.2.184:4000/api/saml/sso"/>
+        <md:SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="http://10.52.2.184:4000/api/saml/sso"/>
+        </md:IDPSSODescriptor>
+        </md:EntityDescriptor>
       userCreationMode: ""
       usersGroupMembershipManagementMode: ""   
   # Find more details in https://docs.lenses.io/current/installation/kubernetes/helm/#helm-storage
   ## Postgres template example: "postgres://[username]:[pwd]@[host]:[port]/[database]?sslmode=require"
   postgres:
-    host:
-    port:
-    username:
-    database:
+    host: postgres-postgresql.ivan-playground.svc.cluster.local
+    port: 5432
+    username: postgres
+    database: lenseshq
     passwordSecret:
       # secret name
-      name:
+      name: postgres-postgresql
       # secret key where password will be read from
-      key:
+      key: postgres-password
 
   logger:
     mode: "text"
@@ -143,7 +156,6 @@ lensesHq:
 
   tls:
     enabled: true
-
 
   # Additional env variables appended to deployment
   # Follows the format of [EnvVar spec](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.21/#envvar-v1-core)
@@ -161,4 +173,4 @@ lensesHq:
     enabled: false
 
   monitoring:
-  port: 9090
+    port: 9090

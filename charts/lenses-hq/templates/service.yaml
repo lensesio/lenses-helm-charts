@@ -31,7 +31,7 @@ spec:
     {{- end}}
     targetPort: {{.Values.restPort}}
   - name: http-metrics
-    port: {{.Values.monitoring.port}}
+    port: {{.Values.lensesHq.monitoring.port}}
   selector:
     app: {{include "fullname" .}}
     component: "lenses-hq"

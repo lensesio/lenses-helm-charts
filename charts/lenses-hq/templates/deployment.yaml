@@ -9,7 +9,7 @@ metadata:
     heritage: {{.Release.Service}}
     component: "lenses-hq"
     lenses.io/app: {{include "fullname" .}}
-    lenses.io/app.type: lenses-gq
+    lenses.io/app.type: lenses-hq
     {{- range $key, $value := .Values.labels }}
     {{ $key }}: {{ $value | quote }}
     {{- end }}
@@ -78,7 +78,7 @@ spec:
       {{- end }}
       containers:
       - name: {{ .Chart.Name }}
-        image: {{include "lensesHqImage" . | quote }}
+        image: {{ .Values.lensesHq.image }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         {{- if .Values.containerSecurityContext}}
         securityContext:
@@ -86,12 +86,12 @@ spec:
         {{- end }}
         ports:
         - containerPort: {{ .Values.restPort }}
-        {{- if .Values.lenseshq.livenessProbe.enabled }}
+        {{- if .Values.lensesHq.livenessProbe.enabled }}
         livenessProbe:
           httpGet:
             path: /
             port: {{ .Values.restPort }}
-          {{- if .Values.lenseshq.tls.enabled }}
+          {{- if .Values.lensesHq.tls.enabled }}
             scheme: HTTPS
           {{- end }}
           initialDelaySeconds: 300
@@ -107,21 +107,7 @@ spec:
         resources:
           {{- toYaml .Values.resources | nindent 10 }}
         env:
-        {{- with .Values.lenseshq.security.defaultUser.usernameSecretKeyRef }}
-          - name: LENSESHQ_SECURITY_USER
-            valueFrom:
-              secretKeyRef:
-                name: {{ .name }}
-                key: {{ .key }}
-          {{- end }}
-          {{- with .Values.lenseshq.security.defaultUser.passwordSecretKeyRef }}
-          - name: LENSESHQ_SECURITY_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: {{ .name }}
-                key: {{ .key }}
-          {{- end-}}
-          {{- if .Values.lenseshq.pauseExec.enabled }}
+          {{- if .Values.lensesHq.pauseExec.enabled }}
           - name: PAUSE_EXEC
             value: "true"
           - name: LENSESHQ_PG_PASSWORD

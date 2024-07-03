@@ -10,7 +10,7 @@ metadata:
     lenses.io/app: {{include "fullname" .}}
     lenses.io/app.type: lenses-hq-configmap
 data:
-  config.toml: |
+  "config.toml": |
     [api]
     address = {{ .Values.lensesHq.api.address }}
     access_control_allow_origin = {{ .Values.lensesHq.api.accessControlAllowOrigin }}
@@ -19,7 +19,7 @@ data:
     organisation_name = {{ .Values.lensesHq.api.saml.organisationName }}
     base_url = {{ .Values.lensesHq.api.saml.baseUrl }}
     entity_id = {{ .Values.lensesHq.api.saml.entityId }}
-    metadata = {{ .Values.lensesHq.api.saml.metadata }}
+    metadata = {{ .Values.lensesHq.api.saml.metadata | indent 4 }}
     user_creation_mode = {{ .Values.lensesHq.api.saml.userCreationMode }}
     users_group_membership_management_mode = {{ .Values.lensesHq.api.saml.usersGroupMembershipManagementMode }}
     
@@ -27,7 +27,7 @@ data:
     address = {{ .Values.lensesHq.agents.address }}
     
     [database]
-    connection = "postgres://{{ .Values.storage.postgres.username }}:{{ .Values.storage.postgres.secret.secretKey | required "db.secretKey is required" | tpl }}@{{ .Values.storage.postgres.host }}:{{ .Values.storage.postgres.port }}/{{ .Values.storage.postgres.database }}?sslmode=require"
+    connection = "postgres://{{ .Values.lensesHq.postgres.username }}:${LENSESHQ_PG_PASSWORD}@{{ .Values.lensesHq.postgres.host }}:{{ .Values.lensesHq.postgres.port }}/{{ .Values.lensesHq.postgres.database }}?sslmode=require"
 
     [logger]
     mode = {{ .Values.lensesHq.logger.mode }}
