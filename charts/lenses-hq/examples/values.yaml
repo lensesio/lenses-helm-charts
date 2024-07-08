@@ -34,6 +34,8 @@ resources:
     memory: 5Gi
 
 image:
+  name: eu.gcr.io/k8-engine/panoptes:v6.0.0-alpha.2
+  imagePullPolicy: IfNotPresent
   repository: 
   # -- Default to .Chart.AppVersion
   # tag:
@@ -47,16 +49,18 @@ rbacEnable: true
 
 # In case rbac is enabled you can choose to enable namespace scoped roles or 
 # cluster roles to be created 
-namespaceScope: true
+namespaceScope: false
 
-# Lenses container port
-restPort: 3030
-# Lenses service port, service targets restPort
+# Lense HQ container port
+restPort: 8080
+# Lenses HQ service port, service targets restPort
 servicePort: 80
 servicePortName: lenses-hq
 
 # serviceAccount is the Service account to be used by Lenses to deploy apps
-serviceAccount: default
+serviceAccount:
+  create: true
+  name: lenses-new
 
 # Lenses service
 service:
@@ -88,59 +92,59 @@ service:
   #   - 0.0.0.0/0
 
 ingress:
-  ## If true, Ingress will be created
-  ##
-  enabled: false
-  host:
-  # ingressClassName:
-
-  # Ingress annotations
-  annotations: {}
-    # Optionally add here the annotations related to the ingress provider, see examples below:
-    # kubernetes.io/ingress.class: traefik
-    # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: 'true'
-    # nginx.ingress.kubernetes.io/rewrite-target: /
-
-  # TLS if enabled load the tls.crt and tls.keys as a secrets and enable TLS on the ingress
-  tls:
-    enabled: false
-    crt: |-
-
-    key: |-
+  annotations:
+    kubernetes.io/ingress.class: traefik
+    traefik.ingress.kubernetes.io/router.middlewares: common-traefik-basic-auth@kubernetescrd
+  enabled: true
+  host: panoptes.dev-envs.k8.data-lenses.io
 
 lensesHq:
   agents:
     address: ":10000"
   api:
     address: ":8080"
-    accessControlAllowOrigin: ""
+    accessControlAllowOrigin: '["https://panoptes.dev-envs.k8.data-lenses.io"]'
     saml:
       organisationName: "hqtesting"
-      baseUrl: "http://10.52.2.184:4000/api/saml/sso"
+      baseUrl: "https://mocksaml.com/api/saml/sso"
       entityId: "https://saml.example.com/entityid"
       # -- Example: <?xml version="1.0" ... (big blob of xml) </md:EntityDescriptor>
       metadata: |
-        <md:EntityDescriptor xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata" entityID="https://saml.example.com/entityid" validUntil="2034-07-03T11:53:19.711Z">
+        <md:EntityDescriptor xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata" entityID="https://saml.example.com/entityid" validUntil="2034-07-05T10:48:26.825Z">
         <md:IDPSSODescriptor WantAuthnRequestsSigned="true" protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
         <md:KeyDescriptor use="signing">
         <ds:KeyInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
         <ds:X509Data>
-        <ds:X509Certificate>MIIDbTCCAlWgAwIBAgIULyIf6AO1dvfjHoWKpmSslSQQSF0wDQYJKoZIhvcNAQEL BQAwRTELMAkGA1UEBhMCSFIxEzARBgNVBAgMClNvbWUtU3RhdGUxITAfBgNVBAoM GEludGVybmV0IFdpZGdpdHMgUHR5IEx0ZDAgFw0yNDA3MDMxMDI2MzZaGA8zMDIz MTEwNDEwMjYzNlowRTELMAkGA1UEBhMCSFIxEzARBgNVBAgMClNvbWUtU3RhdGUx ITAfBgNVBAoMGEludGVybmV0IFdpZGdpdHMgUHR5IEx0ZDCCASIwDQYJKoZIhvcN AQEBBQADggEPADCCAQoCggEBAJrpfUx/Yzl183uKl1w4kDCeMVY9C4RuJ/nJOFUx jJOKAOdHvzEP5ug6gy+nNxhCio+Nbf3jSu6jWF2VaALjY9P23F+QFOpIB2PT7zxj QvOU4JnolQUhuMS+vI1l2/zinY02KPJ1CBQxXwLjj++sl4N1CLCivyCS1ajL3YxN JafRVYCnIkRKLHNRJoOKleT/cqp1y36/Sn3KMWhwxRoBpRiWRK4Iw6HtY3Dv9y04 8pMnAVwMzBsgGloVWA/1OZSmlGncF5q1UI1PRo+zpjuWjZi/n45EuKRhTu2UNmbl orGBUJqK4zYjV9gsVx6PeaGu9+5WkxZ7Hp8AgGML94XtOmECAwEAAaNTMFEwHQYD VR0OBBYEFGOE7o8mH4H2Y5TAU5qg1j0R9tWoMB8GA1UdIwQYMBaAFGOE7o8mH4H2 Y5TAU5qg1j0R9tWoMA8GA1UdEwEB/wQFMAMBAf8wDQYJKoZIhvcNAQELBQADggEB ABpMzJFtOpztRB7DjRWeX3fe3RFRVUTPI/XhZNSPp7YFJY25rvK+V64oarZaFH+f PppwHvawh6lXIfBbyoQW8b/xlUAL8SGrAGa5mS2tCmg9lF0C4Eh/qyECURcW75G1 Mbm5inHg7xKLSJ6bFlYp97K4YH9uUERcFqT+XPHE5i9Wo+2KnY+MGxDDhtLUy2H6 NJcJzBqG7loOQTDuy58HKI33bQc3K7fxswixWA3mAvPXh7DstMDEgOYn5TycdAGH 892g7+SLWgV2D9av/eHMKLC5/YZMYlOEBK8Bckrp5FaVtrgGZljnHOhXje1RkMdc Ji930Ng7/0mk0f2tVh8JWbY=</ds:X509Certificate>
+        <ds:X509Certificate>MIIC4jCCAcoCCQC33wnybT5QZDANBgkqhkiG9w0BAQsFADAyMQswCQYDVQQGEwJV
+        SzEPMA0GA1UECgwGQm94eUhRMRIwEAYDVQQDDAlNb2NrIFNBTUwwIBcNMjIwMjI4
+        MjE0NjM4WhgPMzAyMTA3MDEyMTQ2MzhaMDIxCzAJBgNVBAYTAlVLMQ8wDQYDVQQK
+        DAZCb3h5SFExEjAQBgNVBAMMCU1vY2sgU0FNTDCCASIwDQYJKoZIhvcNAQEBBQAD
+        ggEPADCCAQoCggEBALGfYettMsct1T6tVUwTudNJH5Pnb9GGnkXi9Zw/e6x45DD0
+        RuRONbFlJ2T4RjAE/uG+AjXxXQ8o2SZfb9+GgmCHuTJFNgHoZ1nFVXCmb/Hg8Hpd
+        4vOAGXndixaReOiq3EH5XvpMjMkJ3+8+9VYMzMZOjkgQtAqO36eAFFfNKX7dTj3V
+        pwLkvz6/KFCq8OAwY+AUi4eZm5J57D31GzjHwfjH9WTeX0MyndmnNB1qV75qQR3b
+        2/W5sGHRv+9AarggJkF+ptUkXoLtVA51wcfYm6hILptpde5FQC8RWY1YrswBWAEZ
+        NfyrR4JeSweElNHg4NVOs4TwGjOPwWGqzTfgTlECAwEAATANBgkqhkiG9w0BAQsF
+        AAOCAQEAAYRlYflSXAWoZpFfwNiCQVE5d9zZ0DPzNdWhAybXcTyMf0z5mDf6FWBW
+        5Gyoi9u3EMEDnzLcJNkwJAAc39Apa4I2/tml+Jy29dk8bTyX6m93ngmCgdLh5Za4
+        khuU3AM3L63g7VexCuO7kwkjh/+LqdcIXsVGO6XDfu2QOs1Xpe9zIzLpwm/RNYeX
+        UjbSj5ce/jekpAw7qyVVL4xOyh8AtUW1ek3wIw1MJvEgEPt0d16oshWJpoS1OT8L
+        r/22SvYEo3EmSGdTVGgk3x3s+A0qWAqTcyjr7Q4s/GKYRFfomGwz0TZ4Iw1ZN99M
+        m0eo2USlSRTVl7QHRTuiuSThHpLKQQ==</ds:X509Certificate>
         </ds:X509Data>
         </ds:KeyInfo>
         </md:KeyDescriptor>
         <md:NameIDFormat>urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress</md:NameIDFormat>
-        <md:SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect" Location="http://10.52.2.184:4000/api/saml/sso"/>
-        <md:SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="http://10.52.2.184:4000/api/saml/sso"/>
+        <md:SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect" Location="https://mocksaml.com/api/saml/sso"/>
+        <md:SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://mocksaml.com/api/saml/sso"/>
         </md:IDPSSODescriptor>
         </md:EntityDescriptor>
-      userCreationMode: ""
-      usersGroupMembershipManagementMode: ""   
+      userCreationMode: "sso"
+      usersGroupMembershipManagementMode: "sso"   
   # Find more details in https://docs.lenses.io/current/installation/kubernetes/helm/#helm-storage
   ## Postgres template example: "postgres://[username]:[pwd]@[host]:[port]/[database]?sslmode=require"
   postgres:
-    host: postgres-postgresql.ivan-playground.svc.cluster.local
+    host: 10.52.2.133
     port: 5432
     username: postgres
     database: lenseshq

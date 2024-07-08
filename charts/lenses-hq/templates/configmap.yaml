@@ -1,34 +1,36 @@
 kind: ConfigMap
 apiVersion: v1
 metadata:
-  name: {{include "fullname" .}}
+  name: {{ include "fullname" . }}
   labels:
-    app: {{include "fullname" .}}
-    chart: {{printf "%s-%s" .Chart.Name .Chart.Version}}
-    release: {{.Release.Name}}
-    heritage: {{.Release.Service}}
-    lenses.io/app: {{include "fullname" .}}
+    app: {{ include "fullname" . }}
+    chart: {{ printf "%s-%s" .Chart.Name .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    lenses.io/app: {{ include "fullname" . }}
     lenses.io/app.type: lenses-hq-configmap
 data:
   "config.toml": |
     [api]
-    address = {{ .Values.lensesHq.api.address }}
+    address = {{ .Values.lensesHq.api.address | quote }}
     access_control_allow_origin = {{ .Values.lensesHq.api.accessControlAllowOrigin }}
-    
+
     [api.saml]
-    organisation_name = {{ .Values.lensesHq.api.saml.organisationName }}
-    base_url = {{ .Values.lensesHq.api.saml.baseUrl }}
-    entity_id = {{ .Values.lensesHq.api.saml.entityId }}
-    metadata = {{ .Values.lensesHq.api.saml.metadata | indent 4 }}
-    user_creation_mode = {{ .Values.lensesHq.api.saml.userCreationMode }}
-    users_group_membership_management_mode = {{ .Values.lensesHq.api.saml.usersGroupMembershipManagementMode }}
+    organisation_name = {{ .Values.lensesHq.api.saml.organisationName | quote }}
+    base_url = {{ .Values.lensesHq.api.saml.baseUrl | quote }}
+    entity_id = {{ .Values.lensesHq.api.saml.entityId | quote }}
+    metadata = """
+    {{ .Values.lensesHq.api.saml.metadata | indent 4 }}
+    """
+    user_creation_mode = {{ .Values.lensesHq.api.saml.userCreationMode | quote }}
+    users_group_membership_management_mode = {{ .Values.lensesHq.api.saml.usersGroupMembershipManagementMode | quote }}
     
     [agents]
-    address = {{ .Values.lensesHq.agents.address }}
+    address = {{ .Values.lensesHq.agents.address | quote }}
     
     [database]
-    connection = "postgres://{{ .Values.lensesHq.postgres.username }}:${LENSESHQ_PG_PASSWORD}@{{ .Values.lensesHq.postgres.host }}:{{ .Values.lensesHq.postgres.port }}/{{ .Values.lensesHq.postgres.database }}?sslmode=require"
+    connection = "postgres://{{ .Values.lensesHq.postgres.username }}:$(LENSESHQ_PG_PASSWORD)@{{ .Values.lensesHq.postgres.host }}:{{ default 5432 .Values.lensesHq.postgres.port }}/{{ .Values.lensesHq.postgres.database }}"
 
     [logger]
-    mode = {{ .Values.lensesHq.logger.mode }}
-    level = {{ .Values.lensesHq.logger.level }}
+    mode = {{ .Values.lensesHq.logger.mode | quote }}
+    level = {{ default "info" .Values.lensesHq.logger.level | quote }}

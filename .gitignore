@@ -7,3 +7,4 @@ landoop
 *.gpg
 build/
 charts/*/coyote.html
+charts/lenses-hq/examples

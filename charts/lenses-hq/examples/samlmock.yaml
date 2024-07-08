@@ -23,7 +23,7 @@ spec:
               fieldRef:
                 fieldPath: status.podIP
           - name: APP_URL
-            value: "http://localhost:4000"
+            value: "http://104.199.30.36:4000"
           - name: ENTITY_ID
             value: "https://saml.example.com/entityid"
           - name: PUBLIC_KEY

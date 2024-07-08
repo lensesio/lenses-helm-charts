@@ -1,14 +1,14 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{include "fullname" . | quote}}
+  name: {{ include "fullname" . | quote}}
   labels:
-    app: {{include "fullname" . | quote}}
+    app: {{ include "fullname" . | quote}}
     chart: {{printf "%s-%s" .Chart.Name .Chart.Version}}
     release: {{.Release.Name}}
     heritage: {{.Release.Service}}
     component: "lenses-hq"
-    lenses.io/app: {{include "fullname" .}}
+    lenses.io/app: {{ include "fullname" .}}
     lenses.io/app.type: lenses-hq
     {{- range $key, $value := .Values.labels }}
     {{ $key }}: {{ $value | quote }}
@@ -20,17 +20,16 @@ metadata:
     {{- end }}
   {{- end }}
 spec:
-  # Horizontal scaling is not yet supported
   replicas: 1
   selector:
     matchLabels:
-      app: {{include "fullname" . | quote}}
+      app: {{ include "fullname" . | quote}}
   strategy:
     type: {{ default "Recreate" .Values.strategy.type | quote }}
   template:
     metadata:
       labels:
-        app: {{include "fullname" . | quote}}
+        app: {{ include "fullname" . | quote }}
         component: "lenses-hq"
         hostPort: {{ .Values.restPort | quote }}
         containerPort: {{ .Values.restPort | quote }}
@@ -68,18 +67,19 @@ spec:
       volumes:
         - name: config
           configMap:
-            name: {{include "fullname" . | quote}}
-        {{- if .Values.additionalVolumes }}
-          {{- toYaml .Values.additionalVolumes | nindent 8 }}
-        {{- end }}
-      serviceAccountName: {{ .Values.serviceAccount }}
+            name: {{ include "fullname" . | quote}}
+            items:
+              - key: config.toml
+                path: config.toml
+      serviceAccountName: {{ .Values.serviceAccount.name }}
       {{- if .Values.image.imagePullSecrets }}
       imagePullSecrets: {{ .Values.image.imagePullSecrets | toYaml | nindent 8 }}
       {{- end }}
       containers:
       - name: {{ .Chart.Name }}
-        image: {{ .Values.lensesHq.image }}
+        image: {{ .Values.image.name }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
+        args: ["/etc/panoptes/config.toml"]
         {{- if .Values.containerSecurityContext}}
         securityContext:
           {{- toYaml .Values.containerSecurityContext | nindent 10 }}
@@ -97,7 +97,6 @@ spec:
           initialDelaySeconds: 300
           periodSeconds: 10
         {{- end }}
-
         volumeMounts:
           - name: config
             mountPath: /etc/panoptes
@@ -109,10 +108,10 @@ spec:
         env:
           {{- if .Values.lensesHq.pauseExec.enabled }}
           - name: PAUSE_EXEC
-            value: "true"
+            value: "false"
+          {{- end }}
           - name: LENSESHQ_PG_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: {{ .Values.lensesHq.storage.postgres.secret.name }}
-                key: {{ .Values.lensesHq.storage.postgres.secret.key }}
-        {{- end }}
+                name: {{ .Values.lensesHq.postgres.passwordSecret.name }}
+                key: {{ .Values.lensesHq.postgres.passwordSecret.key }}

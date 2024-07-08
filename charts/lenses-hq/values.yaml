@@ -34,6 +34,7 @@ resources:
     memory: 5Gi
 
 image:
+  name:
   repository: 
   # -- Default to .Chart.AppVersion
   # tag:
@@ -55,8 +56,12 @@ restPort: 3030
 servicePort: 80
 servicePortName: lenses-hq
 
-# serviceAccount is the Service account to be used by Lenses to deploy apps
-serviceAccount: default
+# -- serviceAccount is the Service account to be used by Lenses to deploy apps
+serviceAccount:
+  # serviceAccount.create -- True | False. In case "true" new SA will be created with service.name as a SA name.
+  create: false
+  # serviceAccount.name -- Name of Service Account. In case serviceAccount.create is *false*, existing SA with defined name here will be used.
+  name: lenses
 
 # Lenses service
 service:
@@ -111,10 +116,13 @@ ingress:
 
 lensesHq:
   agents:
+    # -- Address wherefrom agent will be listening at.
     address: ":10000"
   api:
+    # -- Sets the address the HTTP servers listens at.
     address: ":8080"
     accessControlAllowOrigin: ""
+    # -- SAML2 IdP configuration
     saml:
       organisationName: "my-company"
       baseUrl: ""
@@ -122,23 +130,34 @@ lensesHq:
       # -- Example: <?xml version="1.0" ... (big blob of xml) </md:EntityDescriptor>
       metadata: |-
 
+      # lensesHq.saml.userCreationMode --  Controls how the creation of users should be handled in relation to SSO information
+      # Allowed values are: sso | manual
       userCreationMode: ""
+      # lensesHq.saml.usersGroupMembershipManagementMode -- Controls how the management of a user's group membership should be handled in relation to SSO information.
+      # Allowed values are: sso | manual
       usersGroupMembershipManagementMode: ""   
-  # Find more details in https://docs.lenses.io/current/installation/kubernetes/helm/#helm-storage
-  ## Postgres template example: "postgres://[username]:[pwd]@[host]:[port]/[database]?sslmode=require"
+  
+  # -- Postgres template example: "postgres://[username]:[pwd]@[host]:[port]/[database]?sslmode=require"
   postgres:
+  # postgres.host -- Hostname of running postgres instance.
     host:
+  # postgres.posrt -- Post of rujnning postgress instance. Default is 5432.
     port:
     username:
     database:
+    # postgres.passwordSecret -- Definition of secret that has been precreated and has postgres database password
     passwordSecret:
-      # secret name
+      # Secret name
       name:
-      # secret key where password will be read from
+      # Secret key where password will be read from
       key:
 
   logger:
+    # logger.mode -- Controls the format of the logger's output.
+    # Allowed values are: text | json
     mode: "text"
+    # logger.level -- Controls the level of the logger
+    # Allowed values are: info | debug
     level: "debug"
 
   tls:
