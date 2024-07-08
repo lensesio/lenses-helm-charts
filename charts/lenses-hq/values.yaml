@@ -180,4 +180,4 @@ lensesHq:
     enabled: false
 
   monitoring:
-  port: 9090
+    port: 9090
