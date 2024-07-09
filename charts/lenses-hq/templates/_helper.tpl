@@ -22,22 +22,6 @@ Create a default fully qualified app name.
 {{- end -}}
 {{- end -}}
 
-{{- define "claimName" -}}
-{{- if .Values.fullnameOverride -}}
-{{- printf "%s-%s" (.Values.fullnameOverride | trunc 57 | trimSuffix "-") "claim" -}}
-{{- else -}}
-{{- printf "%s-%s" (.Release.Name | trunc 57 | trimSuffix "-") "claim" -}}
-{{- end -}}
-{{- end -}}
-
-{{- define "sidecarProvisionImage" -}}
-{{- if .Values.lenseshq.provision.sidecar.image.tag -}}
-{{- printf "%s:%s" .Values.lenseshq.provision.sidecar.image.repository .Values.lenseshq.provision.sidecar.image.tag -}}
-{{- else -}}
-{{- printf "%s:%s" .Values.lenseshq.provision.sidecar.image.repository (regexFind "\\d+\\.\\d+" .Chart.AppVersion) -}}
-{{- end -}}
-{{- end -}}
-
 {{- define "lensesHqImage" -}}
 {{- if .Values.image.tag -}}
 {{ printf "%s:%s" .Values.image.repository .Values.image.tag }}
@@ -74,6 +58,14 @@ Create a default fully qualified app name.
 {{- if .Values.lenseshq.logbackXml }}-Dlogback.configurationFile="file:{{ .Values.lenseshq.logbackXml}}" {{ end -}}
 {{- if .Values.lenseshq.jvm.logBackOpts }}{{- .Values.lenseshq.jvm.logBackOpts }}{{- end -}}
 {{- end -}}
+
+{{- define "databaseSecretName" -}}
+{{- if .Values.nameOverride }}
+  {{- printf "%s-%s" .Values.nameOverride "db-secret" | trunc 63 | trimSuffix "-" }}
+{{- else }}
+  {{- printf "%s-%s" .Chart.Name "db-secret" | trunc 63 | trimSuffix "-" }}
+{{- end }}
+{{- end }}
 
 {{/*
 Return the appropriate apiVersion for ingress.

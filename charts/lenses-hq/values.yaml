@@ -1,6 +1,7 @@
 nameOverride: ""
 fullnameOverride: ""
 
+annotations: {}
 podTemplateAnnotations: {} # Annotations here go into the PodTemplateSpec at deployment.spec.template.annotations.
 labels: {}
 strategy: {}
@@ -139,18 +140,24 @@ lensesHq:
   
   # -- Postgres template example: "postgres://[username]:[pwd]@[host]:[port]/[database]?sslmode=require"
   postgres:
-  # postgres.host -- Hostname of running postgres instance.
+    # postgres.host -- Hostname of running postgres instance.
     host:
-  # postgres.posrt -- Post of rujnning postgress instance. Default is 5432.
+    # postgres.port -- Port of running postgress instance. Default is 5432.
     port:
+    # postgres.username -- Username which will be used for connecting to Postgres database.
     username:
     database:
     # postgres.passwordSecret -- Definition of secret that has been precreated and has postgres database password
     passwordSecret:
+      # postgres.passwordSecret.type -- Possible options: precreated | createNew
+      type: "precreated"
       # Secret name
       name:
       # Secret key where password will be read from
       key:
+      
+      password: 
+ 
 
   logger:
     # logger.mode -- Controls the format of the logger's output.

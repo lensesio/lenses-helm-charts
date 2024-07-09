@@ -1,14 +1,14 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "fullname" . | quote}}
+  name: {{ include "fullname" . | quote }}
   labels:
-    app: {{ include "fullname" . | quote}}
-    chart: {{printf "%s-%s" .Chart.Name .Chart.Version}}
-    release: {{.Release.Name}}
-    heritage: {{.Release.Service}}
+    app: {{ include "fullname" . | quote }}
+    chart: {{ printf "%s-%s" .Chart.Name .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
     component: "lenses-hq"
-    lenses.io/app: {{ include "fullname" .}}
+    lenses.io/app: {{ include "fullname" . }}
     lenses.io/app.type: lenses-hq
     {{- range $key, $value := .Values.labels }}
     {{ $key }}: {{ $value | quote }}
@@ -23,7 +23,7 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: {{ include "fullname" . | quote}}
+      app: {{ include "fullname" . | quote }}
   strategy:
     type: {{ default "Recreate" .Values.strategy.type | quote }}
   template:
@@ -57,13 +57,6 @@ spec:
       securityContext:
         {{- toYaml .Values.securityContext | nindent 8 }}
       {{- end }}
-      {{- if .Values.dnsPolicy }}
-      dnsPolicy: {{ .Values.dnsPolicy }}
-      {{- end }}
-      {{- if .Values.dnsConfig }}
-      dnsConfig:
-        {{- toYaml .Values.dnsConfig | nindent 8 }}
-      {{- end }}
       volumes:
         - name: config
           configMap:
@@ -75,6 +68,7 @@ spec:
       {{- if .Values.image.imagePullSecrets }}
       imagePullSecrets: {{ .Values.image.imagePullSecrets | toYaml | nindent 8 }}
       {{- end }}
+      dnsPolicy: ClusterFirst
       containers:
       - name: {{ .Chart.Name }}
         image: {{ .Values.image.name }}
@@ -85,7 +79,15 @@ spec:
           {{- toYaml .Values.containerSecurityContext | nindent 10 }}
         {{- end }}
         ports:
-        - containerPort: {{ .Values.restPort }}
+          - containerPort: {{ .Values.restPort }}
+            name: {{ .Values.servicePortName }}
+            protocol: TCP
+          - containerPort: 10000
+            name: agents
+            protocol: TCP
+          - containerPort: {{ .Values.lensesHq.monitoring.port }}
+            name: metrics
+            protocol: TCP
         {{- if .Values.lensesHq.livenessProbe.enabled }}
         livenessProbe:
           httpGet:
@@ -113,5 +115,10 @@ spec:
           - name: LENSESHQ_PG_PASSWORD
             valueFrom:
               secretKeyRef:
+              {{- if contains "createNew" .Values.lensesHq.postgres.passwordSecret.type }}
+                name: {{ include "databaseSecretName" . }}
+                key: "password"
+              {{ else if contains "precreated" .Values.lensesHq.postgres.passwordSecret.type }}
                 name: {{ .Values.lensesHq.postgres.passwordSecret.name }}
                 key: {{ .Values.lensesHq.postgres.passwordSecret.key }}
+              {{- end }}

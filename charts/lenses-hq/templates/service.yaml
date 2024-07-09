@@ -19,21 +19,24 @@ metadata:
     {{- toYaml .Values.service.annotations | nindent 4 }}
 {{- end }}
 spec:
-  type: {{.Values.service.type | quote}}
+  type: {{ .Values.service.type | quote }}
   {{- if .Values.service.externalTrafficPolicy }}
   externalTrafficPolicy: {{toYaml .Values.service.externalTrafficPolicy}}
   {{- end }}
   ports:
-  - name: {{.Values.servicePortName}}
-    port: {{.Values.servicePort}}
-    {{- if include "nodePort" .}}
-    nodePort: {{ include "nodePort" .}}
-    {{- end}}
-    targetPort: {{.Values.restPort}}
+  - name: {{ .Values.servicePortName }}
+    port: {{ .Values.servicePort }}
+    {{- if include "nodePort" . }}
+    nodePort: {{ include "nodePort" . }}
+    {{- end }}
+    targetPort:  {{ .Values.restPort }}
   - name: http-metrics
-    port: {{.Values.lensesHq.monitoring.port}}
+    port: {{ .Values.lensesHq.monitoring.port }}
+  - name: agents
+    port: 10000
+    targetPort: agents
   selector:
-    app: {{include "fullname" .}}
+    app: {{ include "fullname" . }}
     component: "lenses-hq"
 
 {{- if contains "LoadBalancer" .Values.service.type }}

@@ -117,7 +117,7 @@ metadata:
     app: {{ include "fullname" . }}
     chart: {{ printf "%s-%s" .Chart.Name .Chart.Version }}
     release: {{ .Release.Name }}
-    heritage: {{.Release.Service }}
+    heritage: {{ .Release.Service }}
     lenses.io/app: {{ include "fullname" . }}
     lenses.io/app.type: lenses-role-binding
 subjects:

@@ -14,7 +14,7 @@ data:
     [api]
     address = {{ .Values.lensesHq.api.address | quote }}
     access_control_allow_origin = {{ .Values.lensesHq.api.accessControlAllowOrigin }}
-
+    
     [api.saml]
     organisation_name = {{ .Values.lensesHq.api.saml.organisationName | quote }}
     base_url = {{ .Values.lensesHq.api.saml.baseUrl | quote }}
@@ -29,8 +29,9 @@ data:
     address = {{ .Values.lensesHq.agents.address | quote }}
     
     [database]
-    connection = "postgres://{{ .Values.lensesHq.postgres.username }}:$(LENSESHQ_PG_PASSWORD)@{{ .Values.lensesHq.postgres.host }}:{{ default 5432 .Values.lensesHq.postgres.port }}/{{ .Values.lensesHq.postgres.database }}"
+    connection = "postgres://{{ .Values.lensesHq.postgres.username }}:$(LENSESHQ_PG_PASSWORD)@{{ .Values.lensesHq.postgres.host }}:{{ .Values.lensesHq.postgres.port }}/{{ .Values.lensesHq.postgres.database }}"
 
     [logger]
     mode = {{ .Values.lensesHq.logger.mode | quote }}
     level = {{ default "info" .Values.lensesHq.logger.level | quote }}
+
