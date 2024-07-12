@@ -34,8 +34,8 @@ resources:
     memory: 5Gi
 
 image:
-  name: eu.gcr.io/k8-engine/panoptes:v6.0.0-alpha.2
-  repository: 
+  repository: eu.gcr.io/k8-engine/panoptes:v6.0.0-alpha.2
+  #repository: 
   # -- Default to .Chart.AppVersion
   # tag:
   pullPolicy: Always
@@ -147,14 +147,14 @@ lensesHq:
   postgres:
     host: 10.52.3.55
     port: 5432
-    username: postgres
+    username: lenseshq
     database: lenseshq
     passwordSecret:
-     # type: "createNew"
-     # password: OwGmPwFwez
-      type: "precreated"
-      name: postgres-postgresql
-      key:  postgres-password
+      type: "createNew"
+      password: "OwGmPwFwezaaa"
+      #type: "precreated"
+      #name: postgres-postgresql
+      #key:  postgres-password
   
   logger:
     mode: "text"

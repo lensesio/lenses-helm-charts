@@ -1,0 +1,937 @@
+{
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "$id": "http://example.com/example.json",
+    "type": "object",
+    "default": {},
+    "title": "Root Schema",
+    "required": [
+        "resources",
+        "image",
+        "rbacEnable",
+        "namespaceScope",
+        "restPort",
+        "servicePort",
+        "servicePortName",
+        "serviceAccount",
+        "service",
+        "lensesHq"
+    ],
+    "properties": {
+        "nameOverride": {
+            "type": "string",
+            "default": "",
+            "title": "The nameOverride Schema",
+            "examples": [
+                ""
+            ]
+        },
+        "fullnameOverride": {
+            "type": "string",
+            "default": "",
+            "title": "The fullnameOverride Schema",
+            "examples": [
+                ""
+            ]
+        },
+        "annotations": {
+            "type": "object",
+            "default": {},
+            "title": "The annotations Schema",
+            "required": [],
+            "properties": {},
+            "examples": [{}]
+        },
+        "podTemplateAnnotations": {
+            "type": "object",
+            "default": {},
+            "title": "The podTemplateAnnotations Schema",
+            "required": [],
+            "properties": {},
+            "examples": [{}]
+        },
+        "labels": {
+            "type": "object",
+            "default": {},
+            "title": "The labels Schema",
+            "required": [],
+            "properties": {},
+            "examples": [{}]
+        },
+        "strategy": {
+            "type": "object",
+            "default": {},
+            "title": "The strategy Schema",
+            "required": [],
+            "properties": {},
+            "examples": [{}]
+        },
+        "nodeSelector": {
+            "type": "object",
+            "default": {},
+            "title": "The nodeSelector Schema",
+            "required": [],
+            "properties": {},
+            "examples": [{}]
+        },
+        "tolerations": {
+            "type": "object",
+            "default": {},
+            "title": "The tolerations Schema",
+            "required": [],
+            "properties": {},
+            "examples": [{}]
+        },
+        "affinity": {
+            "type": "object",
+            "default": {},
+            "title": "The affinity Schema",
+            "required": [],
+            "properties": {},
+            "examples": [{}]
+        },
+        "securityContext": {
+            "type": "object",
+            "default": {},
+            "title": "The securityContext Schema",
+            "required": [],
+            "properties": {},
+            "examples": [{}]
+        },
+        "resources": {
+            "type": "object",
+            "default": {},
+            "title": "The resources Schema",
+            "required": [
+                "requests",
+                "limits"
+            ],
+            "properties": {
+                "requests": {
+                    "type": "object",
+                    "default": {},
+                    "title": "The requests Schema",
+                    "required": [
+                        "memory"
+                    ],
+                    "properties": {
+                        "memory": {
+                            "type": "string",
+                            "default": "",
+                            "title": "The memory Schema",
+                            "examples": [
+                                "4Gi"
+                            ]
+                        }
+                    },
+                    "examples": [{
+                        "memory": "4Gi"
+                    }]
+                },
+                "limits": {
+                    "type": "object",
+                    "default": {},
+                    "title": "The limits Schema",
+                    "required": [
+                        "memory"
+                    ],
+                    "properties": {
+                        "memory": {
+                            "type": "string",
+                            "default": "",
+                            "title": "The memory Schema",
+                            "examples": [
+                                "5Gi"
+                            ]
+                        }
+                    },
+                    "examples": [{
+                        "memory": "5Gi"
+                    }]
+                }
+            },
+            "examples": [{
+                "requests": {
+                    "memory": "4Gi"
+                },
+                "limits": {
+                    "memory": "5Gi"
+                }
+            }]
+        },
+        "image": {
+            "type": "object",
+            "default": {},
+            "title": "The image Schema",
+            "required": [
+                "repository",
+                "pullPolicy"
+            ],
+            "properties": {
+                "repository": {
+                    "type": "string",
+                    "default": null,
+                    "title": "The repository Schema",
+                    "examples": [
+                        "lenses/lenses"
+                    ]
+                },
+                "pullPolicy": {
+                    "type": "string",
+                    "default": "",
+                    "title": "The pullPolicy Schema",
+                    "examples": [
+                        "IfNotPresent"
+                    ]
+                }
+            },
+            "examples": [{
+                "name": null,
+                "repository": null,
+                "pullPolicy": "IfNotPresent"
+            }]
+        },
+        "rbacEnable": {
+            "type": "boolean",
+            "default": false,
+            "title": "The rbacEnable Schema",
+            "examples": [
+                true
+            ]
+        },
+        "namespaceScope": {
+            "type": "boolean",
+            "default": false,
+            "title": "The namespaceScope Schema",
+            "examples": [
+                true
+            ]
+        },
+        "restPort": {
+            "type": "integer",
+            "default": 0,
+            "title": "The restPort Schema",
+            "examples": [
+                3030
+            ]
+        },
+        "servicePort": {
+            "type": "integer",
+            "default": 0,
+            "title": "The servicePort Schema",
+            "examples": [
+                80
+            ]
+        },
+        "servicePortName": {
+            "type": "string",
+            "default": "",
+            "title": "The servicePortName Schema",
+            "examples": [
+                "lenses-hq"
+            ]
+        },
+        "serviceAccount": {
+            "type": "object",
+            "default": {},
+            "title": "The serviceAccount Schema",
+            "required": [
+                "create",
+                "name"
+            ],
+            "properties": {
+                "create": {
+                    "type": "boolean",
+                    "default": false,
+                    "title": "The create Schema",
+                    "examples": [
+                        false,
+                        true
+                    ]
+                },
+                "name": {
+                    "type": "string",
+                    "default": "",
+                    "title": "The name Schema",
+                    "examples": [
+                        "lenses"
+                    ]
+                }
+            },
+            "examples": [{
+                "create": false,
+                "name": "lenses"
+            }]
+        },
+        "service": {
+            "type": "object",
+            "default": {},
+            "title": "The service Schema",
+            "required": [
+                "enabled",
+                "type",
+                "annotations"
+            ],
+            "properties": {
+                "enabled": {
+                    "type": "boolean",
+                    "default": false,
+                    "title": "The enabled Schema",
+                    "examples": [
+                        true
+                    ]
+                },
+                "type": {
+                    "type": "string",
+                    "default": "",
+                    "title": "The type Schema",
+                    "examples": [
+                        "ClusterIP",
+                        "nodePort"
+                    ]
+                },
+                "annotations": {
+                    "type": "object",
+                    "default": {},
+                    "title": "The annotations Schema",
+                    "required": [],
+                    "properties": {},
+                    "examples": [{}]
+                },
+                "externalTrafficPolicy": {
+                    "type": "null",
+                    "default": null,
+                    "title": "The externalTrafficPolicy Schema",
+                    "examples": [
+                        null
+                    ]
+                }
+            },
+            "examples": [{
+                "enabled": true,
+                "type": "ClusterIP",
+                "annotations": {},
+                "externalTrafficPolicy": null
+            }]
+        },
+        "ingress": {
+            "type": "object",
+            "default": {},
+            "title": "The ingress Schema",
+            "required": [
+                "enabled",
+                "host",
+                "annotations",
+                "tls"
+            ],
+            "properties": {
+                "enabled": {
+                    "type": "boolean",
+                    "default": false,
+                    "title": "The enabled Schema",
+                    "examples": [
+                        false,
+                        true
+                    ]
+                },
+                "host": {
+                    "type": "string",
+                    "default": null,
+                    "title": "The host Schema",
+                    "examples": [
+                        null
+                    ]
+                },
+                "annotations": {
+                    "type": "object",
+                    "default": {},
+                    "title": "The annotations Schema",
+                    "required": [],
+                    "properties": {},
+                    "examples": [{}]
+                },
+                "tls": {
+                    "type": "object",
+                    "default": {},
+                    "title": "The tls Schema",
+                    "required": [
+                        "enabled",
+                        "crt",
+                        "key"
+                    ],
+                    "properties": {
+                        "enabled": {
+                            "type": "boolean",
+                            "default": false,
+                            "title": "The enabled Schema",
+                            "examples": [
+                                false,
+                                true
+                            ]
+                        },
+                        "crt": {
+                            "type": "string",
+                            "default": "",
+                            "title": "The crt Schema",
+                            "examples": [
+                                ""
+                            ]
+                        },
+                        "key": {
+                            "type": "string",
+                            "default": "",
+                            "title": "The key Schema",
+                            "examples": [
+                                ""
+                            ]
+                        }
+                    },
+                    "examples": [{
+                        "enabled": false,
+                        "crt": "",
+                        "key": ""
+                    }]
+                }
+            },
+            "examples": [{
+                "enabled": false,
+                "host": null,
+                "annotations": {},
+                "tls": {
+                    "enabled": false,
+                    "crt": "",
+                    "key": ""
+                }
+            }]
+        },
+        "lensesHq": {
+            "type": "object",
+            "default": {},
+            "title": "The lensesHq Schema",
+            "required": [
+                "agents",
+                "api",
+                "postgres",
+                "logger",
+                "tls",
+                "livenessProbe",
+                "monitoring"
+            ],
+            "properties": {
+                "agents": {
+                    "type": "object",
+                    "default": {},
+                    "title": "The agents Schema",
+                    "required": [
+                        "address"
+                    ],
+                    "properties": {
+                        "address": {
+                            "type": "string",
+                            "default": "",
+                            "title": "The address Schema",
+                            "examples": [
+                                ":10000"
+                            ]
+                        }
+                    },
+                    "examples": [{
+                        "address": ":10000"
+                    }]
+                },
+                "api": {
+                    "type": "object",
+                    "default": {},
+                    "title": "The api Schema",
+                    "required": [
+                        "address",
+                        "accessControlAllowOrigin",
+                        "saml"
+                    ],
+                    "properties": {
+                        "address": {
+                            "type": "string",
+                            "default": "",
+                            "title": "The address Schema",
+                            "examples": [
+                                ":8080"
+                            ]
+                        },
+                        "accessControlAllowOrigin": {
+                            "type": "string",
+                            "default": "",
+                            "title": "The accessControlAllowOrigin Schema",
+                            "examples": [
+                                ["https://example.io","http://example.io"]
+                            ]
+                        },
+                        "saml": {
+                            "type": "object",
+                            "default": {},
+                            "title": "The saml Schema",
+                            "required": [
+                                "organisationName",
+                                "baseUrl",
+                                "entityId",
+                                "metadata",
+                                "userCreationMode",
+                                "usersGroupMembershipManagementMode"
+                            ],
+                            "properties": {
+                                "organisationName": {
+                                    "type": "string",
+                                    "default": "",
+                                    "title": "The organisationName Schema",
+                                    "examples": [
+                                        "my-company"
+                                    ]
+                                },
+                                "baseUrl": {
+                                    "type": "string",
+                                    "default": "",
+                                    "title": "The baseUrl Schema",
+                                    "examples": [
+                                        "https://saml.example.com/api/saml/sso"
+                                    ]
+                                },
+                                "entityId": {
+                                    "type": "string",
+                                    "default": "",
+                                    "title": "The entityId Schema",
+                                    "examples": [
+                                        "https://saml.example.com/entityid"
+                                    ]
+                                },
+                                "metadata": {
+                                    "type": "string",
+                                    "default": "",
+                                    "title": "The metadata Schema",
+                                    "examples": [
+                                        ""
+                                    ]
+                                },
+                                "userCreationMode": {
+                                    "type": "string",
+                                    "default": "",
+                                    "pattern": "^(sso|manual)$",
+                                    "title": "The userCreationMode Schema",
+                                    "examples": [
+                                        "sso",
+                                        "manual"
+                                    ]
+                                },
+                                "usersGroupMembershipManagementMode": {
+                                    "type": "string",
+                                    "default": "",
+                                    "pattern": "^(sso|manual)$",
+                                    "title": "The usersGroupMembershipManagementMode Schema",
+                                    "examples": [
+                                        "sso",
+                                        "manual"
+                                    ]
+                                }
+                            },
+                            "examples": [{
+                                "organisationName": "my-company",
+                                "baseUrl": "",
+                                "entityId": "",
+                                "metadata": "",
+                                "userCreationMode": "",
+                                "usersGroupMembershipManagementMode": ""
+                            }]
+                        }
+                    },
+                    "examples": [{
+                        "address": ":8080",
+                        "accessControlAllowOrigin": ["https://example.io","http://example.io"],
+                        "saml": {
+                            "organisationName": "my-company",
+                            "baseUrl": "",
+                            "entityId": "",
+                            "metadata": "",
+                            "userCreationMode": "",
+                            "usersGroupMembershipManagementMode": ""
+                        }
+                    }]
+                },
+                "postgres": {
+                    "type": "object",
+                    "default": {},
+                    "title": "The postgres Schema",
+                    "required": [
+                        "host",
+                        "port",
+                        "username",
+                        "database",
+                        "passwordSecret"
+                    ],
+                    "properties": {
+                        "host": {
+                            "type": "string",
+                            "default": null,
+                            "title": "The host Schema",
+                            "examples": [
+                                "10.0.0.1"
+                            ]
+                        },
+                        "port": {
+                            "type": "integer",
+                            "default": null,
+                            "title": "The port Schema",
+                            "examples": [
+                                5432
+                            ]
+                        },
+                        "username": {
+                            "type": "string",
+                            "default": null,
+                            "title": "The username Schema",
+                            "examples": [
+                                "lenseshq"
+                            ]
+                        },
+                        "database": {
+                            "type": "string",
+                            "default": null,
+                            "title": "The database Schema",
+                            "examples": [
+                                "lensesDbName"
+                            ]
+                        },
+                        "passwordSecret": {
+                            "type": "object",
+                            "default": {},
+                            "title": "The passwordSecret Schema",
+                            "required": [
+                                "type",
+                                "name",
+                                "key"
+                            ],
+                            "properties": {
+                                "type": {
+                                    "type": "string",
+                                    "default": "precreated",
+                                    "title": "The type Schema",
+                                    "pattern": "^(precreated|createNew)$",
+                                    "examples": [
+                                        "precreated",
+                                        "createNew"
+                                    ]
+                                },
+                                "name": {
+                                    "type": "null",
+                                    "default": null,
+                                    "title": "The name Schema",
+                                    "examples": [
+                                        "secretName"
+                                    ]
+                                },
+                                "key": {
+                                    "type": "null",
+                                    "default": null,
+                                    "title": "The key Schema",
+                                    "examples": [
+                                        "secretKeyName"
+                                    ]
+                                },
+                                "password": {
+                                    "type": "string",
+                                    "default": null,
+                                    "title": "Password for creatNew type",
+                                    "examples": [
+                                        "abc123def"
+                                    ]
+                                }
+                            },
+                            "examples": [{
+                                "type": "precreated",
+                                "name": null,
+                                "key": null,
+                                "password": null
+                            }]
+                        }
+                    },
+                    "examples": [{
+                        "host": null,
+                        "port": null,
+                        "username": null,
+                        "database": null,
+                        "passwordSecret": {
+                            "type": "precreated",
+                            "name": null,
+                            "key": null,
+                            "password": null
+                        }
+                    }]
+                },
+                "logger": {
+                    "type": "object",
+                    "default": {},
+                    "title": "The logger Schema",
+                    "required": [
+                        "mode",
+                        "level"
+                    ],
+                    "properties": {
+                        "mode": {
+                            "type": "string",
+                            "default": "",
+                            "title": "The mode Schema",
+                            "pattern": "^(text|json)$",
+                            "examples": [
+                                "text",
+                                "json"
+                            ]
+                        },
+                        "level": {
+                            "type": "string",
+                            "default": "",
+                            "title": "The level Schema",
+                            "pattern": "^(json|debug)$",
+                            "examples": [
+                                "debug",
+                                "info"
+                            ]
+                        }
+                    },
+                    "examples": [{
+                        "mode": "text",
+                        "level": "debug"
+                    }]
+                },
+                "tls": {
+                    "type": "object",
+                    "default": {},
+                    "title": "The tls Schema",
+                    "required": [
+                        "enabled"
+                    ],
+                    "properties": {
+                        "enabled": {
+                            "type": "boolean",
+                            "default": false,
+                            "title": "The enabled Schema",
+                            "examples": [
+                                true
+                            ]
+                        }
+                    },
+                    "examples": [{
+                        "enabled": true
+                    }]
+                },
+                "additionalEnv": {
+                    "type": "null",
+                    "default": null,
+                    "title": "The additionalEnv Schema",
+                    "examples": [
+                        null
+                    ]
+                },
+                "livenessProbe": {
+                    "type": "object",
+                    "default": {},
+                    "title": "The livenessProbe Schema",
+                    "required": [
+                        "enabled"
+                    ],
+                    "properties": {
+                        "enabled": {
+                            "type": "boolean",
+                            "default": false,
+                            "title": "The enabled Schema",
+                            "examples": [
+                                true
+                            ]
+                        }
+                    },
+                    "examples": [{
+                        "enabled": true
+                    }]
+                },
+                "pauseExec": {
+                    "type": "object",
+                    "default": {},
+                    "title": "The pauseExec Schema",
+                    "required": [
+                        "enabled"
+                    ],
+                    "properties": {
+                        "enabled": {
+                            "type": "boolean",
+                            "default": false,
+                            "title": "The enabled Schema",
+                            "examples": [
+                                false
+                            ]
+                        }
+                    },
+                    "examples": [{
+                        "enabled": false
+                    }]
+                },
+                "monitoring": {
+                    "type": "object",
+                    "default": {},
+                    "title": "The monitoring Schema",
+                    "required": [
+                        "port"
+                    ],
+                    "properties": {
+                        "port": {
+                            "type": "integer",
+                            "default": 0,
+                            "title": "The port Schema",
+                            "examples": [
+                                9090
+                            ]
+                        }
+                    },
+                    "examples": [{
+                        "port": 9090
+                    }]
+                }
+            },
+            "examples": [{
+                "agents": {
+                    "address": ":10000"
+                },
+                "api": {
+                    "address": ":8080",
+                    "accessControlAllowOrigin": "",
+                    "saml": {
+                        "organisationName": "my-company",
+                        "baseUrl": "",
+                        "entityId": "",
+                        "metadata": "",
+                        "userCreationMode": "",
+                        "usersGroupMembershipManagementMode": ""
+                    }
+                },
+                "postgres": {
+                    "host": null,
+                    "port": null,
+                    "username": null,
+                    "database": null,
+                    "passwordSecret": {
+                        "type": "precreated",
+                        "name": null,
+                        "key": null,
+                        "password": null
+                    }
+                },
+                "logger": {
+                    "mode": "text",
+                    "level": "debug"
+                },
+                "tls": {
+                    "enabled": true
+                },
+                "additionalEnv": null,
+                "livenessProbe": {
+                    "enabled": true
+                },
+                "pauseExec": {
+                    "enabled": false
+                },
+                "monitoring": {
+                    "port": 9090
+                }
+            }]
+        }
+    },
+    "examples": [{
+        "nameOverride": "",
+        "fullnameOverride": "",
+        "annotations": {},
+        "podTemplateAnnotations": {},
+        "labels": {},
+        "strategy": {},
+        "nodeSelector": {},
+        "tolerations": {},
+        "affinity": {},
+        "securityContext": {},
+        "resources": {
+            "requests": {
+                "memory": "4Gi"
+            },
+            "limits": {
+                "memory": "5Gi"
+            }
+        },
+        "image": {
+            "repository": null,
+            "pullPolicy": "IfNotPresent"
+        },
+        "rbacEnable": true,
+        "namespaceScope": true,
+        "restPort": 3030,
+        "servicePort": 80,
+        "servicePortName": "lenses-hq",
+        "serviceAccount": {
+            "create": false,
+            "name": "lenses"
+        },
+        "service": {
+            "enabled": true,
+            "type": "ClusterIP",
+            "annotations": {},
+            "externalTrafficPolicy": null
+        },
+        "ingress": {
+            "enabled": false,
+            "host": null,
+            "annotations": {},
+            "tls": {
+                "enabled": false,
+                "crt": "",
+                "key": ""
+            }
+        },
+        "lensesHq": {
+            "agents": {
+                "address": ":10000"
+            },
+            "api": {
+                "address": ":8080",
+                "accessControlAllowOrigin": "",
+                "saml": {
+                    "organisationName": "my-company",
+                    "baseUrl": "",
+                    "entityId": "",
+                    "metadata": "",
+                    "userCreationMode": "",
+                    "usersGroupMembershipManagementMode": ""
+                }
+            },
+            "postgres": {
+                "host": null,
+                "port": null,
+                "username": null,
+                "database": null,
+                "passwordSecret": {
+                    "type": "precreated",
+                    "name": null,
+                    "key": null,
+                    "password": null
+                }
+            },
+            "logger": {
+                "mode": "text",
+                "level": "debug"
+            },
+            "tls": {
+                "enabled": true
+            },
+            "additionalEnv": null,
+            "livenessProbe": {
+                "enabled": true
+            },
+            "pauseExec": {
+                "enabled": false
+            },
+            "monitoring": {
+                "port": 9090
+            }
+        }
+    }]
+}

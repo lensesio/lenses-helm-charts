@@ -57,6 +57,13 @@ spec:
       securityContext:
         {{- toYaml .Values.securityContext | nindent 8 }}
       {{- end }}
+      {{- if .Values.dnsPolicy }}
+      dnsPolicy: {{ .Values.dnsPolicy }}
+      {{- end }}
+      {{- if .Values.dnsConfig }}
+      dnsConfig:
+        {{- toYaml .Values.dnsConfig | nindent 8 }}
+      {{- end }}
       volumes:
         - name: config
           configMap:
@@ -71,7 +78,7 @@ spec:
       dnsPolicy: ClusterFirst
       containers:
       - name: {{ .Chart.Name }}
-        image: {{ .Values.image.name }}
+        image: {{ .Values.image.repository }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         args: ["/etc/panoptes/config.toml"]
         {{- if .Values.containerSecurityContext}}
