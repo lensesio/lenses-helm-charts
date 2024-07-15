@@ -611,32 +611,44 @@
                                     "type": "string",
                                     "default": "precreated",
                                     "title": "The type Schema",
-                                    "pattern": "^(precreated|createNew)$",
+                                    "pattern": "^(precreated|createNew|externalSecret)$",
                                     "examples": [
                                         "precreated",
-                                        "createNew"
+                                        "createNew",
+                                        "externalSecret"
                                     ]
                                 },
                                 "name": {
-                                    "type": "null",
+                                    "type": "string",
                                     "default": null,
                                     "title": "The name Schema",
                                     "examples": [
                                         "secretName"
                                     ]
                                 },
+                                "backendType": {
+                                    "type": "string",
+                                    "default": null,
+                                    "title": "The name Schema",
+                                    "examples": [
+                                        "secretsManager",
+                                        "systemManager",
+                                        "vault"
+                                    ]
+                                },
                                 "key": {
-                                    "type": "null",
+                                    "type": "string",
                                     "default": null,
                                     "title": "The key Schema",
                                     "examples": [
-                                        "secretKeyName"
+                                        "secretKeyName",
+                                        "/hello-service/password"
                                     ]
                                 },
                                 "password": {
-                                    "type": "string",
+                                    "type": ["string", "null"],
                                     "default": null,
-                                    "title": "Password for creatNew type",
+                                    "title": "Password for createNew type",
                                     "examples": [
                                         "abc123def"
                                     ]
@@ -816,7 +828,8 @@
                         "type": "precreated",
                         "name": null,
                         "key": null,
-                        "password": null
+                        "password": null,
+                        "backendType": null
                     }
                 },
                 "logger": {
@@ -912,7 +925,8 @@
                     "type": "precreated",
                     "name": null,
                     "key": null,
-                    "password": null
+                    "password": null,
+                    "backendType": null
                 }
             },
             "logger": {

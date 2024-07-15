@@ -9,8 +9,8 @@ A chart for Lenses HQ
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | affinity | object | `{}` |  |
+| annotations | object | `{}` |  |
 | fullnameOverride | string | `""` |  |
-| image.name | string | `nil` |  |
 | image.pullPolicy | string | `"IfNotPresent"` | Default to .Chart.AppVersion tag: |
 | image.repository | string | `nil` |  |
 | ingress.annotations | object | `{}` |  |
@@ -22,17 +22,16 @@ A chart for Lenses HQ
 | labels | object | `{}` |  |
 | lensesHq.additionalEnv | string | `nil` |  |
 | lensesHq.agents.address | string | `":10000"` | Address wherefrom agent will be listening at. |
-| lensesHq.api.accessControlAllowOrigin | string | `""` |  |
+| lensesHq.api.accessControlAllowOrigin | string | `"[]"` |  |
 | lensesHq.api.address | string | `":8080"` | Sets the address the HTTP servers listens at. |
 | lensesHq.api.saml | object | `{"baseUrl":"","entityId":"","metadata":"","organisationName":"my-company","userCreationMode":"","usersGroupMembershipManagementMode":""}` | SAML2 IdP configuration |
 | lensesHq.api.saml.metadata | string | `""` | Example: <?xml version="1.0" ... (big blob of xml) </md:EntityDescriptor> |
 | lensesHq.livenessProbe.enabled | bool | `true` |  |
 | lensesHq.logger.level | string | `"debug"` |  |
 | lensesHq.logger.mode | string | `"text"` |  |
-| lensesHq.monitoring | string | `nil` |  |
+| lensesHq.monitoring.port | int | `9090` |  |
 | lensesHq.pauseExec.enabled | bool | `false` |  |
-| lensesHq.port | int | `9090` |  |
-| lensesHq.postgres | object | `{"database":null,"host":null,"passwordSecret":{"key":null,"name":null},"port":null,"username":null}` | Postgres template example: "postgres://[username]:[pwd]@[host]:[port]/[database]?sslmode=require" |
+| lensesHq.postgres | object | `{"database":null,"host":null,"passwordSecret":{"backendType":null,"key":null,"name":null,"password":null,"type":"precreated"},"port":null,"username":null}` | Postgres template example: "postgres://[username]:[pwd]@[host]:[port]/[database]?sslmode=require" |
 | lensesHq.tls.enabled | bool | `true` |  |
 | nameOverride | string | `""` |  |
 | namespaceScope | bool | `true` |  |
@@ -47,7 +46,7 @@ A chart for Lenses HQ
 | service.enabled | bool | `true` |  |
 | service.externalTrafficPolicy | string | `nil` |  |
 | service.type | string | `"ClusterIP"` |  |
-| serviceAccount | object | `{"create":false,"name":"lenses"}` | serviceAccount is the Service account to be used by Lenses to deploy apps |
+| serviceAccount | object | `{"annotations":{},"create":false,"name":"lenses"}` | serviceAccount is the Service account to be used by Lenses to deploy apps |
 | serviceAccount.create | bool | `false` | True | False. In case "true" new SA will be created with service.name as a SA name. |
 | serviceAccount.name | string | `"lenses"` | Name of Service Account. In case serviceAccount.create is *false*, existing SA with defined name here will be used. |
 | servicePort | int | `80` |  |

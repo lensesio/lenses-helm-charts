@@ -60,6 +60,7 @@ serviceAccount:
   create: false
   # serviceAccount.name -- Name of Service Account. In case serviceAccount.create is *false*, existing SA with defined name here will be used.
   name: lenses
+  annotations: {}
 
 # Lenses service
 service:
@@ -143,16 +144,23 @@ lensesHq:
     port:
     # postgres.username -- Username which will be used for connecting to Postgres database.
     username:
+    # postgres.database -- Database name to which HQ will connect to and store required information.
     database:
     # postgres.passwordSecret -- Definition of secret that has been precreated and has postgres database password
     passwordSecret:
-      # postgres.passwordSecret.type -- Possible options: precreated | createNew
+      # postgres.passwordSecret.type -- Possible options: precreated | createNew | externalSecret
       type: "precreated"
-      # Secret name
+      # postgres.passwordSecret.key -- Secret name where database password will be stored in case "createNew" or read from in case of "precreated" | "externalSecret".
       name:
-      # Secret key where password will be read from
+      # postgres.passwordSecret.key -- Secret key where password will be read from
       key:
-      
+      # postgres.passwordSecret.backendType -- Backend type in case external secret is being used. Include this only in case type: "externalSecret"
+      externalSecret:
+        backendType:
+        secretStoreRef:
+          clusterSecretStore:
+            name:
+      # postgres.passwordSecret.password -- Entry for a password in case of testing where type: "createNew", otherwise can be left out. NOT FOR PRODUCTION USE!
       password: 
  
 

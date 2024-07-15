@@ -34,7 +34,8 @@ resources:
     memory: 5Gi
 
 image:
-  repository: eu.gcr.io/k8-engine/panoptes:v6.0.0-alpha.2
+  #repository: eu.gcr.io/k8-engine/panoptes:v6.0.0-alpha.2
+  repository: 816592207049.dkr.ecr.us-east-2.amazonaws.com/panoptes:v6.0.0-alpha.2
   #repository: 
   # -- Default to .Chart.AppVersion
   # tag:
@@ -94,14 +95,14 @@ ingress:
     kubernetes.io/ingress.class: traefik
     traefik.ingress.kubernetes.io/router.middlewares: common-traefik-basic-auth@kubernetescrd
   enabled: true
-  host: panoptes-test-ivan.dev-envs.k8.data-lenses.io
+  host: panoptes-test.enjoy.data-lenses.io
 
 lensesHq:
   agents:
     address: ":10000"
   api:
     address: ":8080"
-    accessControlAllowOrigin: '["https://panoptes-test-ivan.dev-envs.k8.data-lenses.io","http://panoptes-test-ivan.dev-envs.k8.data-lenses.io"]'
+    accessControlAllowOrigin: '["https://panoptes-test.enjoy.data-lenses.io","http://panoptes-test.enjoy.data-lenses.io"]'
     saml:
       organisationName: "Lenses"
       baseUrl: "http://104.199.30.36:4000/api/saml/sso"
@@ -145,17 +146,22 @@ lensesHq:
   # Find more details in https://docs.lenses.io/current/installation/kubernetes/helm/#helm-storage
   ## Postgres template example: "postgres://[username]:[pwd]@[host]:[port]/[database]?sslmode=require"
   postgres:
-    host: 10.52.3.55
+    host: postgres-postgresql.ivan-playground.svc.cluster.local
     port: 5432
-    username: lenseshq
+    username: lenses
     database: lenseshq
     passwordSecret:
-      type: "createNew"
-      password: "OwGmPwFwezaaa"
+      type: "externalSecret"
+      #password: "OwGmPwFwezaaa"
       #type: "precreated"
-      #name: postgres-postgresql
+      name: hq-password
       #key:  postgres-password
-  
+      key: postgres-password
+      externalSecret:
+        backendType: aws
+        secretStoreRef:
+          clusterSecretStore:
+            name: enjoy2-secrets
   logger:
     mode: "text"
     level: "debug"

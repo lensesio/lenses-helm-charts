@@ -125,7 +125,8 @@ spec:
               {{- if contains "createNew" .Values.lensesHq.postgres.passwordSecret.type }}
                 name: {{ include "databaseSecretName" . }}
                 key: "password"
-              {{ else if contains "precreated" .Values.lensesHq.postgres.passwordSecret.type }}
+              {{ else if or (contains "precreated" .Values.lensesHq.postgres.passwordSecret.type) (contains "externalSecret" .Values.lensesHq.postgres.passwordSecret.type) }}
                 name: {{ .Values.lensesHq.postgres.passwordSecret.name }}
                 key: {{ .Values.lensesHq.postgres.passwordSecret.key }}
+                
               {{- end }}
