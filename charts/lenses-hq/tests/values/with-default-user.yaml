@@ -1,5 +1,0 @@
-lenses:
-  security:
-    defaultUser:
-      username: foo
-      password: bar
