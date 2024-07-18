@@ -626,15 +626,31 @@
                                         "secretName"
                                     ]
                                 },
-                                "backendType": {
-                                    "type": "string",
-                                    "default": null,
-                                    "title": "The name Schema",
-                                    "examples": [
-                                        "secretsManager",
-                                        "systemManager",
-                                        "vault"
-                                    ]
+                                "externalSecret": {
+                                    "type": "object",
+                                    "default": {},
+                                    "title": "Schema for externalSecret reference in case of externalSecret usage",
+                                    "required":"secretStoreRef",
+                                    "properties": {
+                                        "secretStoreRef": "object",
+                                        "default": {},
+                                        "title": "Schema for externalSecret reference in case of externalSecret usage",
+                                        "required":"clusterSecretStore",
+                                        "properties": {
+                                            "clusterSecretStore": "object",
+                                            "default": {},
+                                            "title": "Schema for externalSecret reference in case of externalSecret usage",
+                                            "required": "name",
+                                            "properties": {
+                                                "name": "string",
+                                                "default": "",
+                                                "examples": [
+                                                    "secretName"
+                                                ]
+
+                                            }
+                                        }
+                                    }
                                 },
                                 "key": {
                                     "type": "string",

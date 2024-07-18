@@ -34,4 +34,3 @@ data:
     [logger]
     mode = {{ .Values.lensesHq.logger.mode | quote }}
     level = {{ default "info" .Values.lensesHq.logger.level | quote }}
-

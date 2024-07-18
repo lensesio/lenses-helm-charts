@@ -1,13 +1,29 @@
 nameOverride: ""
 fullnameOverride: ""
 
+# -- (dict) Custom deployment annotations
+# @section -- Custom deployment values
 annotations: {}
-podTemplateAnnotations: {} # Annotations here go into the PodTemplateSpec at deployment.spec.template.annotations.
+# -- (dict) Annotations here go into the PodTemplateSpec at deployment.spec.template.annotations.
+# @section -- Custom deployment values
+podTemplateAnnotations: {}
+# -- (dict) Deployment labels
+# @section -- Custom deployment values
 labels: {}
+# -- (dict) Deployment strategy
+# @section -- Custom deployment values
 strategy: {}
+# -- (dict) Deployment nodeSelector
+# @section -- Custom deployment values
 nodeSelector: {}
+# -- (dict) Deployment tolerations
+# @section -- Custom deployment values
 tolerations: {}
+# -- (dict) Deployment affinity rules
+# @section -- Custom deployment values
 affinity: {}
+# -- (dict) Deployment security context
+# @section -- Custom deployment values
 securityContext: {}
 # dnsPolicy: "None" # Optional dnsPolicy and dnsConfig to put into the Deployment's PodTemplateSpec.
 # dnsConfig:
@@ -19,11 +35,13 @@ securityContext: {}
 # Add Prometheus annotations to the pod for Lenses metric scraping
 # * The metrics path is '/metrics' and is not adjustable
 
-# Resource management
-# Lenses itself is bound by the JVM heap settings ('lenses.jvm.heapOpts' in the chart). The default
+#  Resource management
+# Lenses HQ itself is bound by the JVM heap settings ('lenses.jvm.heapOpts' in the chart). The default
 # heap space Lenses can use is 3GiB. If you increase the memory resource here, you will need to also
 # adjust 'lenses.jvm.heapOpts'. You should allow for 1-2GiB extra space beyond the heap. So if the
 # memory limit is 10Gi, set 'lenses.jvm.heapOpts' to '-Xmx8g -Xms4g'.
+# -- Pod resources
+# @section -- Custom deployment values
 resources:
   requests:
   #   cpu: 1
@@ -31,48 +49,74 @@ resources:
   limits:
   #   cpu: 2
     memory: 5Gi
-
+# -- Image map
+# @section -- Custom deployment values
 image:
-  repository: 
+  # -- Image repository
+  # @section -- Custom deployment values
+  repository:
+
   # -- Default to .Chart.AppVersion
   # tag:
+  # -- Image pullPolicy
+  # @section -- Custom deployment values
   pullPolicy: IfNotPresent
   # -- imagePullSecrets: # any image pull secrets for private registries go here
   #   - name: regcred
 
-# rbacEnable indicates if a the cluster has rbac enabled and a cluster role
-# and rolebinding should be created for the service account
+# -- (bool) rbacEnable indicates if a the cluster has rbac enabled and a cluster role  and rolebinding should be created for the service account
+# @section -- Permission scope values
 rbacEnable: true
 
-# In case rbac is enabled you can choose to enable namespace scoped roles or 
-# cluster roles to be created 
+# -- (bool) In case rbac is enabled you can choose to enable namespace scoped roles or  cluster roles to be created
+# @section -- Permission scope values
 namespaceScope: true
 
-# Lenses container port
+# -- (int) Lenses HQ container port
+# @section -- Lenses HQ deployment service values
 restPort: 3030
-# Lenses service port, service targets restPort
+# -- (int) Lenses HQ service port, service targets restPort
+# @section -- Lenses HQ deployment service values
 servicePort: 80
+# -- (string) Lenses HQ service port name
+# @section -- Lenses HQ deployment service values
 servicePortName: lenses-hq
 
-# -- serviceAccount is the Service account to be used by Lenses to deploy apps
+# -- User to be used by Lenses to deploy apps
+# @section -- Permission scope values
 serviceAccount:
-  # serviceAccount.create -- True | False. In case "true" new SA will be created with service.name as a SA name.
+  # -- (bool) In case "true" new SA will be created with service.name as a SA name.
+  # @section -- Permission scope values
   create: false
-  # serviceAccount.name -- Name of Service Account. In case serviceAccount.create is *false*, existing SA with defined name here will be used.
+
+  # -- (string) Name of Service Account. In case serviceAccount.create is *false*, existing SA with defined name here will be used.
+  # @section -- Permission scope values
   name: lenses
+
+  # -- (dict) Additional service account annotations.
+  # @section -- Permission scope values
   annotations: {}
 
-# Lenses service
+# @section -- Lenses HQ deployment service values
 service:
+  # -- (bool) Deciding factor whether Lenses HQ service will be created and which type
+  # @section -- Lenses HQ deployment service values
   enabled: true
+
+  # -- (string) Type of service to be created.
+  # @section -- Lenses HQ deployment service values
   type: ClusterIP
+
+  # -- (dict) Additional service annotations
+  # @section -- Lenses HQ deployment service values
   annotations: {}
 
   # If you want to make it available as a node port, then add nodePort: <somePort>
   # Warning: this should not be used with servicePort:
   # Warning nodePort is deprecated and will be removed on next Lenses major version upgrade
   # nodePort:
-
+  # -- (string)
+  # @section -- Lenses HQ deployment service values
   externalTrafficPolicy:
 
   ## Load balancer IP address
@@ -92,13 +136,18 @@ service:
   #   - 0.0.0.0/0
 
 ingress:
-  ## If true, Ingress will be created
-  ##
+  # -- (bool) If true, Ingress will be created
+  # @section -- Lenses HQ deployment service values
   enabled: false
+
+  # -- (tpl/string) Set custom host name. (DNS name convention)
+  # @notationType -- tpl
+  # @section -- Lenses HQ deployment service values
   host:
   # ingressClassName:
 
-  # Ingress annotations
+  # -- (dict) Custom Ingress annotations
+  # @section -- Lenses HQ deployment service values
   annotations: {}
     # Optionally add here the annotations related to the ingress provider, see examples below:
     # kubernetes.io/ingress.class: traefik
@@ -106,8 +155,11 @@ ingress:
     # kubernetes.io/tls-acme: 'true'
     # nginx.ingress.kubernetes.io/rewrite-target: /
 
-  # TLS if enabled load the tls.crt and tls.keys as a secrets and enable TLS on the ingress
+  # -- TLS if enabled load the tls.crt and tls.keys as a secrets and enable TLS on the ingress
+  # @section -- Lenses HQ deployment service values
   tls:
+    # -- (bool) Set to true to enable HTTPS
+    # @section -- Lenses HQ deployment service values
     enabled: false
     crt: |-
 
@@ -115,81 +167,129 @@ ingress:
 
 lensesHq:
   agents:
-    # -- Address wherefrom agent will be listening at.
+    # -- (string) Address wherefrom agent will be listening at.
+    # @section -- Lenses HQ startup values
     address: ":10000"
   api:
-    # -- Sets the address the HTTP servers listens at.
+    # -- (string) Sets the address the HTTP servers listens at.
+    # @section -- Lenses HQ startup values
     address: ":8080"
+
+    # -- (string)
+    # @section -- Lenses HQ startup values
     accessControlAllowOrigin: '[]'
+
     # -- SAML2 IdP configuration
+    # @section -- Lenses HQ startup values
     saml:
+      # @section -- Lenses HQ startup values
       organisationName: "my-company"
+
+      # @section -- Lenses HQ startup values
       baseUrl: ""
+
+      # @section -- Lenses HQ startup values
       entityId: ""
+
       # -- Example: <?xml version="1.0" ... (big blob of xml) </md:EntityDescriptor>
+      # @section -- Lenses HQ startup values
       metadata: |-
 
       # lensesHq.saml.userCreationMode --  Controls how the creation of users should be handled in relation to SSO information
       # Allowed values are: sso | manual
+      # @section -- Lenses HQ startup values
       userCreationMode: ""
+
       # lensesHq.saml.usersGroupMembershipManagementMode -- Controls how the management of a user's group membership should be handled in relation to SSO information.
       # Allowed values are: sso | manual
-      usersGroupMembershipManagementMode: ""   
-  
+      # @section -- Lenses HQ startup values
+      usersGroupMembershipManagementMode: ""
+
   # -- Postgres template example: "postgres://[username]:[pwd]@[host]:[port]/[database]?sslmode=require"
+  # @section -- Lenses HQ startup values
   postgres:
-    # postgres.host -- Hostname of running postgres instance.
+    #  -- (string) Hostname of running postgres instance.
+    # @section -- Lenses HQ startup values
     host:
-    # postgres.port -- Port of running postgress instance. Default is 5432.
+
+    # -- (int) Port of running postgress instance. Default is 5432.
+    # @section -- Lenses HQ startup values
     port:
-    # postgres.username -- Username which will be used for connecting to Postgres database.
+
+    # -- (string) Username which will be used for connecting to Postgres database.
+    # @section -- Lenses HQ startup values
     username:
-    # postgres.database -- Database name to which HQ will connect to and store required information.
+
+    # -- (string) Database name to which HQ will connect to and store required information.
+    # @section -- Lenses HQ startup values
     database:
-    # postgres.passwordSecret -- Definition of secret that has been precreated and has postgres database password
+
+    # -- Definition of secret that has been precreated and has postgres database password
+    # @section -- Lenses HQ startup values
     passwordSecret:
-      # postgres.passwordSecret.type -- Possible options: precreated | createNew | externalSecret
+      # -- (string) Possible options: precreated | createNew | externalSecret
+      # @section -- Lenses HQ startup values
       type: "precreated"
-      # postgres.passwordSecret.key -- Secret name where database password will be stored in case "createNew" or read from in case of "precreated" | "externalSecret".
+
+      # -- (string) Secret name where database password will be stored in case "createNew" or read from in case of "precreated" | "externalSecret".
+      # @section -- Lenses HQ startup values
       name:
-      # postgres.passwordSecret.key -- Secret key where password will be read from
+
+      # -- (string) Secret key where password will be read from
+      # @section -- Lenses HQ startup values
       key:
-      # postgres.passwordSecret.backendType -- Backend type in case external secret is being used. Include this only in case type: "externalSecret"
       externalSecret:
-        backendType:
         secretStoreRef:
           clusterSecretStore:
+            # -- (string) Name of cluster secret store created by ESO.
+            # @section -- Lenses HQ startup values
             name:
-      # postgres.passwordSecret.password -- Entry for a password in case of testing where type: "createNew", otherwise can be left out. NOT FOR PRODUCTION USE!
-      password: 
- 
 
+      # -- (string) Entry for a password in case of testing where type: "createNew", otherwise can be left out. NOT FOR PRODUCTION USE!
+      # @section -- Lenses HQ startup values
+      password:
+
+  # @section -- Lenses HQ startup values
   logger:
-    # logger.mode -- Controls the format of the logger's output.
-    # Allowed values are: text | json
+    # -- (string) Controls the format of the logger's output. Allowed values are: text | json
+    # @section -- Lenses HQ startup values
     mode: "text"
-    # logger.level -- Controls the level of the logger
+
+    # -- (string) Controls the level of the logger
     # Allowed values are: info | debug
+    # @section -- Lenses HQ startup values
     level: "debug"
 
-  tls:
-    enabled: true
 
 
-  # Additional env variables appended to deployment
+  # -- (map) Additional env variables appended to deployment
+  # @section -- Lenses HQ startup values
   # Follows the format of [EnvVar spec](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.21/#envvar-v1-core)
   additionalEnv:
     # - name: FOO
     #   value: bar
 
+  # @section -- Lenses HQ startup values
   # Disable livenessProbe, used while debugging
   livenessProbe:
+    # -- (bool)
+    # @section -- Lenses HQ startup values
     enabled: true
 
-  # Pause execution of Lenses start up script to allow the user to login into the container and
+    tls:
+      # -- Enabling HTTPS forliveness probe.
+      # @section -- Lenses HQ startup values
+      enabled: false
+
+  # -- (bool) Execution postponment.
+  # @raw
+  # Pause execution of Lenses HQ start up script to allow the user to login into the container and
   # check the running environment, used while debugging
+  # @section -- Lenses HQ startup values
   pauseExec:
     enabled: false
 
+  # -- (int) Port on which Lenses HQ will open for metric collection.
+  # @section -- Lenses HQ startup values
   monitoring:
     port: 9090
