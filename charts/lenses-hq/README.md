@@ -4,6 +4,35 @@
 
 A chart for Lenses HQ
 
+## TL;DR
+
+```
+helm repo add lensesio https://helm.repo.lenses.io/
+helm repo update
+
+helm install lenses-hq .  --namespace lenses-hq -f examples/values.yaml
+```
+
+## Introduction
+
+## Prerequisistes
+- Kubernetes 1.23+
+- Helm 3.8.0+
+- Postgre database
+-  *External secret operator (in case of `ExternalSecret` usage)
+
+## Installing the Chart
+To install teh chart with the release name `lenses-hq-release`:
+
+```console
+helm repo add lensesio https://helm.repo.lenses.io/
+helm repo update
+
+helm install lenses-hq .  --namespace lenses-hq -f examples/values.yaml
+```
+
+> Note: You need to substitute the placeholder `.` with a reference to your Helm chart registry and repository. For example, in the case of ex-Lenses, you need to use lensesio/lenses
+
 ## Values
 
 ### Custom deployment values

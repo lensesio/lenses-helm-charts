@@ -36,10 +36,6 @@ securityContext: {}
 # * The metrics path is '/metrics' and is not adjustable
 
 #  Resource management
-# Lenses HQ itself is bound by the JVM heap settings ('lenses.jvm.heapOpts' in the chart). The default
-# heap space Lenses can use is 3GiB. If you increase the memory resource here, you will need to also
-# adjust 'lenses.jvm.heapOpts'. You should allow for 1-2GiB extra space beyond the heap. So if the
-# memory limit is 10Gi, set 'lenses.jvm.heapOpts' to '-Xmx8g -Xms4g'.
 # -- Pod resources
 # @section -- Custom deployment values
 resources:
@@ -245,7 +241,7 @@ lensesHq:
             # @section -- Lenses HQ startup values
             name:
 
-      # -- (string) Entry for a password in case of testing where type: "createNew", otherwise can be left out. NOT FOR PRODUCTION USE!
+      # -- (string) Entry for a password in case of testing where type: "createNew", otherwise can be left out. *NOT FOR PRODUCTION USE!*
       # @section -- Lenses HQ startup values
       password:
 

@@ -1,5 +1,5 @@
 {
-    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "$schema": "http://json-schema.org/schema#",
     "$id": "http://example.com/example.json",
     "type": "object",
     "default": {},
@@ -612,42 +612,46 @@
                                     "default": "precreated",
                                     "title": "The type Schema",
                                     "pattern": "^(precreated|createNew|externalSecret)$",
+                                    "enum": ["createNew", "precreated"],
                                     "examples": [
                                         "precreated",
                                         "createNew",
                                         "externalSecret"
                                     ]
-                                },
-                                "name": {
-                                    "type": "string",
-                                    "default": null,
-                                    "title": "The name Schema",
-                                    "examples": [
-                                        "secretName"
-                                    ]
-                                },
-                                "externalSecret": {
-                                    "type": "object",
-                                    "default": {},
-                                    "title": "Schema for externalSecret reference in case of externalSecret usage",
-                                    "required":"secretStoreRef",
-                                    "properties": {
-                                        "secretStoreRef": "object",
+                                }
+                            },
+                            "externalSecret": {
+                                "type": "object",
+                                "default": {},
+                                "title": "Schema for externalSecret reference in case of externalSecret usage",
+                                "required": [
+                                    "secretStoreRef"
+                                ],
+                                "properties": {
+                                    "secretStoreRef":{
+                                        "type":"object",
                                         "default": {},
                                         "title": "Schema for externalSecret reference in case of externalSecret usage",
-                                        "required":"clusterSecretStore",
+                                        "required":[
+                                            "clusterSecretStore"
+                                        ],
                                         "properties": {
-                                            "clusterSecretStore": "object",
-                                            "default": {},
-                                            "title": "Schema for externalSecret reference in case of externalSecret usage",
-                                            "required": "name",
-                                            "properties": {
-                                                "name": "string",
-                                                "default": "",
-                                                "examples": [
-                                                    "secretName"
-                                                ]
-
+                                            "clusterSecretStore": {
+                                                "type": "object",
+                                                "default": {},
+                                                "title": "Schema for externalSecret reference in case of externalSecret usage",
+                                                "required": [
+                                                    "name"
+                                                ],
+                                                "properties": {
+                                                    "name": {
+                                                        "type": ["string", "null"],
+                                                        "default": "",
+                                                        "examples": [
+                                                            "secretName"
+                                                        ]
+                                                    }
+                                                }
                                             }
                                         }
                                     }

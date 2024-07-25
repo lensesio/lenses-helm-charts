@@ -5,6 +5,7 @@ landoop
 *.compare
 .history/
 *.gpg
+.DS_Store
 build/
 charts/*/coyote.html
 charts/lenses-hq/examples/
