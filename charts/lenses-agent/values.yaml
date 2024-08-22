@@ -1,0 +1,398 @@
+### https://docs.lenses.io/5.5/installation/getting-started/helm/ ###
+
+nameOverride: ""
+fullnameOverride: ""
+
+image:
+  repository: 279048208673.dkr.ecr.eu-west-1.amazonaws.com/panoptes-agent:test-amd
+  # Default to .Chart.AppVersion
+  # tag:
+  pullPolicy: IfNotPresent
+  # imagePullSecrets: # any image pull secrets for private registries go here
+  #   - name: regcred
+
+annotations: {}
+podTemplateAnnotations: {} # Annotations here go into the PodTemplateSpec at deployment.spec.template.annotations.
+labels: {}
+strategy: {}
+nodeSelector: {}
+tolerations: {}
+affinity: {}
+securityContext: {}
+# dnsPolicy: "None" # Optional dnsPolicy and dnsConfig to put into the Deployment's PodTemplateSpec.
+# dnsConfig:
+#   nameservers:
+#     - 1.1.1.1
+# containerSecurityContext: # Optional, plugged in into the both the deployment's main app container and the sidecar.
+#   allowPrivilegeEscalation: false
+
+# Add Prometheus annotations to the pod for Lenses metric scraping
+# * The metrics path is '/metrics' and is not adjustable
+# * Consumer lag metrics are exposed under 'lenses.url/metrics'. There isn't a standard way to add multiple scrape
+#   targets in the annotations, so you will have to add the lag metrics target manually to your Prometheus instance.
+monitoring:
+  enabled: true
+  port: 9102
+
+# Resource management
+# Lenses itself is bound by the JVM heap settings ('lenses.jvm.heapOpts' in the chart). The default
+# heap space Lenses can use is 3GiB. If you increase the memory resource here, you will need to also
+# adjust 'lenses.jvm.heapOpts'. You should allow for 1-2GiB extra space beyond the heap. So if the
+# memory limit is 10Gi, set 'lenses.jvm.heapOpts' to '-Xmx8g -Xms4g'.
+resources:
+  requests:
+  #   cpu: 1
+    memory: 4Gi
+  limits:
+  #   cpu: 2
+    memory: 5Gi
+
+# rbacEnable indicates if a the cluster has rbac enabled and a cluster role
+# and rolebinding should be created for the service account
+rbacEnable: true
+
+# Lenses container port
+restPort: 3030
+# Lenses service port, service targets restPort
+servicePort: 80
+servicePortName: lenses
+
+# -- User to be used by Lenses to deploy apps
+# @section -- Permission scope values
+serviceAccount:
+  # -- (bool) In case "true" new SA will be created with service.name as a SA name.
+  # @section -- Permission scope values
+  create: false
+
+  # -- (string) Name of Service Account. In case serviceAccount.create is *false*, existing SA with defined name here will be used.
+  # @section -- Permission scope values
+  name: lenses
+
+  # -- (dict) Additional service account annotations.
+  # @section -- Permission scope values
+  annotations: {}
+
+# If you use Data Policies module enable a Persistent Volume to keep your data policies rule.
+# Also used when lenses.storage.enabled: false, and an H2 local filesystem database is used, instead of Postgresql.
+# https://docs.lenses.io/current/installation/kubernetes/persistence/
+persistence:
+  enabled: true
+  accessModes:
+    - ReadWriteOnce
+  size: 5Gi
+  log:
+    enabled: true
+  # Target an pre-existing volume claim to use it as Lenses Persistent volume
+  # existingClaim:
+
+  ## Policies data Persistent Volume Storage Class
+  ## If defined, storageClassName: <storageClass>
+  ## If set to "-", storageClassName: "", which disables dynamic provisioning
+  ## If undefined (the default) or set to null, no storageClassName spec is
+  ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+  ##   GKE, AWS & OpenStack)
+  ##
+  # storageClass: "-"
+
+# Additional volume mounts to use in Lenses delpoyments, for example to load additional plugins (UDFs) in Lenses
+# Use it in conjuction with lenses.additionalVolumes
+additionalVolumeMounts:
+  # - name: lenses-plugins
+  #   mountPath: "/data/plugins"
+
+# Additional volumes to use in Lenses delpoyments either by Lenses for other sidecars like Lenses provisioner.
+# Example usages:
+#   Lenses: load additional plugins (UDFs) in Lenses
+#   Lenses provisioner: load additional files from pre-existing volumes, secrets or vault secrets to use in provisioning
+additionalVolumes:
+  # - name: secrets
+  #   secret:
+  #     secretName: lenses-super-secrets
+  # Note: PersistentVolumeClaim should already exist before deploying Helm chart
+  # - name: lenses-plugins
+  #   persistentVolumeClaim:
+  #     claimName: lenses-plugins
+
+# Lenses service
+service:
+  enabled: true
+  type: ClusterIP
+  annotations: {}
+
+  # If you want to make it available as a node port, then add nodePort: <somePort>
+  # Warning: this should not be used with servicePort:
+  # Warning nodePort is deprecated and will be removed on next Lenses major version upgrade
+  # nodePort:
+
+  externalTrafficPolicy:
+
+  ## Load balancer IP address
+  ## Is not required, but allows for static address with
+  ## serviceType LoadBalancer.
+  ## If not supported by cloud provider, this field is ignored.
+  ## Default: nil
+  ##
+  # loadBalancerIP: 130.211.x.x
+
+  ## This will restrict traffic through the cloud-provider load-balancer
+  ## to the specified client IPs.
+  ## If not supported by cloud provider, this field is ignored.
+  ## Default: nil
+  ##
+  # loadBalancerSourceRanges:
+  #   - 0.0.0.0/0
+
+ingress:
+  ## If true, Ingress will be created
+  ##
+  enabled: false
+  host:
+  # ingressClassName:
+
+  # Ingress annotations
+  annotations: {}
+    # Optionally add here the annotations related to the ingress provider, see examples below:
+    # kubernetes.io/ingress.class: traefik
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: 'true'
+    # nginx.ingress.kubernetes.io/rewrite-target: /
+
+  # TLS if enabled load the tls.crt and tls.keys as a secrets and enable TLS on the ingress
+  tls:
+    enabled: false
+    crt: |-
+
+    key: |-
+
+# Optionally add this property in case you would like to enforce Read Only Root Filesystem
+# In that case only /data and /tmp directories will extra mounted and be writable
+# the rest will be mount the container's root filesystem as read-only.
+# containerSecurityContext:
+#   readOnlyRootFilesystem: true
+
+lenses:
+  # Configuration necessary for agent connecting to HQ
+  hq:
+    # HQ hostname
+    host:
+    # HQ port
+    port: 10000
+    # Api key that has been generated in HQ as service account
+    apiKey:
+      secret:
+        # createNew | precreated | externalSecret
+        type: ""
+        # Secret name when creating "externalSecret"
+        name:
+        # Required in case secret.name: "createNew", alongside secret.name
+        value:
+        # Required in case secret.type: "externalSecret", alongisde secret.name
+        externalSecret:
+          name:
+          key:
+          secretStoreRef:
+            clusterSecretStore:
+              name:
+    ssl:
+      enabled: false
+  # Set the details to provision Lenses
+  # 1: Lenses version >=5,3 (https://docs.lenses.io/5.5/installation/getting-started/helm/#helm-lenses-provision)
+  #    This is applied on every deployment/upgrade of the chart. Any connection change in the UI will be
+  #    reverted during an upgrade. *Connections that do not exist here will be deleted*.
+  provision:
+    enabled: false
+    version: "2"
+    path: /mnt/provision-secrets
+    # Find more details in https://docs.lenses.io/5.5/installation/getting-started/helm/#helm-provision
+
+    # You can find examples at https://github.com/lensesio/lenses-helm-charts/tree/release/5.5/examples
+    connections:
+      # kafka:
+      #   - name: kafka
+      #     version: 1
+      #     tags: [ 'prod']
+      #     configuration:
+      #       kafkaBootstrapServers:
+      #         value:
+      #           - PLAINTEXT://broker-1.svc.cluster.local:9093
+      #       metricsType:
+      #         value: JMX
+      #       metricsPort:
+      #         value: 9581
+      # confluentSchemaRegistry:
+      #   - name: schema-registry
+      #     version: 1
+      #     tags: [ 'prod' ]
+      #     configuration:
+      #       schemaRegistryUrls:
+      #         value:
+      #           - http://schema-registry-1.svc.cluster.local:8081
+      # connect:
+      #   - name: datalake-connect
+      #     version: 1
+      #     tags: [ 'prod', 'datalake' ]
+      #     configuration:
+      #       workers:
+      #         value:
+      #           - http://connect-worker-1.svc.cluster.local:8083
+      #       metricsType:
+      #         value: JMX
+      #       metricsPort:
+      #         value: 9584
+
+    secrets: {}
+      # Base64 encoded. Read how to convert from .pem to .jks in the article: https://docs.lenses.io/current/configuration/dynamic/pem-to-jks-conversion/
+      # data:
+      #   kafka.keystore.jks: |-
+      #   kafka.truststore.jks: |-
+      # stringData:
+
+    # Find more details in https://docs.lenses.io/current/installation/kubernetes/helm/#helm-provision-sidecar
+    sidecar:
+      # name:
+      image:
+        repository: lensesio/lenses-cli
+        # Default to .Chart.AppVersion with major.minor semantic (e.g 5.0)
+        # tag:
+        # pullPolicy: Always
+        # registrySecretKey:
+
+      # Additional volume mounts to load additional files from pre-existing volumes, secrets or vault secrets to use in provisioning
+      # Use it in conjuction with lenses.additionalVolumes
+      additionalVolumeMounts:
+        # - name: lenses-super-secrets
+        #   mountPath: "/data/lenses-super-secrets"
+
+
+  # For additional generic JVM settings
+  # Read more: https://docs.lenses.io/current/configuration/static/jvm/
+  lensesOpts: |-
+
+  # Each version of the helm chart for Lenses is accompanied by a values.yaml.
+  # This values file contains sane defaults for all the supported Lenses configuration options for that version of the chart.
+  # Although great care has been taken to cover most use cases in the chart, we may encounter situations where a specific configuration option is required but is not available.
+  # To support such cases, Lenses Helm Chart provides the lenses.append.conf mechanism.
+  append:
+    # Custom configuration values, will take precedence over the env variables and auto-generated values
+    # Read more: https://help.lenses.io/knowledge-base/helm/helm-lenses-append-conf/
+    conf: |-
+
+  jvm:
+    # heapOpts are any overrides for Lenses Heap JVM options
+    # Please adjust this in sync with 'resources.limits.memory'
+    heapOpts: -Xmx3g -Xms1g
+    # logBackOpts are any logging options. Lenses is using the logback library.
+    logBackOpts:
+
+    #performanceOpts are any jvm tuning options to add to the jvm
+    performanceOpts:
+
+  # Override the default logback xml
+  # Used primarily to load a Lenses provided xml with debug level set for Lenses libs
+  # Can be used to load your custom logback if needed. Uncomment the following line
+  # to switch the log level for Lenses facilities to DEBUG.
+  # logbackXml: /opt/lenses/logback-debug.xml
+
+  opts:
+    # Global truststore/keystore for the JVM
+    # base64 encoded truststore data
+    # openssl base64 < kafka.truststore.jks | tr -d '\n'
+    trustStoreFileData: |-
+
+    trustStorePassword: |-
+
+  tls:
+    # TLS setup for serving Lenses over TLS
+    enabled: false
+
+    # base64 encoded truststore data
+    # openssl base64 < kafka.truststore.jks | tr -d '\n'
+    keyStoreFileData: |-
+
+    keyStorePassword: |-
+
+    keyPassword: |-
+
+    # Authenticate to Lenses with client authentication
+    clientAuth: false
+
+    # base64 encoded truststore data
+    # openssl base64 < kafka.truststore.jks | tr -d '\n'
+    trustStoreFileData: |-
+
+    trustStorePassword: |-
+
+
+  # Find more details in https://docs.lenses.io/current/installation/kubernetes/helm/#helm-storage
+  storage:
+    postgres:
+      enabled: false
+      host:
+      port:               # optional, defaults to 5432
+
+      # Set the username for postgres connection
+      # Use the value "external" to bypass the Helm validation and handle the username externally.
+      # The common use case for using "external" is to take the actual value from a Kubernetes Secret resource already deployed.
+      # To do so, add the following definition under 'lenses.additionalEnv' key:
+      # - name: LENSES_STORAGE_POSTGRES_USERNAME
+      #   valueFrom:
+      #     secretKeyRef:
+      #       name: [SECRET_RESOURCE_NAME]
+      #       key: [SECRET_RESOURCE_KEY]
+      username:           # use "external" to manage it using secrets
+
+      # Set the password for postgres connection
+      # Use the value "external" to bypass the Helm validation and handle the password externally.
+      # The common use case for using "external" is to take the actual value from a Kubernetes Secret resource already deployed.
+      # To do so, add the following definition under 'lenses.additionalEnv' key:
+      # - name: LENSES_STORAGE_POSTGRES_PASSWORD
+      #   valueFrom:
+      #     secretKeyRef:
+      #       name: [SECRET_RESOURCE_NAME]
+      #       key: [SECRET_RESOURCE_KEY]
+      password:           # use "external" to manage it using secrets
+
+      database:
+      schema:             # optional, defaults to public schema
+
+  # Data Application Deployment Framework
+  deployments:
+    eventsBufferSize: 10000
+    errorsBufferSize: 1000
+
+    connect:
+      statusInterval: 30 second
+      actionsBufferSize: 1000
+
+  sql:
+    # processorImage: lensesioextra/sql-processor
+    # processorImageTag: 5.5
+    mode: IN_PROC
+    heap: 1024M
+    minHeap: 128M
+    memLimit: 1152M
+    memRequest: 128M
+    livenessInitialDelay: 60 seconds
+
+  # The url to the grafana host
+  grafanaUrl:
+
+  # topics
+  topics:
+    # suffix to add to lenses system topics, for example if you are running more than one Lenses on the same kafka cluster
+    suffix:
+
+  # Additional env variables appended to deployment
+  # Follows the format of [EnvVar spec](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.21/#envvar-v1-core)
+  additionalEnv:
+    # - name: FOO
+    #   value: bar
+
+  # Disable livenessProbe, used while debugging
+  livenessProbe:
+    enabled: true
+
+  # Pause execution of Lenses start up script to allow the user to login into the container and
+  # check the running environment, used while debugging
+  pauseExec:
+    enabled: false

@@ -612,7 +612,7 @@
                                     "default": "precreated",
                                     "title": "The type Schema",
                                     "pattern": "^(precreated|createNew|externalSecret)$",
-                                    "enum": ["createNew", "precreated"],
+                                    "enum": ["createNew", "precreated", "externalSecret"],
                                     "examples": [
                                         "precreated",
                                         "createNew",

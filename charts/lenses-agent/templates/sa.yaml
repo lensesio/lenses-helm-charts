@@ -13,5 +13,5 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
     lenses.io/app: {{ include "fullname" . }}
-    lenses.io/app.type: lenses-hq-serviceaccount
+    lenses.io/app.type: lenses-agent-serviceaccount
 {{- end }}

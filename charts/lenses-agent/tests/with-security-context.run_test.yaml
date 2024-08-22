@@ -1,0 +1,24 @@
+suite: add securityContext and verify that pod is honoring them
+templates:
+  - deployment.yaml
+tests:
+  - it: should not contain securityContext with default values
+    asserts:
+      - isEmpty:
+          path: spec.template.spec.securityContext
+  - it: should honor securityContext
+    set:
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 3000
+        fsGroup: 2000
+    asserts:
+      - equal:
+          path: spec.template.spec.securityContext.runAsUser
+          value: 1000
+      - equal:
+          path: spec.template.spec.securityContext.runAsGroup
+          value: 3000
+      - equal:
+          path: spec.template.spec.securityContext.fsGroup
+          value: 2000

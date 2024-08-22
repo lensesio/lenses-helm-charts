@@ -9,3 +9,4 @@ landoop
 build/
 charts/*/coyote.html
 charts/lenses-hq/examples/
+charts/lenses-agent/examples

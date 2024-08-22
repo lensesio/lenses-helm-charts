@@ -1,0 +1,92 @@
+suite: using postgres as database
+templates:
+  - configmap.yaml
+  - deployment.yaml
+  - secrets.yaml
+tests:
+  - it: should work without postgres enabled
+    asserts:
+      - template: configmap.yaml
+        isKind:
+          of: ConfigMap
+      - template: deployment.yaml
+        isKind:
+          of: Deployment
+      - template: secrets.yaml
+        isKind:
+          of: Secret
+  - it: should fail with postgres enabled and no other settings
+    set:
+      lenses:
+        storage:
+          postgres:
+            enabled: true
+    asserts:
+      - template: deployment.yaml
+        failedTemplate:
+          errorMessage: PostgreSQL 'host' value is mandatory
+  - it: should fail with postgres enabled and only host is set
+    set:
+      lenses:
+        storage:
+          postgres:
+            enabled: true
+            host: example.com
+    asserts:
+      - template: deployment.yaml
+        failedTemplate:
+          errorMessage: PostgreSQL 'database' value is mandatory
+  - it: should fail with postgres enabled and only host, database is set
+    values:
+      - values/with-postgres-host-db.yaml
+    asserts:
+      - template: deployment.yaml
+        failedTemplate:
+          errorMessage: PostgreSQL 'username' value is mandatory
+  - it: should render with postgres enabled and host, database, username, password is set
+    values:
+      - values/with-postgres-host-db-username-pwd.yaml
+    asserts:
+      - template: configmap.yaml
+        equal:
+          path: data.lenses\.append\.conf
+          value: |
+
+            lenses.storage.postgres.host="example.com"
+            lenses.storage.postgres.database="foo-db"
+            lenses.storage.postgres.username="foo"
+      - template: secrets.yaml
+        equal:
+          path: stringData.security\.conf
+          value: |
+
+            lenses.storage.postgres.password="ba@!&>r"
+  - it: should render with postgres enabled and host, database set and username, password set to external
+    values:
+      - values/with-postgres-and-external-secrets.yaml
+    asserts:
+      - template: configmap.yaml
+        equal:
+          path: data.lenses\.append\.conf
+          value: |
+
+            lenses.storage.postgres.host="example.com"
+            lenses.storage.postgres.database="foo-db"
+      - template: deployment.yaml
+        contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: LENSES_STORAGE_POSTGRES_USERNAME
+            valueFrom:
+              secretKeyRef:
+                key: lenses-storage-postgres-username
+                name: lenses-super-secrets
+      - template: deployment.yaml
+        contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: LENSES_STORAGE_POSTGRES_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: lenses-super-secrets
+                key: lenses-storage-postgres-password

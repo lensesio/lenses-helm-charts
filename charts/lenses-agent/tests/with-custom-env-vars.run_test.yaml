@@ -1,0 +1,52 @@
+suite: use custom env vars and check how they are depicted in deployment
+templates:
+  - deployment.yaml
+tests:
+  - it: should work when custom env vars is set
+    set:
+      lenses:
+        env:
+          FOO: "bar"
+    asserts:
+      - template: deployment.yaml
+        contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: FOO
+            value: bar
+  - it: should work when custom multiline env vars is set
+    set:
+      lenses:
+        env:
+          LENSES_CONNECTORS_INFO: |
+            [
+              {
+                class.name = "io.confluent.connect.salesforce.SalesforceBulkApiSinkConnector"
+                name = "Salesforce Bulk API Sink"
+                sink = true,
+                property = "kafka.topic"
+                extractor.class = "io.lenses.config.kafka.connect.SimpleTopicsExtractor"
+                icon = "salesforce.png"
+                description = "The Salesforce bulk API Sink"
+                author = "Confluent, Inc."
+              }
+            ]
+    asserts:
+      - template: deployment.yaml
+        contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: LENSES_CONNECTORS_INFO
+            value: |
+              [
+                {
+                  class.name = "io.confluent.connect.salesforce.SalesforceBulkApiSinkConnector"
+                  name = "Salesforce Bulk API Sink"
+                  sink = true,
+                  property = "kafka.topic"
+                  extractor.class = "io.lenses.config.kafka.connect.SimpleTopicsExtractor"
+                  icon = "salesforce.png"
+                  description = "The Salesforce bulk API Sink"
+                  author = "Confluent, Inc."
+                }
+              ]

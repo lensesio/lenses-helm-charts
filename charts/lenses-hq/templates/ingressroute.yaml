@@ -1,0 +1,16 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  labels:
+    app.kubernetes.io/instance: lenses-hq
+  name: lenses-hq-http
+  namespace: panoptes
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - kind: Rule
+      match: Host(`panoptes-test.enjoy.data-lenses.io`)
+      services:
+        - name: lenses-hq
+          port: lenses-hq
