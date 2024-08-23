@@ -183,20 +183,24 @@ lenses:
         # createNew | precreated | externalSecret
         type: "externalSecret"
         #value: ""
-        name: master-agent-apikey
+        #key: master-agent-apikey
         #key: password
         #name: lenses-apikey-secret
         # Secret name when creating "externalSecret"
         #name: leneses-agent-secret
-        # Required in case secret.name: "createNew", alongside secret.name
+        # Required in case secret.type: "createNew", alongside secret.name
         #value: ""
         # Required in case secret.type: "externalSecret", alongisde secret.name
         externalSecret:
-          #name: master-agent-apikey
-          key: key
+          key: master-agent-apikey
           secretStoreRef:
             clusterSecretStore:
               name: panoptes-secrets
+
+        # Required in case secret.type: "precreated": name & key
+        ## type: "precreated"
+        ## name: "secret-name"
+        ## key: "secret-key"
     ssl:
       enabled: false
   # Set the details to provision Lenses

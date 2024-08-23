@@ -60,7 +60,7 @@ servicePortName: lenses
 # -- User to be used by Lenses to deploy apps
 # @section -- Permission scope values
 serviceAccount:
-  # -- (bool) In case "true" new SA will be created with service.name as a SA name.
+  # -- (bool) In case "true" new SA will be created with service.name with defines 'serviceAccount.name'.
   # @section -- Permission scope values
   create: false
 
@@ -182,19 +182,19 @@ lenses:
       secret:
         # createNew | precreated | externalSecret
         type: ""
-        # Secret name when creating "externalSecret"
+        # Secret name when creating "externalSecret", "createNew", "precreated"
         name:
-        # Required in case secret.name: "createNew", alongside secret.name
+        # Required in case secret.name: "createNew", alongside 'secret.name'
         value:
-        # Required in case secret.type: "externalSecret", alongisde secret.name
+        # Required in case secret.name: "precreated", alongside 'secret.name'
+        ## key:
+        # Required in case secret.type: "externalSecret", alongisde externalsecret.key
         externalSecret:
-          name:
           key:
           secretStoreRef:
             clusterSecretStore:
               name:
-    ssl:
-      enabled: false
+
   # Set the details to provision Lenses
   # 1: Lenses version >=5,3 (https://docs.lenses.io/5.5/installation/getting-started/helm/#helm-lenses-provision)
   #    This is applied on every deployment/upgrade of the chart. Any connection change in the UI will be
@@ -207,6 +207,19 @@ lenses:
 
     # You can find examples at https://github.com/lensesio/lenses-helm-charts/tree/release/5.5/examples
     connections:
+      #grpcServer:
+      #  - name: lenses-hq
+      #    version: 1
+      #    tags: ['hq']
+      #    configuration:
+      #      server:
+      #        value: panoptes-backend.panoptes-master.svc.cluster.local
+      #    port:
+      #        value: 10000
+      #    apiKey:
+      #      value: ${LENSES_HQ_API_KEY}
+      #    sslEnabled:
+      #      value: false
       # kafka:
       #   - name: kafka
       #     version: 1

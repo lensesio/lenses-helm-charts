@@ -302,8 +302,11 @@ spec:
           valueFrom:
             secretKeyRef:
               name:  {{ include "apiKeySecretName" . }}
+             {{- if contains "precreated" .Values.lenses.hq.apiKey.secret.type -}}
+              key: {{ .Values.lenses.hq.apiKey.secret.key }}
+             {{ else }}
               key: key
-
+            {{- end }}
         - name: LENSES_TOPICS_EXTERNAL_TOPOLOGY
           value: {{include "topologyTopic" . | quote}}
         - name: LENSES_TOPICS_EXTERNAL_METRICS
