@@ -385,39 +385,6 @@ spec:
         {{- toYaml .Values.lenses.additionalEnv | nindent 8 }}
         {{- end }}
 
-      {{- if and .Values.lenses.provision.enabled (eq .Values.lenses.provision.version "1") }}
-        # Lenses sidecar provision is only needed if we are running the pre 5.3.0 provisioning mechanism.
-      {{- $provision := .Values.lenses.provision}}
-      - name: {{default "lenses-provision" $provision.name}}
-        image: {{include "sidecarProvisionImage" . | quote }}
-        imagePullPolicy: {{default "Always" $provision.sidecar.image.pullPolicy}}
-        {{- if .Values.containerSecurityContext}}
-        securityContext:
-          {{- toYaml .Values.containerSecurityContext | nindent 10 }}
-        {{- end }}
-        command:
-          - bash
-          - -c
-          - |
-            lenses-cli provision \
-              --wait-for-lenses \
-              --setup-mode \
-              --host="http{{- if .Values.lenses.tls.enabled -}}s{{- end -}}://localhost:{{.Values.restPort}}" \
-              {{- if .Values.lenses.tls.enabled}}
-              --insecure \
-              {{- end}}
-              --user="$LENSES_ADMIN_USER" \
-              --pass="$LENSES_ADMIN_PASSWORD" \
-              /mnt/provision-secrets/provision.yaml \
-              --mode=sidecar
-        volumeMounts:
-          - name: provision-secrets
-            mountPath: "/mnt/provision-secrets"
-          {{- if $provision.sidecar.additionalVolumeMounts }}
-            {{- toYaml $provision.sidecar.additionalVolumeMounts | nindent 10 }}
-          {{- end }}
-      {{- end }}
-
       {{- if .Values.sidecarContainers }}
       {{- toYaml .Values.sidecarContainers | nindent 6 }}
       {{- end }}
