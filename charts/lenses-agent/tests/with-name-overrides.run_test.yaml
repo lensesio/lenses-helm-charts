@@ -3,14 +3,13 @@ templates:
   - deployment.yaml
   - volume-claim.yaml
   - logs-volume-claim.yaml
-  - provision-secrets.yaml
 tests:
   - template: deployment.yaml
     it: should work without any overrides
     asserts:
       - equal:
           path: metadata.name
-          value: RELEASE-NAME-lenses
+          value: RELEASE-NAME-lenses-agent
 
   - template: volume-claim.yaml
     it: should work for volume-claim without any overrides
@@ -24,19 +23,6 @@ tests:
       - equal:
           path: metadata.name
           value: RELEASE-NAME-logsclaim
-  - template: provision-secrets.yaml
-    it: should work for provision-secrets without any overrides
-    set:
-      lenses:
-        provision:
-          enabled: true
-          version: "1"
-          yaml: {}
-    asserts:
-      - equal:
-          path: metadata.name
-          value: RELEASE-NAME-provision
-
   - template: deployment.yaml
     it: when override release name is overriden metadata.name should change
     release:
@@ -44,16 +30,16 @@ tests:
     asserts:
       - equal:
           path: metadata.labels.app
-          value: bar-lenses
+          value: bar-lenses-agent
       - equal:
           path: metadata.labels.lenses\.io\/app
-          value: bar-lenses
+          value: bar-lenses-agent
       - equal:
           path: metadata.name
-          value: bar-lenses
+          value: bar-lenses-agent
       - equal:
           path: spec.selector.matchLabels.app
-          value: bar-lenses
+          value: bar-lenses-agent
 
   - template: volume-claim.yaml
     it: when override release name is overriden metadata.name for volume-claim should change
@@ -62,10 +48,10 @@ tests:
     asserts:
       - equal:
           path: metadata.labels.app
-          value: lenses
+          value: lenses-agent
       - equal:
           path: metadata.labels.lenses\.io\/app
-          value: lenses
+          value: lenses-agent
       - equal:
           path: metadata.name
           value: bar-claim
@@ -80,107 +66,64 @@ tests:
     asserts:
       - equal:
           path: metadata.labels.app
-          value: lenses
+          value: lenses-agent
       - equal:
           path: metadata.labels.lenses\.io\/app
-          value: lenses
+          value: lenses-agent
       - equal:
           path: metadata.name
           value: bar-logsclaim
       - equal:
           path: metadata.name
           value: bar-logsclaim
-
-  - template: provision-secrets.yaml
-    it: when override release name is overriden metadata.name for provision-secrets should change
-    release:
-      name: bar
-    set:
-      lenses:
-        provision:
-          enabled: true
-          version: "1"
-          yaml: {}
-    asserts:
-      - equal:
-          path: metadata.labels.app
-          value: bar-lenses
-      - equal:
-          path: metadata.labels.lenses\.io\/app
-          value: bar-lenses
-      - equal:
-          path: metadata.name
-          value: bar-provision
 
   - template: deployment.yaml
     it: when override release name and includes 'lenses' metadata.name should change and should not add another 'lenses' suffix
     release:
-      name: bar-lenses-foo
+      name: bar-lenses-agent-foo
     asserts:
       - equal:
           path: metadata.labels.app
-          value: bar-lenses-foo
+          value: bar-lenses-agent-foo
       - equal:
           path: metadata.labels.lenses\.io\/app
-          value: bar-lenses-foo
+          value: bar-lenses-agent-foo
       - equal:
           path: metadata.name
-          value: bar-lenses-foo
+          value: bar-lenses-agent-foo
       - equal:
           path: spec.selector.matchLabels.app
-          value: bar-lenses-foo
+          value: bar-lenses-agent-foo
 
   - template: volume-claim.yaml
     it: when override release name and includes 'lenses' metadata.name for volume-claim should change and should not add another 'lenses' suffix
     release:
-      name: bar-lenses-foo
+      name: bar-lenses-agent-foo
     asserts:
       - equal:
           path: metadata.labels.app
-          value: lenses
+          value: lenses-agent
       - equal:
           path: metadata.labels.lenses\.io\/app
-          value: lenses
+          value: lenses-agent
       - equal:
           path: metadata.name
-          value: bar-lenses-foo-claim
+          value: bar-lenses-agent-foo-claim
 
   - template: logs-volume-claim.yaml
     it: when override release name and includes 'lenses' metadata.name for logs-volume-claim should change and should not add another 'lenses' suffix
     release:
-      name: bar-lenses-foo
+      name: bar-lenses-agent-foo
     asserts:
       - equal:
           path: metadata.labels.app
-          value: lenses
+          value: lenses-agent
       - equal:
           path: metadata.labels.lenses\.io\/app
-          value: lenses
+          value: lenses-agent
       - equal:
           path: metadata.name
-          value: bar-lenses-foo-logsclaim
-
-
-  - template: provision-secrets.yaml
-    it: when override release name and includes 'lenses' metadata.name for provision-secrets should change and should not add another 'lenses' suffix
-    release:
-      name: bar-lenses-foo
-    set:
-      lenses:
-        provision:
-          enabled: true
-          version: "1"
-          yaml: {}
-    asserts:
-      - equal:
-          path: metadata.labels.app
-          value: bar-lenses-foo
-      - equal:
-          path: metadata.labels.lenses\.io\/app
-          value: bar-lenses-foo
-      - equal:
-          path: metadata.name
-          value: bar-lenses-foo-provision
+          value: bar-lenses-agent-foo-logsclaim
 
   - template: deployment.yaml
     it: when set nameOverride, metadata.name should change
@@ -209,20 +152,6 @@ tests:
           path: metadata.name
           value: RELEASE-NAME-logsclaim
 
-  - template: provision-secrets.yaml
-    it: when set nameOverride, metadata.name for provision-secrets should NOT change
-    set:
-      nameOverride: bar
-      lenses:
-        provision:
-          enabled: true
-          version: "1"
-          yaml: {}
-    asserts:
-      - equal:
-          path: metadata.name
-          value: RELEASE-NAME-provision
-
   - template: deployment.yaml
     it: when set fullnameOverride, metadata.name should change
     set:
@@ -249,20 +178,6 @@ tests:
       - equal:
           path: metadata.name
           value: bar-logsclaim
-
-  - template: provision-secrets.yaml
-    it: when set fullnameOverride, metadata.name for provision-secrets should change
-    set:
-      fullnameOverride: bar
-      lenses:
-        provision:
-          enabled: true
-          version: "1"
-          yaml: {}
-    asserts:
-      - equal:
-          path: metadata.name
-          value: bar-provision
 
   - template: deployment.yaml
     it: when override fullnameOverride with over 63 chars, the metadata.name should contain the set value but limited to 63 chars
@@ -296,22 +211,6 @@ tests:
           path: metadata.name
           # 67 chars
           value: bm0f9ee5y-zgpo3qvok-9ntof267e-56i7rd29y-glwnknta1-kjbhk72-logsclaim
-
-  - template: provision-secrets.yaml
-    it: when override fullnameOverride with over 63 chars, the metadata.name for provision-secrets should contain the set value but limited to 63 chars
-    set:
-      # 100 chars
-      fullnameOverride: bm0f9ee5y-zgpo3qvok-9ntof267e-56i7rd29y-glwnknta1-kjbhk72gy-rgt84nngv-743j4q37f-mr047wtu1-mxey6qg78
-      lenses:
-        provision:
-          enabled: true
-          version: "1"
-          yaml: {}
-    asserts:
-      - equal:
-          path: metadata.name
-          # 63 chars
-          value: bm0f9ee5y-zgpo3qvok-9ntof267e-56i7rd29y-glwnknta1-kjb-provision
 
   - template: deployment.yaml
     it: when override nameOverride with over 63 chars, the metadata.name should contain the set value but limited to 63 chars

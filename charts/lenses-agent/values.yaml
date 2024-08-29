@@ -4,7 +4,7 @@ nameOverride: ""
 fullnameOverride: ""
 
 image:
-  repository: 279048208673.dkr.ecr.eu-west-1.amazonaws.com/panoptes-agent:test-amd
+  repository: lensesio/lenses
   # Default to .Chart.AppVersion
   # tag:
   pullPolicy: IfNotPresent
@@ -66,7 +66,7 @@ serviceAccount:
 
   # -- (string) Name of Service Account. In case serviceAccount.create is *false*, existing SA with defined name here will be used.
   # @section -- Permission scope values
-  name: lenses
+  name: default
 
   # -- (dict) Additional service account annotations.
   # @section -- Permission scope values
@@ -409,3 +409,13 @@ lenses:
   # check the running environment, used while debugging
   pauseExec:
     enabled: false
+
+sidecarContainers:
+  # - name: sidecar-example
+  #   image: alpine
+  #   command: ["sh", "-c", "watch date"]
+
+# initContainers:
+#   - name: init-example
+#     image: alpine
+#     command: ["sh", "-c", "date"]

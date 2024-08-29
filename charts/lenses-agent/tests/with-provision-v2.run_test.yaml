@@ -6,22 +6,6 @@ templates:
   - provision-secrets-v2-files.yaml
   - secrets.yaml
 tests:
-  - it: should work with provision disabled (default mode)
-    # set:
-    #   lenses:
-    #     provision:
-    #       enabled: false
-    asserts:
-      - template: provision-secrets.yaml
-        hasDocuments:
-          count: 0
-      - template: deployment.yaml
-        notContains:
-          path: spec.template.spec.volumes
-          content:
-            name: provision-secrets
-            secret:
-              secretName: RELEASE-NAME-provision
   - it: should work with provision connections set
     set:
       lenses:

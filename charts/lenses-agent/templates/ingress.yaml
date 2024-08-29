@@ -6,11 +6,11 @@ metadata:
   labels:
     app: {{include "fullname" .}}
     chart: {{printf "%s-%s" .Chart.Name .Chart.Version}}
-    component: "lenses"
+    component: "lenses-agent"
     heritage: {{.Release.Service}}
     release: {{.Release.Name}}
     lenses.io/app: {{include "fullname" .}}
-    lenses.io/app.type: lenses-ingress
+    lenses.io/app.type: lenses-agent-ingress
     {{- range $key, $value := .Values.labels }}
     {{ $key }}: {{ $value | quote }}
     {{- end}}

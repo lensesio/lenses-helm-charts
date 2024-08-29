@@ -11,11 +11,11 @@ metadata:
   labels:
     app: {{include "name" .}}
     chart: {{printf "%s-%s" .Chart.Name .Chart.Version}}
-    component: "lenses"
+    component: "lenses-agent"
     heritage: {{.Release.Service}}
     release: {{.Release.Name}}
     lenses.io/app: {{include "name" .}}
-    lenses.io/app.type: lenses-volume-claim
+    lenses.io/app.type: lenses-agent-volume-claim
 spec:
   accessModes:
 {{toYaml .Values.persistence.accessModes | indent 4}}

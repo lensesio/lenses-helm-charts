@@ -91,13 +91,9 @@ spec:
         - name: provision-secrets
           secret:
             secretName: {{include "provisionFullname" . | quote}}
-
-        {{- if eq .Values.lenses.provision.version "2" }}
         - name: provision-secrets-files
           secret:
             secretName: {{ (printf "%s-%s" (include "provisionFullname" .) "files") | quote}}
-        {{- end }}
-
         {{- end }}
 
        {{- if and (hasKey .Values "containerSecurityContext") (hasKey .Values.containerSecurityContext "readOnlyRootFilesystem") (eq .Values.containerSecurityContext.readOnlyRootFilesystem true) }}
@@ -110,6 +106,10 @@ spec:
           secret:
             secretName: {{include "fullname" . | quote}}
             items:
+              - key: security.conf
+                path: security.conf
+              - key: security.append.conf
+                path: security.append.conf
               {{- if .Values.lenses.tls.enabled }}
               - key: lenses.tls.keystore.jks
                 path: lenses.tls.keystore.jks
@@ -183,7 +183,7 @@ spec:
           {{- if .Values.additionalVolumeMounts }}
             {{- toYaml .Values.additionalVolumeMounts | nindent 10 }}
           {{- end }}
-        {{- if and .Values.lenses.provision.enabled (eq .Values.lenses.provision.version "2") }}
+        {{- if and .Values.lenses.provision.enabled }}
           - name: provision-secrets
             mountPath: {{ $.Values.lenses.provision.path }}
           - name: provision-secrets-files
@@ -277,7 +277,7 @@ spec:
         - name: LENSES_GRAFANA
           value: {{ .Values.lenses.grafanaUrl | quote }}
         {{- end }}
-        {{- if and .Values.lenses.provision.enabled (eq .Values.lenses.provision.version "2") }}
+        {{- if and .Values.lenses.provision.enabled }}
         # Provisioning
         - name: LENSES_PROVISIONING_PATH
           value: {{ .Values.lenses.provision.path }}
@@ -290,14 +290,7 @@ spec:
           value: {{ .Values.monitoring.port | quote }}
         {{- end }}
         {{- end }}
-
         # HQ
-        - name: LENSES_HQ_PORT
-          value: {{ .Values.lenses.hq.port | quote }}
-        - name: LENSES_HQ_HOST
-          value: {{ .Values.lenses.hq.host }}
-        - name: LENSES_HQ_SSL_ENABLED
-          value: {{ .Values.lenses.hq.ssl.enabled | quote }}
         - name: LENSES_HQ_API_KEY
           valueFrom:
             secretKeyRef:
