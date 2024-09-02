@@ -289,3 +289,16 @@ lensesHq:
   # @section -- Lenses HQ startup values
   monitoring:
     port: 9090
+
+# -- (map) Sidecar container enablement.
+# @raw
+#
+# sidecarContainers:
+  # - name: sidecar-example
+  #   image: alpine
+  #   command: ["sh", "-c", "watch date"]
+
+# initContainers:
+#   - name: init-example
+#     image: alpine
+#     command: ["sh", "-c", "date"]

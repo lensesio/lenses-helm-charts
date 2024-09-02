@@ -4,10 +4,10 @@ nameOverride: ""
 fullnameOverride: ""
 
 image:
-  repository: lensesio/lenses
+  repository: registry/panoptes-agent:pan-amd
   # Default to .Chart.AppVersion
   # tag:
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
   # imagePullSecrets: # any image pull secrets for private registries go here
   #   - name: regcred
 
@@ -49,7 +49,7 @@ resources:
 
 # rbacEnable indicates if a the cluster has rbac enabled and a cluster role
 # and rolebinding should be created for the service account
-rbacEnable: true
+rbacEnable: false
 
 # Lenses container port
 restPort: 3030
@@ -60,13 +60,13 @@ servicePortName: lenses
 # -- User to be used by Lenses to deploy apps
 # @section -- Permission scope values
 serviceAccount:
-  # -- (bool) In case "true" new SA will be created with service.name with defines 'serviceAccount.name'.
+  # -- (bool) In case "true" new SA will be created with service.name as a SA name.
   # @section -- Permission scope values
-  create: false
+  create: true
 
   # -- (string) Name of Service Account. In case serviceAccount.create is *false*, existing SA with defined name here will be used.
   # @section -- Permission scope values
-  name: default
+  name: lenses
 
   # -- (dict) Additional service account annotations.
   # @section -- Permission scope values
@@ -167,71 +167,87 @@ ingress:
 # Optionally add this property in case you would like to enforce Read Only Root Filesystem
 # In that case only /data and /tmp directories will extra mounted and be writable
 # the rest will be mount the container's root filesystem as read-only.
-# containerSecurityContext:
-#   readOnlyRootFilesystem: true
+containerSecurityContext:
+  readOnlyRootFilesystem: false
 
 lenses:
   # Configuration necessary for agent connecting to HQ
   hq:
     # HQ hostname
-    host:
+    host: panoptes-backend.panoptes-master.svc.cluster.local
     # HQ port
     port: 10000
     # Api key that has been generated in HQ as service account
     apiKey:
       secret:
         # createNew | precreated | externalSecret
-        type: ""
-        # Secret name when creating "externalSecret", "createNew", "precreated"
-        name:
-        # Required in case secret.name: "createNew", alongside 'secret.name'
-        value:
-        # Required in case secret.name: "precreated", alongside 'secret.name'
-        ## key:
-        # Required in case secret.type: "externalSecret", alongisde externalsecret.key
+        type: "externalSecret"
+        #value: ""
+        #key: master-agent-apikey
+        #key: password
+        #name: lenses-apikey-secret
+        # Secret name when creating "externalSecret"
+        #name: leneses-agent-secret
+        # Required in case secret.type: "createNew", alongside secret.name
+        #value: ""
+        # Required in case secret.type: "externalSecret", alongisde secret.name
         externalSecret:
-          key:
+          key: master-agent-apikey
           secretStoreRef:
             clusterSecretStore:
-              name:
+              name: panoptes-secrets
 
+        # Required in case secret.type: "precreated": name & key
+        ## type: "precreated"
+        ## name: "secret-name"
+        ## key: "secret-key"
+    ssl:
+      enabled: false
   # Set the details to provision Lenses
   # 1: Lenses version >=5,3 (https://docs.lenses.io/5.5/installation/getting-started/helm/#helm-lenses-provision)
   #    This is applied on every deployment/upgrade of the chart. Any connection change in the UI will be
   #    reverted during an upgrade. *Connections that do not exist here will be deleted*.
   provision:
-    enabled: false
+    enabled: true
     version: "2"
     path: /mnt/provision-secrets
     # Find more details in https://docs.lenses.io/5.5/installation/getting-started/helm/#helm-provision
 
     # You can find examples at https://github.com/lensesio/lenses-helm-charts/tree/release/5.5/examples
     connections:
-      #grpcServer:
-      #  - name: lenses-hq
-      #    version: 1
-      #    tags: ['hq']
-      #    configuration:
-      #      server:
-      #        value: panoptes-backend.panoptes-master.svc.cluster.local
-      #    port:
-      #        value: 10000
-      #    apiKey:
-      #      value: ${LENSES_HQ_API_KEY}
-      #    sslEnabled:
-      #      value: false
-      # kafka:
-      #   - name: kafka
-      #     version: 1
-      #     tags: [ 'prod']
-      #     configuration:
-      #       kafkaBootstrapServers:
-      #         value:
-      #           - PLAINTEXT://broker-1.svc.cluster.local:9093
-      #       metricsType:
-      #         value: JMX
-      #       metricsPort:
-      #         value: 9581
+      grpcServer:
+        - name: lenses-hq
+          version: 1
+          tags: ['hq']
+          configuration:
+            server:
+              value: panoptes-backend.panoptes-master.svc.cluster.local
+            port:
+              value: 10000
+            apiKey:
+              value: ${LENSES_HQ_API_KEY}
+            sslEnabled:
+              value: false
+          # sslEnabledProtocols:
+          #  value: $LENSES_HQ_SSL_ENABLED_PROTOCOLS
+      kafka:
+        - name: kafka
+          version: 1
+          tags: [ 'prod']
+          configuration:
+            kafkaBootstrapServers:
+              value:
+                - SASL_PLAINTEXT://kafka:9092
+            saslJaasConfig:
+              value: org.apache.kafka.common.security.scram.ScramLoginModule required username="user1" password="insert-pwd-here";
+            saslMechanism:
+              value: SCRAM-SHA-256
+            protocol:
+              value: SASL_PLAINTEXT
+            #metricsType:
+            #  value: JMX
+            #metricsPort:
+            #  value: 9581
       # confluentSchemaRegistry:
       #   - name: schema-registry
       #     version: 1
@@ -293,7 +309,7 @@ lenses:
   jvm:
     # heapOpts are any overrides for Lenses Heap JVM options
     # Please adjust this in sync with 'resources.limits.memory'
-    heapOpts: -Xmx3g -Xms1g
+    heapOpts:
     # logBackOpts are any logging options. Lenses is using the logback library.
     logBackOpts:
 
@@ -409,13 +425,3 @@ lenses:
   # check the running environment, used while debugging
   pauseExec:
     enabled: false
-
-sidecarContainers:
-  # - name: sidecar-example
-  #   image: alpine
-  #   command: ["sh", "-c", "watch date"]
-
-# initContainers:
-#   - name: init-example
-#     image: alpine
-#     command: ["sh", "-c", "date"]

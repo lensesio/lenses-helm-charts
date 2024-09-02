@@ -128,5 +128,13 @@ spec:
               {{ else if or (contains "precreated" .Values.lensesHq.postgres.passwordSecret.type) (contains "externalSecret" .Values.lensesHq.postgres.passwordSecret.type) }}
                 name: {{ .Values.lensesHq.postgres.passwordSecret.name }}
                 key: {{ .Values.lensesHq.postgres.passwordSecret.key }}
-                
               {{- end }}
+
+      {{- if .Values.sidecarContainers }}
+      {{- toYaml .Values.sidecarContainers | nindent 6 }}
+      {{- end }}
+
+      {{- if .Values.initContainers }}
+      initContainers:
+      {{- toYaml .Values.initContainers | nindent 6 }}
+      {{- end }}

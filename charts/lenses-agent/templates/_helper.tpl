@@ -126,6 +126,14 @@ lenses.provisioning.interval={{ .Values.lenses.provision.interval }}
 {{ default "" .Values.lenses.append.conf }}
 {{- end -}}
 
+{{- define "securityConf" -}}
+{{- if and .Values.lenses.storage.postgres.enabled .Values.lenses.storage.postgres.password }}
+{{- if not (eq (default "not-external" .Values.lenses.storage.postgres.password) "external") }}
+lenses.storage.postgres.password={{ required "PostgreSQL 'password' value is mandatory" .Values.lenses.storage.postgres.password | quote }}
+{{- end -}}
+{{- end -}}
+{{- end -}}
+
 {{- if and .Values.lenses.storage.postgres.enabled .Values.lenses.storage.postgres.password }}
 {{- if not (eq (default "not-external" .Values.lenses.storage.postgres.password) "external") }}
 lenses.storage.postgres.password={{ required "PostgreSQL 'password' value is mandatory" .Values.lenses.storage.postgres.password | quote }}

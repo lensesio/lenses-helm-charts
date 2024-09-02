@@ -87,15 +87,14 @@ spec:
         {{- toYaml .Values.dnsConfig | nindent 8 }}
       {{- end }}
       volumes:
-        {{- if .Values.lenses.provision.enabled }}
         - name: provision-secrets
           secret:
             secretName: {{include "provisionFullname" . | quote}}
+        {{- if eq .Values.lenses.provision.version "2" }}
         - name: provision-secrets-files
           secret:
             secretName: {{ (printf "%s-%s" (include "provisionFullname" .) "files") | quote}}
         {{- end }}
-
        {{- if and (hasKey .Values "containerSecurityContext") (hasKey .Values.containerSecurityContext "readOnlyRootFilesystem") (eq .Values.containerSecurityContext.readOnlyRootFilesystem true) }}
         - name: tmp-volume
           emptyDir: {}
@@ -108,8 +107,6 @@ spec:
             items:
               - key: security.conf
                 path: security.conf
-              - key: security.append.conf
-                path: security.append.conf
               {{- if .Values.lenses.tls.enabled }}
               - key: lenses.tls.keystore.jks
                 path: lenses.tls.keystore.jks
@@ -138,9 +135,9 @@ spec:
       {{- end }}
       containers:
       - name: {{ .Chart.Name }}
-        image: {{include "lensesImage" . | quote }}
+        image: {{ include "lensesImage" . | quote }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
-        {{- if .Values.containerSecurityContext}}
+        {{- if .Values.containerSecurityContext }}
         securityContext:
           {{- toYaml .Values.containerSecurityContext | nindent 10 }}
         {{- end }}
@@ -183,7 +180,7 @@ spec:
           {{- if .Values.additionalVolumeMounts }}
             {{- toYaml .Values.additionalVolumeMounts | nindent 10 }}
           {{- end }}
-        {{- if and .Values.lenses.provision.enabled }}
+        {{- if and .Values.lenses.provision.enabled (eq .Values.lenses.provision.version "2") }}
           - name: provision-secrets
             mountPath: {{ $.Values.lenses.provision.path }}
           - name: provision-secrets-files
@@ -259,13 +256,25 @@ spec:
               name: {{include "fullname" . | quote}}
               key:  "lenses.opts.truststore.password"
         {{- end }}
-        {{- if.Values.lenses.jvm.heapOpts}}
         - name: LENSES_HEAP_OPTS
-          value: {{ .Values.lenses.jvm.heapOpts | quote }}
-        {{- end }}
+          value: |
+                {{- if (.Values.lenses.jvm).heapOpts }}
+                {{ .Values.lenses.jvm.heapOpts }}
+                {{- else }}
+                {{- $limitsMemory := (.Values.resources.limits).memory | default "5Gi" -}}
+                {{- $limitsMemoryGi := regexReplaceAll "[^0-9]" $limitsMemory "" | int -}}
+
+                {{- if lt $limitsMemoryGi 5 -}}
+                {{- fail (printf "requests.limits.memory must be at least 5Gi. Current value: %s" .Values.resources.limits.memory) -}}
+                {{- else }}
+                {{- $xmx := sub $limitsMemoryGi 2 }}
+                {{- $xms := div $xmx 2 }}
+                {{ printf "-Xms%dG -Xmx%dG" $xms $xmx }}
+                {{- end }}
+                {{- end }}
         - name: LENSES_LOG4J_OPTS
           value: {{include "lensesLogBackOpts" . | default "" | quote}}
-        {{- if.Values.lenses.jvm.performanceOpts}}
+        {{- if.Values.lenses.jvm.performanceOpts }}
         - name: LENSES_PERFORMANCE_OPTS
           value: {{ .Values.lenses.jvm.performanceOpts | quote }}
         {{- end }}
@@ -277,7 +286,7 @@ spec:
         - name: LENSES_GRAFANA
           value: {{ .Values.lenses.grafanaUrl | quote }}
         {{- end }}
-        {{- if and .Values.lenses.provision.enabled }}
+        {{- if and .Values.lenses.provision.enabled (eq .Values.lenses.provision.version "2") }}
         # Provisioning
         - name: LENSES_PROVISIONING_PATH
           value: {{ .Values.lenses.provision.path }}
@@ -290,16 +299,14 @@ spec:
           value: {{ .Values.monitoring.port | quote }}
         {{- end }}
         {{- end }}
+
         # HQ
         - name: LENSES_HQ_API_KEY
           valueFrom:
             secretKeyRef:
               name:  {{ include "apiKeySecretName" . }}
-             {{- if contains "precreated" .Values.lenses.hq.apiKey.secret.type -}}
-              key: {{ .Values.lenses.hq.apiKey.secret.key }}
-             {{ else }}
               key: key
-            {{- end }}
+
         - name: LENSES_TOPICS_EXTERNAL_TOPOLOGY
           value: {{include "topologyTopic" . | quote}}
         - name: LENSES_TOPICS_EXTERNAL_METRICS
@@ -377,6 +384,39 @@ spec:
         {{- if .Values.lenses.additionalEnv }}
         {{- toYaml .Values.lenses.additionalEnv | nindent 8 }}
         {{- end }}
+
+      {{- if and .Values.lenses.provision.enabled (eq .Values.lenses.provision.version "1") }}
+        # Lenses sidecar provision is only needed if we are running the pre 5.3.0 provisioning mechanism.
+      {{- $provision := .Values.lenses.provision}}
+      - name: {{default "lenses-provision" $provision.name}}
+        image: {{include "sidecarProvisionImage" . | quote }}
+        imagePullPolicy: {{default "Always" $provision.sidecar.image.pullPolicy}}
+        {{- if .Values.containerSecurityContext}}
+        securityContext:
+          {{- toYaml .Values.containerSecurityContext | nindent 10 }}
+        {{- end }}
+        command:
+          - bash
+          - -c
+          - |
+            lenses-cli provision \
+              --wait-for-lenses \
+              --setup-mode \
+              --host="http{{- if .Values.lenses.tls.enabled -}}s{{- end -}}://localhost:{{.Values.restPort}}" \
+              {{- if .Values.lenses.tls.enabled}}
+              --insecure \
+              {{- end}}
+              --user="$LENSES_ADMIN_USER" \
+              --pass="$LENSES_ADMIN_PASSWORD" \
+              /mnt/provision-secrets/provision.yaml \
+              --mode=sidecar
+        volumeMounts:
+          - name: provision-secrets
+            mountPath: "/mnt/provision-secrets"
+          {{- if $provision.sidecar.additionalVolumeMounts }}
+            {{- toYaml $provision.sidecar.additionalVolumeMounts | nindent 10 }}
+          {{- end }}
+      {{- end }}
 
       {{- if .Values.sidecarContainers }}
       {{- toYaml .Values.sidecarContainers | nindent 6 }}
