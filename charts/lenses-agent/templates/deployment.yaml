@@ -105,8 +105,6 @@ spec:
           secret:
             secretName: {{include "fullname" . | quote}}
             items:
-              - key: security.conf
-                path: security.conf
               {{- if .Values.lenses.tls.enabled }}
               - key: lenses.tls.keystore.jks
                 path: lenses.tls.keystore.jks
@@ -158,14 +156,6 @@ spec:
         volumeMounts:
           - name: secrets
             mountPath: "/mnt/secrets"
-          {{/* TODO: this is deprecated */}}
-          - name: secrets
-            mountPath: "/etc/keytab"
-            subPath: "keytab"
-          {{/* TODO: this is deprecated */}}
-          - name: secrets
-            mountPath: "/etc/registry.keytab"
-            subPath: "registry.keytab"
           - name: config
             mountPath: "/mnt/settings/lenses.append.conf"
             subPath: "lenses.append.conf"
@@ -232,19 +222,6 @@ spec:
         {{- end }}
         - name: LENSES_OPTS
           value: {{include "lensesOpts" . | default "" | quote}}
-        {{/* TODO .Values.lenses.opts.keyStoreFileData is deprecated */}}
-        {{- if .Values.lenses.opts.keyStoreFileData }}
-        - name: CLIENT_OPTS_KEYSTORE_FILE
-          value: "/mnt/secrets/lenses.opts.keystore.jks"
-        {{- end }}
-        {{/* TODO .Values.lenses.opts.keyStorePassword is deprecated */}}
-        {{- if .Values.lenses.opts.keyStorePassword }}
-        - name: CLIENT_OPTS_KEYSTORE_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: {{include "fullname" . | quote}}
-              key:  "lenses.opts.keystore.password"
-        {{- end }}
         {{- if .Values.lenses.opts.trustStoreFileData }}
         - name: CLIENT_OPTS_TRUSTSTORE_FILE
           value: "/mnt/secrets/lenses.opts.truststore.jks"
@@ -257,7 +234,7 @@ spec:
               key:  "lenses.opts.truststore.password"
         {{- end }}
         - name: LENSES_HEAP_OPTS
-          value: |
+          value: |-
                 {{- if (.Values.lenses.jvm).heapOpts }}
                 {{ .Values.lenses.jvm.heapOpts }}
                 {{- else }}

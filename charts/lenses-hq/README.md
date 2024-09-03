@@ -81,24 +81,31 @@ The command deploys LensesHQ on the Kubernetes cluster in the example configurat
 | lensesHq.agents.address | string | `":10000"` | Address wherefrom agent will be listening at. **Required: true** |
 | lensesHq.agents.tls.cert | string | `""` | Sets the PEM formatted public certificate. **Required: false** |
 | lensesHq.agents.tls.enabled | string | `false` | Enables or disables TLS. **Required: true** |
-| lensesHq.agents.tls.key | string | `""` | Sets the PEM formatted private key. **Required: false** |
+| lensesHq.agents.tls.privateKey | string | `{"secret":{"key":null,"name":null}}` | Sets the PEM formatted private key. **Required: false** |
 | lensesHq.api.accessControlAllowCredentials | bool | `false` | Sets the value of the "Access-Control-Allow-Credentials" header. **Required: false** |
 | lensesHq.api.accessControlAllowOrigin | string | `"[*]"` | Sets the address the HTTP server listens at. **Required: false** |
 | lensesHq.api.address | string | `":8080"` | Sets the address the HTTP servers listens at. **Required: true** |
 | lensesHq.api.administrators | list | `[]` | Grants administrator rights to users. **Required: false** |
 | lensesHq.api.redirToIdp | boolean | `false` | Controls API HTTP behaviour on authentication errors. **Required: false** |
-| lensesHq.api.saml | object | `{"baseUrl":"","entityId":"","groupAttributeKey":"group","metadata":"","organisationName":"","uiRootUrl":"/","userCreationMode":"manual","usersGroupMembershipManagementMode":"manual"}` | SAML2 IdP configuration **Required: true** |
-| lensesHq.api.saml.metadata | string | `""` | Example: <?xml version="1.0" ... (big blob of xml) </md:EntityDescriptor> **Required: true** |
+| lensesHq.api.saml.baseUrl | string | `""` | Defines base URL of Panoptes for IdP redirects. **Required: true** |
+| lensesHq.api.saml.entityId | string | `""` | Defines the Entity ID. **Required: true** |
+| lensesHq.api.saml.groupAttributeKey | string | `"group"` | Sets the attribute name for group names. **Required: false** |
+| lensesHq.api.saml.metadata | string | `""` | Contains the IdP issued XML metadata blob. Example: <?xml version="1.0" ... (big blob of xml) </md:EntityDescriptor> **Required: true** |
+| lensesHq.api.saml.organisationName | string | `""` | Sets the name of the organisation that users get assigned to. **Required: true** |
+| lensesHq.api.saml.uiRootUrl | string | `"/"` | Controls where to redirect to upon successful authentication. **Required: false** |
+| lensesHq.api.saml.userCreationMode | string | `"manual"` | Controls how the creation of users should be handled in relation to SSO information Allowed values are: sso | manual **Required: false** |
+| lensesHq.api.saml.usersGroupMembershipManagementMode | string | `"manual"` | Controls how the management of a user's group membership should be handled in relation to SSO information. Allowed values are: sso | manual **Required: false** |
 | lensesHq.api.secureSessionCookies | bool | `true` | Sets the "Secure" attribute on session cookies. **Required: false** |
+| lensesHq.api.tls.cert | string | `""` | Sets the PEM formatted public certificate. **Required: false** |
+| lensesHq.api.tls.enabled | string | `false` | Enables or disables TLS. **Required: true** |
+| lensesHq.api.tls.privateKey | string | `{"secret":{"key":null,"name":null}}` | Sets the PEM formatted private key. **Required: false** |
 | lensesHq.livenessProbe.enabled | bool | `true` |  |
 | lensesHq.livenessProbe.tls.enabled | bool | `false` | Enabling HTTPS forliveness probe. |
 | lensesHq.logger.level | string | `"info"` | Controls the level of the logger Allowed values are: info | debug **Required: false** |
 | lensesHq.logger.mode | string | `"text"` | Controls the format of the logger's output. Allowed values are: text | json **Required: true** |
+| lensesHq.metrics.prometheus_address | string | `":9090"` | ets the address at which Prometheus metrics are served. If not set, it will default to `:9090`` **Required: false** |
 | lensesHq.monitoring | int | `{"port":9090}` | Port on which Lenses HQ will open for metric collection. |
-| lensesHq.pauseExec | bool | `{"enabled":false}` | Execution postponment.
-Pause execution of Lenses HQ start up script to allow the user to login into the container and
-check the running environment, used while debugging |
-| lensesHq.postgres | object | `{"database":null,"host":null,"passwordSecret":{"externalSecret":{"secretStoreRef":{"clusterSecretStore":{"name":null}}},"key":null,"name":null,"password":null,"type":"precreated"},"port":null,"username":null}` | Postgres template example: "postgres://[username]:[pwd]@[host]:[port]/[database]?sslmode=require" **Required: true** |
+| lensesHq.pauseExec | bool | `{"enabled":false}` | Execution postponment. Pause execution of Lenses HQ start up script to allow the user to login into the container and check the running environment, used while debugging |
 | lensesHq.postgres.database | string | `nil` | Database name to which HQ will connect to and store required information. **Required: true** |
 | lensesHq.postgres.passwordSecret | object | `{"externalSecret":{"secretStoreRef":{"clusterSecretStore":{"name":null}}},"key":null,"name":null,"password":null,"type":"precreated"}` | Definition of secret that has been precreated and has postgres database password |
 | lensesHq.postgres.passwordSecret.externalSecret.secretStoreRef.clusterSecretStore.name | string | `nil` | Name of cluster secret store created by ESO. |
@@ -125,6 +132,7 @@ check the running environment, used while debugging |
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | fullnameOverride | string | `""` |  |
+| lensesHq.postgres.host | string | `nil` |  |
 | nameOverride | string | `""` |  |
 
 ----------------------------------------------

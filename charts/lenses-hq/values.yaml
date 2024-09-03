@@ -239,52 +239,50 @@ lensesHq:
           name:
           key:
 
-    # -- SAML2 IdP configuration
-    # @section -- Lenses HQ startup values
-    # **Required: true**
     saml:
+      # -- Sets the name of the organisation that users get assigned to.
       # @section -- Lenses HQ startup values
       # **Required: true**
       organisationName: ""
 
+      # -- Defines base URL of Panoptes for IdP redirects.
       # @section -- Lenses HQ startup values
       # **Required: true**
       baseUrl: ""
 
+      # -- Defines the Entity ID.
       # @section -- Lenses HQ startup values
       # **Required: true**
       entityId: ""
 
-      # -- Example: <?xml version="1.0" ... (big blob of xml) </md:EntityDescriptor>
+      # -- Contains the IdP issued XML metadata blob.
+      # Example: <?xml version="1.0" ... (big blob of xml) </md:EntityDescriptor>
       # @section -- Lenses HQ startup values
       # **Required: true**
       metadata: |-
 
-      # lensesHq.saml.userCreationMode --  Controls how the creation of users should be handled in relation to SSO information
+      # -- Controls how the creation of users should be handled in relation to SSO information
       # Allowed values are: sso | manual
       # @section -- Lenses HQ startup values
       # **Required: false**
       userCreationMode: "manual"
 
-      # lensesHq.saml.usersGroupMembershipManagementMode -- Controls how the management of a user's group membership should be handled in relation to SSO information.
+      # -- Controls how the management of a user's group membership should be handled in relation to SSO information.
       # Allowed values are: sso | manual
       # @section -- Lenses HQ startup values
       # **Required: false**
       usersGroupMembershipManagementMode: "manual"
 
-      # lensesHq.saml.ui_root_url --  Controls where to redirect to upon successful authentication.
+      # -- Controls where to redirect to upon successful authentication.
       # @section -- Lenses HQ startup values
       # **Required: false**
       uiRootUrl: "/"
 
-      # lensesHq.saml.group_attribute_key --  Sets the attribute name for group names.
+      # -- Sets the attribute name for group names.
       # @section -- Lenses HQ startup values
       # **Required: false**
       groupAttributeKey: "group"
 
-  # -- Postgres template example: "postgres://[username]:[pwd]@[host]:[port]/[database]?sslmode=require"
-  # @section -- Lenses HQ startup values
-  # **Required: true**
   postgres:
     #  -- (string) Hostname of running postgres instance.
     # @section -- Lenses HQ startup values
@@ -372,7 +370,6 @@ lensesHq:
       enabled: false
 
   # -- (bool) Execution postponment.
-  # @raw
   # Pause execution of Lenses HQ start up script to allow the user to login into the container and
   # check the running environment, used while debugging
   # @section -- Lenses HQ startup values

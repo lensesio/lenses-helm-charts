@@ -4,7 +4,7 @@ nameOverride: ""
 fullnameOverride: ""
 
 image:
-  repository: registry/panoptes-agent:pan-amd
+  repository: lensesio/lenses
   # Default to .Chart.AppVersion
   # tag:
   pullPolicy: Always
@@ -62,11 +62,11 @@ servicePortName: lenses
 serviceAccount:
   # -- (bool) In case "true" new SA will be created with service.name as a SA name.
   # @section -- Permission scope values
-  create: true
+  create: false
 
   # -- (string) Name of Service Account. In case serviceAccount.create is *false*, existing SA with defined name here will be used.
   # @section -- Permission scope values
-  name: lenses
+  name: default
 
   # -- (dict) Additional service account annotations.
   # @section -- Permission scope values
@@ -208,42 +208,42 @@ lenses:
   #    This is applied on every deployment/upgrade of the chart. Any connection change in the UI will be
   #    reverted during an upgrade. *Connections that do not exist here will be deleted*.
   provision:
-    enabled: true
+    enabled: false
     version: "2"
     path: /mnt/provision-secrets
     # Find more details in https://docs.lenses.io/5.5/installation/getting-started/helm/#helm-provision
 
     # You can find examples at https://github.com/lensesio/lenses-helm-charts/tree/release/5.5/examples
-    connections:
-      grpcServer:
-        - name: lenses-hq
-          version: 1
-          tags: ['hq']
-          configuration:
-            server:
-              value: panoptes-backend.panoptes-master.svc.cluster.local
-            port:
-              value: 10000
-            apiKey:
-              value: ${LENSES_HQ_API_KEY}
-            sslEnabled:
-              value: false
+    #connections:
+    #  grpcServer:
+    #    - name: lenses-hq
+    #      version: 1
+    #      tags: ['hq']
+    #      configuration:
+    #        server:
+    #          value: panoptes-backend.panoptes-master.svc.cluster.local
+    #        port:
+    #          value: 10000
+    #        apiKey:
+    #          value: ${LENSES_HQ_API_KEY}
+    #        sslEnabled:
+    #          value: false
           # sslEnabledProtocols:
           #  value: $LENSES_HQ_SSL_ENABLED_PROTOCOLS
-      kafka:
-        - name: kafka
-          version: 1
-          tags: [ 'prod']
-          configuration:
-            kafkaBootstrapServers:
-              value:
-                - SASL_PLAINTEXT://kafka:9092
-            saslJaasConfig:
-              value: org.apache.kafka.common.security.scram.ScramLoginModule required username="user1" password="insert-pwd-here";
-            saslMechanism:
-              value: SCRAM-SHA-256
-            protocol:
-              value: SASL_PLAINTEXT
+      #kafka:
+      #  - name: kafka
+      #    version: 1
+      #    tags: [ 'prod']
+      #    configuration:
+      #      kafkaBootstrapServers:
+      #        value:
+      #          - SASL_PLAINTEXT://kafka:9092
+      #      saslJaasConfig:
+      #        value: org.apache.kafka.common.security.scram.ScramLoginModule required username="user1" password="insert-pwd-here";
+      #      saslMechanism:
+      #        value: SCRAM-SHA-256
+      #      protocol:
+      #        value: SASL_PLAINTEXT
             #metricsType:
             #  value: JMX
             #metricsPort:
