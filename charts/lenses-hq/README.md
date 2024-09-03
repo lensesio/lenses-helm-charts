@@ -18,7 +18,7 @@ helm install lenses-hq .  --namespace lenses-hq -f examples/values.yaml
 ## Prerequisistes
 - Kubernetes 1.23+
 - Helm 3.8.0+
-- Postgre database
+- Postgres database
 -  *External secret operator (in case of `ExternalSecret` usage)
 
 ## Installing the Chart
@@ -32,6 +32,10 @@ helm install lenses-hq .  --namespace lenses-hq -f examples/values.yaml
 ```
 
 > Note: You need to substitute the placeholder `.` with a reference to your Helm chart registry and repository. For example, in the case of ex-Lenses, you need to use lensesio/lenses
+
+The command deploys LensesHQ on the Kubernetes cluster in the example configuration. The Parameters section lists the parameters (#parameters) that can be configured during installation.
+
+## Parameters
 
 ## Values
 
@@ -74,29 +78,36 @@ helm install lenses-hq .  --namespace lenses-hq -f examples/values.yaml
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | lensesHq.additionalEnv | map | `nil` | Additional env variables appended to deployment Follows the format of [EnvVar spec](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.21/#envvar-v1-core) |
-| lensesHq.agents.address | string | `":10000"` | Address wherefrom agent will be listening at. |
-| lensesHq.api.accessControlAllowOrigin | string | `"[]"` |  |
-| lensesHq.api.address | string | `":8080"` | Sets the address the HTTP servers listens at. |
-| lensesHq.api.saml | object | `{"baseUrl":"","entityId":"","metadata":"","organisationName":"my-company","userCreationMode":"","usersGroupMembershipManagementMode":""}` | SAML2 IdP configuration |
-| lensesHq.api.saml.metadata | string | `""` | Example: <?xml version="1.0" ... (big blob of xml) </md:EntityDescriptor> |
+| lensesHq.agents.address | string | `":10000"` | Address wherefrom agent will be listening at. **Required: true** |
+| lensesHq.agents.tls.cert | string | `""` | Sets the PEM formatted public certificate. **Required: false** |
+| lensesHq.agents.tls.enabled | string | `false` | Enables or disables TLS. **Required: true** |
+| lensesHq.agents.tls.key | string | `""` | Sets the PEM formatted private key. **Required: false** |
+| lensesHq.api.accessControlAllowCredentials | bool | `false` | Sets the value of the "Access-Control-Allow-Credentials" header. **Required: false** |
+| lensesHq.api.accessControlAllowOrigin | string | `"[*]"` | Sets the address the HTTP server listens at. **Required: false** |
+| lensesHq.api.address | string | `":8080"` | Sets the address the HTTP servers listens at. **Required: true** |
+| lensesHq.api.administrators | list | `[]` | Grants administrator rights to users. **Required: false** |
+| lensesHq.api.redirToIdp | boolean | `false` | Controls API HTTP behaviour on authentication errors. **Required: false** |
+| lensesHq.api.saml | object | `{"baseUrl":"","entityId":"","groupAttributeKey":"group","metadata":"","organisationName":"","uiRootUrl":"/","userCreationMode":"manual","usersGroupMembershipManagementMode":"manual"}` | SAML2 IdP configuration **Required: true** |
+| lensesHq.api.saml.metadata | string | `""` | Example: <?xml version="1.0" ... (big blob of xml) </md:EntityDescriptor> **Required: true** |
+| lensesHq.api.secureSessionCookies | bool | `true` | Sets the "Secure" attribute on session cookies. **Required: false** |
 | lensesHq.livenessProbe.enabled | bool | `true` |  |
 | lensesHq.livenessProbe.tls.enabled | bool | `false` | Enabling HTTPS forliveness probe. |
-| lensesHq.logger.level | string | `"debug"` | Controls the level of the logger Allowed values are: info | debug |
-| lensesHq.logger.mode | string | `"text"` | Controls the format of the logger's output. Allowed values are: text | json |
+| lensesHq.logger.level | string | `"info"` | Controls the level of the logger Allowed values are: info | debug **Required: false** |
+| lensesHq.logger.mode | string | `"text"` | Controls the format of the logger's output. Allowed values are: text | json **Required: true** |
 | lensesHq.monitoring | int | `{"port":9090}` | Port on which Lenses HQ will open for metric collection. |
 | lensesHq.pauseExec | bool | `{"enabled":false}` | Execution postponment.
 Pause execution of Lenses HQ start up script to allow the user to login into the container and
 check the running environment, used while debugging |
-| lensesHq.postgres | object | `{"database":null,"host":null,"passwordSecret":{"externalSecret":{"secretStoreRef":{"clusterSecretStore":{"name":null}}},"key":null,"name":null,"password":null,"type":"precreated"},"port":null,"username":null}` | Postgres template example: "postgres://[username]:[pwd]@[host]:[port]/[database]?sslmode=require" |
-| lensesHq.postgres.database | string | `nil` | Database name to which HQ will connect to and store required information. |
+| lensesHq.postgres | object | `{"database":null,"host":null,"passwordSecret":{"externalSecret":{"secretStoreRef":{"clusterSecretStore":{"name":null}}},"key":null,"name":null,"password":null,"type":"precreated"},"port":null,"username":null}` | Postgres template example: "postgres://[username]:[pwd]@[host]:[port]/[database]?sslmode=require" **Required: true** |
+| lensesHq.postgres.database | string | `nil` | Database name to which HQ will connect to and store required information. **Required: true** |
 | lensesHq.postgres.passwordSecret | object | `{"externalSecret":{"secretStoreRef":{"clusterSecretStore":{"name":null}}},"key":null,"name":null,"password":null,"type":"precreated"}` | Definition of secret that has been precreated and has postgres database password |
 | lensesHq.postgres.passwordSecret.externalSecret.secretStoreRef.clusterSecretStore.name | string | `nil` | Name of cluster secret store created by ESO. |
 | lensesHq.postgres.passwordSecret.key | string | `nil` | Secret key where password will be read from |
 | lensesHq.postgres.passwordSecret.name | string | `nil` | Secret name where database password will be stored in case "createNew" or read from in case of "precreated" | "externalSecret". |
-| lensesHq.postgres.passwordSecret.password | string | `nil` | Entry for a password in case of testing where type: "createNew", otherwise can be left out. NOT FOR PRODUCTION USE! |
+| lensesHq.postgres.passwordSecret.password | string | `nil` | Entry for a password in case of testing where type: "createNew", otherwise can be left out. *NOT FOR PRODUCTION USE!* |
 | lensesHq.postgres.passwordSecret.type | string | `"precreated"` | Possible options: precreated | createNew | externalSecret |
-| lensesHq.postgres.port | int | `nil` | Port of running postgress instance. Default is 5432. |
-| lensesHq.postgres.username | string | `nil` | Username which will be used for connecting to Postgres database. |
+| lensesHq.postgres.port | int | `nil` | Port of running postgress instance. Default is 5432. **Required: true** |
+| lensesHq.postgres.username | string | `nil` | Username which will be used for connecting to Postgres database. **Required: true** |
 
 ### Permission scope values
 

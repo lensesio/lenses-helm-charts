@@ -14,7 +14,20 @@ data:
     [api]
     address = {{ .Values.lensesHq.api.address | quote }}
     access_control_allow_origin = {{ .Values.lensesHq.api.accessControlAllowOrigin }}
-    
+    access_control_allow_credentials = {{ .Values.lensesHq.api.accessControlAllowCredentials }}
+    secure_session_cookies = {{ .Values.lensesHq.api.secureSessionCookies }}
+    administrators = {{ .Values.lensesHq.api.administrators | quote }}
+    redir_to_idp = {{ .Values.lensesHq.api.redirToIdp }}
+
+    {{ if (.Values.lensesHq.api.tls).enabled }}
+    [api.tls_config]
+    enabled = {{ .Values.lensesHq.api.tls.enabled }}
+    cert = """
+    {{ .Values.lensesHq.api.tls.cert | indent 4 }}
+    """
+    key = $(LENSESHQ_API_TLS_KEY)
+    {{ end }}
+
     [api.saml]
     organisation_name = {{ .Values.lensesHq.api.saml.organisationName | quote }}
     base_url = {{ .Values.lensesHq.api.saml.baseUrl | quote }}
@@ -24,13 +37,26 @@ data:
     """
     user_creation_mode = {{ .Values.lensesHq.api.saml.userCreationMode | quote }}
     users_group_membership_management_mode = {{ .Values.lensesHq.api.saml.usersGroupMembershipManagementMode | quote }}
-    
+    ui_root_url = {{ .Values.lensesHq.api.saml.uiRootUrl | quote }}
+    group_attribute_key = {{ .Values.lensesHq.api.saml.groupAttributeKey | quote }}
+
     [agents]
     address = {{ .Values.lensesHq.agents.address | quote }}
-    
+    {{ if (.Values.lensesHq.agents.tls).enabled }}
+    [agents.tls_config]
+    enabled = {{ .Values.lensesHq.agents.tls.enabled }}
+    cert = """
+    {{ .Values.lensesHq.agents.tls.cert | indent 4 }}
+    """
+    key = $(LENSESHQ_AGENTS_TLS_KEY)
+    {{ end }}
+
     [database]
     connection = "postgres://{{ .Values.lensesHq.postgres.username }}:$(LENSESHQ_PG_PASSWORD)@{{ .Values.lensesHq.postgres.host }}:{{ .Values.lensesHq.postgres.port }}/{{ .Values.lensesHq.postgres.database }}"
 
     [logger]
     mode = {{ .Values.lensesHq.logger.mode | quote }}
     level = {{ default "info" .Values.lensesHq.logger.level | quote }}
+
+    [metrics]
+    prometheus_address = {{ .Values.lensesHq.metrics.prometheus_address | quote }}

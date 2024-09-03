@@ -165,59 +165,145 @@ lensesHq:
   agents:
     # -- (string) Address wherefrom agent will be listening at.
     # @section -- Lenses HQ startup values
+    # **Required: true**
     address: ":10000"
+
+    tls:
+      # -- (string) Enables or disables TLS.
+      # @section -- Lenses HQ startup values
+      # **Required: true**
+      enabled: false
+
+      # -- (string) Sets the PEM formatted public certificate.
+      # @section -- Lenses HQ startup values
+      # **Required: false**
+      cert: |-
+
+      # -- (string) Sets the PEM formatted private key.
+      # @section -- Lenses HQ startup values
+      # **Required: false**
+      privateKey:
+        # Reference to precreated secret name and key.
+        secret:
+          name:
+          key:
+
   api:
     # -- (string) Sets the address the HTTP servers listens at.
     # @section -- Lenses HQ startup values
+    # **Required: true**
     address: ":8080"
 
-    # -- (string)
+    # -- (boolean) Controls API HTTP behaviour on authentication errors.
     # @section -- Lenses HQ startup values
-    accessControlAllowOrigin: '[]'
+    # **Required: false**
+    redirToIdp: false
+
+    # -- (string) Sets the address the HTTP server listens at.
+    # @section -- Lenses HQ startup values
+    # **Required: false**
+    accessControlAllowOrigin: '[*]'
+
+    # -- Sets the value of the "Access-Control-Allow-Credentials" header.
+    # @section -- Lenses HQ startup values
+    # **Required: false**
+    accessControlAllowCredentials: false
+
+    # -- Sets the "Secure" attribute on session cookies.
+    # @section -- Lenses HQ startup values
+    # **Required: false**
+    secureSessionCookies: true
+
+    # -- Grants administrator rights to users.
+    # @section -- Lenses HQ startup values
+    # **Required: false**
+    administrators: []
+
+    tls:
+      # -- (string) Enables or disables TLS.
+      # @section -- Lenses HQ startup values
+      # **Required: true**
+      enabled: false
+
+      # -- (string) Sets the PEM formatted public certificate.
+      # @section -- Lenses HQ startup values
+      # **Required: false**
+      cert: |-
+
+      # -- (string) Sets the PEM formatted private key.
+      # @section -- Lenses HQ startup values
+      # **Required: false**
+      privateKey:
+        # Reference to precreated secret name and key.
+        secret:
+          name:
+          key:
 
     # -- SAML2 IdP configuration
     # @section -- Lenses HQ startup values
+    # **Required: true**
     saml:
       # @section -- Lenses HQ startup values
-      organisationName: "my-company"
+      # **Required: true**
+      organisationName: ""
 
       # @section -- Lenses HQ startup values
+      # **Required: true**
       baseUrl: ""
 
       # @section -- Lenses HQ startup values
+      # **Required: true**
       entityId: ""
 
       # -- Example: <?xml version="1.0" ... (big blob of xml) </md:EntityDescriptor>
       # @section -- Lenses HQ startup values
+      # **Required: true**
       metadata: |-
 
       # lensesHq.saml.userCreationMode --  Controls how the creation of users should be handled in relation to SSO information
       # Allowed values are: sso | manual
       # @section -- Lenses HQ startup values
-      userCreationMode: ""
+      # **Required: false**
+      userCreationMode: "manual"
 
       # lensesHq.saml.usersGroupMembershipManagementMode -- Controls how the management of a user's group membership should be handled in relation to SSO information.
       # Allowed values are: sso | manual
       # @section -- Lenses HQ startup values
-      usersGroupMembershipManagementMode: ""
+      # **Required: false**
+      usersGroupMembershipManagementMode: "manual"
+
+      # lensesHq.saml.ui_root_url --  Controls where to redirect to upon successful authentication.
+      # @section -- Lenses HQ startup values
+      # **Required: false**
+      uiRootUrl: "/"
+
+      # lensesHq.saml.group_attribute_key --  Sets the attribute name for group names.
+      # @section -- Lenses HQ startup values
+      # **Required: false**
+      groupAttributeKey: "group"
 
   # -- Postgres template example: "postgres://[username]:[pwd]@[host]:[port]/[database]?sslmode=require"
   # @section -- Lenses HQ startup values
+  # **Required: true**
   postgres:
     #  -- (string) Hostname of running postgres instance.
     # @section -- Lenses HQ startup values
+    # **Required: true**
     host:
 
     # -- (int) Port of running postgress instance. Default is 5432.
     # @section -- Lenses HQ startup values
+    # **Required: true**
     port:
 
     # -- (string) Username which will be used for connecting to Postgres database.
     # @section -- Lenses HQ startup values
+    # **Required: true**
     username:
 
     # -- (string) Database name to which HQ will connect to and store required information.
     # @section -- Lenses HQ startup values
+    # **Required: true**
     database:
 
     # -- Definition of secret that has been precreated and has postgres database password
@@ -249,13 +335,21 @@ lensesHq:
   logger:
     # -- (string) Controls the format of the logger's output. Allowed values are: text | json
     # @section -- Lenses HQ startup values
+    # **Required: true**
     mode: "text"
 
     # -- (string) Controls the level of the logger
     # Allowed values are: info | debug
     # @section -- Lenses HQ startup values
-    level: "debug"
+    # **Required: false**
+    level: "info"
 
+  metrics:
+    # -- (string) ets the address at which Prometheus metrics are served.
+    # If not set, it will default to `:9090``
+    # @section -- Lenses HQ startup values
+    # **Required: false**
+    prometheus_address: ":9090"
 
 
   # -- (map) Additional env variables appended to deployment

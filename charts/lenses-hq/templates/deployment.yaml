@@ -119,6 +119,20 @@ spec:
           - name: PAUSE_EXEC
             value: "false"
           {{- end }}
+          {{ if (.Values.lensesHq.agents.tls).enabled }}
+          - name: LENSESHQ_AGENTS_TLS_KEY
+            valueFrom:
+              secretKeyRef:
+                name: .Values.lensesHq.agents.tls.prviateKey.secret.name
+                key: .Values.lensesHq.agents.tls.prviateKey.secret.key
+          {{- end }}
+          {{ if (.Values.lensesHq.agents.tls).enabled }}
+          - name: LENSESHQ_API_TLS_KEY
+            valueFrom:
+              secretKeyRef:
+                name: .Values.lensesHq.api.tls.prviateKey.secret.name
+                key: .Values.lensesHq.api.tls.prviateKey.secret.key
+          {{- end }}
           - name: LENSESHQ_PG_PASSWORD
             valueFrom:
               secretKeyRef:
