@@ -16,7 +16,7 @@ data:
     access_control_allow_origin = {{ .Values.lensesHq.api.accessControlAllowOrigin }}
     access_control_allow_credentials = {{ .Values.lensesHq.api.accessControlAllowCredentials }}
     secure_session_cookies = {{ .Values.lensesHq.api.secureSessionCookies }}
-    administrators = {{ .Values.lensesHq.api.administrators | quote }}
+    administrators = {{ .Values.lensesHq.api.administrators }}
     redir_to_idp = {{ .Values.lensesHq.api.redirToIdp }}
 
     {{ if (.Values.lensesHq.api.tls).enabled }}
@@ -59,4 +59,4 @@ data:
     level = {{ default "info" .Values.lensesHq.logger.level | quote }}
 
     [metrics]
-    prometheus_address = {{ .Values.lensesHq.metrics.prometheus_address | quote }}
+    prometheus_address = {{ .Values.lensesHq.metrics.prometheusAddress | quote }}

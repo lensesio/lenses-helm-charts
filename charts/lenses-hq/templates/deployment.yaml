@@ -92,7 +92,7 @@ spec:
           - containerPort: 10000
             name: agents
             protocol: TCP
-          - containerPort: {{ .Values.lensesHq.monitoring.port }}
+          - containerPort: {{ regexReplaceAll "^[^0-9]*" .Values.lensesHq.metrics.prometheusAddress "" | int }}
             name: metrics
             protocol: TCP
         {{- if .Values.lensesHq.livenessProbe.enabled }}

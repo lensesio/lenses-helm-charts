@@ -287,7 +287,7 @@ lensesHq:
     #  -- (string) Hostname of running postgres instance.
     # @section -- Lenses HQ startup values
     # **Required: true**
-    host:
+    host: ""
 
     # -- (int) Port of running postgress instance. Default is 5432.
     # @section -- Lenses HQ startup values
@@ -297,12 +297,12 @@ lensesHq:
     # -- (string) Username which will be used for connecting to Postgres database.
     # @section -- Lenses HQ startup values
     # **Required: true**
-    username:
+    username: ""
 
     # -- (string) Database name to which HQ will connect to and store required information.
     # @section -- Lenses HQ startup values
     # **Required: true**
-    database:
+    database: ""
 
     # -- Definition of secret that has been precreated and has postgres database password
     # @section -- Lenses HQ startup values
@@ -347,7 +347,7 @@ lensesHq:
     # If not set, it will default to `:9090``
     # @section -- Lenses HQ startup values
     # **Required: false**
-    prometheus_address: ":9090"
+    prometheusAddress: ":9090"
 
 
   # -- (map) Additional env variables appended to deployment
@@ -375,11 +375,6 @@ lensesHq:
   # @section -- Lenses HQ startup values
   pauseExec:
     enabled: false
-
-  # -- (int) Port on which Lenses HQ will open for metric collection.
-  # @section -- Lenses HQ startup values
-  monitoring:
-    port: 9090
 
 # -- (map) Sidecar container enablement.
 # @raw

@@ -21,7 +21,7 @@ metadata:
 spec:
   type: {{ .Values.service.type | quote }}
   {{- if .Values.service.externalTrafficPolicy }}
-  externalTrafficPolicy: {{toYaml .Values.service.externalTrafficPolicy}}
+  externalTrafficPolicy: {{ toYaml .Values.service.externalTrafficPolicy }}
   {{- end }}
   ports:
   - name: {{ .Values.servicePortName }}
@@ -31,7 +31,7 @@ spec:
     {{- end }}
     targetPort:  {{ .Values.restPort }}
   - name: http-metrics
-    port: {{ .Values.lensesHq.monitoring.port }}
+    port: {{ regexReplaceAll "^[^0-9]*" .Values.lensesHq.metrics.prometheusAddress "" | int }}
   - name: agents
     port: 10000
     targetPort: agents
