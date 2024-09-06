@@ -59,7 +59,7 @@ namespaceScope: false
 restPort: 3030
 # Lenses service port, service targets restPort
 servicePort: 80
-servicePortName: lenses
+servicePortName: lenses-agent
 
 # -- User to be used by Lenses to deploy apps
 # @section -- Permission scope values
@@ -182,7 +182,7 @@ lenses:
     # HQ port
     port: 10000
     # Api key that has been generated in HQ as service account
-    apiKey:
+    agentKey:
       secret:
         # createNew | precreated | externalSecret
         type: "externalSecret"
@@ -226,7 +226,7 @@ lenses:
     #          value: panoptes-backend.panoptes-master.svc.cluster.local
     #        port:
     #          value: 10000
-    #        apiKey:
+    #        agentKey:
     #          value: ${LENSES_HQ_API_KEY}
     #        sslEnabled:
     #          value: false

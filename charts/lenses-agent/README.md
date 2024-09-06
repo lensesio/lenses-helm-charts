@@ -10,10 +10,10 @@ A chart for Lenses
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| serviceAccount | object | `{"annotations":{},"create":true,"name":"lenses"}` | User to be used by Lenses to deploy apps |
+| serviceAccount | object | `{"annotations":{},"create":false,"name":"default"}` | User to be used by Lenses to deploy apps |
 | serviceAccount.annotations | dict | `{}` | Additional service account annotations. |
-| serviceAccount.create | bool | `true` | In case "true" new SA will be created with service.name as a SA name. |
-| serviceAccount.name | string | `"lenses"` | Name of Service Account. In case serviceAccount.create is *false*, existing SA with defined name here will be used. |
+| serviceAccount.create | bool | `false` | In case "true" new SA will be created with service.name as a SA name. |
+| serviceAccount.name | string | `"default"` | Name of Service Account. In case serviceAccount.create is *false*, existing SA with defined name here will be used. |
 
 ### Other Values
 
@@ -26,7 +26,7 @@ A chart for Lenses
 | containerSecurityContext.readOnlyRootFilesystem | bool | `false` |  |
 | fullnameOverride | string | `""` |  |
 | image.pullPolicy | string | `"Always"` |  |
-| image.repository | string | `"registry/panoptes-agent:pan-amd"` |  |
+| image.repository | string | `"lensesio/lenses"` |  |
 | ingress.annotations | object | `{}` |  |
 | ingress.enabled | bool | `false` |  |
 | ingress.host | string | `nil` |  |
@@ -41,9 +41,10 @@ A chart for Lenses
 | lenses.deployments.errorsBufferSize | int | `1000` |  |
 | lenses.deployments.eventsBufferSize | int | `10000` |  |
 | lenses.grafanaUrl | string | `nil` |  |
-| lenses.hq.apiKey.secret.externalSecret.key | string | `"master-agent-apikey"` |  |
-| lenses.hq.apiKey.secret.externalSecret.secretStoreRef.clusterSecretStore.name | string | `"panoptes-secrets"` |  |
-| lenses.hq.apiKey.secret.type | string | `"externalSecret"` |  |
+| lenses.hq.agentKey.secret.externalSecret.secretStoreRef.clusterSecretStore.name | string | `"panoptes-secrets"` |  |
+| lenses.hq.agentKey.secret.key | string | `"password"` |  |
+| lenses.hq.agentKey.secret.name | string | `"lenses-hq-agent-secret"` |  |
+| lenses.hq.agentKey.secret.type | string | `"externalSecret"` |  |
 | lenses.hq.host | string | `"panoptes-backend.panoptes-master.svc.cluster.local"` |  |
 | lenses.hq.port | int | `10000` |  |
 | lenses.hq.ssl.enabled | bool | `false` |  |
@@ -55,21 +56,7 @@ A chart for Lenses
 | lenses.opts.trustStoreFileData | string | `""` |  |
 | lenses.opts.trustStorePassword | string | `""` |  |
 | lenses.pauseExec.enabled | bool | `false` |  |
-| lenses.provision.connections.grpcServer[0].configuration.apiKey.value | string | `"${LENSES_HQ_API_KEY}"` |  |
-| lenses.provision.connections.grpcServer[0].configuration.port.value | int | `10000` |  |
-| lenses.provision.connections.grpcServer[0].configuration.server.value | string | `"panoptes-backend.panoptes-master.svc.cluster.local"` |  |
-| lenses.provision.connections.grpcServer[0].configuration.sslEnabled.value | bool | `false` |  |
-| lenses.provision.connections.grpcServer[0].name | string | `"lenses-hq"` |  |
-| lenses.provision.connections.grpcServer[0].tags[0] | string | `"hq"` |  |
-| lenses.provision.connections.grpcServer[0].version | int | `1` |  |
-| lenses.provision.connections.kafka[0].configuration.kafkaBootstrapServers.value[0] | string | `"SASL_PLAINTEXT://kafka:9092"` |  |
-| lenses.provision.connections.kafka[0].configuration.protocol.value | string | `"SASL_PLAINTEXT"` |  |
-| lenses.provision.connections.kafka[0].configuration.saslJaasConfig.value | string | `"org.apache.kafka.common.security.scram.ScramLoginModule required username=\"user1\" password=\"insert-pwd-here\";"` |  |
-| lenses.provision.connections.kafka[0].configuration.saslMechanism.value | string | `"SCRAM-SHA-256"` |  |
-| lenses.provision.connections.kafka[0].name | string | `"kafka"` |  |
-| lenses.provision.connections.kafka[0].tags[0] | string | `"prod"` |  |
-| lenses.provision.connections.kafka[0].version | int | `1` |  |
-| lenses.provision.enabled | bool | `true` |  |
+| lenses.provision.enabled | bool | `false` |  |
 | lenses.provision.path | string | `"/mnt/provision-secrets"` |  |
 | lenses.provision.secrets | object | `{}` |  |
 | lenses.provision.sidecar.additionalVolumeMounts | string | `nil` |  |
@@ -99,6 +86,7 @@ A chart for Lenses
 | monitoring.enabled | bool | `true` |  |
 | monitoring.port | int | `9102` |  |
 | nameOverride | string | `""` |  |
+| namespaceScope | bool | `false` |  |
 | nodeSelector | object | `{}` |  |
 | persistence.accessModes[0] | string | `"ReadWriteOnce"` |  |
 | persistence.enabled | bool | `true` |  |
@@ -115,7 +103,7 @@ A chart for Lenses
 | service.externalTrafficPolicy | string | `nil` |  |
 | service.type | string | `"ClusterIP"` |  |
 | servicePort | int | `80` |  |
-| servicePortName | string | `"lenses"` |  |
+| servicePortName | string | `"lenses-agent"` |  |
 | strategy | object | `{}` |  |
 | tolerations | object | `{}` |  |
 

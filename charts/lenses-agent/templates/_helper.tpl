@@ -166,7 +166,7 @@ Return the appropriate apiVersion for ingress.
 {{- end -}}
 {{- end -}}
 
-{{- define "apiKeySecretName" -}}
+{{- define "agentKeySecretName" -}}
 {{- if .Values.nameOverride }}
   {{- printf "%s-%s" .Values.nameOverride "agentkey-secret" | trunc 63 | trimSuffix "-" }}
 {{- else }}
