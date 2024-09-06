@@ -168,8 +168,8 @@ Return the appropriate apiVersion for ingress.
 
 {{- define "apiKeySecretName" -}}
 {{- if .Values.nameOverride }}
-  {{- printf "%s-%s" .Values.nameOverride "apikey-secret" | trunc 63 | trimSuffix "-" }}
+  {{- printf "%s-%s" .Values.nameOverride "agentkey-secret" | trunc 63 | trimSuffix "-" }}
 {{- else }}
-  {{- printf "%s-%s" .Chart.Name "apikey-secret" | trunc 63 | trimSuffix "-" }}
+  {{- printf "%s-%s" .Chart.Name "agentkey-secret" | trunc 63 | trimSuffix "-" }}
 {{- end }}
 {{- end }}

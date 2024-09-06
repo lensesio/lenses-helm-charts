@@ -48,8 +48,12 @@ resources:
     memory: 5Gi
 
 # rbacEnable indicates if a the cluster has rbac enabled and a cluster role
-# and rolebinding should be created for the service account
+# and clusterrolebinding should be created for the service account
 rbacEnable: false
+
+# namespaceScope indicates that if the cluster has rbac and namespaceScope is enabled
+#  role and role binding on namespace level will be created
+namespaceScope: false
 
 # Lenses container port
 restPort: 3030
@@ -183,16 +187,14 @@ lenses:
         # createNew | precreated | externalSecret
         type: "externalSecret"
         #value: ""
-        #key: master-agent-apikey
-        #key: password
-        #name: lenses-apikey-secret
+        key: password
+        name: lenses-hq-agent-secret
         # Secret name when creating "externalSecret"
         #name: leneses-agent-secret
         # Required in case secret.type: "createNew", alongside secret.name
         #value: ""
         # Required in case secret.type: "externalSecret", alongisde secret.name
         externalSecret:
-          key: master-agent-apikey
           secretStoreRef:
             clusterSecretStore:
               name: panoptes-secrets

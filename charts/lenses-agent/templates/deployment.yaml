@@ -280,12 +280,22 @@ spec:
         {{- end }}
 
         # HQ
-        - name: LENSES_HQ_API_KEY
+        - name: LENSES_HQ_AGENT_KEY
           valueFrom:
             secretKeyRef:
               name:  {{ include "apiKeySecretName" . }}
               key: key
 
+        - name: LENSES_HQ_AGENT_KEY
+        valueFrom:
+            secretKeyRef:
+            {{- if contains "createNew" .Values.lenses.hq.apiKey.secret.type }}
+            name: {{ include "apiKeySecretName" . }}
+            key: "password"
+            {{ else if or (contains "precreated" .Values.lenses.hq.apiKey.secret.type) (contains "externalSecret" .Values.lenses.hq.apiKey.secret.type) }}
+            name: {{ include "apiKeySecretName" . }}
+            key: {{ .Values.lenses.hq.apiKey.secret.key }}
+            {{- end }}
         - name: LENSES_TOPICS_EXTERNAL_TOPOLOGY
           value: {{include "topologyTopic" . | quote}}
         - name: LENSES_TOPICS_EXTERNAL_METRICS
