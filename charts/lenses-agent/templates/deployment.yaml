@@ -283,12 +283,6 @@ spec:
         - name: LENSES_HQ_AGENT_KEY
           valueFrom:
             secretKeyRef:
-              name:  {{ include "agentKeySecretName" . }}
-              key: key
-
-        - name: LENSES_HQ_AGENT_KEY
-        valueFrom:
-            secretKeyRef:
             {{- if contains "createNew" .Values.lenses.hq.agentKey.secret.type }}
             name: {{ include "agentKeySecretName" . }}
             key: "password"
