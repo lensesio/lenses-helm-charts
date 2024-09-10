@@ -27,7 +27,7 @@ tests:
             host: example.com
             database: sample-db
             username: foo
-            password: bar
+            password: ba@!&>r
         append:
           conf: |
             lenses.kubernetes.namespaces = {
@@ -41,6 +41,7 @@ tests:
             lenses.storage.postgres.host="example.com"
             lenses.storage.postgres.database="sample-db"
             lenses.storage.postgres.username="foo"
+            lenses.storage.postgres.password="ba@!&>r"
             lenses.kubernetes.namespaces = {
               incluster = [role-binding,ci-fperezp,foobar],
             }

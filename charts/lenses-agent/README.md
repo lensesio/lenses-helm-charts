@@ -2,9 +2,7 @@
 
 ![Version: 6.0.0](https://img.shields.io/badge/Version-6.0.0-informational?style=flat-square) ![AppVersion: 6.0.0](https://img.shields.io/badge/AppVersion-6.0.0-informational?style=flat-square)
 
-A chart for Lenses
-
-## Values
+A chart for Lenses Agent
 
 ### Permission scope values
 
@@ -27,12 +25,6 @@ A chart for Lenses
 | fullnameOverride | string | `""` |  |
 | image.pullPolicy | string | `"Always"` |  |
 | image.repository | string | `"lensesio/lenses"` |  |
-| ingress.annotations | object | `{}` |  |
-| ingress.enabled | bool | `false` |  |
-| ingress.host | string | `nil` |  |
-| ingress.tls.crt | string | `""` |  |
-| ingress.tls.enabled | bool | `false` |  |
-| ingress.tls.key | string | `""` |  |
 | labels | object | `{}` |  |
 | lenses.additionalEnv | string | `nil` |  |
 | lenses.append.conf | string | `""` |  |

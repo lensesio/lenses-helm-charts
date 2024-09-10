@@ -110,6 +110,11 @@ lenses.storage.postgres.database={{ required "PostgreSQL 'database' value is man
 {{- if not (eq (default "not-external" .Values.lenses.storage.postgres.username) "external") }}
 lenses.storage.postgres.username={{ required "PostgreSQL 'username' value is mandatory" .Values.lenses.storage.postgres.username | quote }}
 {{- end }}
+{{- if and .Values.lenses.storage.postgres.enabled .Values.lenses.storage.postgres.password }}
+{{- if not (eq (default "not-external" .Values.lenses.storage.postgres.password) "external") }}
+lenses.storage.postgres.password={{ required "PostgreSQL 'password' value is mandatory" .Values.lenses.storage.postgres.password | quote }}
+{{- end -}}
+{{- end -}}
 {{- if .Values.lenses.storage.postgres.port }}
 lenses.storage.postgres.port={{  .Values.lenses.storage.postgres.port | quote }}
 {{- end }}
@@ -124,20 +129,6 @@ lenses.provisioning.interval={{ .Values.lenses.provision.interval }}
 {{- end }}
 {{- end }}
 {{ default "" .Values.lenses.append.conf }}
-{{- end -}}
-
-{{- define "securityConf" -}}
-{{- if and .Values.lenses.storage.postgres.enabled .Values.lenses.storage.postgres.password }}
-{{- if not (eq (default "not-external" .Values.lenses.storage.postgres.password) "external") }}
-lenses.storage.postgres.password={{ required "PostgreSQL 'password' value is mandatory" .Values.lenses.storage.postgres.password | quote }}
-{{- end -}}
-{{- end -}}
-{{- end -}}
-
-{{- if and .Values.lenses.storage.postgres.enabled .Values.lenses.storage.postgres.password }}
-{{- if not (eq (default "not-external" .Values.lenses.storage.postgres.password) "external") }}
-lenses.storage.postgres.password={{ required "PostgreSQL 'password' value is mandatory" .Values.lenses.storage.postgres.password | quote }}
-{{- end -}}
 {{- end -}}
 
 {{- define "lensesOpts" -}}

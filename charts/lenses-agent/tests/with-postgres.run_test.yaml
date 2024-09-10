@@ -55,6 +55,7 @@ tests:
             lenses.storage.postgres.host="example.com"
             lenses.storage.postgres.database="foo-db"
             lenses.storage.postgres.username="foo"
+            lenses.storage.postgres.password="ba@!&>r"
 
   - it: should render with postgres enabled and host, database set and username, password set to external
     values:

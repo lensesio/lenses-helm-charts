@@ -35,10 +35,6 @@ helm install lenses-hq .  --namespace lenses-hq -f examples/values.yaml
 
 The command deploys LensesHQ on the Kubernetes cluster in the example configuration. The Parameters section lists the parameters (#parameters) that can be configured during installation.
 
-## Parameters
-
-## Values
-
 ### Custom deployment values
 
 | Key | Type | Default | Description |
