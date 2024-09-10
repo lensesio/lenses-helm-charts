@@ -97,7 +97,7 @@ tests:
     asserts:
       - equal:
           path: spec.ports[0].name
-          value: lenses
+          value: lenses-agent
 
   - it: port name should change if overriden
     set:

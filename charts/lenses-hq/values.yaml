@@ -64,7 +64,8 @@ image:
 # @section -- Permission scope values
 rbacEnable: true
 
-# -- (bool) In case rbac is enabled you can choose to enable namespace scoped roles or  cluster roles to be created
+# -- (bool)  In case rbac is enabled you can choose to enable creation on namespace scoped roles
+# instead of cluster roles instead
 # @section -- Permission scope values
 namespaceScope: true
 

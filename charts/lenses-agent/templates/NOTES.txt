@@ -34,13 +34,3 @@ Lenses Agent has been deployed!
 
 2. Configure DNS records corresponding to Kubernetes ingress resources to point to the NODE_IP/NODE_HOST
 {{- end }}
-
-
-{{- if and .Values.ingress.enabled }}
-==================================================
-=  INGRESS                                       =
-==================================================
-Ingress enabled.
-
-Visit the UI at https://{{ .Values.ingress.host }}
-{{- end}}

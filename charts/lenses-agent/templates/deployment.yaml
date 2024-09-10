@@ -284,11 +284,11 @@ spec:
           valueFrom:
             secretKeyRef:
             {{- if contains "createNew" .Values.lenses.hq.agentKey.secret.type }}
-            name: {{ include "agentKeySecretName" . }}
-            key: "password"
+              name: {{ include "agentKeySecretName" . }}
+              key: key
             {{ else if or (contains "precreated" .Values.lenses.hq.agentKey.secret.type) (contains "externalSecret" .Values.lenses.hq.agentKey.secret.type) }}
-            name: {{ include "agentKeySecretName" . }}
-            key: {{ .Values.lenses.hq.agentKey.secret.key }}
+              name: {{ include "agentKeySecretName" . }}
+              key: {{ .Values.lenses.hq.agentKey.secret.key }}
             {{- end }}
         - name: LENSES_TOPICS_EXTERNAL_TOPOLOGY
           value: {{include "topologyTopic" . | quote}}

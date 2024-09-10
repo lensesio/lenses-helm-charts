@@ -1,16 +1,12 @@
 suite: add custom labels and verify that resources get them
 templates:
   - deployment.yaml
-  - ingress.yaml
   - service.yaml
 tests:
   - it: should work
     set:
       labels:
         foo: bar
-      ingress:
-        enabled: true
-        host: example.com
     asserts:
       - equal:
           path: metadata.labels.foo

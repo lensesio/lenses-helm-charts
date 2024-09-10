@@ -146,28 +146,6 @@ service:
   # loadBalancerSourceRanges:
   #   - 0.0.0.0/0
 
-ingress:
-  ## If true, Ingress will be created
-  ##
-  enabled: false
-  host:
-  # ingressClassName:
-
-  # Ingress annotations
-  annotations: {}
-    # Optionally add here the annotations related to the ingress provider, see examples below:
-    # kubernetes.io/ingress.class: traefik
-    # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: 'true'
-    # nginx.ingress.kubernetes.io/rewrite-target: /
-
-  # TLS if enabled load the tls.crt and tls.keys as a secrets and enable TLS on the ingress
-  tls:
-    enabled: false
-    crt: |-
-
-    key: |-
-
 # Optionally add this property in case you would like to enforce Read Only Root Filesystem
 # In that case only /data and /tmp directories will extra mounted and be writable
 # the rest will be mount the container's root filesystem as read-only.
@@ -226,7 +204,7 @@ lenses:
     #          value: panoptes-backend.panoptes-master.svc.cluster.local
     #        port:
     #          value: 10000
-    #        agentKey:
+    #        apiKey:
     #          value: ${LENSES_HQ_API_KEY}
     #        sslEnabled:
     #          value: false
