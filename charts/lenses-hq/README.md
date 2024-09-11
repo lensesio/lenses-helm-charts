@@ -15,8 +15,13 @@ helm install lenses-hq .  --namespace lenses-hq -f examples/values.yaml
 
 ## Introduction
 
+In the past, Lenses v5 represented one UI per Kafka cluster which led to managing dozens of UI, user permissions per UI and many more.
+
+With Panoptes, we shrunk Lenses to only one UI called Lenses HQ where all administrative work is being done. Lenses Agent still has to be deployed and connected to HQ in order to collect information from connections (Kafka / Schema Registry / Connect Clusters / SQL Processors). After logging-in to HQ, user has ability to view all its topics / write sql queries and many more across all clusters access has been given to under single pane of glass.
+
 ## Prerequisistes
 - Kubernetes 1.23+
+- SAML (SSO)
 - Helm 3.8.0+
 - Postgres database
 -  *External secret operator (in case of `ExternalSecret` usage)

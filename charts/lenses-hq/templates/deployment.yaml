@@ -89,7 +89,7 @@ spec:
           - containerPort: {{ .Values.restPort }}
             name: {{ .Values.servicePortName }}
             protocol: TCP
-          - containerPort: 10000
+          - containerPort: {{ int (trimPrefix ":" .Values.lensesHq.agents.address) }}
             name: agents
             protocol: TCP
           - containerPort: {{ regexReplaceAll "^[^0-9]*" .Values.lensesHq.metrics.prometheusAddress "" | int }}
@@ -115,10 +115,6 @@ spec:
         resources:
           {{- toYaml .Values.resources | nindent 10 }}
         env:
-          {{- if .Values.lensesHq.pauseExec.enabled }}
-          - name: PAUSE_EXEC
-            value: "false"
-          {{- end }}
           {{ if (.Values.lensesHq.agents.tls).enabled }}
           - name: LENSESHQ_AGENTS_TLS_KEY
             valueFrom:

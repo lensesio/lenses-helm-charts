@@ -370,13 +370,6 @@ lensesHq:
       # @section -- Lenses HQ startup values
       enabled: false
 
-  # -- (bool) Execution postponment.
-  # Pause execution of Lenses HQ start up script to allow the user to login into the container and
-  # check the running environment, used while debugging
-  # @section -- Lenses HQ startup values
-  pauseExec:
-    enabled: false
-
 # -- (map) Sidecar container enablement.
 # @raw
 #

@@ -33,7 +33,7 @@ spec:
   - name: http-metrics
     port: {{ regexReplaceAll "^[^0-9]*" .Values.lensesHq.metrics.prometheusAddress "" | int }}
   - name: agents
-    port: 10000
+    port: {{ int (trimPrefix ":" .Values.lensesHq.agents.address) }}
     targetPort: agents
   selector:
     app: {{ include "fullname" . }}
