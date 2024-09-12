@@ -165,23 +165,23 @@ ingress:
 lensesHq:
   agents:
     # -- (string) Address wherefrom agent will be listening at.
-    # @section -- Lenses HQ startup values
+    # @section -- Lenses HQ Agent startup values
     # **Required: true**
     address: ":10000"
 
     tls:
       # -- (string) Enables or disables TLS.
-      # @section -- Lenses HQ startup values
+      # @section -- Lenses HQ Agent startup values
       # **Required: true**
       enabled: false
 
       # -- (string) Sets the PEM formatted public certificate.
-      # @section -- Lenses HQ startup values
+      # @section -- Lenses HQ Agent startup values
       # **Required: false**
       cert: |-
 
       # -- (string) Sets the PEM formatted private key.
-      # @section -- Lenses HQ startup values
+      # @section -- Lenses HQ Agent startup values
       # **Required: false**
       privateKey:
         # Reference to precreated secret name and key.
@@ -191,48 +191,48 @@ lensesHq:
 
   api:
     # -- (string) Sets the address the HTTP servers listens at.
-    # @section -- Lenses HQ startup values
+    # @section -- Lenses HQ API startup values
     # **Required: true**
     address: ":8080"
 
     # -- (boolean) Controls API HTTP behaviour on authentication errors.
-    # @section -- Lenses HQ startup values
+    # @section -- Lenses HQ API startup values
     # **Required: false**
     redirToIdp: false
 
     # -- (string) Sets the address the HTTP server listens at.
-    # @section -- Lenses HQ startup values
+    # @section -- Lenses HQ API startup values
     # **Required: false**
     accessControlAllowOrigin: '[*]'
 
     # -- Sets the value of the "Access-Control-Allow-Credentials" header.
-    # @section -- Lenses HQ startup values
+    # @section -- Lenses HQ API startup values
     # **Required: false**
     accessControlAllowCredentials: false
 
     # -- Sets the "Secure" attribute on session cookies.
-    # @section -- Lenses HQ startup values
+    # @section -- Lenses HQ API startup values
     # **Required: false**
     secureSessionCookies: true
 
     # -- Grants administrator rights to users.
-    # @section -- Lenses HQ startup values
+    # @section -- Lenses HQ API startup values
     # **Required: false**
     administrators: []
 
     tls:
       # -- (string) Enables or disables TLS.
-      # @section -- Lenses HQ startup values
+      # @section -- Lenses HQ API startup values
       # **Required: true**
       enabled: false
 
       # -- (string) Sets the PEM formatted public certificate.
-      # @section -- Lenses HQ startup values
+      # @section -- Lenses HQ API startup values
       # **Required: false**
       cert: |-
 
       # -- (string) Sets the PEM formatted private key.
-      # @section -- Lenses HQ startup values
+      # @section -- Lenses HQ API startup values
       # **Required: false**
       privateKey:
         # Reference to precreated secret name and key.
@@ -242,111 +242,111 @@ lensesHq:
 
     saml:
       # -- Sets the name of the organisation that users get assigned to.
-      # @section -- Lenses HQ startup values
+      # @section -- Lenses HQ SAML startup values
       # **Required: true**
       organisationName: ""
 
       # -- Defines base URL of Panoptes for IdP redirects.
-      # @section -- Lenses HQ startup values
+      # @section -- Lenses HQ SAML startup values
       # **Required: true**
       baseUrl: ""
 
       # -- Defines the Entity ID.
-      # @section -- Lenses HQ startup values
+      # @section -- Lenses HQ SAML startup values
       # **Required: true**
       entityId: ""
 
       # -- Contains the IdP issued XML metadata blob.
       # Example: <?xml version="1.0" ... (big blob of xml) </md:EntityDescriptor>
-      # @section -- Lenses HQ startup values
+      # @section -- Lenses HQ SAML startup values
       # **Required: true**
       metadata: |-
 
       # -- Controls how the creation of users should be handled in relation to SSO information
       # Allowed values are: sso | manual
-      # @section -- Lenses HQ startup values
+      # @section -- Lenses HQ SAML startup values
       # **Required: false**
       userCreationMode: "manual"
 
       # -- Controls how the management of a user's group membership should be handled in relation to SSO information.
       # Allowed values are: sso | manual
-      # @section -- Lenses HQ startup values
+      # @section -- Lenses HQ SAML startup values
       # **Required: false**
       usersGroupMembershipManagementMode: "manual"
 
       # -- Controls where to redirect to upon successful authentication.
-      # @section -- Lenses HQ startup values
+      # @section -- Lenses HQ SAML startup values
       # **Required: false**
       uiRootUrl: "/"
 
       # -- Sets the attribute name for group names.
-      # @section -- Lenses HQ startup values
+      # @section -- Lenses HQ SAML startup values
       # **Required: false**
       groupAttributeKey: "group"
 
   postgres:
-    #  -- (string) Hostname of running postgres instance.
-    # @section -- Lenses HQ startup values
+    # -- (string) Hostname of running postgres instance.
+    # @section -- Lenses HQ Database startup values
     # **Required: true**
     host: ""
 
     # -- (int) Port of running postgress instance. Default is 5432.
-    # @section -- Lenses HQ startup values
+    # @section -- Lenses HQ Database startup values
     # **Required: true**
-    port:
+    port: 5432
 
     # -- (string) Username which will be used for connecting to Postgres database.
-    # @section -- Lenses HQ startup values
+    # @section -- Lenses HQ Database startup values
     # **Required: true**
     username: ""
 
     # -- (string) Database name to which HQ will connect to and store required information.
-    # @section -- Lenses HQ startup values
+    # @section -- Lenses HQ Database startup values
     # **Required: true**
     database: ""
 
     # -- Definition of secret that has been precreated and has postgres database password
-    # @section -- Lenses HQ startup values
+    # @section -- Lenses HQ Database startup values
     passwordSecret:
       # -- (string) Possible options: precreated | createNew | externalSecret
-      # @section -- Lenses HQ startup values
+      # @section -- Lenses HQ Database startup values
       type: "precreated"
 
       # -- (string) Secret name where database password will be stored in case "createNew" or read from in case of "precreated" | "externalSecret".
-      # @section -- Lenses HQ startup values
-      name:
+      # @section -- Lenses HQ Database startup values
+      name: ""
+
+      # -- (string) Entry for a password in case of testing where type: "createNew", otherwise can be left out. *NOT FOR PRODUCTION USE!*
+      # @section -- Lenses HQ Database startup values
+      password: ""
 
       # -- (string) Secret key where password will be read from
-      # @section -- Lenses HQ startup values
+      # @section -- Lenses HQ Database startup values
       key:
       externalSecret:
         secretStoreRef:
           clusterSecretStore:
             # -- (string) Name of cluster secret store created by ESO.
-            # @section -- Lenses HQ startup values
+            # @section -- Lenses HQ Database startup values
             name:
-
-      # -- (string) Entry for a password in case of testing where type: "createNew", otherwise can be left out. *NOT FOR PRODUCTION USE!*
-      # @section -- Lenses HQ startup values
-      password:
 
   # @section -- Lenses HQ startup values
   logger:
     # -- (string) Controls the format of the logger's output. Allowed values are: text | json
-    # @section -- Lenses HQ startup values
+    # @section -- Lenses HQ logger startup values
     # **Required: true**
     mode: "text"
 
     # -- (string) Controls the level of the logger
     # Allowed values are: info | debug
-    # @section -- Lenses HQ startup values
+    # @section -- Lenses HQ logger startup values
     # **Required: false**
     level: "info"
 
   metrics:
     # -- (string) ets the address at which Prometheus metrics are served.
     # If not set, it will default to `:9090``
-    # @section -- Lenses HQ startup values
+    # @section -- Lenses HQ metrics startup values
     # **Required: false**
     prometheusAddress: ":9090"
 
