@@ -22,10 +22,8 @@ data:
     {{ if (.Values.lensesHq.api.tls).enabled }}
     [api.tls_config]
     enabled = {{ .Values.lensesHq.api.tls.enabled }}
-    cert = """
-    {{ .Values.lensesHq.api.tls.cert | indent 4 }}
-    """
-    key = $(LENSESHQ_API_TLS_KEY)
+    cert = ""{{ .Values.lensesHq.api.tls.cert | quote }}""
+    key = """$(LENSESHQ_API_TLS_KEY)"""
     {{ end }}
 
     [api.saml]
@@ -45,10 +43,8 @@ data:
     {{ if (.Values.lensesHq.agents.tls).enabled }}
     [agents.tls_config]
     enabled = {{ .Values.lensesHq.agents.tls.enabled }}
-    cert = """
-    {{ .Values.lensesHq.agents.tls.cert | indent 4 }}
-    """
-    key = $(LENSESHQ_AGENTS_TLS_KEY)
+    cert = ""{{ .Values.lensesHq.agents.tls.cert | quote }}""
+    key = """$(LENSESHQ_AGENTS_TLS_KEY)"""
     {{ end }}
 
     [database]

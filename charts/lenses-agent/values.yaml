@@ -153,7 +153,9 @@ containerSecurityContext:
   readOnlyRootFilesystem: false
 
 lenses:
+
   # Configuration necessary for agent connecting to HQ
+  # @section -- Agent HQ scope values
   hq:
     # HQ hostname
     host: panoptes-backend.panoptes-master.svc.cluster.local

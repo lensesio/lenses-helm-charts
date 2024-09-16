@@ -119,15 +119,15 @@ spec:
           - name: LENSESHQ_AGENTS_TLS_KEY
             valueFrom:
               secretKeyRef:
-                name: .Values.lensesHq.agents.tls.prviateKey.secret.name
-                key: .Values.lensesHq.agents.tls.prviateKey.secret.key
+                name: {{.Values.lensesHq.agents.tls.privateKey.secret.name }}
+                key: {{ .Values.lensesHq.agents.tls.privateKey.secret.key }}
           {{- end }}
-          {{ if (.Values.lensesHq.agents.tls).enabled }}
+          {{ if (.Values.lensesHq.api.tls).enabled }}
           - name: LENSESHQ_API_TLS_KEY
             valueFrom:
               secretKeyRef:
-                name: .Values.lensesHq.api.tls.prviateKey.secret.name
-                key: .Values.lensesHq.api.tls.prviateKey.secret.key
+                name: {{ .Values.lensesHq.api.tls.privateKey.secret.name }}
+                key: {{ .Values.lensesHq.api.tls.privateKey.secret.key }}
           {{- end }}
           - name: LENSESHQ_PG_PASSWORD
             valueFrom:
