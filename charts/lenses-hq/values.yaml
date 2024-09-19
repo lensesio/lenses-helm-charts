@@ -175,6 +175,11 @@ lensesHq:
       # **Required: true**
       enabled: false
 
+      # -- (string) Enabled verbose of TLS debug logs
+      # @section -- Lenses HQ Agent startup values
+      # **Required: true**
+      verboseLogs: false
+
       # -- (string) Sets the PEM formatted public certificate.
       # @section -- Lenses HQ Agent startup values
       # **Required: false**
@@ -225,6 +230,11 @@ lensesHq:
       # @section -- Lenses HQ API startup values
       # **Required: true**
       enabled: false
+
+      # -- (string) Enabled verbose of TLS debug logs
+      # @section -- Lenses HQ Agent startup values
+      # **Required: true**
+      verboseLogs: false
 
       # -- (string) Sets the PEM formatted public certificate.
       # @section -- Lenses HQ API startup values
@@ -349,14 +359,6 @@ lensesHq:
     # @section -- Lenses HQ metrics startup values
     # **Required: false**
     prometheusAddress: ":9090"
-
-
-  # -- (map) Additional env variables appended to deployment
-  # @section -- Lenses HQ startup values
-  # Follows the format of [EnvVar spec](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.21/#envvar-v1-core)
-  additionalEnv:
-    # - name: FOO
-    #   value: bar
 
   # @section -- Lenses HQ startup values
   # Disable livenessProbe, used while debugging

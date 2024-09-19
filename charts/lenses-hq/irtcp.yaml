@@ -1,0 +1,16 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRouteTCP
+metadata:
+  labels:
+    app.kubernetes.io/instance: hq-tls-test-lenses-hq
+  name: hq-tls-test-lenses-hq
+  namespace: hq-agent-test
+spec:
+  entryPoints:
+    - agents
+  routes:
+    - match: HostSNI(`hq.enjoy.data-lenses.io`)
+      services:
+        - name: hq-tls-test-lenses-hq
+          port: agents
+  tls: {}

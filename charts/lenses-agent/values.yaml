@@ -3,21 +3,44 @@
 nameOverride: ""
 fullnameOverride: ""
 
+# -- Image map
+# @section -- Custom deployment values
 image:
+  # -- Image repository
+  # @section -- Custom deployment values
   repository: lensesio/lenses
-  # Default to .Chart.AppVersion
+
+  # -- Default to .Chart.AppVersion
   # tag:
-  pullPolicy: Always
-  # imagePullSecrets: # any image pull secrets for private registries go here
+  # -- Image pullPolicy
+  # @section -- Custom deployment values
+  pullPolicy: IfNotPresent
+  # -- imagePullSecrets: # any image pull secrets for private registries go here
   #   - name: regcred
 
+# -- (dict) Custom deployment annotations
+# @section -- Custom deployment values
 annotations: {}
-podTemplateAnnotations: {} # Annotations here go into the PodTemplateSpec at deployment.spec.template.annotations.
+# -- (dict) Annotations here go into the PodTemplateSpec at deployment.spec.template.annotations.
+# @section -- Custom deployment values
+podTemplateAnnotations: {}
+# -- (dict) Deployment labels
+# @section -- Custom deployment values
 labels: {}
+# -- (dict) Deployment strategy
+# @section -- Custom deployment values
 strategy: {}
+# -- (dict) Deployment nodeSelector
+# @section -- Custom deployment values
 nodeSelector: {}
+# -- (dict) Deployment tolerations
+# @section -- Custom deployment values
 tolerations: {}
+# -- (dict) Deployment affinity rules
+# @section -- Custom deployment values
 affinity: {}
+# -- (dict) Deployment security context
+# @section -- Custom deployment values
 securityContext: {}
 # dnsPolicy: "None" # Optional dnsPolicy and dnsConfig to put into the Deployment's PodTemplateSpec.
 # dnsConfig:
@@ -31,7 +54,11 @@ securityContext: {}
 # * Consumer lag metrics are exposed under 'lenses.url/metrics'. There isn't a standard way to add multiple scrape
 #   targets in the annotations, so you will have to add the lag metrics target manually to your Prometheus instance.
 monitoring:
+  # -- (dict) Enables port on certain port where path /metrics gets exposed.
+  # @section -- Monitoring scope values
   enabled: true
+  # -- (dict) Sets port where metrics will be exposed
+  # @section -- Monitoring scope values
   port: 9102
 
 # Resource management
@@ -39,6 +66,8 @@ monitoring:
 # heap space Lenses can use is 3GiB. If you increase the memory resource here, you will need to also
 # adjust 'lenses.jvm.heapOpts'. You should allow for 1-2GiB extra space beyond the heap. So if the
 # memory limit is 10Gi, set 'lenses.jvm.heapOpts' to '-Xmx8g -Xms4g'.
+# -- Pod resources
+# @section -- Custom deployment values
 resources:
   requests:
   #   cpu: 1
@@ -46,19 +75,26 @@ resources:
   limits:
   #   cpu: 2
     memory: 5Gi
+# -- Image map
 
-# rbacEnable indicates if a the cluster has rbac enabled and a cluster role
+# -- (bool) Enables rbac which indicates if a the cluster has rbac enabled and a cluster role
 # and clusterrolebinding should be created for the service account
+# @section -- Permission scope values
 rbacEnable: false
 
-# namespaceScope indicates that if the cluster has rbac and namespaceScope is enabled
+# -- (bool) Enables namespaceScope which indicates that if the cluster has rbac and namespaceScope is enabled
 #  role and role binding on namespace level will be created
+# @section -- Permission scope values
 namespaceScope: false
 
-# Lenses container port
+# -- (int) Lenses Agent container port
+# @section -- Lenses Agent deployment service values
 restPort: 3030
-# Lenses service port, service targets restPort
+# -- (int) Lenses Agent service port, service targets restPort
+# @section -- Lenses Agent deployment service values
 servicePort: 80
+# -- (string) Lenses Agent service port name
+# @section -- Lenses Agent deployment service values
 servicePortName: lenses-agent
 
 # -- User to be used by Lenses to deploy apps
@@ -76,15 +112,23 @@ serviceAccount:
   # @section -- Permission scope values
   annotations: {}
 
-# If you use Data Policies module enable a Persistent Volume to keep your data policies rule.
-# Also used when lenses.storage.enabled: false, and an H2 local filesystem database is used, instead of Postgresql.
-# https://docs.lenses.io/current/installation/kubernetes/persistence/
 persistence:
+  # -- (boolean) If you use Data Policies module enable a Persistent Volume to keep your data policies rule.
+  # Also used when lenses.storage.enabled: false, and an H2 local filesystem database is used, instead of Postgresql.
+  # https://docs.lenses.io/current/installation/kubernetes/persistence/
+  # @section -- Persistence scope values
   enabled: true
+
+  # -- (list) Access mode rights for created persistence volumes.
+  # @section -- Persistence scope values
   accessModes:
     - ReadWriteOnce
+  # -- (string) Size of persistence that will be created.
+  # @section -- Persistence scope values
   size: 5Gi
   log:
+    # -- (boolean) Extra volume creation dedicated for logs.
+    # @section -- Persistence scope values
     enabled: true
   # Target an pre-existing volume claim to use it as Lenses Persistent volume
   # existingClaim:
@@ -98,17 +142,19 @@ persistence:
   ##
   # storageClass: "-"
 
-# Additional volume mounts to use in Lenses delpoyments, for example to load additional plugins (UDFs) in Lenses
+# -- (list) Additional volume mounts to use in Lenses delpoyments, for example to load additional plugins (UDFs) in Lenses
 # Use it in conjuction with lenses.additionalVolumes
+# @section -- Extras
 additionalVolumeMounts:
   # - name: lenses-plugins
   #   mountPath: "/data/plugins"
 
-# Additional volumes to use in Lenses delpoyments either by Lenses for other sidecars like Lenses provisioner.
-# Example usages:
-#   Lenses: load additional plugins (UDFs) in Lenses
-#   Lenses provisioner: load additional files from pre-existing volumes, secrets or vault secrets to use in provisioning
+# -- (list) Additional volumes to use in Lenses delpoyments either by Lenses for other sidecars like Lenses provisioner.
+# @section -- Extras
 additionalVolumes:
+  # Example usages:
+  #   Lenses: load additional plugins (UDFs) in Lenses
+  #   Lenses provisioner: load additional files from pre-existing volumes, secrets or vault secrets to use in provisioning
   # - name: secrets
   #   secret:
   #     secretName: lenses-super-secrets
@@ -117,17 +163,26 @@ additionalVolumes:
   #   persistentVolumeClaim:
   #     claimName: lenses-plugins
 
-# Lenses service
+# @section -- Lenses Agent deployment service values
 service:
+  # -- (bool) Deciding factor whether Lenses HQ service will be created and which type
+  # @section -- Lenses Agent deployment service values
   enabled: true
+
+  # -- (string) Type of service to be created.
+  # @section -- Lenses Agent deployment service values
   type: ClusterIP
+
+  # -- (dict) Additional service annotations
+  # @section -- Lenses Agent deployment service values
   annotations: {}
 
   # If you want to make it available as a node port, then add nodePort: <somePort>
   # Warning: this should not be used with servicePort:
   # Warning nodePort is deprecated and will be removed on next Lenses major version upgrade
   # nodePort:
-
+  # -- (string)
+  # @section -- Lenses Agent deployment service values
   externalTrafficPolicy:
 
   ## Load balancer IP address
@@ -146,25 +201,32 @@ service:
   # loadBalancerSourceRanges:
   #   - 0.0.0.0/0
 
+
 # Optionally add this property in case you would like to enforce Read Only Root Filesystem
 # In that case only /data and /tmp directories will extra mounted and be writable
 # the rest will be mount the container's root filesystem as read-only.
 containerSecurityContext:
+  # -- (list) Enabling read only root filesystem.
+  # @section -- Extras
   readOnlyRootFilesystem: false
 
 lenses:
-
   # Configuration necessary for agent connecting to HQ
-  # @section -- Agent HQ scope values
+  # @section -- Agent <-> HQ scope values
   hq:
-    # HQ hostname
-    host: panoptes-backend.panoptes-master.svc.cluster.local
-    # HQ port
+    # -- (string) Lenses HQ hostname.
+    # @section -- Agent <-> HQ scope values
+    host:
+    # -- (int) Lenses HQ port where it is listening for Agent connections.
+    # @section -- Agent <-> HQ scope values
     port: 10000
-    # Api key that has been generated in HQ as service account
+    # -- (dict) Agent key that has been generated in HQ as service account for Agent registration.
+    # @section -- Agent <-> HQ scope values
     agentKey:
       secret:
-        # createNew | precreated | externalSecret
+        # -- (string) Secret type for referencing / creating agent key
+        # Possible values: createNew | precreated | externalSecret
+        # @section -- Agent <-> HQ scope values
         type: "externalSecret"
         #value: ""
         key: password
@@ -183,15 +245,22 @@ lenses:
         ## type: "precreated"
         ## name: "secret-name"
         ## key: "secret-key"
-    ssl:
-      enabled: false
+
   # Set the details to provision Lenses
   # 1: Lenses version >=5,3 (https://docs.lenses.io/5.5/installation/getting-started/helm/#helm-lenses-provision)
   #    This is applied on every deployment/upgrade of the chart. Any connection change in the UI will be
   #    reverted during an upgrade. *Connections that do not exist here will be deleted*.
   provision:
-    enabled: false
+    # -- (boolean) Enables provisioning to automate connections from Agent
+    # Possible values: createNew | precreated | externalSecret
+    # @section -- Agent Provision scope values
+    enabled: true
+    # -- (string) Version of provisioning that will be used, currently only "2" is supported.
+    # Property is still here as a transition phase and will be removed in the future.
+    # @section -- Agent Provision scope values
     version: "2"
+    # -- (string) Path where provisioner will be initiated.
+    # @section -- Agent Provision scope values
     path: /mnt/provision-secrets
     # Find more details in https://docs.lenses.io/5.5/installation/getting-started/helm/#helm-provision
 
@@ -250,7 +319,8 @@ lenses:
       #         value: JMX
       #       metricsPort:
       #         value: 9584
-
+    # -- (dict) Secrets base64 encoded (such as keystores) which will be placed within provisioner folder upon initialisation.
+    # @section -- Agent Provision scope values
     secrets: {}
       # Base64 encoded. Read how to convert from .pem to .jks in the article: https://docs.lenses.io/current/configuration/dynamic/pem-to-jks-conversion/
       # data:
@@ -260,16 +330,20 @@ lenses:
 
     # Find more details in https://docs.lenses.io/current/installation/kubernetes/helm/#helm-provision-sidecar
     sidecar:
-      # name:
+      # -- (dict) Sidecar image name.
+      # @section -- Agent Provision scope values
       image:
+        # -- (string) Sidecar image repository
+        # @section -- Agent Provision scope values
         repository: lensesio/lenses-cli
         # Default to .Chart.AppVersion with major.minor semantic (e.g 5.0)
         # tag:
         # pullPolicy: Always
         # registrySecretKey:
 
-      # Additional volume mounts to load additional files from pre-existing volumes, secrets or vault secrets to use in provisioning
-      # Use it in conjuction with lenses.additionalVolumes
+      # -- (list) Additional volume mounts to load additional files from pre-existing volumes, secrets or vault secrets to use in provisioning
+      # Use it in conjuction with lenses.additionalVolumes.
+      # @section -- Agent Provision scope values
       additionalVolumeMounts:
         # - name: lenses-super-secrets
         #   mountPath: "/data/lenses-super-secrets"
@@ -277,6 +351,8 @@ lenses:
 
   # For additional generic JVM settings
   # Read more: https://docs.lenses.io/current/configuration/static/jvm/
+  # -- (string) For additional generic JVM settings
+  # @section -- Extras
   lensesOpts: |-
 
   # Each version of the helm chart for Lenses is accompanied by a values.yaml.
@@ -286,16 +362,21 @@ lenses:
   append:
     # Custom configuration values, will take precedence over the env variables and auto-generated values
     # Read more: https://help.lenses.io/knowledge-base/helm/helm-lenses-append-conf/
+    # -- (string) Additional parameters which usually go to lenses.conf and are not supported by this Helm Chart.
+    # @section -- Extras
     conf: |-
 
   jvm:
-    # heapOpts are any overrides for Lenses Heap JVM options
+    # -- (string) heapOpts are any overrides for Lenses Heap JVM options.
     # Please adjust this in sync with 'resources.limits.memory'
+    # @section -- Agent JVM scope values
     heapOpts:
-    # logBackOpts are any logging options. Lenses is using the logback library.
+    # -- (string) logBackOpts are any logging options. Lenses is using the logback library.
+    # @section -- Agent JVM scope values
     logBackOpts:
 
-    #performanceOpts are any jvm tuning options to add to the jvm
+    # -- (string) performanceOpts are any jvm tuning options to add to the jvm
+    # @section -- Agent JVM scope values
     performanceOpts:
 
   # Override the default logback xml
@@ -304,10 +385,12 @@ lenses:
   # to switch the log level for Lenses facilities to DEBUG.
   # logbackXml: /opt/lenses/logback-debug.xml
 
+  # -- (string) Global truststore/keystore for the JVM.
+  # base64 encoded truststore data
+  # openssl base64 < kafka.truststore.jks | tr -d '\n'
+  # @section -- Agent JVM scope values
   opts:
-    # Global truststore/keystore for the JVM
-    # base64 encoded truststore data
-    # openssl base64 < kafka.truststore.jks | tr -d '\n'
+
     trustStoreFileData: |-
 
     trustStorePassword: |-
@@ -336,9 +419,17 @@ lenses:
 
   # Find more details in https://docs.lenses.io/current/installation/kubernetes/helm/#helm-storage
   storage:
+    # -- (dict) Connection details for Postgres database
+    # @section -- Agent Database scope values
     postgres:
+      # -- (boolean) Enables postgres database connection, otherwise H2 as internal database will be used.
+      # @section -- Agent Database scope values
       enabled: false
+      # -- (string) Postgres database host details
+      # @section -- Agent Database scope values
       host:
+      # -- (int) Postgres database port details
+      # @section -- Agent Database scope values
       port:               # optional, defaults to 5432
 
       # Set the username for postgres connection
@@ -350,6 +441,8 @@ lenses:
       #     secretKeyRef:
       #       name: [SECRET_RESOURCE_NAME]
       #       key: [SECRET_RESOURCE_KEY]
+      # -- (string) Postgres database user details
+      # @section -- Agent Database scope values
       username:           # use "external" to manage it using secrets
 
       # Set the password for postgres connection
@@ -361,9 +454,14 @@ lenses:
       #     secretKeyRef:
       #       name: [SECRET_RESOURCE_NAME]
       #       key: [SECRET_RESOURCE_KEY]
+      # -- (string) Postgres user password details
+      # @section -- Agent Database scope values
       password:           # use "external" to manage it using secrets
-
+      # -- (string) Postgres database name that Agent will connect to and communicate with.
+      # @section -- Agent Database scope values
       database:
+      # -- (string) Postgres schema, defaults to public in case not defined.
+      # @section -- Agent Database scope values
       schema:             # optional, defaults to public schema
 
   # Data Application Deployment Framework
@@ -378,32 +476,55 @@ lenses:
   sql:
     # processorImage: lensesioextra/sql-processor
     # processorImageTag: 5.5
+
+    # -- (string) Setting execution mode for SQL Processors
+    # Example: IN_PROC | KUBERNETES
+    # @section -- Agent SQL Processor scope values
     mode: IN_PROC
+
+    # -- (string) Setting heap for each individual SQL Processor
+    # @section -- Agent SQL Processor scope values
     heap: 1024M
+
+    # -- (string) Setting min heap for each individual SQL Processor
+    # @section -- Agent SQL Processor scope values
     minHeap: 128M
+
+    # -- (string) Setting memory limit for each individual SQL Processor
+    # @section -- Agent SQL Processor scope values
     memLimit: 1152M
+
+    # -- (string) Setting memory limit for each individual SQL Processor
+    # @section -- Agent SQL Processor scope values
     memRequest: 128M
+
+    # -- (string) Setting
+    # @section -- Agent SQL Processor scope values
     livenessInitialDelay: 60 seconds
 
-  # The url to the grafana host
+  # -- (string) URL for Grafana UI
+  # @section -- Extras
   grafanaUrl:
 
-  # topics
   topics:
-    # suffix to add to lenses system topics, for example if you are running more than one Lenses on the same kafka cluster
+    # -- (string) Suffix to add to lenses system topics, for example if you are running more than one Lenses on the same kafka cluster
+    # @section -- Extras
     suffix:
 
-  # Additional env variables appended to deployment
+  # -- (string) Additional env variables appended to deployment
+  # @section -- Extras
   # Follows the format of [EnvVar spec](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.21/#envvar-v1-core)
   additionalEnv:
     # - name: FOO
     #   value: bar
 
-  # Disable livenessProbe, used while debugging
   livenessProbe:
+    # -- (string) Disables livenessProbe, used while debugging
+    # @section -- Extras
     enabled: true
 
-  # Pause execution of Lenses start up script to allow the user to login into the container and
-  # check the running environment, used while debugging
   pauseExec:
+    # -- (string) Pauses execution of Lenses start up script to allow the user to login into the container and
+    # check the running environment, used while debugging
+    # @section -- Extras
     enabled: false

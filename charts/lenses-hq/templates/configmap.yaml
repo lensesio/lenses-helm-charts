@@ -20,10 +20,11 @@ data:
     redir_to_idp = {{ .Values.lensesHq.api.redirToIdp }}
 
     {{ if (.Values.lensesHq.api.tls).enabled }}
-    [api.tls_config]
+    [api.tls]
     enabled = {{ .Values.lensesHq.api.tls.enabled }}
     cert = ""{{ .Values.lensesHq.api.tls.cert | quote }}""
     key = """$(LENSESHQ_API_TLS_KEY)"""
+    verbose_logs = {{ .Values.lensesHq.api.tls.verboseLogs  | quote }}
     {{ end }}
 
     [api.saml]
@@ -41,10 +42,11 @@ data:
     [agents]
     address = {{ .Values.lensesHq.agents.address | quote }}
     {{ if (.Values.lensesHq.agents.tls).enabled }}
-    [agents.tls_config]
+    [agents.tls]
     enabled = {{ .Values.lensesHq.agents.tls.enabled }}
     cert = ""{{ .Values.lensesHq.agents.tls.cert | quote }}""
     key = """$(LENSESHQ_AGENTS_TLS_KEY)"""
+    verbose_logs = {{ .Values.lensesHq.agents.tls.verboseLogs }}
     {{ end }}
 
     [database]
