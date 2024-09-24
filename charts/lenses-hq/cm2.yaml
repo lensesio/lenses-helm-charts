@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: metadata-configmap-2  # This is the name of the ConfigMap
+data:
+  metadata.xml: |
+    <?xml version="1.0" encoding="UTF-8"?><md:EntityDescriptor
+    xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata"
+    entityID="https://accounts.google.com/o/saml2?idpid=C041qpyya"
+    validUntil="2028-10-30T16:33:21.000Z">
+      <md:IDPSSODescriptor WantAuthnRequestsSigned="false" protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
+        <md:KeyDescriptor use="signing">
+          <ds:KeyInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+            <ds:X509Data>
+              <ds:X509Certificate>MIIDdDCCAlygAwIBAgIGAYuLu3ztMA0GCSqGSIb3DQEBCwUAMHsxFDASBgNVBAoTC0dvb2dsZSBJ
+              bmMuMRYwFAYDVQQHEw1Nb3VudGFpbiBWaWV3MQ8wDQYDVQQDEwZHb29nbGUxGDAWBgNVBAsTD0dv
+              b2dsZSBGb3IgV29yazELMAkGA1UEBhMCVVMxEzARBgNVBAgTCkNhbGlmb3JuaWEwHhcNMjMxMTAx
+              MTYzMzIxWhcNMjgxMDMwMTYzMzIxWjB7MRQwEgYDVQQKEwtHb29nbGUgSW5jLjEWMBQGA1UEBxMN
+              TW91bnRhaW4gVmlldzEPMA0GA1UEAxMGR29vZ2xlMRgwFgYDVQQLEw9Hb29nbGUgRm9yIFdvcmsx
+              CzAJBgNVBAYTAlVTMRMwEQYDVQQIEwpDYWxpZm9ybmlhMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8A
+              MIIBCgKCAQEAsm4+dPx5xYcApDst/EG1bQ6VvvKBd//ashEo9gqHUPaRUetorpXuNnvBe77q9AOj
+              SxtM6rk8D90LSyC6e4zfjWBB9WQ36lFcYuPHMyl1XRsZAk8Oan5nDiZdLWiFQ7BzoqV7ptQ2Mh7T
+              zQrXCpqv0Fa8l3WtdrcNqLKtyoVqVeajRQet+Z+gPWybWVjASisZKz9+mFenzUSB1s4iG81Tb1ej
+              I8Ng01BH6WnsBu8+hJ6G3+9r3ni5zwZPkZojzstcuG1ad2Ii/LmLEs+rvaLF0Ts3TSPE+qlk0e8v
+              dMNgQf4F/Xh1OXoZ9u6Q+2CP8kSebzDOJLPTif/Nr5vbZgAUtwIDAQABMA0GCSqGSIb3DQEBCwUA
+              A4IBAQCE+MYeCoN4Ln2Iqg6+YcYjPZUnSwU4dkNEkxxfw1XE7WzVGMAyzvuxlRW0d2C77FyAc/VY
+              Ro+o3ZVBkQy5X181M7d5GLCvMNkZ79BoePVownaLzBUOg/JO1MjliF/kONbSo634C/yyPoizO+wS
+              rNdddyFU18o77Mada3diIb5E+EIuaGgq79nBgT+ZZcUtqZcIjthwvJdKGiR9IQDUBqxRQlbhsZZZ
+              Tc5UzSVZG5P/VjNbMlW27JT87iLXf9pfj9FtOTWaYGe50EluK8YINmrhtf1V/DR8NWiMUiYpj1QS
+              8i9OZQSDNF3vgtjDYzT3jb3nVVYOanQ1ZVyhsMJcy8fm</ds:X509Certificate>
+            </ds:X509Data>
+          </ds:KeyInfo>
+        </md:KeyDescriptor>
+        <md:NameIDFormat>urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress</md:NameIDFormat>
+        <md:SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect" Location="https://accounts.google.com/o/saml2/idp?idpid=C041qpyya"/>
+        <md:SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://accounts.google.com/o/saml2/idp?idpid=C041qpyya"/>
+      </md:IDPSSODescriptor>
+    </md:EntityDescriptor>

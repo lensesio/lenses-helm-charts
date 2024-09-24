@@ -498,7 +498,7 @@ lenses:
     # @section -- Agent SQL Processor scope values
     memRequest: 128M
 
-    # -- (string) Setting
+    # -- (string) Setting initial delay when SQL processor is being started
     # @section -- Agent SQL Processor scope values
     livenessInitialDelay: 60 seconds
 

@@ -270,7 +270,24 @@ lensesHq:
       # Example: <?xml version="1.0" ... (big blob of xml) </md:EntityDescriptor>
       # @section -- Lenses HQ SAML startup values
       # **Required: true**
-      metadata: |-
+      metadata:
+        # -- (boolean) Enables use of configmap to refernence SAML metadata file.
+        # @section -- Lenses HQ SAML startup values
+        # **Required: true**
+        useConfigMap: false
+        # -- (string) ConfigMap name which contains metadata information.
+        # @section -- Lenses HQ SAML startup values
+        # **Required: false**
+        configMapName: ""
+        # -- (string) ConfigMap key used to refernce configmap metadata information.
+        # @section -- Lenses HQ SAML startup values
+        # **Required: false**
+        configMapKey: "metadata.xml"
+        # -- Contains the IdP issued XML metadata blob.
+        # Example: <?xml version="1.0" ... (big blob of xml) </md:EntityDescriptor>
+        # @section -- Lenses HQ SAML startup values
+        # **Required: true**
+        stringData: |
 
       # -- Controls how the creation of users should be handled in relation to SSO information
       # Allowed values are: sso | manual

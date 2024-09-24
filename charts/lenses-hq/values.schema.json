@@ -502,12 +502,47 @@
                                     ]
                                 },
                                 "metadata": {
-                                    "type": "string",
+                                    "type": "object",
                                     "default": "",
                                     "title": "The metadata Schema",
                                     "examples": [
                                         ""
-                                    ]
+                                    ],
+                                    "properties": {
+                                        "useConfigMap": {
+                                            "type": "boolean",
+                                            "default": "false",
+                                            "title": "Read metadata xml file from ConfigMap Schema",
+                                            "examples": [
+                                                true,
+                                                false
+                                            ]
+                                        },
+                                        "configMapName": {
+                                            "type": "string",
+                                            "default": "",
+                                            "title": "ConfigMap name where Saml metadata is stored Schema",
+                                            "examples": [
+                                                "metadata-configmap"
+                                            ]
+                                        },
+                                        "confiMapKey": {
+                                            "type": "string",
+                                            "default": "metadata.xml",
+                                            "title": "ConfigMap key used to refernce configmap metadata information.",
+                                            "examples": [
+                                                "metadata.xml"
+                                            ]
+                                        },
+                                        "stringData": {
+                                            "type": "string",
+                                            "default": "",
+                                            "title": " Contains the IdP issued XML metadata blob.",
+                                            "examples": [
+                                                "<?xml version= ... (big blob of xml) </md:EntityDescriptor>"
+                                            ]
+                                        }
+                                    }
                                 },
                                 "userCreationMode": {
                                     "type": "string",

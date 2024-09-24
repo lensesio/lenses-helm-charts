@@ -23,7 +23,9 @@ data:
     [api.tls]
     enabled = {{ .Values.lensesHq.api.tls.enabled }}
     cert = ""{{ .Values.lensesHq.api.tls.cert | quote }}""
-    key = """$(LENSESHQ_API_TLS_KEY)"""
+    key = """
+    $(LENSESHQ_API_TLS_KEY)
+    """
     verbose_logs = {{ .Values.lensesHq.api.tls.verboseLogs  | quote }}
     {{ end }}
 
@@ -31,9 +33,14 @@ data:
     organisation_name = {{ .Values.lensesHq.api.saml.organisationName | quote }}
     base_url = {{ .Values.lensesHq.api.saml.baseUrl | quote }}
     entity_id = {{ .Values.lensesHq.api.saml.entityId | quote }}
+    {{- if .Values.lensesHq.api.saml.metadata.useConfigMap }}
+    metadata = """$(LENSESHQ_API_SAML_METADATA)"""
+    {{- else }}
     metadata = """
-    {{ .Values.lensesHq.api.saml.metadata | indent 4 }}
+    {{ .Values.lensesHq.api.saml.metadata.stringData | indent 4 }}
     """
+    {{- end }}
+
     user_creation_mode = {{ .Values.lensesHq.api.saml.userCreationMode | quote }}
     users_group_membership_management_mode = {{ .Values.lensesHq.api.saml.usersGroupMembershipManagementMode | quote }}
     ui_root_url = {{ .Values.lensesHq.api.saml.uiRootUrl | quote }}

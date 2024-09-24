@@ -29,8 +29,6 @@ The command deploys Lenses Agent on the Kubernetes cluster in the example config
 
 ## Parameters
 
-## Values
-
 ### Extras
 
 | Key | Type | Default | Description |
