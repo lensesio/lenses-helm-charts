@@ -1,0 +1,143 @@
+nameOverride: ""
+fullnameOverride: ""
+
+podTemplateAnnotations: {}
+labels: {}
+strategy: {}
+nodeSelector: {}
+tolerations: {}
+affinity: {}
+securityContext: {}
+resources:
+  requests:
+  #   cpu: 1
+    memory: 4Gi
+  limits:
+  #   cpu: 2
+    memory: 5Gi
+
+image:
+  #repository: eu.gcr.io/k8-engine/panoptes:v6.0.0-alpha.2
+  repository: 637423640330.dkr.ecr.eu-west-1.amazonaws.com/hq:v6.0.0-alpha.austin-8-g2564e52
+  #repository:
+  # -- Default to .Chart.AppVersion
+  # tag:
+  pullPolicy: Always
+  # -- imagePullSecrets: # any image pull secrets for private registries go here
+  #   - name: regcred
+
+# rbacEnable indicates if a the cluster has rbac enabled and a cluster role
+# and rolebinding should be created for the service account
+rbacEnable: true
+
+# In case rbac is enabled you can choose to enable namespace scoped roles or
+# cluster roles to be created
+namespaceScope: true
+
+# Lense HQ container port
+restPort: 8080
+# Lenses HQ service port, service targets restPort
+servicePort: 80
+servicePortName: lenses-hq
+
+# serviceAccount is the Service account to be used by Lenses to deploy apps
+serviceAccount:
+  create: false
+  name: default
+
+# Lenses service
+service:
+  enabled: true
+  type: ClusterIP
+  annotations: {}
+
+ingress:
+  annotations:
+    kubernetes.io/ingress.class: traefik
+    traefik.ingress.kubernetes.io/router.middlewares: common-traefik-basic-auth@kubernetescrd
+  enabled: true
+  host: hq.enjoy.data-lenses.io
+
+lensesHq:
+  agents:
+    address: ":10000"
+    tls:
+      enabled: false
+  api:
+    address: ":8080"
+    accessControlAllowOrigin: '[""]'
+    administrators: '["admin@example.com"]'
+    saml:
+      organisationName: "Lenses"
+      baseUrl: "https://"
+      entityId: "https://"
+      # -- Example: <?xml version="1.0" ... (big blob of xml) </md:EntityDescriptor>
+      metadata:
+        useConfigMap: false
+        stringData: |
+          <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+          <md:EntityDescriptor xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata" entityID="https://saml.example.com/entityid" validUntil="2034-09-23T08:10:34.764Z">
+            <md:IDPSSODescriptor WantAuthnRequestsSigned="true" protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
+              <md:KeyDescriptor use="signing">
+                <ds:KeyInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+                  <ds:X509Data>
+                    <ds:X509Certificate>MIIC4jCCAcoCCQC33wnybT5QZDANBgkqhkiG9w0BAQsFADAyMQswCQYDVQQGEwJV
+          SzEPMA0GA1UECgwGQm94eUhRMRIwEAYDVQQDDAlNb2NrIFNBTUwwIBcNMjIwMjI4
+          MjE0NjM4WhgPMzAyMTA3MDEyMTQ2MzhaMDIxCzAJBgNVBAYTAlVLMQ8wDQYDVQQK
+          DAZCb3h5SFExEjAQBgNVBAMMCU1vY2sgU0FNTDCCASIwDQYJKoZIhvcNAQEBBQAD
+          ggEPADCCAQoCggEBALGfYettMsct1T6tVUwTudNJH5Pnb9GGnkXi9Zw/e6x45DD0
+          RuRONbFlJ2T4RjAE/uG+AjXxXQ8o2SZfb9+GgmCHuTJFNgHoZ1nFVXCmb/Hg8Hpd
+          4vOAGXndixaReOiq3EH5XvpMjMkJ3+8+9VYMzMZOjkgQtAqO36eAFFfNKX7dTj3V
+          pwLkvz6/KFCq8OAwY+AUi4eZm5J57D31GzjHwfjH9WTeX0MyndmnNB1qV75qQR3b
+          2/W5sGHRv+9AarggJkF+ptUkXoLtVA51wcfYm6hILptpde5FQC8RWY1YrswBWAEZ
+          NfyrR4JeSweElNHg4NVOs4TwGjOPwWGqzTfgTlECAwEAATANBgkqhkiG9w0BAQsF
+          AAOCAQEAAYRlYflSXAWoZpFfwNiCQVE5d9zZ0DPzNdWhAybXcTyMf0z5mDf6FWBW
+          5Gyoi9u3EMEDnzLcJNkwJAAc39Apa4I2/tml+Jy29dk8bTyX6m93ngmCgdLh5Za4
+          khuU3AM3L63g7VexCuO7kwkjh/+LqdcIXsVGO6XDfu2QOs1Xpe9zIzLpwm/RNYeX
+          UjbSj5ce/jekpAw7qyVVL4xOyh8AtUW1ek3wIw1MJvEgEPt0d16oshWJpoS1OT8L
+          r/22SvYEo3EmSGdTVGgk3x3s+A0qWAqTcyjr7Q4s/GKYRFfomGwz0TZ4Iw1ZN99M
+          m0eo2USlSRTVl7QHRTuiuSThHpLKQQ==</ds:X509Certificate>
+                  </ds:X509Data>
+                </ds:KeyInfo>
+              </md:KeyDescriptor>
+              <md:NameIDFormat>urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress</md:NameIDFormat>
+              <md:SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect" Location="https://mocksaml.com/api/saml/sso"/>
+              <md:SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://mocksaml.com/api/saml/sso"/>
+            </md:IDPSSODescriptor>
+          </md:EntityDescriptor>
+      userCreationMode: "sso"
+      usersGroupMembershipManagementMode: "sso"
+    tls:
+      enabled: false
+  # Find more details in https://docs.lenses.io/current/installation/kubernetes/helm/#helm-storage
+  ## Postgres template example: "postgres://[username]:[pwd]@[host]:[port]/[database]?sslmode=require"
+  postgres:
+    host: postgres-postgresql.postgres.svc.cluster.local
+    port: 5432
+    username: lenses
+    database: hq
+    passwordSecret:
+      type: "externalSecret"
+      name: postgres
+      key:  password
+      externalSecret:
+        secretStoreRef:
+          clusterSecretStore:
+            name: enjoy3-secrets
+
+  logger:
+    mode: "text"
+    level: "debug"
+
+  # Additional env variables appended to deployment
+  # Follows the format of [EnvVar spec](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.21/#envvar-v1-core)
+  additionalEnv:
+    # - name: FOO
+    #   value: bar
+
+  # Disable livenessProbe, used while debugging
+  livenessProbe:
+    enabled: true
+
+  monitoring:
+    port: 9090

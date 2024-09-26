@@ -18,7 +18,7 @@ With Panoptes, we shrunk Lenses to only one UI called Lenses HQ where all admini
 -  *External secret operator (in case of `ExternalSecret` usage)
 
 ## Installing the Chart
-To install teh chart with the release name `lenses-hq-release`:
+To install the chart with the release name `lenses-hq-release`:
 
 ```console
 helm repo add lensesio https://helm.repo.lenses.io/
@@ -69,14 +69,6 @@ The command deploys Lenses HQ on the Kubernetes cluster in the example configura
 | servicePort | int | `80` | Lenses HQ service port, service targets restPort |
 | servicePortName | string | `"lenses-hq"` | Lenses HQ service port name |
 
-### Lenses HQ startup values
-
-| Key | Type | Default | Description |
-|-----|------|---------|-------------|
-| lensesHq.additionalEnv | map | `nil` | Additional env variables appended to deployment Follows the format of [EnvVar spec](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.21/#envvar-v1-core) |
-| lensesHq.livenessProbe.enabled | bool | `true` |  |
-| lensesHq.livenessProbe.tls.enabled | bool | `false` | Enabling HTTPS forliveness probe. |
-
 ### Lenses HQ Agent startup values
 
 | Key | Type | Default | Description |
@@ -85,6 +77,8 @@ The command deploys Lenses HQ on the Kubernetes cluster in the example configura
 | lensesHq.agents.tls.cert | string | `""` | Sets the PEM formatted public certificate. **Required: false** |
 | lensesHq.agents.tls.enabled | string | `false` | Enables or disables TLS. **Required: true** |
 | lensesHq.agents.tls.privateKey | string | `{"secret":{"key":null,"name":null}}` | Sets the PEM formatted private key. **Required: false** |
+| lensesHq.agents.tls.verboseLogs | string | `false` | Enabled verbose of TLS debug logs **Required: true** |
+| lensesHq.api.tls.verboseLogs | string | `false` | Enabled verbose of TLS debug logs **Required: true** |
 
 ### Lenses HQ API startup values
 
@@ -107,11 +101,22 @@ The command deploys Lenses HQ on the Kubernetes cluster in the example configura
 | lensesHq.api.saml.baseUrl | string | `""` | Defines base URL of Panoptes for IdP redirects. **Required: true** |
 | lensesHq.api.saml.entityId | string | `""` | Defines the Entity ID. **Required: true** |
 | lensesHq.api.saml.groupAttributeKey | string | `"group"` | Sets the attribute name for group names. **Required: false** |
-| lensesHq.api.saml.metadata | string | `""` | Contains the IdP issued XML metadata blob. Example: <?xml version="1.0" ... (big blob of xml) </md:EntityDescriptor> **Required: true** |
+| lensesHq.api.saml.metadata | object | `{"configMapKey":"metadata.xml","configMapName":"","stringData":"","useConfigMap":false}` | Contains the IdP issued XML metadata blob. Example: <?xml version="1.0" ... (big blob of xml) </md:EntityDescriptor> **Required: true** |
+| lensesHq.api.saml.metadata.configMapKey | string | `"metadata.xml"` | ConfigMap key used to refernce configmap metadata information. **Required: false** |
+| lensesHq.api.saml.metadata.configMapName | string | `""` | ConfigMap name which contains metadata information. **Required: false** |
+| lensesHq.api.saml.metadata.stringData | string | `""` | Contains the IdP issued XML metadata blob. Example: <?xml version="1.0" ... (big blob of xml) </md:EntityDescriptor> **Required: true** |
+| lensesHq.api.saml.metadata.useConfigMap | boolean | `false` | Enables use of configmap to refernence SAML metadata file. **Required: true** |
 | lensesHq.api.saml.organisationName | string | `""` | Sets the name of the organisation that users get assigned to. **Required: true** |
 | lensesHq.api.saml.uiRootUrl | string | `"/"` | Controls where to redirect to upon successful authentication. **Required: false** |
 | lensesHq.api.saml.userCreationMode | string | `"manual"` | Controls how the creation of users should be handled in relation to SSO information Allowed values are: sso | manual **Required: false** |
 | lensesHq.api.saml.usersGroupMembershipManagementMode | string | `"manual"` | Controls how the management of a user's group membership should be handled in relation to SSO information. Allowed values are: sso | manual **Required: false** |
+
+### Lenses HQ startup values
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| lensesHq.livenessProbe.enabled | bool | `true` |  |
+| lensesHq.livenessProbe.tls.enabled | bool | `false` | Enabling HTTPS forliveness probe. |
 
 ### Lenses HQ logger startup values
 

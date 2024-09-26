@@ -1,12 +1,26 @@
-### Documentation: https://docs.lenses.io/current/installation/kubernetes/helm/
-### All values reference: https://github.com/lensesio/lenses-helm-charts/blob/release/5.4/charts/lenses/values.yaml
-
 lenses:
+  hq:
+    agentKey:
+      secret:
+        type: "createNew"
+        name: "agentKey"
+        value: "agent_key_kU919kP32b0w7EiV_6d9Lv4Tm3dmvPH4bjyOz4vgqukSLTZ3o"
   provision:
     enabled: true
     version: "2"
     path: /mnt/provision-secrets
     connections:
+      grpcServer:
+        - name: lenses-hq
+          version: 1
+          tags: ['hq']
+          configuration:
+            server:
+              value: hq-tls-test-lenses-hq.hq-agent-test.svc.cluster.local
+            port:
+              value: 10000
+            apiKey:
+              value: ${LENSES_HQ_AGENT_KEY}
       kafka:
         # There can only be one Kafka cluster at a time
         - name: kafka

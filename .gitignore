@@ -8,5 +8,5 @@ landoop
 .DS_Store
 build/
 charts/*/coyote.html
-charts/lenses-hq/examples/
-charts/lenses-agent/examples
+charts/lenses-hq/local-examples/
+charts/lenses-agent/local-examples/
