@@ -61,6 +61,7 @@ spec:
         {{- end }}
         {{- if  (include "lensesAppendConf" .) }}
         checksum/lenses.append.conf: {{ include "lensesAppendConf" . | sha256sum }}
+        checksum/saml.metadata.xml: {{ .Values.lenses.security.saml.metadataFileData | sha256sum }}
         {{- end }}
     spec:
       {{- if .Values.nodeSelector }}
