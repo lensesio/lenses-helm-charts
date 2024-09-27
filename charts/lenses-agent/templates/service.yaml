@@ -20,15 +20,9 @@ metadata:
 {{- end }}
 spec:
   type: {{ .Values.service.type | quote }}
-  {{- if .Values.service.externalTrafficPolicy }}
-  externalTrafficPolicy: {{ toYaml .Values.service.externalTrafficPolicy }}
-  {{- end }}
   ports:
   - name: {{ .Values.servicePortName }}
     port: {{ .Values.servicePort }}
-    {{- if include "nodePort" . }}
-    nodePort: {{ include "nodePort" . }}
-    {{- end}}
     targetPort: {{ .Values.restPort }}
   - name: http-metrics
     port: {{ .Values.monitoring.port }}
@@ -38,15 +32,5 @@ spec:
     app: {{ include "fullname" . }}
     component: "lenses"
 
-{{- if contains "LoadBalancer" .Values.service.type }}
-  {{- if .Values.service.loadBalancerIP }}
-  loadBalancerIP: {{ .Values.service.loadBalancerIP }}
-  {{- end -}}
-  {{- if .Values.service.loadBalancerSourceRanges }}
-  loadBalancerSourceRanges:
-  {{- range .Values.service.loadBalancerSourceRanges }}
-  - {{.}}
-  {{- end }}
-  {{- end -}}
 {{- end -}}
 {{- end -}}

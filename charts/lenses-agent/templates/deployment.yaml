@@ -5,9 +5,6 @@
     {{ fail (printf "%s%s%s" "Setting configuration value .Values.lenses." . " is deprecated. Please use the provision yaml instead. See documentation here.") }}
   {{ end }}
 {{ end }}
-{{- if and .Values.lenses.provision.enabled .Values.lenses.tls.enabled .Values.lenses.tls.clientAuth}}
-  {{ fail "Provisioning not supported if TLS client authentication (mTLS) is enabled" }}
-{{ end -}}
 
 apiVersion: apps/v1
 kind: Deployment
@@ -107,12 +104,6 @@ spec:
             items:
               - key: lenses.opts.truststore.jks
                 path: lenses.opts.truststore.jks
-              {{- if .Values.lenses.tls.enabled }}
-              - key: lenses.tls.keystore.jks
-                path: lenses.tls.keystore.jks
-              - key: lenses.tls.truststore.jks
-                path: lenses.tls.truststore.jks
-              {{- end }}
         - name: config
           configMap:
             name: {{include "fullname" . | quote}}
@@ -148,9 +139,6 @@ spec:
           httpGet:
             path: /
             port: {{ .Values.restPort }}
-          {{- if .Values.lenses.tls.enabled }}
-            scheme: HTTPS
-          {{- end }}
           initialDelaySeconds: 300
           periodSeconds: 10
         {{- end }}
@@ -187,41 +175,6 @@ spec:
         resources:
           {{- toYaml .Values.resources | nindent 10 }}
         env:
-        {{- if .Values.lenses.tls.enabled }}
-        {{- if .Values.lenses.tls.keyStoreFileData }}
-        - name: LENSES_SSL_KEYSTORE_LOCATION
-          value: "/mnt/secrets/lenses.tls.keystore.jks"
-        {{- end }}
-        {{- if .Values.lenses.tls.keyStorePassword }}
-        - name: LENSES_SSL_KEYSTORE_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: {{include "fullname" . | quote}}
-              key:  "lenses.tls.keystore.password"
-        {{- end }}
-        {{- if .Values.lenses.tls.keyPassword }}
-        - name: LENSES_SSL_KEY_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: {{include "fullname" . | quote}}
-              key:  "lenses.tls.key.password"
-        {{- end }}
-        {{- if .Values.lenses.tls.auth }}
-        - name: LENSES_SSL_CLIENT_AUTH
-          value: {{ .Values.lenses.tls.auth }}
-        {{- end }}
-        {{- if .Values.lenses.tls.trustStoreFileData }}
-        - name: LENSES_SSL_TRUSTSTORE_LOCATION
-          value: "/mnt/secrets/lenses.tls.truststore.jks"
-        {{- end }}
-        {{- if .Values.lenses.tls.trustStorePassword }}
-        - name: LENSES_SSL_TRUSTSTORE_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: {{include "fullname" . | quote}}
-              key:  "lenses.tls.truststore.password"
-        {{- end }}
-        {{- end }}
         - name: LENSES_OPTS
           value: {{include "lensesOpts" . | default "" | quote}}
         {{- if .Values.lenses.opts.trustStoreFileData }}
@@ -319,24 +272,6 @@ spec:
           value: {{ .Values.lenses.sql.livenessInitialDelay | quote }}
         {{- end }}
 
-        # Deployments
-        {{- if.Values.lenses.deployments.eventsBufferSize }}
-        - name: LENSES_DEPLOYMENTS_EVENTS_BUFFER_SIZE
-          value: {{ .Values.lenses.deployments.eventsBufferSize | quote }}
-        {{- end }}
-        {{- if.Values.lenses.deployments.errorsBufferSize }}
-        - name: LENSES_DEPLOYMENTS_ERRORS_BUFFER_SIZE
-          value: {{ .Values.lenses.deployments.errorsBufferSize | quote }}
-        {{- end }}
-        {{- if.Values.lenses.deployments.connect.statusInterval }}
-        - name: LENSES_DEPLOYMENT_CONNECT_STATUS_INTERVAL
-          value: {{ .Values.lenses.deployments.connect.statusInterval | quote }}
-        {{- end }}
-        {{- if.Values.lenses.deployments.connect.actionsBufferSize }}
-        - name: LENSES_DEPLOYMENT_CONNECT_ACTIONS_BUFFER_SIZE
-          value: {{ .Values.lenses.deployments.connect.actionsBufferSize | quote }}
-        {{- end }}
-
         # Lenses configuration flags
         - name: LC_KUBERNETES_MODE
           value: "true"
@@ -367,39 +302,6 @@ spec:
         {{- if .Values.lenses.additionalEnv }}
         {{- toYaml .Values.lenses.additionalEnv | nindent 8 }}
         {{- end }}
-
-      {{- if and .Values.lenses.provision.enabled (eq .Values.lenses.provision.version "1") }}
-        # Lenses sidecar provision is only needed if we are running the pre 5.3.0 provisioning mechanism.
-      {{- $provision := .Values.lenses.provision}}
-      - name: {{default "lenses-provision" $provision.name}}
-        image: {{include "sidecarProvisionImage" . | quote }}
-        imagePullPolicy: {{default "Always" $provision.sidecar.image.pullPolicy}}
-        {{- if .Values.containerSecurityContext}}
-        securityContext:
-          {{- toYaml .Values.containerSecurityContext | nindent 10 }}
-        {{- end }}
-        command:
-          - bash
-          - -c
-          - |
-            lenses-cli provision \
-              --wait-for-lenses \
-              --setup-mode \
-              --host="http{{- if .Values.lenses.tls.enabled -}}s{{- end -}}://localhost:{{.Values.restPort}}" \
-              {{- if .Values.lenses.tls.enabled}}
-              --insecure \
-              {{- end}}
-              --user="$LENSES_ADMIN_USER" \
-              --pass="$LENSES_ADMIN_PASSWORD" \
-              /mnt/provision-secrets/provision.yaml \
-              --mode=sidecar
-        volumeMounts:
-          - name: provision-secrets
-            mountPath: "/mnt/provision-secrets"
-          {{- if $provision.sidecar.additionalVolumeMounts }}
-            {{- toYaml $provision.sidecar.additionalVolumeMounts | nindent 10 }}
-          {{- end }}
-      {{- end }}
 
       {{- if .Values.sidecarContainers }}
       {{- toYaml .Values.sidecarContainers | nindent 6 }}

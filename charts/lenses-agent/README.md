@@ -29,6 +29,8 @@ The command deploys Lenses Agent on the Kubernetes cluster in the example config
 
 ## Parameters
 
+## Values
+
 ### Extras
 
 | Key | Type | Default | Description |
@@ -65,10 +67,7 @@ The command deploys Lenses Agent on the Kubernetes cluster in the example config
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| lenses.hq.agentKey | dict | `{"secret":{"externalSecret":{"secretStoreRef":{"clusterSecretStore":{"name":"panoptes-secrets"}}},"key":"password","name":"lenses-hq-agent-secret","type":"externalSecret"}}` | Agent key that has been generated in HQ as service account for Agent registration. |
 | lenses.hq.agentKey.secret.type | string | `"externalSecret"` | Secret type for referencing / creating agent key Possible values: createNew | precreated | externalSecret |
-| lenses.hq.host | string | `nil` | Lenses HQ hostname. |
-| lenses.hq.port | int | `10000` | Lenses HQ port where it is listening for Agent connections. |
 
 ### Agent JVM scope values
 
@@ -86,9 +85,6 @@ The command deploys Lenses Agent on the Kubernetes cluster in the example config
 | lenses.provision.enabled | boolean | `true` | Enables provisioning to automate connections from Agent Possible values: createNew | precreated | externalSecret |
 | lenses.provision.path | string | `"/mnt/provision-secrets"` | Path where provisioner will be initiated. |
 | lenses.provision.secrets | dict | `{}` | Secrets base64 encoded (such as keystores) which will be placed within provisioner folder upon initialisation. |
-| lenses.provision.sidecar.additionalVolumeMounts | list | `nil` | Additional volume mounts to load additional files from pre-existing volumes, secrets or vault secrets to use in provisioning Use it in conjuction with lenses.additionalVolumes. |
-| lenses.provision.sidecar.image | dict | `{"repository":"lensesio/lenses-cli"}` | Sidecar image name. |
-| lenses.provision.sidecar.image.repository | string | `"lensesio/lenses-cli"` | Sidecar image repository |
 | lenses.provision.version | string | `"2"` | Version of provisioning that will be used, currently only "2" is supported. Property is still here as a transition phase and will be removed in the future. |
 
 ### Agent SQL Processor scope values
@@ -96,7 +92,7 @@ The command deploys Lenses Agent on the Kubernetes cluster in the example config
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | lenses.sql.heap | string | `"1024M"` | Setting heap for each individual SQL Processor |
-| lenses.sql.livenessInitialDelay | string | `"60 seconds"` | Setting |
+| lenses.sql.livenessInitialDelay | string | `"60 seconds"` | Setting initial delay when SQL processor is being started |
 | lenses.sql.memLimit | string | `"1152M"` | Setting memory limit for each individual SQL Processor |
 | lenses.sql.memRequest | string | `"128M"` | Setting memory limit for each individual SQL Processor |
 | lenses.sql.minHeap | string | `"128M"` | Setting min heap for each individual SQL Processor |
@@ -149,9 +145,8 @@ The command deploys Lenses Agent on the Kubernetes cluster in the example config
 | restPort | int | `3030` | Lenses Agent container port |
 | service.annotations | dict | `{}` | Additional service annotations |
 | service.enabled | bool | `true` | Deciding factor whether Lenses HQ service will be created and which type |
-| service.externalTrafficPolicy | string | `nil` |  |
 | service.type | string | `"ClusterIP"` | Type of service to be created. |
-| servicePort | int | `80` | Lenses Agent service port, service targets restPort |
+| servicePort | int | `80` | Lenses Agent service port, service targets restPort. **DEPRECATED** |
 | servicePortName | string | `"lenses-agent"` | Lenses Agent service port name |
 
 ### Other Values
@@ -163,13 +158,9 @@ The command deploys Lenses Agent on the Kubernetes cluster in the example config
 | lenses.deployments.connect.statusInterval | string | `"30 second"` |  |
 | lenses.deployments.errorsBufferSize | int | `1000` |  |
 | lenses.deployments.eventsBufferSize | int | `10000` |  |
-| lenses.tls.clientAuth | bool | `false` |  |
-| lenses.tls.enabled | bool | `false` |  |
-| lenses.tls.keyPassword | string | `""` |  |
-| lenses.tls.keyStoreFileData | string | `""` |  |
-| lenses.tls.keyStorePassword | string | `""` |  |
-| lenses.tls.trustStoreFileData | string | `""` |  |
-| lenses.tls.trustStorePassword | string | `""` |  |
+| lenses.hq.agentKey.secret.externalSecret.secretStoreRef.clusterSecretStore.name | string | `"panoptes-secrets"` |  |
+| lenses.hq.agentKey.secret.key | string | `"password"` |  |
+| lenses.hq.agentKey.secret.name | string | `"lenses-hq-agent-secret"` |  |
 | nameOverride | string | `""` |  |
 
 ----------------------------------------------
