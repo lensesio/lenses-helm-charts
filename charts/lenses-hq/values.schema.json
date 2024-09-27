@@ -469,7 +469,6 @@
                             "default": {},
                             "title": "The saml Schema",
                             "required": [
-                                "organisationName",
                                 "baseUrl",
                                 "entityId",
                                 "metadata",
@@ -477,14 +476,6 @@
                                 "usersGroupMembershipManagementMode"
                             ],
                             "properties": {
-                                "organisationName": {
-                                    "type": "string",
-                                    "default": "",
-                                    "title": "The organisationName Schema",
-                                    "examples": [
-                                        "my-company"
-                                    ]
-                                },
                                 "baseUrl": {
                                     "type": "string",
                                     "default": "",
@@ -566,7 +557,6 @@
                                 }
                             },
                             "examples": [{
-                                "organisationName": "my-company",
                                 "baseUrl": "",
                                 "entityId": "",
                                 "metadata": "",
@@ -579,7 +569,6 @@
                         "address": ":8080",
                         "accessControlAllowOrigin": ["https://example.io","http://example.io"],
                         "saml": {
-                            "organisationName": "my-company",
                             "baseUrl": "",
                             "entityId": "",
                             "metadata": "",
@@ -866,7 +855,6 @@
                     "address": ":8080",
                     "accessControlAllowOrigin": "",
                     "saml": {
-                        "organisationName": "my-company",
                         "baseUrl": "",
                         "entityId": "",
                         "metadata": "",
@@ -963,7 +951,6 @@
                 "address": ":8080",
                 "accessControlAllowOrigin": "",
                 "saml": {
-                    "organisationName": "my-company",
                     "baseUrl": "",
                     "entityId": "",
                     "metadata": "",

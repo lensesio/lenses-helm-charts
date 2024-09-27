@@ -154,10 +154,6 @@ The command deploys Lenses Agent on the Kubernetes cluster in the example config
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | fullnameOverride | string | `""` |  |
-| lenses.deployments.connect.actionsBufferSize | int | `1000` |  |
-| lenses.deployments.connect.statusInterval | string | `"30 second"` |  |
-| lenses.deployments.errorsBufferSize | int | `1000` |  |
-| lenses.deployments.eventsBufferSize | int | `10000` |  |
 | lenses.hq.agentKey.secret.externalSecret.secretStoreRef.clusterSecretStore.name | string | `"panoptes-secrets"` |  |
 | lenses.hq.agentKey.secret.key | string | `"password"` |  |
 | lenses.hq.agentKey.secret.name | string | `"lenses-hq-agent-secret"` |  |

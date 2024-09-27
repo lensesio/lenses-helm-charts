@@ -30,7 +30,6 @@ data:
     {{ end }}
 
     [api.saml]
-    organisation_name = {{ .Values.lensesHq.api.saml.organisationName | quote }}
     base_url = {{ .Values.lensesHq.api.saml.baseUrl | quote }}
     entity_id = {{ .Values.lensesHq.api.saml.entityId | quote }}
     {{- if .Values.lensesHq.api.saml.metadata.useConfigMap }}

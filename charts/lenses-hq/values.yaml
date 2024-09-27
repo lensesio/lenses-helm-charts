@@ -251,11 +251,6 @@ lensesHq:
           key:
 
     saml:
-      # -- Sets the name of the organisation that users get assigned to.
-      # @section -- Lenses HQ SAML startup values
-      # **Required: true**
-      organisationName: ""
-
       # -- Defines base URL of Panoptes for IdP redirects.
       # @section -- Lenses HQ SAML startup values
       # **Required: true**

@@ -383,16 +383,6 @@ lenses:
       # @section -- Agent Database scope values
       schema:             # optional, defaults to public schema
 
-  # Data Application Deployment Framework
-  # DEPRECATED
-  deployments:
-    eventsBufferSize: 10000
-    errorsBufferSize: 1000
-
-    connect:
-      statusInterval: 30 second
-      actionsBufferSize: 1000
-
   sql:
     # processorImage: lensesioextra/sql-processor
     # processorImageTag: 5.5
