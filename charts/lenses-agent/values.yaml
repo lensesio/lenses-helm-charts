@@ -89,9 +89,7 @@ namespaceScope: false
 # -- (int) Lenses Agent container port
 # @section -- Lenses Agent deployment service values
 restPort: 3030
-# -- (int) Lenses Agent service port, service targets restPort. **DEPRECATED**
-# @section -- Lenses Agent deployment service values
-servicePort: 80
+
 # -- (string) Lenses Agent service port name
 # @section -- Lenses Agent deployment service values
 servicePortName: lenses-agent
@@ -167,10 +165,6 @@ service:
   # -- (bool) Deciding factor whether Lenses HQ service will be created and which type
   # @section -- Lenses Agent deployment service values
   enabled: true
-
-  # -- (string) Type of service to be created.
-  # @section -- Lenses Agent deployment service values
-  type: ClusterIP
 
   # -- (dict) Additional service annotations
   # @section -- Lenses Agent deployment service values

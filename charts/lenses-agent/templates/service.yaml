@@ -19,11 +19,8 @@ metadata:
     {{- toYaml .Values.service.annotations | nindent 4 }}
 {{- end }}
 spec:
-  type: {{ .Values.service.type | quote }}
+  type: "ClusterIP"
   ports:
-  - name: {{ .Values.servicePortName }}
-    port: {{ .Values.servicePort }}
-    targetPort: {{ .Values.restPort }}
   - name: http-metrics
     port: {{ .Values.monitoring.port }}
   - name: lenses-agent-rest
@@ -32,5 +29,4 @@ spec:
     app: {{ include "fullname" . }}
     component: "lenses"
 
-{{- end -}}
 {{- end -}}

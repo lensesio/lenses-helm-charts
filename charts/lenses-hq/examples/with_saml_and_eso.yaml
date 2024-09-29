@@ -68,7 +68,6 @@ lensesHq:
     accessControlAllowOrigin: '[""]'
     administrators: '["admin@example.com"]'
     saml:
-      organisationName: "Lenses"
       baseUrl: "https://"
       entityId: "https://"
       # -- Example: <?xml version="1.0" ... (big blob of xml) </md:EntityDescriptor>
