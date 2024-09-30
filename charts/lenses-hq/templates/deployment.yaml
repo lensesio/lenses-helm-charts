@@ -100,7 +100,7 @@ spec:
           httpGet:
             path: /
             port: {{ .Values.restPort }}
-          {{- if .Values.lensesHq.tls.enabled }}
+          {{- if .Values.lensesHq.livenessProbe.tls.enabled }}
             scheme: HTTPS
           {{- end }}
           initialDelaySeconds: 300

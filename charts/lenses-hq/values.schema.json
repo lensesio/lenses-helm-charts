@@ -412,7 +412,6 @@
                 "api",
                 "postgres",
                 "logger",
-                "tls",
                 "livenessProbe",
                 "monitoring"
             ],
@@ -752,27 +751,6 @@
                     "examples": [{
                         "mode": "text",
                         "level": "debug"
-                    }]
-                },
-                "tls": {
-                    "type": "object",
-                    "default": {},
-                    "title": "The tls Schema",
-                    "required": [
-                        "enabled"
-                    ],
-                    "properties": {
-                        "enabled": {
-                            "type": "boolean",
-                            "default": false,
-                            "title": "The enabled Schema",
-                            "examples": [
-                                true
-                            ]
-                        }
-                    },
-                    "examples": [{
-                        "enabled": true
                     }]
                 },
                 "additionalEnv": {

@@ -18,7 +18,7 @@ resources:
 
 image:
   #repository: eu.gcr.io/k8-engine/panoptes:v6.0.0-alpha.2
-  repository: 637423640330.dkr.ecr.eu-west-1.amazonaws.com/hq:v6.0.0-alpha.austin-8-g2564e52
+  repository: public.ecr.aws/q8a6e1s5/public-hq:v6.0.0-alpha.2
   #repository:
   # -- Default to .Chart.AppVersion
   # tag:
@@ -55,7 +55,7 @@ ingress:
   annotations:
     kubernetes.io/ingress.class: traefik
     traefik.ingress.kubernetes.io/router.middlewares: common-traefik-basic-auth@kubernetescrd
-  enabled: true
+  enabled: false
   host: hq.enjoy.data-lenses.io
 
 lensesHq:
@@ -65,11 +65,11 @@ lensesHq:
       enabled: false
   api:
     address: ":8080"
-    accessControlAllowOrigin: '[""]'
+    accessControlAllowOrigin: '["http://localhost:8080"]'
     administrators: '["admin@example.com"]'
     saml:
-      baseUrl: "https://"
-      entityId: "https://"
+      baseUrl: "http://localhost:8080"
+      entityId: "http://localhost:8080"
       # -- Example: <?xml version="1.0" ... (big blob of xml) </md:EntityDescriptor>
       metadata:
         useConfigMap: false
@@ -123,6 +123,9 @@ lensesHq:
         secretStoreRef:
           clusterSecretStore:
             name: enjoy3-secrets
+
+  tls:
+    enabled: false
 
   logger:
     mode: "text"
