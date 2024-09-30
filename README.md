@@ -18,8 +18,10 @@ It is still mandatory to install one Lenses Agent per Kafka Cluster but without 
 
 To get started:
 * For a complete reference of the values supported, have a look at the
-  [values.yaml](./charts/lenses/values.yaml).
+  * Lenses Agent [values.yaml](./charts/lenses/values.yaml)
+  * Lenses HQ [values.yaml](./charts/lenses-hq/values.yaml).
 * Documentation for the chart can be found at our [documentation
- website](https://docs.lenses.io/5.4/installation/getting-started/helm/).
+ website](https://docs.proxy.lenses.io/next).
 * Find many sample snippets for _values_ and how to combine them under the
-  [examples directory](./examples).
+  * Lenses Agent [examples directory](./charts/lenses-agent/examples/)
+  * Lenses HQ [examples directory](./charts/lenses-hq/examples/).

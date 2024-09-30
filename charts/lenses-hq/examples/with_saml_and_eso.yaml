@@ -17,8 +17,7 @@ resources:
     memory: 5Gi
 
 image:
-  #repository: eu.gcr.io/k8-engine/panoptes:v6.0.0-alpha.2
-  repository: public.ecr.aws/q8a6e1s5/public-hq:v6.0.0-alpha.2
+  repository:
   #repository:
   # -- Default to .Chart.AppVersion
   # tag:
@@ -50,13 +49,6 @@ service:
   enabled: true
   type: ClusterIP
   annotations: {}
-
-ingress:
-  annotations:
-    kubernetes.io/ingress.class: traefik
-    traefik.ingress.kubernetes.io/router.middlewares: common-traefik-basic-auth@kubernetescrd
-  enabled: false
-  host: hq.enjoy.data-lenses.io
 
 lensesHq:
   agents:
@@ -123,7 +115,7 @@ lensesHq:
       externalSecret:
         secretStoreRef:
           clusterSecretStore:
-            name: enjoy3-secrets
+            name: [CLUSTER_SECRET_STORE_NAME]
 
   tls:
     enabled: false

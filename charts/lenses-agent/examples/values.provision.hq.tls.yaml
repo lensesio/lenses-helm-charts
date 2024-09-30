@@ -4,7 +4,7 @@ nameOverride: ""
 fullnameOverride: ""
 
 image:
-  repository: eu.gcr.io/lenses-ci/lenses
+  repository:
   # Default to .Chart.AppVersion
   tag: panoptes
   pullPolicy: Always
