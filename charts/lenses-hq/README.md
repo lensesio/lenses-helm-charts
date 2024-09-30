@@ -106,7 +106,6 @@ The command deploys Lenses HQ on the Kubernetes cluster in the example configura
 | lensesHq.api.saml.metadata.configMapName | string | `""` | ConfigMap name which contains metadata information. **Required: false** |
 | lensesHq.api.saml.metadata.stringData | string | `""` | Contains the IdP issued XML metadata blob. Example: <?xml version="1.0" ... (big blob of xml) </md:EntityDescriptor> **Required: true** |
 | lensesHq.api.saml.metadata.useConfigMap | boolean | `false` | Enables use of configmap to refernence SAML metadata file. **Required: true** |
-| lensesHq.api.saml.organisationName | string | `""` | Sets the name of the organisation that users get assigned to. **Required: true** |
 | lensesHq.api.saml.uiRootUrl | string | `"/"` | Controls where to redirect to upon successful authentication. **Required: false** |
 | lensesHq.api.saml.userCreationMode | string | `"manual"` | Controls how the creation of users should be handled in relation to SSO information Allowed values are: sso | manual **Required: false** |
 | lensesHq.api.saml.usersGroupMembershipManagementMode | string | `"manual"` | Controls how the management of a user's group membership should be handled in relation to SSO information. Allowed values are: sso | manual **Required: false** |
@@ -136,6 +135,7 @@ The command deploys Lenses HQ on the Kubernetes cluster in the example configura
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | lensesHq.postgres.database | string | `""` | Database name to which HQ will connect to and store required information. **Required: true** |
+| lensesHq.postgres.extraParamSpecs | string | `""` | Extra Parameters key words that are being added at the end of Connection URI. Example: ?sslmode=disable **Required: false** |
 | lensesHq.postgres.host | string | `""` | Hostname of running postgres instance. **Required: true** |
 | lensesHq.postgres.passwordSecret | object | `{"externalSecret":{"secretStoreRef":{"clusterSecretStore":{"name":null}}},"key":null,"name":"","password":"","type":"precreated"}` | Definition of secret that has been precreated and has postgres database password |
 | lensesHq.postgres.passwordSecret.externalSecret.secretStoreRef.clusterSecretStore.name | string | `nil` | Name of cluster secret store created by ESO. |

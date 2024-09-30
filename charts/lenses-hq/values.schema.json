@@ -585,6 +585,7 @@
                         "port",
                         "username",
                         "database",
+                        "extraParamSpecs",
                         "passwordSecret"
                     ],
                     "properties": {
@@ -618,6 +619,14 @@
                             "title": "The database Schema",
                             "examples": [
                                 "lensesDbName"
+                            ]
+                        },
+                        "extraParamSpecs": {
+                            "type": "string",
+                            "default": null,
+                            "title": "The database Schema",
+                            "examples": [
+                                "?sslmode=disable"
                             ]
                         },
                         "passwordSecret": {

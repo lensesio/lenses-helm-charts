@@ -115,6 +115,7 @@ lensesHq:
     port: 5432
     username: lenses
     database: hq
+    #extraParamSpecs: "?sslmode=disable"
     passwordSecret:
       type: "externalSecret"
       name: postgres

@@ -327,6 +327,11 @@ lensesHq:
     # **Required: true**
     database: ""
 
+    # -- (string) Extra Parameters key words that are being added at the end of Connection URI. Example: ?sslmode=disable
+    # @section -- Lenses HQ Database startup values
+    # **Required: false**
+    extraParamSpecs: ""
+
     # -- Definition of secret that has been precreated and has postgres database password
     # @section -- Lenses HQ Database startup values
     passwordSecret:
