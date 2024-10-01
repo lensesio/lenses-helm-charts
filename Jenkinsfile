@@ -93,7 +93,7 @@ pipeline {
             steps {
                 script {
                     docker.image("docker.bintray.io/jfrog/jfrog-cli-go").inside {
-                        sh("jfrog rt u build/*.tgz ${HELM_REPOSITORY} --url=${ARTIFACTORY_URL} --apikey=${ARTIFACTORY_API_KEY}")
+                        sh("jfrog rt u \"build/*.tgz\" ${HELM_REPOSITORY} --url=${ARTIFACTORY_URL} --apikey=${ARTIFACTORY_API_KEY}")
                     }
                 }
             }
