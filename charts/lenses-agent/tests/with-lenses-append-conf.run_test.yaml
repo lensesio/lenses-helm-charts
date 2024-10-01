@@ -15,6 +15,7 @@ tests:
           path: data.lenses\.append\.conf
           value: |
 
+            lenses.provisioning.path="/mnt/provision-secrets"
             lenses.kubernetes.namespaces = {
               incluster = [role-binding,ci-fperezp,foobar],
             }
@@ -42,6 +43,7 @@ tests:
             lenses.storage.postgres.database="sample-db"
             lenses.storage.postgres.username="foo"
             lenses.storage.postgres.password="ba@!&>r"
+            lenses.provisioning.path="/mnt/provision-secrets"
             lenses.kubernetes.namespaces = {
               incluster = [role-binding,ci-fperezp,foobar],
             }
