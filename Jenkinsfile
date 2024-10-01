@@ -30,7 +30,7 @@ pipeline {
 
     environment {
         // If this matches the branch name it will DEPLOY to PUBLIC HELM REPO
-        RELEASE_BRANCH_FOR_PUBLIC = 'release/5.5'
+        RELEASE_BRANCH_FOR_PUBLIC = 'release/6.0'
     }
 
     stages {
@@ -85,7 +85,8 @@ pipeline {
                 environment name: 'RELEASE_PUBLIC', value: 'true'
             }
             environment {
-                HELM_REPOSITORY = 'lenses-helm-charts'
+                // TODO ON RELEASE: Update Helm Repository
+                HELM_REPOSITORY = 'helm-charts-preview'
                 ARTIFACTORY_URL = 'https://lenses.jfrog.io/artifactory/'
                 ARTIFACTORY_API_KEY = credentials('artifactory-lenses-helm')
             }
@@ -115,6 +116,10 @@ pipeline {
         }
 
         stage('Pull Helm Chart repo and build static assets') {
+            // TODO ON RELEASE: Remove this condition to enable the stage
+            when {
+                expression { false }
+            }
             agent {
                 docker {
                     label 'docker && lightweight'
@@ -154,7 +159,9 @@ pipeline {
 
         stage('Upload static assets to production Lenses website') {
             when {
-                environment name: 'RELEASE_PUBLIC', value: 'true'
+                // TODO ON RELEASE: Remove this condition, uncomment the next
+                expression { false }
+                // environment name: 'RELEASE_PUBLIC', value: 'true'
             }
             environment {
                 SSH_HOST = credentials('ssh-host')
@@ -182,6 +189,10 @@ pipeline {
         }
 
         stage('Build Helm repo Docker image') {
+            // TODO ON RELEASE: Remove this condition to enable the stage
+            when {
+                expression { false }
+            }
             environment {
                 DOCKER_IMAGE = 'eu.gcr.io/lenses-ci/lenses-helm-chart-repo'
             }
@@ -210,9 +221,11 @@ GIT_BRANCH=${env.GIT_BRANCH}
 
         stage('Deploy to Kubernetes staging cluster using ArgoCD') {
             when {
-                not {
-                    branch 'master'
-                }
+                // TODO ON RELEASE: Remove this condition, uncomment the next
+                expression { false }
+                // not {
+                //     branch 'master'
+                // }
             }
             steps{
                 script {
