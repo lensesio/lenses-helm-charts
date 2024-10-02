@@ -36,15 +36,15 @@ tests:
     asserts:
       - equal:
           path: spec.template.metadata.annotations.checksum/lenses\.append\.conf
-          value: 01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b
+          value: ad9d4894069de891cdef5f82bc1e5f53714a708ab9dd0791cc5099ec8b3f5167
 
   - it: checksum annotation should change with chart keys
     set:
-      lenses.provision.enabled: true
+      lenses.provision.enabled: false
     asserts:
       - equal:
           path: spec.template.metadata.annotations.checksum/lenses\.append\.conf
-          value: ad9d4894069de891cdef5f82bc1e5f53714a708ab9dd0791cc5099ec8b3f5167
+          value: 01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b
 
   - it: checksum annotation should change with custom append section
     set:
@@ -53,7 +53,7 @@ tests:
     asserts:
       - equal:
           path: spec.template.metadata.annotations.checksum/lenses\.append\.conf
-          value: 1c4431a10feefc92c2a674a99ad606dc2d958605c5c810739cd6661ea5fb23bb
+          value: a72025a7c5e0b4ebbb27245bec2110b1673e799367055c91b5a0f60d71b9a4f7
 
   - it: should add custom annotations
     set:

@@ -56,6 +56,7 @@ tests:
             lenses.storage.postgres.database="foo-db"
             lenses.storage.postgres.username="foo"
             lenses.storage.postgres.password="ba@!&>r"
+            lenses.provisioning.path="/mnt/provision-secrets"
 
   - it: should render with postgres enabled and host, database set and username, password set to external
     values:
@@ -68,6 +69,8 @@ tests:
 
             lenses.storage.postgres.host="example.com"
             lenses.storage.postgres.database="foo-db"
+            lenses.provisioning.path="/mnt/provision-secrets"
+
       - template: deployment.yaml
         contains:
           path: spec.template.spec.containers[0].env

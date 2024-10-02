@@ -412,8 +412,7 @@
                 "api",
                 "postgres",
                 "logger",
-                "livenessProbe",
-                "monitoring"
+                "livenessProbe"
             ],
             "properties": {
                 "agents": {
@@ -750,7 +749,7 @@
                             "type": "string",
                             "default": "",
                             "title": "The level Schema",
-                            "pattern": "^(json|debug)$",
+                            "pattern": "^(info|debug)$",
                             "examples": [
                                 "debug",
                                 "info"

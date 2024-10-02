@@ -1,0 +1,9 @@
+image:
+  repository: lensesiolocal/lenses-hq
+
+ingress:
+  host: lenses.url
+lensesHq:
+  postgres:
+    passwordSecret:
+      key: lenses-db-secret
