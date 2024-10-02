@@ -140,6 +140,6 @@ lenses.provisioning.interval={{ .Values.lenses.provision.interval }}
 {{- if .Values.nameOverride }}
   {{- printf "%s-%s" .Values.nameOverride "agentkey-secret" | trunc 63 | trimSuffix "-" }}
 {{- else }}
-  {{- printf "%s-%s" .Chart.Name "agentkey-secret" | trunc 63 | trimSuffix "-" }}
+  {{- printf "%s-%s" .Release.Name "agentkey-secret" | trunc 63 | trimSuffix "-" }}
 {{- end }}
 {{- end }}
