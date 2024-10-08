@@ -620,6 +620,41 @@
                                 "lensesDbName"
                             ]
                         },
+                        "useSecretForUsername": {
+                            "type": "object",
+                            "default": null,
+                            "title": "Decision tree object to use database user as a secret or not",
+                            "required": [
+                                "enabled"
+                            ],
+                            "properties": {
+                                "enabled": {
+                                    "type": "boolean",
+                                    "default": null,
+                                    "title": "Decision tree property to use database user as a secret or not",
+                                    "examples": [
+                                        "false"
+                                    ]
+                                },
+                                "existingSecret": {
+                                    "type": "object",
+                                    "default": null,
+                                    "title": "The username secret reference Schema",
+                                    "properties": {
+                                        "name": {
+                                            "type": "string",
+                                            "default": null,
+                                            "title": "The username secret name reference"
+                                        },
+                                        "key": {
+                                            "type": "string",
+                                            "default": null,
+                                            "title": "The username secret key reference"
+                                        }
+                                    }
+                                }
+                            }
+                        },
                         "extraParamSpecs": {
                             "type": "string",
                             "default": null,

@@ -139,6 +139,15 @@ spec:
                 name: {{ .Values.lensesHq.postgres.passwordSecret.name }}
                 key: {{ .Values.lensesHq.postgres.passwordSecret.key }}
               {{- end }}
+          - name: LENSESHQ_PG_USERNAME
+            {{- if .Values.lensesHq.postgres.useSecretForUsername.enabled }}
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.lensesHq.postgres.useSecretForUsername.existingSecret.name }}
+                key: {{ .Values.lensesHq.postgres.useSecretForUsername.existingSecret.key }}
+            {{ else }}
+            value: {{ .Values.lensesHq.postgres.username }}
+            {{- end }}
           {{ if .Values.lensesHq.api.saml.metadata.useConfigMap }}
           - name: LENSESHQ_API_SAML_METADATA
             valueFrom:

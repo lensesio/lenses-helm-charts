@@ -57,9 +57,9 @@ data:
 
     [database]
     {{- if .Values.lensesHq.postgres.extraParamSpecs }}
-    connection = "postgres://{{ .Values.lensesHq.postgres.username }}:$(LENSESHQ_PG_PASSWORD)@{{ .Values.lensesHq.postgres.host }}:{{ .Values.lensesHq.postgres.port }}/{{ .Values.lensesHq.postgres.database }}{{ .Values.lensesHq.postgres.extraParamSpecs }}"
+    connection = "postgres://$(LENSESHQ_PG_USERNAME):$(LENSESHQ_PG_PASSWORD)@{{ .Values.lensesHq.postgres.host }}:{{ .Values.lensesHq.postgres.port }}/{{ .Values.lensesHq.postgres.database }}{{ .Values.lensesHq.postgres.extraParamSpecs }}"
     {{- else }}
-    connection = "postgres://{{ .Values.lensesHq.postgres.username }}:$(LENSESHQ_PG_PASSWORD)@{{ .Values.lensesHq.postgres.host }}:{{ .Values.lensesHq.postgres.port }}/{{ .Values.lensesHq.postgres.database }}"
+    connection = "postgres://$(LENSESHQ_PG_USERNAME):$(LENSESHQ_PG_PASSWORD)@{{ .Values.lensesHq.postgres.host }}:{{ .Values.lensesHq.postgres.port }}/{{ .Values.lensesHq.postgres.database }}"
     {{- end }}
 
     [logger]

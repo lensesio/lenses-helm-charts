@@ -322,6 +322,18 @@ lensesHq:
     # **Required: true**
     username: ""
 
+    useSecretForUsername:
+      # -- (string) Whether username will be used within a secret or as a part of `username` value.
+      # @section -- Lenses HQ Database startup values
+      # **Required: true**
+      enabled: false
+      # -- (string) Secret refernce for database user.
+      # @section -- Lenses HQ Database startup values
+      # **Required: false**
+      existingSecret:
+        name: ""
+        key: ""
+
     # -- (string) Database name to which HQ will connect to and store required information.
     # @section -- Lenses HQ Database startup values
     # **Required: true**
