@@ -1,6 +1,6 @@
 # lenses-hq
 
-![Version: 6.0.0](https://img.shields.io/badge/Version-6.0.0-informational?style=flat-square) ![AppVersion: 6.0.0](https://img.shields.io/badge/AppVersion-6.0.0-informational?style=flat-square)
+![Version: 6.0.0-alpha.0](https://img.shields.io/badge/Version-6.0.0--alpha.0-informational?style=flat-square) ![AppVersion: v6.0.0-alpha.2](https://img.shields.io/badge/AppVersion-v6.0.0--alpha.2-informational?style=flat-square)
 
 A chart for Lenses HQ deployment which provides a unified, streamlined view of the entire event infrastructure—whether on-premises or in the cloud—through a single, comprehensive interface.
 
@@ -144,6 +144,8 @@ The command deploys Lenses HQ on the Kubernetes cluster in the example configura
 | lensesHq.postgres.passwordSecret.password | string | `""` | Entry for a password in case of testing where type: "createNew", otherwise can be left out. *NOT FOR PRODUCTION USE!* |
 | lensesHq.postgres.passwordSecret.type | string | `"precreated"` | Possible options: precreated | createNew | externalSecret |
 | lensesHq.postgres.port | int | `5432` | Port of running postgress instance. Default is 5432. **Required: true** |
+| lensesHq.postgres.useSecretForUsername.enabled | string | `false` | Whether username will be used within a secret or as a part of `username` value. **Required: true** |
+| lensesHq.postgres.useSecretForUsername.existingSecret | string | `{"key":"","name":""}` | Secret refernce for database user. **Required: false** |
 | lensesHq.postgres.username | string | `""` | Username which will be used for connecting to Postgres database. **Required: true** |
 
 ### Permission scope values
