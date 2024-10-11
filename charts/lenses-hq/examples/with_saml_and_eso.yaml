@@ -64,7 +64,7 @@ lensesHq:
       entityId: "http://localhost:8080"
       # -- Example: <?xml version="1.0" ... (big blob of xml) </md:EntityDescriptor>
       metadata:
-        useConfigMap: false
+        useSecret: false
         stringData: |
           <?xml version="1.0" encoding="UTF-8" standalone="no"?>
           <md:EntityDescriptor xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata" entityID="https://saml.example.com/entityid" validUntil="2034-09-23T08:10:34.764Z">
@@ -116,9 +116,6 @@ lensesHq:
         secretStoreRef:
           clusterSecretStore:
             name: [CLUSTER_SECRET_STORE_NAME]
-
-  tls:
-    enabled: false
 
   logger:
     mode: "text"

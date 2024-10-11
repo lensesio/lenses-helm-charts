@@ -126,7 +126,7 @@ spec:
             valueFrom:
               secretKeyRef:
                 name: {{ .Values.lensesHq.agents.tls.cert.secretName }}
-                key: {{ .Values.lensesHq.agents.tls.cert.secretKey }}
+                key: {{ .Values.lensesHq.agents.tls.cert.secretKeyName }}
           {{- end }}
           {{- end }}
           {{ if (.Values.lensesHq.api.tls).enabled }}
@@ -140,7 +140,7 @@ spec:
             valueFrom:
               secretKeyRef:
                 name: {{ .Values.lensesHq.api.tls.cert.secretName }}
-                key: {{ .Values.lensesHq.api.tls.cert.secretKey }}
+                key: {{ .Values.lensesHq.api.tls.cert.secretKeyName }}
           {{- end }}
           {{- end }}
           - name: LENSESHQ_PG_PASSWORD
@@ -162,12 +162,12 @@ spec:
             {{ else }}
             value: {{ .Values.lensesHq.postgres.username }}
             {{- end }}
-          {{ if .Values.lensesHq.api.saml.metadata.useConfigMap }}
+          {{ if .Values.lensesHq.api.saml.metadata.useSecret }}
           - name: LENSESHQ_API_SAML_METADATA
             valueFrom:
-              configMapKeyRef:
-                name: {{ .Values.lensesHq.api.saml.metadata.configMapName }}
-                key: {{ .Values.lensesHq.api.saml.metadata.configMapKey }}
+              secretKeyRef:
+                name: {{ .Values.lensesHq.api.saml.metadata.secretName }}
+                key: {{ .Values.lensesHq.api.saml.metadata.secretKeyName }}
           {{- end }}
       {{- if .Values.sidecarContainers }}
       {{- toYaml .Values.sidecarContainers | nindent 6 }}

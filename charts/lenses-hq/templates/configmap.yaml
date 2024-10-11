@@ -38,7 +38,7 @@ data:
     [api.saml]
     base_url = {{ .Values.lensesHq.api.saml.baseUrl | quote }}
     entity_id = {{ .Values.lensesHq.api.saml.entityId | quote }}
-    {{- if .Values.lensesHq.api.saml.metadata.useConfigMap }}
+    {{- if .Values.lensesHq.api.saml.metadata.useSecret }}
     metadata = """$(LENSESHQ_API_SAML_METADATA)"""
     {{- else }}
     metadata = """

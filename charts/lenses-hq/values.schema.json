@@ -481,7 +481,7 @@
                                                 "hq-pub-cert"
                                             ]
                                         },
-                                        "secretKey":{
+                                        "secretKeyName":{
                                             "type": "string",
                                             "default": "",
                                             "title": "Secret name where certificate is being stored.",
@@ -599,27 +599,27 @@
                                         ""
                                     ],
                                     "properties": {
-                                        "useConfigMap": {
+                                        "useSecret": {
                                             "type": "boolean",
-                                            "default": "false",
+                                            "default": false,
                                             "title": "Read metadata xml file from ConfigMap Schema",
                                             "examples": [
                                                 true,
                                                 false
                                             ]
                                         },
-                                        "configMapName": {
+                                        "secretName": {
                                             "type": "string",
                                             "default": "",
-                                            "title": "ConfigMap name where Saml metadata is stored Schema",
+                                            "title": "Secret name where Saml metadata is stored Schema",
                                             "examples": [
                                                 "metadata-configmap"
                                             ]
                                         },
-                                        "confiMapKey": {
+                                        "secretKeyName": {
                                             "type": "string",
                                             "default": "metadata.xml",
-                                            "title": "ConfigMap key used to refernce configmap metadata information.",
+                                            "title": "Secret key used to reference secret metadata information.",
                                             "examples": [
                                                 "metadata.xml"
                                             ]

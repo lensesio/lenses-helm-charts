@@ -74,7 +74,10 @@ The command deploys Lenses HQ on the Kubernetes cluster in the example configura
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | lensesHq.agents.address | string | `":10000"` | Address wherefrom agent will be listening at. **Required: true** |
-| lensesHq.agents.tls.cert | string | `""` | Sets the PEM formatted public certificate. **Required: false** |
+| lensesHq.agents.tls.cert.secretKeyName | string | `""` | Secret key where within a secret where certificate is sotred. **Required: false** |
+| lensesHq.agents.tls.cert.secretName | string | `""` | Secret name where certificate is stored. **Required: false** |
+| lensesHq.agents.tls.cert.stringData | string | `""` | Sets the PEM formatted public certificate. **Required: false** |
+| lensesHq.agents.tls.cert.useSecret | string | `false` | Enables usage of secret for certificate. **Required: false** |
 | lensesHq.agents.tls.enabled | string | `false` | Enables or disables TLS. **Required: true** |
 | lensesHq.agents.tls.privateKey | string | `{"secret":{"key":null,"name":null}}` | Sets the PEM formatted private key. **Required: false** |
 | lensesHq.agents.tls.verboseLogs | string | `false` | Enabled verbose of TLS debug logs **Required: true** |
@@ -90,7 +93,10 @@ The command deploys Lenses HQ on the Kubernetes cluster in the example configura
 | lensesHq.api.administrators | list | `[]` | Grants administrator rights to users. **Required: false** |
 | lensesHq.api.redirToIdp | boolean | `false` | Controls API HTTP behaviour on authentication errors. **Required: false** |
 | lensesHq.api.secureSessionCookies | bool | `true` | Sets the "Secure" attribute on session cookies. **Required: false** |
-| lensesHq.api.tls.cert | string | `""` | Sets the PEM formatted public certificate. **Required: false** |
+| lensesHq.api.tls.cert.secretKeyName | string | `""` | Secret key where within a secret where certificate is sotred. **Required: false** |
+| lensesHq.api.tls.cert.secretName | string | `""` | Secret name where certificate is stored. **Required: false** |
+| lensesHq.api.tls.cert.stringData | string | `""` | Sets the PEM formatted public certificate. **Required: false** |
+| lensesHq.api.tls.cert.useSecret | string | `false` | Enables usage of secret for certificate. **Required: false** |
 | lensesHq.api.tls.enabled | string | `false` | Enables or disables TLS. **Required: true** |
 | lensesHq.api.tls.privateKey | string | `{"secret":{"key":null,"name":null}}` | Sets the PEM formatted private key. **Required: false** |
 
@@ -101,11 +107,11 @@ The command deploys Lenses HQ on the Kubernetes cluster in the example configura
 | lensesHq.api.saml.baseUrl | string | `""` | Defines base URL of Panoptes for IdP redirects. **Required: true** |
 | lensesHq.api.saml.entityId | string | `""` | Defines the Entity ID. **Required: true** |
 | lensesHq.api.saml.groupAttributeKey | string | `"group"` | Sets the attribute name for group names. **Required: false** |
-| lensesHq.api.saml.metadata | object | `{"configMapKey":"metadata.xml","configMapName":"","stringData":"","useConfigMap":false}` | Contains the IdP issued XML metadata blob. Example: <?xml version="1.0" ... (big blob of xml) </md:EntityDescriptor> **Required: true** |
-| lensesHq.api.saml.metadata.configMapKey | string | `"metadata.xml"` | ConfigMap key used to refernce configmap metadata information. **Required: false** |
-| lensesHq.api.saml.metadata.configMapName | string | `""` | ConfigMap name which contains metadata information. **Required: false** |
+| lensesHq.api.saml.metadata | object | `{"secretKeyName":"metadata.xml","secretName":"","stringData":"","useSecret":false}` | Contains the IdP issued XML metadata blob. Example: <?xml version="1.0" ... (big blob of xml) </md:EntityDescriptor> **Required: true** |
+| lensesHq.api.saml.metadata.secretKeyName | string | `"metadata.xml"` | ConfigMap key used to reference configmap metadata information. **Required: false** |
+| lensesHq.api.saml.metadata.secretName | string | `""` | ConfigMap name which contains metadata information. **Required: false** |
 | lensesHq.api.saml.metadata.stringData | string | `""` | Contains the IdP issued XML metadata blob. Example: <?xml version="1.0" ... (big blob of xml) </md:EntityDescriptor> **Required: true** |
-| lensesHq.api.saml.metadata.useConfigMap | boolean | `false` | Enables use of configmap to refernence SAML metadata file. **Required: true** |
+| lensesHq.api.saml.metadata.useSecret | boolean | `false` | Enables use of configmap to refernence SAML metadata file. **Required: true** |
 | lensesHq.api.saml.uiRootUrl | string | `"/"` | Controls where to redirect to upon successful authentication. **Required: false** |
 | lensesHq.api.saml.userCreationMode | string | `"manual"` | Controls how the creation of users should be handled in relation to SSO information Allowed values are: sso | manual **Required: false** |
 | lensesHq.api.saml.usersGroupMembershipManagementMode | string | `"manual"` | Controls how the management of a user's group membership should be handled in relation to SSO information. Allowed values are: sso | manual **Required: false** |
@@ -145,7 +151,7 @@ The command deploys Lenses HQ on the Kubernetes cluster in the example configura
 | lensesHq.postgres.passwordSecret.type | string | `"precreated"` | Possible options: precreated | createNew | externalSecret |
 | lensesHq.postgres.port | int | `5432` | Port of running postgress instance. Default is 5432. **Required: true** |
 | lensesHq.postgres.useSecretForUsername.enabled | string | `false` | Whether username will be used within a secret or as a part of `username` value. **Required: true** |
-| lensesHq.postgres.useSecretForUsername.existingSecret | string | `{"key":"","name":""}` | Secret refernce for database user. **Required: false** |
+| lensesHq.postgres.useSecretForUsername.existingSecret | string | `{"key":"","name":""}` | Secret reference for database user. **Required: false** |
 | lensesHq.postgres.username | string | `""` | Username which will be used for connecting to Postgres database. **Required: true** |
 
 ### Permission scope values

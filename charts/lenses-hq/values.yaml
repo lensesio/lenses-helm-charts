@@ -180,14 +180,23 @@ lensesHq:
       # **Required: true**
       verboseLogs: false
 
-      # -- (string) Sets the PEM formatted public certificate.
-      # @section -- Lenses HQ Agent startup values
-      # **Required: false**
       cert:
-        referenceFromSecret: false
+        # -- (string) Enables usage of secret for certificate.
+        # @section -- Lenses HQ Agent startup values
+        # **Required: false**
+        useSecret: false
+        # -- (string) Secret name where certificate is stored.
+        # @section -- Lenses HQ Agent startup values
+        # **Required: false**
         secretName: ""
-        secretKey: ""
-        stringData: -|
+        # -- (string) Secret key where within a secret where certificate is sotred.
+        # @section -- Lenses HQ Agent startup values
+        # **Required: false**
+        secretKeyName: ""
+        # -- (string) Sets the PEM formatted public certificate.
+        # @section -- Lenses HQ Agent startup values
+        # **Required: false**
+        stringData: |
 
       # -- (string) Sets the PEM formatted private key.
       # @section -- Lenses HQ Agent startup values
@@ -240,13 +249,22 @@ lensesHq:
       # **Required: true**
       verboseLogs: false
 
-      # -- (string) Sets the PEM formatted public certificate.
-      # @section -- Lenses HQ API startup values
-      # **Required: false**
       cert:
+        # -- (string) Enables usage of secret for certificate.
+        # @section -- Lenses HQ API startup values
+        # **Required: false**
         useSecret: false
+        # -- (string) Secret name where certificate is stored.
+        # @section -- Lenses HQ API startup values
+        # **Required: false**
         secretName: ""
-        secretKey: ""
+        # -- (string) Secret key where within a secret where certificate is sotred.
+        # @section -- Lenses HQ API startup values
+        # **Required: false**
+        secretKeyName: ""
+        # -- (string) Sets the PEM formatted public certificate.
+        # @section -- Lenses HQ API startup values
+        # **Required: false**
         stringData: |
 
       # -- (string) Sets the PEM formatted private key.
@@ -277,15 +295,15 @@ lensesHq:
         # -- (boolean) Enables use of configmap to refernence SAML metadata file.
         # @section -- Lenses HQ SAML startup values
         # **Required: true**
-        useConfigMap: false
+        useSecret: false
         # -- (string) ConfigMap name which contains metadata information.
         # @section -- Lenses HQ SAML startup values
         # **Required: false**
-        configMapName: ""
+        secretName: ""
         # -- (string) ConfigMap key used to reference configmap metadata information.
         # @section -- Lenses HQ SAML startup values
         # **Required: false**
-        configMapKey: "metadata.xml"
+        secretKeyName: "metadata.xml"
         # -- Contains the IdP issued XML metadata blob.
         # Example: <?xml version="1.0" ... (big blob of xml) </md:EntityDescriptor>
         # @section -- Lenses HQ SAML startup values
