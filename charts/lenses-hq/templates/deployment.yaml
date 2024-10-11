@@ -162,7 +162,7 @@ spec:
             {{ else }}
             value: {{ .Values.lensesHq.postgres.username }}
             {{- end }}
-          {{ if .Values.lensesHq.api.saml.metadata.useSecret }}
+          {{ if .Values.lensesHq.api.saml.metadata.referenceFromSecret }}
           - name: LENSESHQ_API_SAML_METADATA
             valueFrom:
               secretKeyRef:

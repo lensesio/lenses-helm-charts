@@ -295,7 +295,7 @@ lensesHq:
         # -- (boolean) Enables use of configmap to refernence SAML metadata file.
         # @section -- Lenses HQ SAML startup values
         # **Required: true**
-        useSecret: false
+        referenceFromSecret: false
         # -- (string) ConfigMap name which contains metadata information.
         # @section -- Lenses HQ SAML startup values
         # **Required: false**
