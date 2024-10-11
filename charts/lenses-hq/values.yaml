@@ -183,7 +183,11 @@ lensesHq:
       # -- (string) Sets the PEM formatted public certificate.
       # @section -- Lenses HQ Agent startup values
       # **Required: false**
-      cert: |-
+      cert:
+        referenceFromSecret: false
+        secretName: ""
+        secretKey: ""
+        stringData: -|
 
       # -- (string) Sets the PEM formatted private key.
       # @section -- Lenses HQ Agent startup values
@@ -239,7 +243,11 @@ lensesHq:
       # -- (string) Sets the PEM formatted public certificate.
       # @section -- Lenses HQ API startup values
       # **Required: false**
-      cert: |-
+      cert:
+        useSecret: false
+        secretName: ""
+        secretKey: ""
+        stringData: |
 
       # -- (string) Sets the PEM formatted private key.
       # @section -- Lenses HQ API startup values
@@ -274,7 +282,7 @@ lensesHq:
         # @section -- Lenses HQ SAML startup values
         # **Required: false**
         configMapName: ""
-        # -- (string) ConfigMap key used to refernce configmap metadata information.
+        # -- (string) ConfigMap key used to reference configmap metadata information.
         # @section -- Lenses HQ SAML startup values
         # **Required: false**
         configMapKey: "metadata.xml"
@@ -327,7 +335,7 @@ lensesHq:
       # @section -- Lenses HQ Database startup values
       # **Required: true**
       enabled: false
-      # -- (string) Secret refernce for database user.
+      # -- (string) Secret reference for database user.
       # @section -- Lenses HQ Database startup values
       # **Required: false**
       existingSecret:

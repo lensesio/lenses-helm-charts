@@ -121,6 +121,13 @@ spec:
               secretKeyRef:
                 name: {{.Values.lensesHq.agents.tls.privateKey.secret.name }}
                 key: {{ .Values.lensesHq.agents.tls.privateKey.secret.key }}
+          {{ if (.Values.lensesHq.agents.tls.cert).referenceFromSecret }}
+          - name: LENSESHQ_AGENTS_TLS_CERT
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.lensesHq.agents.tls.cert.secretName }}
+                key: {{ .Values.lensesHq.agents.tls.cert.secretKey }}
+          {{- end }}
           {{- end }}
           {{ if (.Values.lensesHq.api.tls).enabled }}
           - name: LENSESHQ_API_TLS_KEY
@@ -128,6 +135,13 @@ spec:
               secretKeyRef:
                 name: {{ .Values.lensesHq.api.tls.privateKey.secret.name }}
                 key: {{ .Values.lensesHq.api.tls.privateKey.secret.key }}
+          {{ if (.Values.lensesHq.api.tls.cert).referenceFromSecret }}
+          - name: LENSESHQ_API_TLS_CERT
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.lensesHq.api.tls.cert.secretName }}
+                key: {{ .Values.lensesHq.api.tls.cert.secretKey }}
+          {{- end }}
           {{- end }}
           - name: LENSESHQ_PG_PASSWORD
             valueFrom:

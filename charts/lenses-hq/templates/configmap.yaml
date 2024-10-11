@@ -22,11 +22,17 @@ data:
     {{ if (.Values.lensesHq.api.tls).enabled }}
     [api.tls]
     enabled = {{ .Values.lensesHq.api.tls.enabled }}
-    cert = ""{{ .Values.lensesHq.api.tls.cert | quote }}""
+    {{ if (.Values.lensesHq.api.tls.cert).referenceFromSecret }}
+    cert = """
+    $(LENSESHQ_API_TLS_CERT)
+    """
+    {{- else }}
+    cert = ""{{ .Values.lensesHq.api.tls.cert.stringData | quote }}""
+    {{ end }}
     key = """
     $(LENSESHQ_API_TLS_KEY)
     """
-    verbose_logs = {{ .Values.lensesHq.api.tls.verboseLogs  | quote }}
+    verbose_logs = {{ .Values.lensesHq.api.tls.verboseLogs }}
     {{ end }}
 
     [api.saml]
@@ -50,7 +56,13 @@ data:
     {{ if (.Values.lensesHq.agents.tls).enabled }}
     [agents.tls]
     enabled = {{ .Values.lensesHq.agents.tls.enabled }}
-    cert = ""{{ .Values.lensesHq.agents.tls.cert | quote }}""
+    {{ if (.Values.lensesHq.agents.tls.cert).referenceFromSecret }}
+    cert = """
+    $(LENSESHQ_AGENTS_TLS_CERT)
+    """
+    {{- else }}
+    cert = ""{{ .Values.lensesHq.agents.tls.cert.stringData | quote }}""
+    {{ end }}
     key = """$(LENSESHQ_AGENTS_TLS_KEY)"""
     verbose_logs = {{ .Values.lensesHq.agents.tls.verboseLogs }}
     {{ end }}
