@@ -330,7 +330,7 @@ lensesHq:
       # -- Sets the attribute name for group names.
       # @section -- Lenses HQ SAML startup values
       # **Required: false**
-      groupAttributeKey: "group"
+      groupAttributeKey: "groups"
 
   postgres:
     # -- (string) Hostname of running postgres instance.

@@ -106,7 +106,7 @@ The command deploys Lenses HQ on the Kubernetes cluster in the example configura
 |-----|------|---------|-------------|
 | lensesHq.api.saml.baseUrl | string | `""` | Defines base URL of Panoptes for IdP redirects. **Required: true** |
 | lensesHq.api.saml.entityId | string | `""` | Defines the Entity ID. **Required: true** |
-| lensesHq.api.saml.groupAttributeKey | string | `"group"` | Sets the attribute name for group names. **Required: false** |
+| lensesHq.api.saml.groupAttributeKey | string | `"groups"` | Sets the attribute name for group names. **Required: false** |
 | lensesHq.api.saml.metadata | object | `{"secretKeyName":"metadata.xml","secretName":"","stringData":"","useSecret":false}` | Contains the IdP issued XML metadata blob. Example: <?xml version="1.0" ... (big blob of xml) </md:EntityDescriptor> **Required: true** |
 | lensesHq.api.saml.metadata.secretKeyName | string | `"metadata.xml"` | ConfigMap key used to reference configmap metadata information. **Required: false** |
 | lensesHq.api.saml.metadata.secretName | string | `""` | ConfigMap name which contains metadata information. **Required: false** |

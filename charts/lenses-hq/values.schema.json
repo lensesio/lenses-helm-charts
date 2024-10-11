@@ -434,7 +434,7 @@
                         },
                         "tls": {
                             "type": "object",
-                            "default":{},
+                            "default": {},
                             "title": "The tls Schema",
                             "required": [
                                 "enabled",
@@ -460,7 +460,7 @@
                                     ]
                                 },
                                 "cert":{
-                                    "type": "object“",
+                                    "type": "object",
                                     "default": {},
                                     "title": "The cert Schema",
                                     "properties": {
