@@ -71,7 +71,7 @@ namespaceScope: true
 
 # -- (int) Lenses HQ container port
 # @section -- Lenses HQ deployment service values
-restPort: 3030
+restPort: 8080
 # -- (int) Lenses HQ service port, service targets restPort
 # @section -- Lenses HQ deployment service values
 servicePort: 80
