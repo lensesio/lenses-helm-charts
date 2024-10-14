@@ -59,8 +59,9 @@ The command deploys Lenses HQ on the Kubernetes cluster in the example configura
 | ingress.annotations | dict | `{}` | Custom Ingress annotations |
 | ingress.enabled | bool | `false` | If true, Ingress will be created |
 | ingress.host | tpl/string | `nil` | Set custom host name. (DNS name convention) |
-| ingress.tls | object | `{"crt":"","enabled":false,"key":""}` | TLS if enabled load the tls.crt and tls.keys as a secrets and enable TLS on the ingress |
+| ingress.tls | object | `{"enabled":false,"secretName":""}` | TLS if enabled load the tls.crt and tls.keys as a secrets and enable TLS on the ingress |
 | ingress.tls.enabled | bool | `false` | Set to true to enable HTTPS |
+| ingress.tls.secretName | string | `""` | Secret name where tls certificates are being stored. The TLS secret must contain keys named tls.crt and tls.key that contain the certificate and private key to use for TLS. |
 | restPort | int | `3030` | Lenses HQ container port |
 | service.annotations | dict | `{}` | Additional service annotations |
 | service.enabled | bool | `true` | Deciding factor whether Lenses HQ service will be created and which type |
@@ -107,11 +108,11 @@ The command deploys Lenses HQ on the Kubernetes cluster in the example configura
 | lensesHq.api.saml.baseUrl | string | `""` | Defines base URL of Panoptes for IdP redirects. **Required: true** |
 | lensesHq.api.saml.entityId | string | `""` | Defines the Entity ID. **Required: true** |
 | lensesHq.api.saml.groupAttributeKey | string | `"groups"` | Sets the attribute name for group names. **Required: false** |
-| lensesHq.api.saml.metadata | object | `{"secretKeyName":"metadata.xml","secretName":"","stringData":"","useSecret":false}` | Contains the IdP issued XML metadata blob. Example: <?xml version="1.0" ... (big blob of xml) </md:EntityDescriptor> **Required: true** |
+| lensesHq.api.saml.metadata | object | `{"referenceFromSecret":false,"secretKeyName":"metadata.xml","secretName":"","stringData":""}` | Contains the IdP issued XML metadata blob. Example: <?xml version="1.0" ... (big blob of xml) </md:EntityDescriptor> **Required: true** |
+| lensesHq.api.saml.metadata.referenceFromSecret | boolean | `false` | Enables use of configmap to refernence SAML metadata file. **Required: true** |
 | lensesHq.api.saml.metadata.secretKeyName | string | `"metadata.xml"` | ConfigMap key used to reference configmap metadata information. **Required: false** |
 | lensesHq.api.saml.metadata.secretName | string | `""` | ConfigMap name which contains metadata information. **Required: false** |
 | lensesHq.api.saml.metadata.stringData | string | `""` | Contains the IdP issued XML metadata blob. Example: <?xml version="1.0" ... (big blob of xml) </md:EntityDescriptor> **Required: true** |
-| lensesHq.api.saml.metadata.useSecret | boolean | `false` | Enables use of configmap to refernence SAML metadata file. **Required: true** |
 | lensesHq.api.saml.uiRootUrl | string | `"/"` | Controls where to redirect to upon successful authentication. **Required: false** |
 | lensesHq.api.saml.userCreationMode | string | `"manual"` | Controls how the creation of users should be handled in relation to SSO information Allowed values are: sso | manual **Required: false** |
 | lensesHq.api.saml.usersGroupMembershipManagementMode | string | `"manual"` | Controls how the management of a user's group membership should be handled in relation to SSO information. Allowed values are: sso | manual **Required: false** |

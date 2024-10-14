@@ -158,9 +158,10 @@ ingress:
     # -- (bool) Set to true to enable HTTPS
     # @section -- Lenses HQ deployment service values
     enabled: false
-    crt: |-
 
-    key: |-
+    # -- (string) Secret name where tls certificates are being stored. The TLS secret must contain keys named tls.crt and tls.key that contain the certificate and private key to use for TLS.
+    # @section -- Lenses HQ deployment service values
+    secretName: ""
 
 lensesHq:
   agents:
