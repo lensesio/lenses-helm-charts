@@ -185,7 +185,7 @@ lensesHq:
         # -- (string) Enables usage of secret for certificate.
         # @section -- Lenses HQ Agent startup values
         # **Required: false**
-        useSecret: false
+        referenceFromSecret: false
         # -- (string) Secret name where certificate is stored.
         # @section -- Lenses HQ Agent startup values
         # **Required: false**
@@ -254,7 +254,7 @@ lensesHq:
         # -- (string) Enables usage of secret for certificate.
         # @section -- Lenses HQ API startup values
         # **Required: false**
-        useSecret: false
+        referenceFromSecret: false
         # -- (string) Secret name where certificate is stored.
         # @section -- Lenses HQ API startup values
         # **Required: false**

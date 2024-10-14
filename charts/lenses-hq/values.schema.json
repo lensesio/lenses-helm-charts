@@ -581,7 +581,7 @@
                                         ""
                                     ],
                                     "properties": {
-                                        "useSecret": {
+                                        "referenceFromSecret": {
                                             "type": "boolean",
                                             "default": false,
                                             "title": "Read metadata xml file from ConfigMap Schema",
