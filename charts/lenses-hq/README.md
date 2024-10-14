@@ -80,7 +80,7 @@ The command deploys Lenses HQ on the Kubernetes cluster in the example configura
 | lensesHq.agents.tls.cert.secretName | string | `""` | Secret name where certificate is stored. **Required: false** |
 | lensesHq.agents.tls.cert.stringData | string | `""` | Sets the PEM formatted public certificate. **Required: false** |
 | lensesHq.agents.tls.enabled | string | `false` | Enables or disables TLS. **Required: true** |
-| lensesHq.agents.tls.privateKey | string | `{"secret":{"key":null,"name":null}}` | Sets the PEM formatted private key. **Required: false** |
+| lensesHq.agents.tls.privateKey | string | `{"secret":{"key":"","name":""}}` | Sets the PEM formatted private key. **Required: false** |
 | lensesHq.agents.tls.verboseLogs | string | `false` | Enabled verbose of TLS debug logs **Required: true** |
 | lensesHq.api.tls.verboseLogs | string | `false` | Enabled verbose of TLS debug logs **Required: true** |
 
@@ -99,7 +99,7 @@ The command deploys Lenses HQ on the Kubernetes cluster in the example configura
 | lensesHq.api.tls.cert.secretName | string | `""` | Secret name where certificate is stored. **Required: false** |
 | lensesHq.api.tls.cert.stringData | string | `""` | Sets the PEM formatted public certificate. **Required: false** |
 | lensesHq.api.tls.enabled | string | `false` | Enables or disables TLS. **Required: true** |
-| lensesHq.api.tls.privateKey | string | `{"secret":{"key":null,"name":null}}` | Sets the PEM formatted private key. **Required: false** |
+| lensesHq.api.tls.privateKey | string | `{"secret":{"key":"","name":""}}` | Sets the PEM formatted private key. **Required: false** |
 
 ### Lenses HQ SAML startup values
 

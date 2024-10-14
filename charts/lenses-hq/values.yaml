@@ -205,8 +205,8 @@ lensesHq:
       privateKey:
         # Reference to precreated secret name and key.
         secret:
-          name:
-          key:
+          name: ""
+          key: ""
 
   api:
     # -- (string) Sets the address the HTTP servers listens at.
@@ -274,8 +274,8 @@ lensesHq:
       privateKey:
         # Reference to precreated secret name and key.
         secret:
-          name:
-          key:
+          name: ""
+          key: ""
 
     saml:
       # -- Defines base URL of Panoptes for IdP redirects.
