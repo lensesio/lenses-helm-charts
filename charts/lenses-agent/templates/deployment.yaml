@@ -239,7 +239,10 @@ spec:
             {{- if contains "createNew" .Values.lenses.hq.agentKey.secret.type }}
               name: {{ include "agentKeySecretName" . }}
               key: key
-            {{ else if or (contains "precreated" .Values.lenses.hq.agentKey.secret.type) (contains "externalSecret" .Values.lenses.hq.agentKey.secret.type) }}
+            {{ else if contains "precreated" .Values.lenses.hq.agentKey.secret.type }}
+              name: {{ .Values.lenses.hq.agentKey.secret.name }}
+              key: {{ .Values.lenses.hq.agentKey.secret.key }}
+            {{ else if contains "externalSecret" .Values.lenses.hq.agentKey.secret.type }}
               name: {{ include "agentKeySecretName" . }}
               key: {{ .Values.lenses.hq.agentKey.secret.key }}
             {{- end }}
