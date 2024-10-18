@@ -1,6 +1,6 @@
 # lenses-agent
 
-![Version: 6.0.0](https://img.shields.io/badge/Version-6.0.0-informational?style=flat-square) ![AppVersion: 6.0.0](https://img.shields.io/badge/AppVersion-6.0.0-informational?style=flat-square)
+![Version: 6.0.0-alpha.0](https://img.shields.io/badge/Version-6.0.0--alpha.0-informational?style=flat-square) ![AppVersion: v6.0.0-alpha.9](https://img.shields.io/badge/AppVersion-v6.0.0--alpha.9-informational?style=flat-square)
 
 A chart for Lenses Agent deployment (ex. Lenses v5).
 
@@ -67,7 +67,7 @@ The command deploys Lenses Agent on the Kubernetes cluster in the example config
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| lenses.hq.agentKey.secret.type | string | `"externalSecret"` | Secret type for referencing / creating agent key Possible values: createNew | precreated | externalSecret |
+| lenses.hq.agentKey.secret.type | string | `""` | Secret type for referencing / creating agent key Possible values: createNew | precreated | externalSecret |
 
 ### Agent JVM scope values
 
@@ -145,8 +145,6 @@ The command deploys Lenses Agent on the Kubernetes cluster in the example config
 | restPort | int | `3030` | Lenses Agent container port |
 | service.annotations | dict | `{}` | Additional service annotations |
 | service.enabled | bool | `true` | Deciding factor whether Lenses HQ service will be created and which type |
-| service.type | string | `"ClusterIP"` | Type of service to be created. |
-| servicePort | int | `80` | Lenses Agent service port, service targets restPort. **DEPRECATED** |
 | servicePortName | string | `"lenses-agent"` | Lenses Agent service port name |
 
 ### Other Values
@@ -154,9 +152,10 @@ The command deploys Lenses Agent on the Kubernetes cluster in the example config
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | fullnameOverride | string | `""` |  |
-| lenses.hq.agentKey.secret.externalSecret.secretStoreRef.clusterSecretStore.name | string | `"panoptes-secrets"` |  |
-| lenses.hq.agentKey.secret.key | string | `"password"` |  |
-| lenses.hq.agentKey.secret.name | string | `"lenses-hq-agent-secret"` |  |
+| lenses.hq.agentKey.secret.externalSecret.name | string | `""` |  |
+| lenses.hq.agentKey.secret.externalSecret.secretStoreRef.clusterSecretStore.name | string | `""` |  |
+| lenses.hq.agentKey.secret.key | string | `""` |  |
+| lenses.hq.agentKey.secret.name | string | `""` |  |
 | nameOverride | string | `""` |  |
 
 ----------------------------------------------

@@ -187,19 +187,23 @@ lenses:
         # -- (string) Secret type for referencing / creating agent key
         # Possible values: createNew | precreated | externalSecret
         # @section -- Agent <-> HQ scope values
-        type: "externalSecret"
-        #value: ""
-        key: password
-        name: lenses-hq-agent-secret
-        # Secret name when creating "externalSecret"
-        #name: leneses-agent-secret
-        # Required in case secret.type: "createNew", alongside secret.name
-        #value: ""
-        # Required in case secret.type: "externalSecret", alongisde secret.name
+        type: ""
+
+        # Value which hold agentKey string and from which secret will be created
+        ## necessary only in case secret type is "createNew"
+        # value: ""
+
+        # Key from secret's data where Lenses agent_key is being stored
+        key: ""
+        # Secret name whereLenses agent_key will be read from.
+        # Not necessary when externalSecret is being used
+        name: ""
+        # Required in case secret.type: "externalSecret", alongisde secret.key
         externalSecret:
+          name: ""
           secretStoreRef:
             clusterSecretStore:
-              name: panoptes-secrets
+              name: ""
 
         # Required in case secret.type: "precreated": name & key
         ## type: "precreated"
