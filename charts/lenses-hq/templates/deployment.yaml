@@ -69,8 +69,8 @@ spec:
           configMap:
             name: {{ include "fullname" . | quote}}
             items:
-              - key: config.toml
-                path: config.toml
+              - key: config.yaml
+                path: config.yaml
       serviceAccountName: {{ .Values.serviceAccount.name }}
       {{- if .Values.image.imagePullSecrets }}
       imagePullSecrets: {{ .Values.image.imagePullSecrets | toYaml | nindent 8 }}
@@ -80,7 +80,7 @@ spec:
       - name: {{ .Chart.Name }}
         image: {{ .Values.image.repository }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
-        args: ["/etc/panoptes/config.toml"]
+        args: ["/etc/panoptes/config.yaml"]
         {{- if .Values.containerSecurityContext}}
         securityContext:
           {{- toYaml .Values.containerSecurityContext | nindent 10 }}
@@ -129,19 +129,26 @@ spec:
                 key: {{ .Values.lensesHq.agents.tls.cert.secretKeyName }}
           {{- end }}
           {{- end }}
-          {{ if (.Values.lensesHq.api.tls).enabled }}
-          - name: LENSESHQ_API_TLS_KEY
+          {{ if (.Values.lensesHq.auth.tls).enabled }}
+          - name: LENSESHQ_AUTH_TLS_KEY
             valueFrom:
               secretKeyRef:
-                name: {{ .Values.lensesHq.api.tls.privateKey.secret.name }}
-                key: {{ .Values.lensesHq.api.tls.privateKey.secret.key }}
-          {{ if (.Values.lensesHq.api.tls.cert).referenceFromSecret }}
-          - name: LENSESHQ_API_TLS_CERT
+                name: {{ .Values.lensesHq.auth.tls.privateKey.secret.name }}
+                key: {{ .Values.lensesHq.auth.tls.privateKey.secret.key }}
+          {{ if (.Values.lensesHq.auth.tls.cert).referenceFromSecret }}
+          - name: LENSESHQ_AUTH_TLS_CERT
             valueFrom:
               secretKeyRef:
-                name: {{ .Values.lensesHq.api.tls.cert.secretName }}
-                key: {{ .Values.lensesHq.api.tls.cert.secretKeyName }}
+                name: {{ .Values.lensesHq.auth.tls.cert.secretName }}
+                key: {{ .Values.lensesHq.auth.tls.cert.secretKeyName }}
           {{- end }}
+          {{- end }}
+          {{ if .Values.lensesHq.auth.saml.metadata.referenceFromSecret }}
+          - name: LENSESHQ_AUTH_SAML_METADATA
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.lensesHq.auth.saml.metadata.secretName }}
+                key: {{ .Values.lensesHq.auth.saml.metadata.secretKeyName }}
           {{- end }}
           - name: LENSESHQ_PG_PASSWORD
             valueFrom:
@@ -162,13 +169,6 @@ spec:
             {{ else }}
             value: {{ .Values.lensesHq.postgres.username }}
             {{- end }}
-          {{ if .Values.lensesHq.api.saml.metadata.referenceFromSecret }}
-          - name: LENSESHQ_API_SAML_METADATA
-            valueFrom:
-              secretKeyRef:
-                name: {{ .Values.lensesHq.api.saml.metadata.secretName }}
-                key: {{ .Values.lensesHq.api.saml.metadata.secretKeyName }}
-          {{- end }}
       {{- if .Values.sidecarContainers }}
       {{- toYaml .Values.sidecarContainers | nindent 6 }}
       {{- end }}

@@ -175,6 +175,16 @@ spec:
         resources:
           {{- toYaml .Values.resources | nindent 10 }}
         env:
+        - name: LENSESHQ_AGENTS_TLS_KEY
+          valueFrom:
+            secretKeyRef:
+              name: hq-agent-test-authority
+              key: hq-tls-test.crt.pem
+        - name: LENSESHQ_AGENTS_TLS_CERT
+          valueFrom:
+            secretKeyRef:
+              name: hq-agent-test-authority
+              key: hq-tls-test.key.pem
         - name: LENSES_OPTS
           value: {{include "lensesOpts" . | default "" | quote}}
         {{- if .Values.lenses.opts.trustStoreFileData }}

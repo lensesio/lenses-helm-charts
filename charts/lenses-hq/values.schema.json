@@ -391,7 +391,8 @@
             "title": "The lensesHq Schema",
             "required": [
                 "agents",
-                "api",
+                "http",
+                "auth",
                 "postgres",
                 "logger",
                 "livenessProbe"
@@ -519,14 +520,132 @@
                         }
                     }]
                 },
-                "api": {
+                "auth": {
                     "type": "object",
                     "default": {},
-                    "title": "The api Schema",
+                    "title": "The Auth Schema",
+                    "required": [
+                        "administrators",
+                        "saml"
+                ],
+                "properties": {
+                    "administrators": {
+                        "type": "array",
+                        "default": "",
+                        "title": "administrators which would have ultimate permissions out to the box when logging to HQ",
+                        "examples": [
+                            ["test@testcompany.com","test2@testcompany.com"]
+                        ]
+                    },
+                    "saml": {
+                        "type": "object",
+                        "default": {},
+                        "title": "The SAML Schema",
+                        "required": [
+                            "baseURL",
+                            "entityID",
+                            "metadata",
+                            "userCreationMode",
+                            "usersGroupMembershipManagementMode"
+                        ],
+                        "properties": {
+                            "baseURL": {
+                                "type": "string",
+                                "default": "",
+                                "title": "The baseURL Schema",
+                                "examples": [
+                                    "https://saml.example.com/api/saml/sso"
+                                ]
+                            },
+                            "entityID": {
+                                "type": "string",
+                                "default": "",
+                                "title": "The entityID Schema",
+                                "examples": [
+                                    "https://saml.example.com/entityID"
+                                ]
+                            },
+                            "metadata": {
+                                "type": "object",
+                                "default": "",
+                                "title": "The metadata Schema",
+                                "examples": [
+                                    ""
+                                ],
+                                "properties": {
+                                    "referenceFromSecret": {
+                                        "type": "boolean",
+                                        "default": false,
+                                        "title": "Read metadata xml file from ConfigMap Schema",
+                                        "examples": [
+                                            true,
+                                            false
+                                        ]
+                                    },
+                                    "secretName": {
+                                        "type": "string",
+                                        "default": "",
+                                        "title": "Secret name where Saml metadata is stored Schema",
+                                        "examples": [
+                                            "metadata-configmap"
+                                        ]
+                                    },
+                                    "secretKeyName": {
+                                        "type": "string",
+                                        "default": "metadata.xml",
+                                        "title": "Secret key used to reference secret metadata information.",
+                                        "examples": [
+                                            "metadata.xml"
+                                        ]
+                                    },
+                                    "stringData": {
+                                        "type": "string",
+                                        "default": "",
+                                        "title": " Contains the IdP issued XML metadata blob.",
+                                        "examples": [
+                                            "<?xml version= ... (big blob of xml) </md:EntityDescriptor>"
+                                        ]
+                                    }
+                                }
+                            },
+                            "userCreationMode": {
+                                "type": "string",
+                                "default": "",
+                                "pattern": "^(sso|manual)$",
+                                "title": "The userCreationMode Schema",
+                                "examples": [
+                                    "sso",
+                                    "manual"
+                                ]
+                            },
+                            "usersGroupMembershipManagementMode": {
+                                "type": "string",
+                                "default": "",
+                                "pattern": "^(sso|manual)$",
+                                "title": "The usersGroupMembershipManagementMode Schema",
+                                "examples": [
+                                    "sso",
+                                    "manual"
+                                ]
+                            }
+                        },
+                        "examples": [{
+                            "baseURL": "",
+                            "entityID": "",
+                            "metadata": "",
+                            "userCreationMode": "",
+                            "usersGroupMembershipManagementMode": ""
+                        }]
+                    }
+                 }
+                },
+                "http": {
+                    "type": "object",
+                    "default": {},
+                    "title": "The http Schema",
                     "required": [
                         "address",
-                        "accessControlAllowOrigin",
-                        "saml"
+                        "accessControlAllowOrigin"
                     ],
                     "properties": {
                         "address": {
@@ -537,125 +656,27 @@
                                 ":8080"
                             ]
                         },
+                        "tls": {
+                            "type": "boolean",
+                            "default": false,
+                            "title": "Schema for enabling TLS",
+                            "examples": [
+                                false,
+                                true
+                            ]
+                        },
                         "accessControlAllowOrigin": {
-                            "type": "string",
+                            "type": "array",
                             "default": "",
                             "title": "The accessControlAllowOrigin Schema",
                             "examples": [
                                 ["https://example.io","http://example.io"]
                             ]
-                        },
-                        "saml": {
-                            "type": "object",
-                            "default": {},
-                            "title": "The saml Schema",
-                            "required": [
-                                "baseUrl",
-                                "entityId",
-                                "metadata",
-                                "userCreationMode",
-                                "usersGroupMembershipManagementMode"
-                            ],
-                            "properties": {
-                                "baseUrl": {
-                                    "type": "string",
-                                    "default": "",
-                                    "title": "The baseUrl Schema",
-                                    "examples": [
-                                        "https://saml.example.com/api/saml/sso"
-                                    ]
-                                },
-                                "entityId": {
-                                    "type": "string",
-                                    "default": "",
-                                    "title": "The entityId Schema",
-                                    "examples": [
-                                        "https://saml.example.com/entityid"
-                                    ]
-                                },
-                                "metadata": {
-                                    "type": "object",
-                                    "default": "",
-                                    "title": "The metadata Schema",
-                                    "examples": [
-                                        ""
-                                    ],
-                                    "properties": {
-                                        "referenceFromSecret": {
-                                            "type": "boolean",
-                                            "default": false,
-                                            "title": "Read metadata xml file from ConfigMap Schema",
-                                            "examples": [
-                                                true,
-                                                false
-                                            ]
-                                        },
-                                        "secretName": {
-                                            "type": "string",
-                                            "default": "",
-                                            "title": "Secret name where Saml metadata is stored Schema",
-                                            "examples": [
-                                                "metadata-configmap"
-                                            ]
-                                        },
-                                        "secretKeyName": {
-                                            "type": "string",
-                                            "default": "metadata.xml",
-                                            "title": "Secret key used to reference secret metadata information.",
-                                            "examples": [
-                                                "metadata.xml"
-                                            ]
-                                        },
-                                        "stringData": {
-                                            "type": "string",
-                                            "default": "",
-                                            "title": " Contains the IdP issued XML metadata blob.",
-                                            "examples": [
-                                                "<?xml version= ... (big blob of xml) </md:EntityDescriptor>"
-                                            ]
-                                        }
-                                    }
-                                },
-                                "userCreationMode": {
-                                    "type": "string",
-                                    "default": "",
-                                    "pattern": "^(sso|manual)$",
-                                    "title": "The userCreationMode Schema",
-                                    "examples": [
-                                        "sso",
-                                        "manual"
-                                    ]
-                                },
-                                "usersGroupMembershipManagementMode": {
-                                    "type": "string",
-                                    "default": "",
-                                    "pattern": "^(sso|manual)$",
-                                    "title": "The usersGroupMembershipManagementMode Schema",
-                                    "examples": [
-                                        "sso",
-                                        "manual"
-                                    ]
-                                }
-                            },
-                            "examples": [{
-                                "baseUrl": "",
-                                "entityId": "",
-                                "metadata": "",
-                                "userCreationMode": "",
-                                "usersGroupMembershipManagementMode": ""
-                            }]
                         }
                     },
                     "examples": [{
                         "address": ":8080",
-                        "accessControlAllowOrigin": ["https://example.io","http://example.io"],
-                        "saml": {
-                            "baseUrl": "",
-                            "entityId": "",
-                            "metadata": "",
-                            "userCreationMode": "",
-                            "usersGroupMembershipManagementMode": ""
-                        }
+                        "accessControlAllowOrigin":["https://example.io","http://example.io"]
                     }]
                 },
                 "postgres": {
@@ -667,7 +688,6 @@
                         "port",
                         "username",
                         "database",
-                        "extraParamSpecs",
                         "passwordSecret"
                     ],
                     "properties": {
@@ -678,6 +698,23 @@
                             "examples": [
                                 "10.0.0.1"
                             ]
+                        },
+                        "schema": {
+                            "type": "string",
+                            "default": null,
+                            "title": "Database schema Schema",
+                            "examples": [
+                                "my-schema"
+                            ]
+                        },
+                        "params": {
+                            "type": "object",
+                            "default": null,
+                            "title": "Extra database connection parameters Schema",
+                            "examples": {
+                                "application_name": "example",
+                                 "sslmode": "required"
+                            }
                         },
                         "port": {
                             "type": "integer",
@@ -693,6 +730,15 @@
                             "title": "The username Schema",
                             "examples": [
                                 "lenseshq"
+                            ]
+                        },
+                        "tls": {
+                            "type": "boolean",
+                            "default": false,
+                            "title": "Schema for enabling TLS",
+                            "examples": [
+                                false,
+                                true
                             ]
                         },
                         "database": {
@@ -737,14 +783,6 @@
                                     }
                                 }
                             }
-                        },
-                        "extraParamSpecs": {
-                            "type": "string",
-                            "default": null,
-                            "title": "The database Schema",
-                            "examples": [
-                                "?sslmode=disable"
-                            ]
                         },
                         "passwordSecret": {
                             "type": "object",
@@ -950,146 +988,7 @@
                         "port": 9090
                     }]
                 }
-            },
-            "examples": [{
-                "agents": {
-                    "address": ":10000"
-                },
-                "api": {
-                    "address": ":8080",
-                    "accessControlAllowOrigin": "",
-                    "saml": {
-                        "baseUrl": "",
-                        "entityId": "",
-                        "metadata": "",
-                        "userCreationMode": "",
-                        "usersGroupMembershipManagementMode": ""
-                    }
-                },
-                "postgres": {
-                    "host": null,
-                    "port": null,
-                    "username": null,
-                    "database": null,
-                    "passwordSecret": {
-                        "type": "precreated",
-                        "name": null,
-                        "key": null,
-                        "password": null,
-                        "backendType": null
-                    }
-                },
-                "logger": {
-                    "mode": "text",
-                    "level": "debug"
-                },
-                "tls": {
-                    "enabled": true
-                },
-                "additionalEnv": null,
-                "livenessProbe": {
-                    "enabled": true
-                },
-                "pauseExec": {
-                    "enabled": false
-                },
-                "monitoring": {
-                    "port": 9090
-                }
-            }]
-        }
-    },
-    "examples": [{
-        "nameOverride": "",
-        "fullnameOverride": "",
-        "annotations": {},
-        "podTemplateAnnotations": {},
-        "labels": {},
-        "strategy": {},
-        "nodeSelector": {},
-        "tolerations": {},
-        "affinity": {},
-        "securityContext": {},
-        "resources": {
-            "requests": {
-                "memory": "4Gi"
-            },
-            "limits": {
-                "memory": "5Gi"
-            }
-        },
-        "image": {
-            "repository": null,
-            "pullPolicy": "IfNotPresent"
-        },
-        "rbacEnable": true,
-        "namespaceScope": true,
-        "restPort": 3030,
-        "servicePort": 80,
-        "servicePortName": "lenses-hq",
-        "serviceAccount": {
-            "create": false,
-            "name": "lenses"
-        },
-        "service": {
-            "enabled": true,
-            "type": "ClusterIP",
-            "annotations": {},
-            "externalTrafficPolicy": null
-        },
-        "ingress": {
-            "enabled": false,
-            "host": null,
-            "annotations": {},
-            "tls": {
-                "enabled": false
-            }
-        },
-        "lensesHq": {
-            "agents": {
-                "address": ":10000"
-            },
-            "api": {
-                "address": ":8080",
-                "accessControlAllowOrigin": "",
-                "saml": {
-                    "baseUrl": "",
-                    "entityId": "",
-                    "metadata": "",
-                    "userCreationMode": "",
-                    "usersGroupMembershipManagementMode": ""
-                }
-            },
-            "postgres": {
-                "host": null,
-                "port": null,
-                "username": null,
-                "database": null,
-                "passwordSecret": {
-                    "type": "precreated",
-                    "name": null,
-                    "key": null,
-                    "password": null,
-                    "backendType": null
-                }
-            },
-            "logger": {
-                "mode": "text",
-                "level": "debug"
-            },
-            "tls": {
-                "enabled": true
-            },
-            "additionalEnv": null,
-            "livenessProbe": {
-                "enabled": true
-            },
-            "pauseExec": {
-                "enabled": false
-            },
-            "monitoring": {
-                "port": 9090
             }
         }
-    }]
+    }
 }

@@ -55,13 +55,12 @@ lensesHq:
     address: ":10000"
     tls:
       enabled: false
-  api:
-    address: ":8080"
-    accessControlAllowOrigin: '["http://localhost:8080"]'
-    administrators: '["admin@example.com"]'
+  auth:
+    administrators:
+     - "admin@example.com"
     saml:
-      baseUrl: "http://localhost:8080"
-      entityId: "http://localhost:8080"
+      baseURL: "http://localhost:8080"
+      entityID: "http://localhost:8080"
       # -- Example: <?xml version="1.0" ... (big blob of xml) </md:EntityDescriptor>
       metadata:
         referenceFromSecret: false
@@ -100,6 +99,10 @@ lensesHq:
       usersGroupMembershipManagementMode: "sso"
     tls:
       enabled: false
+  http:
+    address: ":8080"
+    accessControlAllowOrigin:
+      - "http://localhost:8080"
   # Find more details in https://docs.lenses.io/current/installation/kubernetes/helm/#helm-storage
   ## Postgres template example: "postgres://[username]:[pwd]@[host]:[port]/[database]?sslmode=require"
   postgres:
