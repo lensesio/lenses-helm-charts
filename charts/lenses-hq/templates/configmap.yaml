@@ -12,11 +12,6 @@ metadata:
 data:
   "config.yaml": |
     auth:
-      users:
-      {{- range .Values.lensesHq.auth.users }}
-        - username: {{ .username }}
-          password: {{ .password }}
-      {{- end }}
       administrators:
       {{- range .Values.lensesHq.auth.administrators }}
         - {{ . }}

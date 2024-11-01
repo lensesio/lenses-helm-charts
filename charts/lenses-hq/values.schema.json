@@ -532,19 +532,10 @@
                     "administrators": {
                         "type": "array",
                         "default": "",
-                        "title": "Administrators which would have ultimate permissions out to the box when logging to HQ",
+                        "title": "administrators which would have ultimate permissions out to the box when logging to HQ",
                         "examples": [
                             ["test@testcompany.com","test2@testcompany.com"]
                         ]
-                    },
-                    "users": {
-                        "type": "object",
-                        "default": "",
-                        "title": "Username and password for password based auth.",
-                        "examples": {
-                         "username": "example",
-                         "password": "$2a$10$DPQYpxj4Y2iTWeuF1n.ItewXnbYXh5/E9lQwDJ/cI/.gBboW2Hodm"
-                        }
                     },
                     "saml": {
                         "type": "object",
