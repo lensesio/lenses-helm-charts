@@ -56,6 +56,10 @@ lensesHq:
     tls:
       enabled: false
   auth:
+    # Add "basic auth" users here.
+    # users:
+    #   - username: admin
+    #     password: $2a$10$DPQYpxj4Y2iTWeuF1n.ItewXnbYXh5/E9lQwDJ/cI/.gBboW2Hodm # bcrypt("admin").
     administrators:
      - "admin@example.com"
     saml:

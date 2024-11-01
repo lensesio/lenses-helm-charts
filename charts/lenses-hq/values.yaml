@@ -209,6 +209,11 @@ lensesHq:
           key: ""
 
   auth:
+    # -- Adds uses for password based auth
+    # @section -- Lenses HQ AUTH startup values
+    # **Required: false**
+    users: []
+
     # -- Grants administrator rights to users.
     # @section -- Lenses HQ AUTH startup values
     # **Required: false**

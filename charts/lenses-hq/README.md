@@ -95,6 +95,7 @@ The command deploys Lenses HQ on the Kubernetes cluster in the example configura
 | lensesHq.auth.tls.enabled | string | `false` | Enables or disables TLS. **Required: true** |
 | lensesHq.auth.tls.privateKey | string | `{"secret":{"key":"","name":""}}` | Sets the PEM formatted private key. **Required: false** |
 | lensesHq.auth.tls.verboseLogs | string | `false` | Enabled verbose of TLS debug logs **Required: true** |
+| lensesHq.auth.users | list | `[]` | Adds uses for password based auth **Required: false** |
 
 ### Lenses HQ SAML startup values
 
