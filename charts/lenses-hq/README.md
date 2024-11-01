@@ -1,6 +1,6 @@
 # lenses-hq
 
-![Version: 6.0.0-alpha.1](https://img.shields.io/badge/Version-6.0.0--alpha.1-informational?style=flat-square) ![AppVersion: 6.0.0-alpha.3](https://img.shields.io/badge/AppVersion-6.0.0--alpha.3-informational?style=flat-square)
+![Version: 6.0.0-alpha.14](https://img.shields.io/badge/Version-6.0.0--alpha.14-informational?style=flat-square) ![AppVersion: 6.0.0-alpha.14](https://img.shields.io/badge/AppVersion-6.0.0--alpha.14-informational?style=flat-square)
 
 A chart for Lenses HQ deployment which provides a unified, streamlined view of the entire event infrastructure—whether on-premises or in the cloud—through a single, comprehensive interface.
 
@@ -145,21 +145,22 @@ The command deploys Lenses HQ on the Kubernetes cluster in the example configura
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| lensesHq.postgres.database | string | `""` | Database name to which HQ will connect to and store required information. **Required: true** |
-| lensesHq.postgres.host | string | `""` | Hostname of running postgres instance. **Required: true** |
-| lensesHq.postgres.params | string | `{}` | Contains connection string parameters as key/values pairs. It allows    fine-grained control of connection settings. The parameters can be found    here: https://www.postgresql.org/docs/current/libpq-connect.html#LIBPQ-PARAMKEYWORDS **Required: false** |
-| lensesHq.postgres.passwordSecret | object | `{"externalSecret":{"secretStoreRef":{"clusterSecretStore":{"name":null}}},"key":null,"name":"","password":"","type":"precreated"}` | Definition of secret that has been precreated and has postgres database password |
-| lensesHq.postgres.passwordSecret.externalSecret.secretStoreRef.clusterSecretStore.name | string | `nil` | Name of cluster secret store created by ESO. |
-| lensesHq.postgres.passwordSecret.key | string | `nil` | Secret key where password will be read from |
-| lensesHq.postgres.passwordSecret.name | string | `""` | Secret name where database password will be stored in case "createNew" or read from in case of "precreated" | "externalSecret". |
-| lensesHq.postgres.passwordSecret.password | string | `""` | Entry for a password in case of testing where type: "createNew", otherwise can be left out. *NOT FOR PRODUCTION USE!* |
-| lensesHq.postgres.passwordSecret.type | string | `"precreated"` | Possible options: precreated | createNew | externalSecret |
-| lensesHq.postgres.port | int | `5432` | Port of running postgress instance. Default is 5432. **Required: true** |
-| lensesHq.postgres.schema | string | `""` | Database schema to which HQ will connect to and store required information. **Required: true** |
-| lensesHq.postgres.tls | string | `false` | Enables TLS. In PostgreSQL connection string terms, setting TLS to        `false` corresponds to `sslmode=disable`; setting TLS to `true`        corresponds to `sslmode=verify-full`. For more fine-grained control,        specify `sslmode` in the params which takes precedence. **Required: true** |
-| lensesHq.postgres.useSecretForUsername.enabled | string | `false` | Whether username will be used within a secret or as a part of `username` value. **Required: true** |
-| lensesHq.postgres.useSecretForUsername.existingSecret | string | `{"key":"","name":""}` | Secret reference for database user. **Required: false** |
-| lensesHq.postgres.username | string | `""` | Username which will be used for connecting to Postgres database. **Required: true** |
+| lensesHq.storage.postgres.database | string | `""` | Database name to which HQ will connect to and store required information. **Required: true** |
+| lensesHq.storage.postgres.enabled | string | `true` | Enabling postgres engine. This flag is here as there might be support of multiple database engines in the future. **Required: true** |
+| lensesHq.storage.postgres.host | string | `""` | Hostname of running database instance. **Required: true** |
+| lensesHq.storage.postgres.params | string | `{}` | Contains connection string parameters as key/values pairs. It allows    fine-grained control of connection settings. The parameters can be found    here: https://www.postgresql.org/docs/current/libpq-connect.html#LIBPQ-PARAMKEYWORDS **Required: false** |
+| lensesHq.storage.postgres.passwordSecret | object | `{"externalSecret":{"secretStoreRef":{"clusterSecretStore":{"name":null}}},"key":null,"name":"","password":"","type":"precreated"}` | Definition of secret that has been precreated and has postgres database password |
+| lensesHq.storage.postgres.passwordSecret.externalSecret.secretStoreRef.clusterSecretStore.name | string | `nil` | Name of cluster secret store created by ESO. |
+| lensesHq.storage.postgres.passwordSecret.key | string | `nil` | Secret key where password will be read from |
+| lensesHq.storage.postgres.passwordSecret.name | string | `""` | Secret name where database password will be stored in case "createNew" or read from in case of "precreated" | "externalSecret". |
+| lensesHq.storage.postgres.passwordSecret.password | string | `""` | Entry for a password in case of testing where type: "createNew", otherwise can be left out. *NOT FOR PRODUCTION USE!* |
+| lensesHq.storage.postgres.passwordSecret.type | string | `"precreated"` | Possible options: precreated | createNew | externalSecret |
+| lensesHq.storage.postgres.port | int | `5432` | Port of running postgress instance. Default is 5432. **Required: true** |
+| lensesHq.storage.postgres.schema | string | `""` | Database schema to which HQ will connect to and store required information. **Required: true** |
+| lensesHq.storage.postgres.tls | string | `false` | Enables TLS. In PostgreSQL connection string terms, setting TLS to        `false` corresponds to `sslmode=disable`; setting TLS to `true`        corresponds to `sslmode=verify-full`. For more fine-grained control,        specify `sslmode` in the params which takes precedence. **Required: true** |
+| lensesHq.storage.postgres.useSecretForUsername.enabled | string | `false` | Whether username will be used within a secret or as a part of `username` value. **Required: true** |
+| lensesHq.storage.postgres.useSecretForUsername.existingSecret | string | `{"key":"","name":""}` | Secret reference for database user. **Required: false** |
+| lensesHq.storage.postgres.username | string | `""` | Username which will be used for connecting to database database. **Required: true** |
 
 ### Permission scope values
 

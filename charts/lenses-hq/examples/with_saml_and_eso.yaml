@@ -104,21 +104,20 @@ lensesHq:
     accessControlAllowOrigin:
       - "http://localhost:8080"
   # Find more details in https://docs.lenses.io/current/installation/kubernetes/helm/#helm-storage
-  ## Postgres template example: "postgres://[username]:[pwd]@[host]:[port]/[database]?sslmode=require"
-  postgres:
-    host: postgres-postgresql.postgres.svc.cluster.local
-    port: 5432
-    username: lenses
-    database: hq
-    #extraParamSpecs: "?sslmode=disable"
-    passwordSecret:
-      type: "externalSecret"
-      name: postgres
-      key:  password
-      externalSecret:
-        secretStoreRef:
-          clusterSecretStore:
-            name: [CLUSTER_SECRET_STORE_NAME]
+  storage:
+    postgres:
+      host: postgres-postgresql.postgres.svc.cluster.local
+      port: 5432
+      username: lenses
+      database: hq
+      passwordSecret:
+        type: "externalSecret"
+        name: postgres
+        key:  password
+        externalSecret:
+          secretStoreRef:
+            clusterSecretStore:
+              name: [CLUSTER_SECRET_STORE_NAME]
 
   logger:
     mode: "text"

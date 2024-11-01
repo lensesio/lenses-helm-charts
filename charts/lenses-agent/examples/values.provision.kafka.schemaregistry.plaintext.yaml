@@ -20,7 +20,7 @@ lenses:
             port:
               value: 10000
             apiKey:
-              value: ${LENSES_HQ_AGENT_KEY}
+              value: ${LENSESHQ_AGENT_KEY}
       kafka:
         # There can only be one Kafka cluster at a time
         - name: kafka

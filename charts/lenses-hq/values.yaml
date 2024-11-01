@@ -330,83 +330,88 @@ lensesHq:
     # **Required: false**
     secureSessionCookies: true
 
-  postgres:
-    # -- (string) Hostname of running postgres instance.
-    # @section -- Lenses HQ Database startup values
-    # **Required: true**
-    host: ""
-
-    # -- (int) Port of running postgress instance. Default is 5432.
-    # @section -- Lenses HQ Database startup values
-    # **Required: true**
-    port: 5432
-
-    # -- (string) Username which will be used for connecting to Postgres database.
-    # @section -- Lenses HQ Database startup values
-    # **Required: true**
-    username: ""
-
-    useSecretForUsername:
-      # -- (string) Whether username will be used within a secret or as a part of `username` value.
+  storage:
+    postgres:
+      # -- (string) Enabling postgres engine. This flag is here as there might be support of multiple database engines in the future.
       # @section -- Lenses HQ Database startup values
       # **Required: true**
-      enabled: false
-      # -- (string) Secret reference for database user.
+      enabled: true
+      # -- (string) Hostname of running database instance.
+      # @section -- Lenses HQ Database startup values
+      # **Required: true**
+      host: ""
+
+      # -- (int) Port of running postgress instance. Default is 5432.
+      # @section -- Lenses HQ Database startup values
+      # **Required: true**
+      port: 5432
+
+      # -- (string) Username which will be used for connecting to database database.
+      # @section -- Lenses HQ Database startup values
+      # **Required: true**
+      username: ""
+
+      useSecretForUsername:
+        # -- (string) Whether username will be used within a secret or as a part of `username` value.
+        # @section -- Lenses HQ Database startup values
+        # **Required: true**
+        enabled: false
+        # -- (string) Secret reference for database user.
+        # @section -- Lenses HQ Database startup values
+        # **Required: false**
+        existingSecret:
+          name: ""
+          key: ""
+
+      # -- (string) Database name to which HQ will connect to and store required information.
+      # @section -- Lenses HQ Database startup values
+      # **Required: true**
+      database: ""
+
+      # -- (string) Database schema to which HQ will connect to and store required information.
+      # @section -- Lenses HQ Database startup values
+      # **Required: true**
+      schema: ""
+
+      # -- (string) Enables TLS. In PostgreSQL connection string terms, setting TLS to
+      #        `false` corresponds to `sslmode=disable`; setting TLS to `true`
+      #        corresponds to `sslmode=verify-full`. For more fine-grained control,
+      #        specify `sslmode` in the params which takes precedence.
+      # @section -- Lenses HQ Database startup values
+      # **Required: true**
+      tls: false
+
+      # -- (string) Contains connection string parameters as key/values pairs. It allows
+      #    fine-grained control of connection settings. The parameters can be found
+      #    here: https://www.postgresql.org/docs/current/libpq-connect.html#LIBPQ-PARAMKEYWORDS
       # @section -- Lenses HQ Database startup values
       # **Required: false**
-      existingSecret:
+      params: {}
+
+      # -- Definition of secret that has been precreated and has postgres database password
+      # @section -- Lenses HQ Database startup values
+      passwordSecret:
+        # -- (string) Possible options: precreated | createNew | externalSecret
+        # @section -- Lenses HQ Database startup values
+        type: "precreated"
+
+        # -- (string) Secret name where database password will be stored in case "createNew" or read from in case of "precreated" | "externalSecret".
+        # @section -- Lenses HQ Database startup values
         name: ""
-        key: ""
 
-    # -- (string) Database name to which HQ will connect to and store required information.
-    # @section -- Lenses HQ Database startup values
-    # **Required: true**
-    database: ""
+        # -- (string) Entry for a password in case of testing where type: "createNew", otherwise can be left out. *NOT FOR PRODUCTION USE!*
+        # @section -- Lenses HQ Database startup values
+        password: ""
 
-    # -- (string) Database schema to which HQ will connect to and store required information.
-    # @section -- Lenses HQ Database startup values
-    # **Required: true**
-    schema: ""
-
-    # -- (string) Enables TLS. In PostgreSQL connection string terms, setting TLS to
-    #        `false` corresponds to `sslmode=disable`; setting TLS to `true`
-    #        corresponds to `sslmode=verify-full`. For more fine-grained control,
-    #        specify `sslmode` in the params which takes precedence.
-    # @section -- Lenses HQ Database startup values
-    # **Required: true**
-    tls: false
-
-    # -- (string) Contains connection string parameters as key/values pairs. It allows
-    #    fine-grained control of connection settings. The parameters can be found
-    #    here: https://www.postgresql.org/docs/current/libpq-connect.html#LIBPQ-PARAMKEYWORDS
-    # @section -- Lenses HQ Database startup values
-    # **Required: false**
-    params: {}
-
-    # -- Definition of secret that has been precreated and has postgres database password
-    # @section -- Lenses HQ Database startup values
-    passwordSecret:
-      # -- (string) Possible options: precreated | createNew | externalSecret
-      # @section -- Lenses HQ Database startup values
-      type: "precreated"
-
-      # -- (string) Secret name where database password will be stored in case "createNew" or read from in case of "precreated" | "externalSecret".
-      # @section -- Lenses HQ Database startup values
-      name: ""
-
-      # -- (string) Entry for a password in case of testing where type: "createNew", otherwise can be left out. *NOT FOR PRODUCTION USE!*
-      # @section -- Lenses HQ Database startup values
-      password: ""
-
-      # -- (string) Secret key where password will be read from
-      # @section -- Lenses HQ Database startup values
-      key:
-      externalSecret:
-        secretStoreRef:
-          clusterSecretStore:
-            # -- (string) Name of cluster secret store created by ESO.
-            # @section -- Lenses HQ Database startup values
-            name:
+        # -- (string) Secret key where password will be read from
+        # @section -- Lenses HQ Database startup values
+        key:
+        externalSecret:
+          secretStoreRef:
+            clusterSecretStore:
+              # -- (string) Name of cluster secret store created by ESO.
+              # @section -- Lenses HQ Database startup values
+              name:
 
   # @section -- Lenses HQ startup values
   logger:

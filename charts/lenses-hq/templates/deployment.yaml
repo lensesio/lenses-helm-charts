@@ -37,6 +37,7 @@ spec:
         {{ $key }}: {{ $value | quote }}
         {{- end }}
       annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
         {{- range $key, $value := .Values.podTemplateAnnotations }}
         {{ $key }}: {{ $value | quote }}
         {{- end }}
@@ -153,21 +154,26 @@ spec:
           - name: LENSESHQ_PG_PASSWORD
             valueFrom:
               secretKeyRef:
-              {{- if contains "createNew" .Values.lensesHq.postgres.passwordSecret.type }}
-                name: {{ include "databaseSecretName" . }}
+              {{- include "validate.singleEnabledDatabase" . -}}
+            {{- range $name, $db := .Values.lensesHq.storage }}
+              {{- if $db.enabled }}
+              {{- if contains "createNew" $db.passwordSecret.type }}
+                name: {{ include "databaseSecretName" $ }}
                 key: "password"
-              {{ else if or (contains "precreated" .Values.lensesHq.postgres.passwordSecret.type) (contains "externalSecret" .Values.lensesHq.postgres.passwordSecret.type) }}
-                name: {{ .Values.lensesHq.postgres.passwordSecret.name }}
-                key: {{ .Values.lensesHq.postgres.passwordSecret.key }}
+              {{ else if or (contains "precreated" $db.passwordSecret.type) (contains "externalSecret" $db.passwordSecret.type) }}
+                name: {{ $db.passwordSecret.name }}
+                key: {{ $db.passwordSecret.key }}
               {{- end }}
           - name: LENSESHQ_PG_USERNAME
-            {{- if .Values.lensesHq.postgres.useSecretForUsername.enabled }}
+            {{- if $db.useSecretForUsername.enabled }}
             valueFrom:
               secretKeyRef:
-                name: {{ .Values.lensesHq.postgres.useSecretForUsername.existingSecret.name }}
-                key: {{ .Values.lensesHq.postgres.useSecretForUsername.existingSecret.key }}
+                name: {{ $db.useSecretForUsername.existingSecret.name }}
+                key: {{ $db.useSecretForUsername.existingSecret.key }}
             {{ else }}
-            value: {{ .Values.lensesHq.postgres.username }}
+            value: {{ $db.username }}
+            {{- end }}
+          {{- end}}
             {{- end }}
       {{- if .Values.sidecarContainers }}
       {{- toYaml .Values.sidecarContainers | nindent 6 }}

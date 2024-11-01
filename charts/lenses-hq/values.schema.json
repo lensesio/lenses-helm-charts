@@ -393,7 +393,7 @@
                 "agents",
                 "http",
                 "auth",
-                "postgres",
+                "storage",
                 "logger",
                 "livenessProbe"
             ],
@@ -679,208 +679,214 @@
                         "accessControlAllowOrigin":["https://example.io","http://example.io"]
                     }]
                 },
-                "postgres": {
+                "storage": {
                     "type": "object",
                     "default": {},
-                    "title": "The postgres Schema",
-                    "required": [
-                        "host",
-                        "port",
-                        "username",
-                        "database",
-                        "passwordSecret"
-                    ],
+                    "title": "Storage Schema",
+                    "required":[],
                     "properties": {
-                        "host": {
-                            "type": "string",
-                            "default": null,
-                            "title": "The host Schema",
-                            "examples": [
-                                "10.0.0.1"
-                            ]
-                        },
-                        "schema": {
-                            "type": "string",
-                            "default": null,
-                            "title": "Database schema Schema",
-                            "examples": [
-                                "my-schema"
-                            ]
-                        },
-                        "params": {
-                            "type": "object",
-                            "default": null,
-                            "title": "Extra database connection parameters Schema",
-                            "examples": {
-                                "application_name": "example",
-                                 "sslmode": "required"
-                            }
-                        },
-                        "port": {
-                            "type": "integer",
-                            "default": null,
-                            "title": "The port Schema",
-                            "examples": [
-                                5432
-                            ]
-                        },
-                        "username": {
-                            "type": "string",
-                            "default": null,
-                            "title": "The username Schema",
-                            "examples": [
-                                "lenseshq"
-                            ]
-                        },
-                        "tls": {
-                            "type": "boolean",
-                            "default": false,
-                            "title": "Schema for enabling TLS",
-                            "examples": [
-                                false,
-                                true
-                            ]
-                        },
-                        "database": {
-                            "type": "string",
-                            "default": null,
-                            "title": "The database Schema",
-                            "examples": [
-                                "lensesDbName"
-                            ]
-                        },
-                        "useSecretForUsername": {
-                            "type": "object",
-                            "default": null,
-                            "title": "Decision tree object to use database user as a secret or not",
-                            "required": [
-                                "enabled"
-                            ],
-                            "properties": {
-                                "enabled": {
-                                    "type": "boolean",
-                                    "default": null,
-                                    "title": "Decision tree property to use database user as a secret or not",
-                                    "examples": [
-                                        "false"
-                                    ]
-                                },
-                                "existingSecret": {
-                                    "type": "object",
-                                    "default": null,
-                                    "title": "The username secret reference Schema",
-                                    "properties": {
-                                        "name": {
-                                            "type": "string",
-                                            "default": null,
-                                            "title": "The username secret name reference"
-                                        },
-                                        "key": {
-                                            "type": "string",
-                                            "default": null,
-                                            "title": "The username secret key reference"
-                                        }
-                                    }
-                                }
-                            }
-                        },
-                        "passwordSecret": {
+                        "postgres":{
                             "type": "object",
                             "default": {},
-                            "title": "The passwordSecret Schema",
+                            "title": "The postgres Schema",
                             "required": [
-                                "type",
-                                "name",
-                                "key"
+                                "host",
+                                "enabled",
+                                "port",
+                                "username",
+                                "database",
+                                "passwordSecret"
                             ],
                             "properties": {
-                                "type": {
+                                "host": {
                                     "type": "string",
-                                    "default": "precreated",
-                                    "title": "The type Schema",
-                                    "pattern": "^(precreated|createNew|externalSecret)$",
-                                    "enum": ["createNew", "precreated", "externalSecret"],
+                                    "default": null,
+                                    "title": "The host Schema",
                                     "examples": [
-                                        "precreated",
-                                        "createNew",
-                                        "externalSecret"
+                                        "10.0.0.1"
                                     ]
-                                }
-                            },
-                            "externalSecret": {
-                                "type": "object",
-                                "default": {},
-                                "title": "Schema for externalSecret reference in case of externalSecret usage",
-                                "required": [
-                                    "secretStoreRef"
-                                ],
-                                "properties": {
-                                    "secretStoreRef":{
-                                        "type":"object",
-                                        "default": {},
-                                        "title": "Schema for externalSecret reference in case of externalSecret usage",
-                                        "required":[
-                                            "clusterSecretStore"
-                                        ],
-                                        "properties": {
-                                            "clusterSecretStore": {
-                                                "type": "object",
-                                                "default": {},
-                                                "title": "Schema for externalSecret reference in case of externalSecret usage",
-                                                "required": [
-                                                    "name"
-                                                ],
-                                                "properties": {
-                                                    "name": {
-                                                        "type": ["string", "null"],
-                                                        "default": "",
-                                                        "examples": [
-                                                            "secretName"
-                                                        ]
-                                                    }
+                                },
+                                "enabled": {
+                                    "type": "boolean",
+                                    "default": true,
+                                    "title": "The host Schema",
+                                    "examples": [
+                                        true,
+                                        false
+                                    ]
+                                },
+                                "schema": {
+                                    "type": "string",
+                                    "default": null,
+                                    "title": "Database schema Schema",
+                                    "examples": [
+                                        "my-schema"
+                                    ]
+                                },
+                                "params": {
+                                    "type": "object",
+                                    "default": null,
+                                    "title": "Extra database connection parameters Schema",
+                                    "examples": {
+                                        "application_name": "example",
+                                        "sslmode": "required"
+                                    }
+                                },
+                                "port": {
+                                    "type": "integer",
+                                    "default": null,
+                                    "title": "The port Schema",
+                                    "examples": [
+                                        5432
+                                    ]
+                                },
+                                "username": {
+                                    "type": "string",
+                                    "default": null,
+                                    "title": "The username Schema",
+                                    "examples": [
+                                        "lenseshq"
+                                    ]
+                                },
+                                "tls": {
+                                    "type": "boolean",
+                                    "default": false,
+                                    "title": "Schema for enabling TLS",
+                                    "examples": [
+                                        false,
+                                        true
+                                    ]
+                                },
+                                "database": {
+                                    "type": "string",
+                                    "default": null,
+                                    "title": "The database Schema",
+                                    "examples": [
+                                        "lensesDbName"
+                                    ]
+                                },
+                                "useSecretForUsername": {
+                                    "type": "object",
+                                    "default": null,
+                                    "title": "Decision tree object to use database user as a secret or not",
+                                    "required": [
+                                        "enabled"
+                                    ],
+                                    "properties": {
+                                        "enabled": {
+                                            "type": "boolean",
+                                            "default": null,
+                                            "title": "Decision tree property to use database user as a secret or not",
+                                            "examples": [
+                                                "false"
+                                            ]
+                                        },
+                                        "existingSecret": {
+                                            "type": "object",
+                                            "default": null,
+                                            "title": "The username secret reference Schema",
+                                            "properties": {
+                                                "name": {
+                                                    "type": "string",
+                                                    "default": null,
+                                                    "title": "The username secret name reference"
+                                                },
+                                                "key": {
+                                                    "type": "string",
+                                                    "default": null,
+                                                    "title": "The username secret key reference"
                                                 }
                                             }
                                         }
                                     }
                                 },
-                                "key": {
-                                    "type": "string",
-                                    "default": null,
-                                    "title": "The key Schema",
-                                    "examples": [
-                                        "secretKeyName",
-                                        "/hello-service/password"
-                                    ]
-                                },
-                                "password": {
-                                    "type": ["string", "null"],
-                                    "default": null,
-                                    "title": "Password for createNew type",
-                                    "examples": [
-                                        "abc123def"
-                                    ]
+                                "passwordSecret": {
+                                    "type": "object",
+                                    "default": {},
+                                    "title": "The passwordSecret Schema",
+                                    "required": [
+                                        "type",
+                                        "name",
+                                        "key"
+                                    ],
+                                    "properties": {
+                                        "type": {
+                                            "type": "string",
+                                            "default": "precreated",
+                                            "title": "The type Schema",
+                                            "pattern": "^(precreated|createNew|externalSecret)$",
+                                            "enum": ["createNew", "precreated", "externalSecret"],
+                                            "examples": [
+                                                "precreated",
+                                                "createNew",
+                                                "externalSecret"
+                                            ]
+                                        }
+                                    },
+                                    "externalSecret": {
+                                        "type": "object",
+                                        "default": {},
+                                        "title": "Schema for externalSecret reference in case of externalSecret usage",
+                                        "required": [
+                                            "secretStoreRef"
+                                        ],
+                                        "properties": {
+                                            "secretStoreRef":{
+                                                "type":"object",
+                                                "default": {},
+                                                "title": "Schema for externalSecret reference in case of externalSecret usage",
+                                                "required":[
+                                                    "clusterSecretStore"
+                                                ],
+                                                "properties": {
+                                                    "clusterSecretStore": {
+                                                        "type": "object",
+                                                        "default": {},
+                                                        "title": "Schema for externalSecret reference in case of externalSecret usage",
+                                                        "required": [
+                                                            "name"
+                                                        ],
+                                                        "properties": {
+                                                            "name": {
+                                                                "type": ["string", "null"],
+                                                                "default": "",
+                                                                "examples": [
+                                                                    "secretName"
+                                                                ]
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "key": {
+                                            "type": "string",
+                                            "default": null,
+                                            "title": "The key Schema",
+                                            "examples": [
+                                                "secretKeyName",
+                                                "/hello-service/password"
+                                            ]
+                                        },
+                                        "password": {
+                                            "type": ["string", "null"],
+                                            "default": null,
+                                            "title": "Password for createNew type",
+                                            "examples": [
+                                                "abc123def"
+                                            ]
+                                        }
+                                    },
+                                    "examples": [{
+                                        "type": "precreated",
+                                        "name": null,
+                                        "key": null,
+                                        "password": null
+                                    }]
                                 }
-                            },
-                            "examples": [{
-                                "type": "precreated",
-                                "name": null,
-                                "key": null,
-                                "password": null
-                            }]
+                            }
                         }
-                    },
-                    "examples": [{
-                        "host": null,
-                        "port": null,
-                        "username": null,
-                        "database": null,
-                        "passwordSecret": {
-                            "type": "precreated",
-                            "name": null,
-                            "key": null,
-                            "password": null
-                        }
-                    }]
+                    }
                 },
                 "logger": {
                     "type": "object",

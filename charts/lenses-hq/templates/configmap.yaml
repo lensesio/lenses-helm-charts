@@ -63,15 +63,22 @@ data:
         verboseLogs: {{ .Values.lensesHq.agents.tls.verboseLogs }}
         {{ end }}
     database:
-      host: {{ .Values.lensesHq.postgres.host }}:{{ .Values.lensesHq.postgres.port }}
+      {{- include "validate.singleEnabledDatabase" . -}}
+    {{- range $name, $db := .Values.lensesHq.storage }}
+      {{- if $db.enabled }}
+      host: {{ $db.host }}:{{ $db.port }}
       username: $(LENSESHQ_PG_USERNAME)
       password: $(LENSESHQ_PG_PASSWORD)
-      database: {{ .Values.lensesHq.postgres.database }}
+      schema: {{ $db.schema }}
+      database: {{ $db.database }}
       params:
-      {{- range .Values.lensesHq.postgres.params }}
+      {{- range $db.params }}
         {{ . }}
       {{- end }}
-      TLS: {{ .Values.lensesHq.postgres.tls }}
+      TLS: {{ $db.tls }}
+      {{- end }}
+    {{- end }}
+
     logger:
       mode: {{ .Values.lensesHq.logger.mode }}
       level: {{ default "info" .Values.lensesHq.logger.level }}
