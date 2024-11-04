@@ -106,6 +106,7 @@ lensesHq:
   # Find more details in https://docs.lenses.io/current/installation/kubernetes/helm/#helm-storage
   storage:
     postgres:
+      enabled: true
       host: postgres-postgresql.postgres.svc.cluster.local
       port: 5432
       username: lenses
