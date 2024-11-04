@@ -657,13 +657,100 @@
                             ]
                         },
                         "tls": {
-                            "type": "boolean",
-                            "default": false,
-                            "title": "Schema for enabling TLS",
-                            "examples": [
-                                false,
-                                true
-                            ]
+                            "type": "object",
+                            "default": {},
+                            "title": "The tls Schema",
+                            "required": [
+                                "enabled",
+                                "verboseLogs"
+                            ],
+                            "properties": {
+                                "enabled": {
+                                    "type": "boolean",
+                                    "default": false,
+                                    "title": "Boolean value to enable TLS between The Agent and HQ",
+                                    "examples": [
+                                        true,
+                                        false
+                                    ]
+                                },
+                                "verboseLogs":{
+                                    "type": "boolean",
+                                    "default": false,
+                                    "title": "Enabled verbosing logs in case tls is enabled for debugging purposes",
+                                    "examples": [
+                                        true,
+                                        false
+                                    ]
+                                },
+                                "cert":{
+                                    "type": "object",
+                                    "default": {},
+                                    "title": "The cert Schema",
+                                    "properties": {
+                                        "referneceFromSecret":{
+                                            "type": "boolean",
+                                            "default": false,
+                                            "title": "Option to enable option to reference certificate from precreated secret",
+                                            "examples": [
+                                                true,
+                                                false
+                                            ]
+                                        },
+                                        "secretName":{
+                                            "type": "string",
+                                            "default": "",
+                                            "title": "Secret name where certificate is being stored.",
+                                            "examples": [
+                                                "hq-pub-cert"
+                                            ]
+                                        },
+                                        "secretKeyName":{
+                                            "type": "string",
+                                            "default": "",
+                                            "title": "Secret name where certificate is being stored.",
+                                            "examples": [
+                                              "hq.pem.crt"
+                                            ]
+                                        },
+                                        "stringData":{
+                                            "type": "string",
+                                            "default": "",
+                                            "title": "Certificate in plain text"
+                                        }
+                                    }
+                                },
+                                "privateKey":{
+                                    "type": "object",
+                                    "default": {},
+                                    "title": "Schema for private key reference",
+                                    "properties": {
+                                        "secret":{
+                                            "type": "object",
+                                            "default": {},
+                                            "title": "Schema for private key secret",
+                                            "properties": {
+                                                "name":{
+                                                    "type": "string",
+                                                    "default": "",
+                                                    "title": "Name of a secret where key is being stored",
+                                                    "examples": [
+                                                        "hq-cert-pk"
+                                                    ]
+                                                },
+                                                "key":{
+                                                    "type": "string",
+                                                    "default": "",
+                                                    "title": "Name of key under which private key is stored within a Kubernetes secret",
+                                                    "examples": [
+                                                        "hq-tls-test.key.pem"
+                                                    ]
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
                         },
                         "accessControlAllowOrigin": {
                             "type": "array",
