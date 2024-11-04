@@ -130,18 +130,18 @@ spec:
                 key: {{ .Values.lensesHq.agents.tls.cert.secretKeyName }}
           {{- end }}
           {{- end }}
-          {{ if (.Values.lensesHq.auth.tls).enabled }}
-          - name: LENSESHQ_AUTH_TLS_KEY
+          {{ if (.Values.lensesHq.http.tls).enabled }}
+          - name: LENSESHQ_HTTP_TLS_KEY
             valueFrom:
               secretKeyRef:
-                name: {{ .Values.lensesHq.auth.tls.privateKey.secret.name }}
-                key: {{ .Values.lensesHq.auth.tls.privateKey.secret.key }}
-          {{ if (.Values.lensesHq.auth.tls.cert).referenceFromSecret }}
-          - name: LENSESHQ_AUTH_TLS_CERT
+                name: {{ .Values.lensesHq.http.tls.privateKey.secret.name }}
+                key: {{ .Values.lensesHq.http.tls.privateKey.secret.key }}
+          {{ if (.Values.lensesHq.http.tls.cert).referenceFromSecret }}
+          - name: LENSESHQ_HTTP_TLS_CERT
             valueFrom:
               secretKeyRef:
-                name: {{ .Values.lensesHq.auth.tls.cert.secretName }}
-                key: {{ .Values.lensesHq.auth.tls.cert.secretKeyName }}
+                name: {{ .Values.lensesHq.http.tls.cert.secretName }}
+                key: {{ .Values.lensesHq.http.tls.cert.secretKeyName }}
           {{- end }}
           {{- end }}
           {{ if .Values.lensesHq.auth.saml.metadata.referenceFromSecret }}
