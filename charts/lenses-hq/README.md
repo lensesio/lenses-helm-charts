@@ -1,6 +1,6 @@
 # lenses-hq
 
-![Version: 6.0.0-alpha.0](https://img.shields.io/badge/Version-6.0.0--alpha.0-informational?style=flat-square) ![AppVersion: v6.0.0-alpha.2](https://img.shields.io/badge/AppVersion-v6.0.0--alpha.2-informational?style=flat-square)
+![Version: 6.0.0-alpha.14](https://img.shields.io/badge/Version-6.0.0--alpha.14-informational?style=flat-square) ![AppVersion: 6.0.0-alpha.14](https://img.shields.io/badge/AppVersion-6.0.0--alpha.14-informational?style=flat-square)
 
 A chart for Lenses HQ deployment which provides a unified, streamlined view of the entire event infrastructure—whether on-premises or in the cloud—through a single, comprehensive interface.
 
@@ -82,40 +82,44 @@ The command deploys Lenses HQ on the Kubernetes cluster in the example configura
 | lensesHq.agents.tls.enabled | string | `false` | Enables or disables TLS. **Required: true** |
 | lensesHq.agents.tls.privateKey | string | `{"secret":{"key":"","name":""}}` | Sets the PEM formatted private key. **Required: false** |
 | lensesHq.agents.tls.verboseLogs | string | `false` | Enabled verbose of TLS debug logs **Required: true** |
-| lensesHq.api.tls.verboseLogs | string | `false` | Enabled verbose of TLS debug logs **Required: true** |
 
-### Lenses HQ API startup values
+### Lenses HQ AUTH startup values
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| lensesHq.api.accessControlAllowCredentials | bool | `false` | Sets the value of the "Access-Control-Allow-Credentials" header. **Required: false** |
-| lensesHq.api.accessControlAllowOrigin | string | `"[*]"` | Sets the address the HTTP server listens at. **Required: false** |
-| lensesHq.api.address | string | `":8080"` | Sets the address the HTTP servers listens at. **Required: true** |
-| lensesHq.api.administrators | list | `[]` | Grants administrator rights to users. **Required: false** |
-| lensesHq.api.redirToIdp | boolean | `false` | Controls API HTTP behaviour on authentication errors. **Required: false** |
-| lensesHq.api.secureSessionCookies | bool | `true` | Sets the "Secure" attribute on session cookies. **Required: false** |
-| lensesHq.api.tls.cert.referenceFromSecret | string | `false` | Enables usage of secret for certificate. **Required: false** |
-| lensesHq.api.tls.cert.secretKeyName | string | `""` | Secret key where within a secret where certificate is sotred. **Required: false** |
-| lensesHq.api.tls.cert.secretName | string | `""` | Secret name where certificate is stored. **Required: false** |
-| lensesHq.api.tls.cert.stringData | string | `""` | Sets the PEM formatted public certificate. **Required: false** |
-| lensesHq.api.tls.enabled | string | `false` | Enables or disables TLS. **Required: true** |
-| lensesHq.api.tls.privateKey | string | `{"secret":{"key":"","name":""}}` | Sets the PEM formatted private key. **Required: false** |
+| lensesHq.auth.administrators | list | `[]` | Grants administrator rights to users. **Required: false** |
+| lensesHq.auth.tls.cert.referenceFromSecret | string | `false` | Enables usage of secret for certificate. **Required: false** |
+| lensesHq.auth.tls.cert.secretKeyName | string | `""` | Secret key where within a secret where certificate is sotred. **Required: false** |
+| lensesHq.auth.tls.cert.secretName | string | `""` | Secret name where certificate is stored. **Required: false** |
+| lensesHq.auth.tls.cert.stringData | string | `""` | Sets the PEM formatted public certificate. **Required: false** |
+| lensesHq.auth.tls.enabled | string | `false` | Enables or disables TLS. **Required: true** |
+| lensesHq.auth.tls.privateKey | string | `{"secret":{"key":"","name":""}}` | Sets the PEM formatted private key. **Required: false** |
+| lensesHq.auth.tls.verboseLogs | string | `false` | Enabled verbose of TLS debug logs **Required: true** |
 
 ### Lenses HQ SAML startup values
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| lensesHq.api.saml.baseUrl | string | `""` | Defines base URL of Panoptes for IdP redirects. **Required: true** |
-| lensesHq.api.saml.entityId | string | `""` | Defines the Entity ID. **Required: true** |
-| lensesHq.api.saml.groupAttributeKey | string | `"groups"` | Sets the attribute name for group names. **Required: false** |
-| lensesHq.api.saml.metadata | object | `{"referenceFromSecret":false,"secretKeyName":"metadata.xml","secretName":"","stringData":""}` | Contains the IdP issued XML metadata blob. Example: <?xml version="1.0" ... (big blob of xml) </md:EntityDescriptor> **Required: true** |
-| lensesHq.api.saml.metadata.referenceFromSecret | boolean | `false` | Enables use of configmap to refernence SAML metadata file. **Required: true** |
-| lensesHq.api.saml.metadata.secretKeyName | string | `"metadata.xml"` | ConfigMap key used to reference configmap metadata information. **Required: false** |
-| lensesHq.api.saml.metadata.secretName | string | `""` | ConfigMap name which contains metadata information. **Required: false** |
-| lensesHq.api.saml.metadata.stringData | string | `""` | Contains the IdP issued XML metadata blob. Example: <?xml version="1.0" ... (big blob of xml) </md:EntityDescriptor> **Required: true** |
-| lensesHq.api.saml.uiRootUrl | string | `"/"` | Controls where to redirect to upon successful authentication. **Required: false** |
-| lensesHq.api.saml.userCreationMode | string | `"manual"` | Controls how the creation of users should be handled in relation to SSO information Allowed values are: sso | manual **Required: false** |
-| lensesHq.api.saml.usersGroupMembershipManagementMode | string | `"manual"` | Controls how the management of a user's group membership should be handled in relation to SSO information. Allowed values are: sso | manual **Required: false** |
+| lensesHq.auth.saml.baseURL | string | `""` | Defines base URL of Panoptes for IdP redirects. **Required: true** |
+| lensesHq.auth.saml.entityID | string | `""` | Defines the Entity ID. **Required: true** |
+| lensesHq.auth.saml.groupAttributeKey | string | `"groups"` | Sets the attribute name for group names. **Required: false** |
+| lensesHq.auth.saml.metadata | object | `{"referenceFromSecret":false,"secretKeyName":"metadata.xml","secretName":"","stringData":""}` | Contains the IdP issued XML metadata blob. Example: <?xml version="1.0" ... (big blob of xml) </md:EntityDescriptor> **Required: true** |
+| lensesHq.auth.saml.metadata.referenceFromSecret | boolean | `false` | Enables use of configmap to refernence SAML metadata file. **Required: true** |
+| lensesHq.auth.saml.metadata.secretKeyName | string | `"metadata.xml"` | ConfigMap key used to reference configmap metadata information. **Required: false** |
+| lensesHq.auth.saml.metadata.secretName | string | `""` | ConfigMap name which contains metadata information. **Required: false** |
+| lensesHq.auth.saml.metadata.stringData | string | `""` | Contains the IdP issued XML metadata blob. Example: <?xml version="1.0" ... (big blob of xml) </md:EntityDescriptor> **Required: true** |
+| lensesHq.auth.saml.uiRootURL | string | `"/"` | Controls where to redirect to upon successful authentication. **Required: false** |
+| lensesHq.auth.saml.userCreationMode | string | `"manual"` | Controls how the creation of users should be handled in relation to SSO information Allowed values are: sso | manual **Required: false** |
+| lensesHq.auth.saml.usersGroupMembershipManagementMode | string | `"manual"` | Controls how the management of a user's group membership should be handled in relation to SSO information. Allowed values are: sso | manual **Required: false** |
+
+### Lenses HQ HTTP startup values
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| lensesHq.http.accessControlAllowCredentials | bool | `false` | Sets the value of the "Access-Control-Allow-Credentials" header. **Required: false** |
+| lensesHq.http.accessControlAllowOrigin | string | `[]` | Sets the address the HTTP server listens at. **Required: false** |
+| lensesHq.http.address | string | `":8080"` | Sets the address the HTTP servers listens at. **Required: true** |
+| lensesHq.http.secureSessionCookies | bool | `true` | Sets the "Secure" attribute on session cookies. **Required: false** |
 
 ### Lenses HQ startup values
 
@@ -141,19 +145,22 @@ The command deploys Lenses HQ on the Kubernetes cluster in the example configura
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| lensesHq.postgres.database | string | `""` | Database name to which HQ will connect to and store required information. **Required: true** |
-| lensesHq.postgres.extraParamSpecs | string | `""` | Extra Parameters key words that are being added at the end of Connection URI. Example: ?sslmode=disable **Required: false** |
-| lensesHq.postgres.host | string | `""` | Hostname of running postgres instance. **Required: true** |
-| lensesHq.postgres.passwordSecret | object | `{"externalSecret":{"secretStoreRef":{"clusterSecretStore":{"name":null}}},"key":null,"name":"","password":"","type":"precreated"}` | Definition of secret that has been precreated and has postgres database password |
-| lensesHq.postgres.passwordSecret.externalSecret.secretStoreRef.clusterSecretStore.name | string | `nil` | Name of cluster secret store created by ESO. |
-| lensesHq.postgres.passwordSecret.key | string | `nil` | Secret key where password will be read from |
-| lensesHq.postgres.passwordSecret.name | string | `""` | Secret name where database password will be stored in case "createNew" or read from in case of "precreated" | "externalSecret". |
-| lensesHq.postgres.passwordSecret.password | string | `""` | Entry for a password in case of testing where type: "createNew", otherwise can be left out. *NOT FOR PRODUCTION USE!* |
-| lensesHq.postgres.passwordSecret.type | string | `"precreated"` | Possible options: precreated | createNew | externalSecret |
-| lensesHq.postgres.port | int | `5432` | Port of running postgress instance. Default is 5432. **Required: true** |
-| lensesHq.postgres.useSecretForUsername.enabled | string | `false` | Whether username will be used within a secret or as a part of `username` value. **Required: true** |
-| lensesHq.postgres.useSecretForUsername.existingSecret | string | `{"key":"","name":""}` | Secret reference for database user. **Required: false** |
-| lensesHq.postgres.username | string | `""` | Username which will be used for connecting to Postgres database. **Required: true** |
+| lensesHq.storage.postgres.database | string | `""` | Database name to which HQ will connect to and store required information. **Required: true** |
+| lensesHq.storage.postgres.enabled | string | `true` | Enabling postgres engine. This flag is here as there might be support of multiple database engines in the future. **Required: true** |
+| lensesHq.storage.postgres.host | string | `""` | Hostname of running database instance. **Required: true** |
+| lensesHq.storage.postgres.params | string | `{}` | Contains connection string parameters as key/values pairs. It allows    fine-grained control of connection settings. The parameters can be found    here: https://www.postgresql.org/docs/current/libpq-connect.html#LIBPQ-PARAMKEYWORDS **Required: false** |
+| lensesHq.storage.postgres.passwordSecret | object | `{"externalSecret":{"secretStoreRef":{"clusterSecretStore":{"name":null}}},"key":null,"name":"","password":"","type":"precreated"}` | Definition of secret that has been precreated and has postgres database password |
+| lensesHq.storage.postgres.passwordSecret.externalSecret.secretStoreRef.clusterSecretStore.name | string | `nil` | Name of cluster secret store created by ESO. |
+| lensesHq.storage.postgres.passwordSecret.key | string | `nil` | Secret key where password will be read from |
+| lensesHq.storage.postgres.passwordSecret.name | string | `""` | Secret name where database password will be stored in case "createNew" or read from in case of "precreated" | "externalSecret". |
+| lensesHq.storage.postgres.passwordSecret.password | string | `""` | Entry for a password in case of testing where type: "createNew", otherwise can be left out. *NOT FOR PRODUCTION USE!* |
+| lensesHq.storage.postgres.passwordSecret.type | string | `"precreated"` | Possible options: precreated | createNew | externalSecret |
+| lensesHq.storage.postgres.port | int | `5432` | Port of running postgress instance. Default is 5432. **Required: true** |
+| lensesHq.storage.postgres.schema | string | `""` | Database schema to which HQ will connect to and store required information. **Required: true** |
+| lensesHq.storage.postgres.tls | string | `false` | Enables TLS. In PostgreSQL connection string terms, setting TLS to        `false` corresponds to `sslmode=disable`; setting TLS to `true`        corresponds to `sslmode=verify-full`. For more fine-grained control,        specify `sslmode` in the params which takes precedence. **Required: true** |
+| lensesHq.storage.postgres.useSecretForUsername.enabled | string | `false` | Whether username will be used within a secret or as a part of `username` value. **Required: true** |
+| lensesHq.storage.postgres.useSecretForUsername.existingSecret | string | `{"key":"","name":""}` | Secret reference for database user. **Required: false** |
+| lensesHq.storage.postgres.username | string | `""` | Username which will be used for connecting to database database. **Required: true** |
 
 ### Permission scope values
 

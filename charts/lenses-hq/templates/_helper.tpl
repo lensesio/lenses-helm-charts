@@ -46,19 +46,6 @@ Create a default fully qualified app name.
 {{- end -}}
 {{- end -}}
 
-{{- define "lensesHqOpts" -}}
-{{- if .Values.lenseshq.opts.keyStoreFileData }}-Djavax.net.ssl.keyStore="/mnt/secrets/lenseshq.opts.keystore.jks" {{ end -}}
-{{- if .Values.lenseshq.opts.keyStorePassword }}-Djavax.net.ssl.keyStorePassword="${CLIENT_OPTS_KEYSTORE_PASSWORD}" {{ end -}}
-{{- if .Values.lenseshq.opts.trustStoreFileData }}-Djavax.net.ssl.trustStore="/mnt/secrets/lenseshq.opts.truststore.jks" {{ end -}}
-{{- if .Values.lenseshq.opts.trustStorePassword }}-Djavax.net.ssl.trustStorePassword="${CLIENT_OPTS_TRUSTSTORE_PASSWORD}" {{ end -}}
-{{- if .Values.lenseshq.lensesOpts }}{{- .Values.lenseshq.lensesOpts }}{{- end -}}
-{{- end -}}
-
-{{- define "lensesHqLogBackOpts" -}}
-{{- if .Values.lenseshq.logbackXml }}-Dlogback.configurationFile="file:{{ .Values.lenseshq.logbackXml}}" {{ end -}}
-{{- if .Values.lenseshq.jvm.logBackOpts }}{{- .Values.lenseshq.jvm.logBackOpts }}{{- end -}}
-{{- end -}}
-
 {{- define "databaseSecretName" -}}
 {{- if .Values.nameOverride }}
   {{- printf "%s-%s" .Values.nameOverride "db-secret" | trunc 63 | trimSuffix "-" }}
@@ -79,3 +66,15 @@ Return the appropriate apiVersion for ingress.
 {{- print "extensions/v1beta1" -}}
 {{- end -}}
 {{- end -}}
+
+{{- define "validate.singleEnabledDatabase" -}}
+{{- $enabledCount := 0 -}}
+{{- range $name, $db := .Values.lensesHq.storage }}
+  {{- if $db.enabled }}
+    {{- $enabledCount = add $enabledCount 1 -}}
+  {{- end }}
+{{- end }}
+{{- if gt $enabledCount 1 }}
+  {{- fail "Only one database can be enabled at a time. Please check your configuration in values.yaml." -}}
+{{- end }}
+{{- end }}

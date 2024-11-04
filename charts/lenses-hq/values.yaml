@@ -208,68 +208,43 @@ lensesHq:
           name: ""
           key: ""
 
-  api:
-    # -- (string) Sets the address the HTTP servers listens at.
-    # @section -- Lenses HQ API startup values
-    # **Required: true**
-    address: ":8080"
-
-    # -- (boolean) Controls API HTTP behaviour on authentication errors.
-    # @section -- Lenses HQ API startup values
-    # **Required: false**
-    redirToIdp: false
-
-    # -- (string) Sets the address the HTTP server listens at.
-    # @section -- Lenses HQ API startup values
-    # **Required: false**
-    accessControlAllowOrigin: '[*]'
-
-    # -- Sets the value of the "Access-Control-Allow-Credentials" header.
-    # @section -- Lenses HQ API startup values
-    # **Required: false**
-    accessControlAllowCredentials: false
-
-    # -- Sets the "Secure" attribute on session cookies.
-    # @section -- Lenses HQ API startup values
-    # **Required: false**
-    secureSessionCookies: true
-
+  auth:
     # -- Grants administrator rights to users.
-    # @section -- Lenses HQ API startup values
+    # @section -- Lenses HQ AUTH startup values
     # **Required: false**
     administrators: []
 
     tls:
       # -- (string) Enables or disables TLS.
-      # @section -- Lenses HQ API startup values
+      # @section -- Lenses HQ AUTH startup values
       # **Required: true**
       enabled: false
 
       # -- (string) Enabled verbose of TLS debug logs
-      # @section -- Lenses HQ Agent startup values
+      # @section -- Lenses HQ AUTH startup values
       # **Required: true**
       verboseLogs: false
 
       cert:
         # -- (string) Enables usage of secret for certificate.
-        # @section -- Lenses HQ API startup values
+        # @section -- Lenses HQ AUTH startup values
         # **Required: false**
         referenceFromSecret: false
         # -- (string) Secret name where certificate is stored.
-        # @section -- Lenses HQ API startup values
+        # @section -- Lenses HQ AUTH startup values
         # **Required: false**
         secretName: ""
         # -- (string) Secret key where within a secret where certificate is sotred.
-        # @section -- Lenses HQ API startup values
+        # @section -- Lenses HQ AUTH startup values
         # **Required: false**
         secretKeyName: ""
         # -- (string) Sets the PEM formatted public certificate.
-        # @section -- Lenses HQ API startup values
+        # @section -- Lenses HQ AUTH startup values
         # **Required: false**
         stringData: |
 
       # -- (string) Sets the PEM formatted private key.
-      # @section -- Lenses HQ API startup values
+      # @section -- Lenses HQ AUTH startup values
       # **Required: false**
       privateKey:
         # Reference to precreated secret name and key.
@@ -281,12 +256,12 @@ lensesHq:
       # -- Defines base URL of Panoptes for IdP redirects.
       # @section -- Lenses HQ SAML startup values
       # **Required: true**
-      baseUrl: ""
+      baseURL: ""
 
       # -- Defines the Entity ID.
       # @section -- Lenses HQ SAML startup values
       # **Required: true**
-      entityId: ""
+      entityID: ""
 
       # -- Contains the IdP issued XML metadata blob.
       # Example: <?xml version="1.0" ... (big blob of xml) </md:EntityDescriptor>
@@ -326,75 +301,117 @@ lensesHq:
       # -- Controls where to redirect to upon successful authentication.
       # @section -- Lenses HQ SAML startup values
       # **Required: false**
-      uiRootUrl: "/"
+      uiRootURL: "/"
 
       # -- Sets the attribute name for group names.
       # @section -- Lenses HQ SAML startup values
       # **Required: false**
       groupAttributeKey: "groups"
 
-  postgres:
-    # -- (string) Hostname of running postgres instance.
-    # @section -- Lenses HQ Database startup values
-    # **Required: true**
-    host: ""
 
-    # -- (int) Port of running postgress instance. Default is 5432.
-    # @section -- Lenses HQ Database startup values
+  http:
+    # -- (string) Sets the address the HTTP servers listens at.
+    # @section -- Lenses HQ HTTP startup values
     # **Required: true**
-    port: 5432
+    address: ":8080"
 
-    # -- (string) Username which will be used for connecting to Postgres database.
-    # @section -- Lenses HQ Database startup values
-    # **Required: true**
-    username: ""
+    # -- (string) Sets the address the HTTP server listens at.
+    # @section -- Lenses HQ HTTP startup values
+    # **Required: false**
+    accessControlAllowOrigin: []
 
-    useSecretForUsername:
-      # -- (string) Whether username will be used within a secret or as a part of `username` value.
+    # -- Sets the value of the "Access-Control-Allow-Credentials" header.
+    # @section -- Lenses HQ HTTP startup values
+    # **Required: false**
+    accessControlAllowCredentials: false
+
+    # -- Sets the "Secure" attribute on session cookies.
+    # @section -- Lenses HQ HTTP startup values
+    # **Required: false**
+    secureSessionCookies: true
+
+  storage:
+    postgres:
+      # -- (string) Enabling postgres engine. This flag is here as there might be support of multiple database engines in the future.
       # @section -- Lenses HQ Database startup values
       # **Required: true**
-      enabled: false
-      # -- (string) Secret reference for database user.
+      enabled: true
+      # -- (string) Hostname of running database instance.
+      # @section -- Lenses HQ Database startup values
+      # **Required: true**
+      host: ""
+
+      # -- (int) Port of running postgress instance. Default is 5432.
+      # @section -- Lenses HQ Database startup values
+      # **Required: true**
+      port: 5432
+
+      # -- (string) Username which will be used for connecting to database database.
+      # @section -- Lenses HQ Database startup values
+      # **Required: true**
+      username: ""
+
+      useSecretForUsername:
+        # -- (string) Whether username will be used within a secret or as a part of `username` value.
+        # @section -- Lenses HQ Database startup values
+        # **Required: true**
+        enabled: false
+        # -- (string) Secret reference for database user.
+        # @section -- Lenses HQ Database startup values
+        # **Required: false**
+        existingSecret:
+          name: ""
+          key: ""
+
+      # -- (string) Database name to which HQ will connect to and store required information.
+      # @section -- Lenses HQ Database startup values
+      # **Required: true**
+      database: ""
+
+      # -- (string) Database schema to which HQ will connect to and store required information.
+      # @section -- Lenses HQ Database startup values
+      # **Required: true**
+      schema: ""
+
+      # -- (string) Enables TLS. In PostgreSQL connection string terms, setting TLS to
+      #        `false` corresponds to `sslmode=disable`; setting TLS to `true`
+      #        corresponds to `sslmode=verify-full`. For more fine-grained control,
+      #        specify `sslmode` in the params which takes precedence.
+      # @section -- Lenses HQ Database startup values
+      # **Required: true**
+      tls: false
+
+      # -- (string) Contains connection string parameters as key/values pairs. It allows
+      #    fine-grained control of connection settings. The parameters can be found
+      #    here: https://www.postgresql.org/docs/current/libpq-connect.html#LIBPQ-PARAMKEYWORDS
       # @section -- Lenses HQ Database startup values
       # **Required: false**
-      existingSecret:
+      params: {}
+
+      # -- Definition of secret that has been precreated and has postgres database password
+      # @section -- Lenses HQ Database startup values
+      passwordSecret:
+        # -- (string) Possible options: precreated | createNew | externalSecret
+        # @section -- Lenses HQ Database startup values
+        type: "precreated"
+
+        # -- (string) Secret name where database password will be stored in case "createNew" or read from in case of "precreated" | "externalSecret".
+        # @section -- Lenses HQ Database startup values
         name: ""
-        key: ""
 
-    # -- (string) Database name to which HQ will connect to and store required information.
-    # @section -- Lenses HQ Database startup values
-    # **Required: true**
-    database: ""
+        # -- (string) Entry for a password in case of testing where type: "createNew", otherwise can be left out. *NOT FOR PRODUCTION USE!*
+        # @section -- Lenses HQ Database startup values
+        password: ""
 
-    # -- (string) Extra Parameters key words that are being added at the end of Connection URI. Example: ?sslmode=disable
-    # @section -- Lenses HQ Database startup values
-    # **Required: false**
-    extraParamSpecs: ""
-
-    # -- Definition of secret that has been precreated and has postgres database password
-    # @section -- Lenses HQ Database startup values
-    passwordSecret:
-      # -- (string) Possible options: precreated | createNew | externalSecret
-      # @section -- Lenses HQ Database startup values
-      type: "precreated"
-
-      # -- (string) Secret name where database password will be stored in case "createNew" or read from in case of "precreated" | "externalSecret".
-      # @section -- Lenses HQ Database startup values
-      name: ""
-
-      # -- (string) Entry for a password in case of testing where type: "createNew", otherwise can be left out. *NOT FOR PRODUCTION USE!*
-      # @section -- Lenses HQ Database startup values
-      password: ""
-
-      # -- (string) Secret key where password will be read from
-      # @section -- Lenses HQ Database startup values
-      key:
-      externalSecret:
-        secretStoreRef:
-          clusterSecretStore:
-            # -- (string) Name of cluster secret store created by ESO.
-            # @section -- Lenses HQ Database startup values
-            name:
+        # -- (string) Secret key where password will be read from
+        # @section -- Lenses HQ Database startup values
+        key:
+        externalSecret:
+          secretStoreRef:
+            clusterSecretStore:
+              # -- (string) Name of cluster secret store created by ESO.
+              # @section -- Lenses HQ Database startup values
+              name:
 
   # @section -- Lenses HQ startup values
   logger:

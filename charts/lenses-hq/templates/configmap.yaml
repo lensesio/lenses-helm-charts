@@ -10,73 +10,77 @@ metadata:
     lenses.io/app: {{ include "fullname" . }}
     lenses.io/app.type: lenses-hq-configmap
 data:
-  "config.toml": |
-    [api]
-    address = {{ .Values.lensesHq.api.address | quote }}
-    access_control_allow_origin = {{ .Values.lensesHq.api.accessControlAllowOrigin }}
-    access_control_allow_credentials = {{ .Values.lensesHq.api.accessControlAllowCredentials }}
-    secure_session_cookies = {{ .Values.lensesHq.api.secureSessionCookies }}
-    administrators = {{ .Values.lensesHq.api.administrators }}
-    redir_to_idp = {{ .Values.lensesHq.api.redirToIdp }}
-
-    {{ if (.Values.lensesHq.api.tls).enabled }}
-    [api.tls]
-    enabled = {{ .Values.lensesHq.api.tls.enabled }}
-    {{ if (.Values.lensesHq.api.tls.cert).referenceFromSecret }}
-    cert = """
-    $(LENSESHQ_API_TLS_CERT)
-    """
-    {{- else }}
-    cert = ""{{ .Values.lensesHq.api.tls.cert.stringData | quote }}""
-    {{ end }}
-    key = """
-    $(LENSESHQ_API_TLS_KEY)
-    """
-    verbose_logs = {{ .Values.lensesHq.api.tls.verboseLogs }}
-    {{ end }}
-
-    [api.saml]
-    base_url = {{ .Values.lensesHq.api.saml.baseUrl | quote }}
-    entity_id = {{ .Values.lensesHq.api.saml.entityId | quote }}
-    {{- if .Values.lensesHq.api.saml.metadata.referenceFromSecret }}
-    metadata = """$(LENSESHQ_API_SAML_METADATA)"""
-    {{- else }}
-    metadata = """
-    {{ .Values.lensesHq.api.saml.metadata.stringData | indent 4 }}
-    """
+  "config.yaml": |
+    auth:
+      administrators:
+      {{- range .Values.lensesHq.auth.administrators }}
+        - {{ . }}
+      {{- end }}
+      saml:
+        baseURL: {{ .Values.lensesHq.auth.saml.baseURL }}
+        entityID: {{ .Values.lensesHq.auth.saml.entityID }}
+        {{- if .Values.lensesHq.auth.saml.metadata.referenceFromSecret }}
+        metadata: $(LENSESHQ_AUTH_SAML_METADATA)
+        {{- else }}
+        metadata: {{ .Values.lensesHq.auth.saml.metadata.stringData | indent 10 }}
+        {{- end }}
+        userCreationMode: {{ .Values.lensesHq.auth.saml.userCreationMode }}
+        groupMembershipMode: {{ .Values.lensesHq.auth.saml.usersGroupMembershipManagementMode }}
+        uiRootURL: {{ .Values.lensesHq.auth.saml.uiRootURL }}
+        groupAttributeKey: {{ .Values.lensesHq.auth.saml.groupAttributeKey }}
+    http:
+      address: {{ .Values.lensesHq.http.address }}
+      accessControlAllowOrigin:
+      {{- range .Values.lensesHq.http.accessControlAllowOrigin }}
+        - {{ . }}
+      {{- end }}
+      accessControlAllowCredentials: {{ .Values.lensesHq.http.accessControlAllowCredentials }}
+      secureSessionCookies: {{ .Values.lensesHq.http.secureSessionCookies }}
+      {{ if (.Values.lensesHq.auth.tls).enabled }}
+      tls:
+        enabled: {{ .Values.lensesHq.auth.tls.enabled -}}
+        {{ if (.Values.lensesHq.auth.tls.cert).referenceFromSecret }}
+        cert: $(LENSESHQ_AUTH_TLS_CERT)
+        {{- else }}
+        cert: |-
+{{ .Values.lensesHq.auth.tls.cert.stringData | indent 10 }}
+        {{ end }}
+        key: $(LENSESHQ_AUTH_TLS_KEY)
+        verboseLogs: {{ .Values.lensesHq.auth.tls.verboseLogs }}
+        {{ end }}
+    agents:
+      address: {{ .Values.lensesHq.agents.address }}
+      {{ if (.Values.lensesHq.agents.tls).enabled }}
+      tls:
+        enabled: {{ .Values.lensesHq.agents.tls.enabled }}
+        {{ if (.Values.lensesHq.agents.tls.cert).referenceFromSecret }}
+        cert: $(LENSESHQ_AGENTS_TLS_CERT)
+        {{- else }}
+        cert: |-
+{{ .Values.lensesHq.agents.tls.cert.stringData | indent 10 }}
+        {{ end }}
+        key: $(LENSESHQ_AGENTS_TLS_KEY)
+        verboseLogs: {{ .Values.lensesHq.agents.tls.verboseLogs }}
+        {{ end }}
+    database:
+      {{- include "validate.singleEnabledDatabase" . -}}
+    {{- range $name, $db := .Values.lensesHq.storage }}
+      {{- if $db.enabled }}
+      host: {{ $db.host }}:{{ $db.port }}
+      username: $(LENSESHQ_PG_USERNAME)
+      password: $(LENSESHQ_PG_PASSWORD)
+      schema: {{ $db.schema }}
+      database: {{ $db.database }}
+      params:
+      {{- range $db.params }}
+        {{ . }}
+      {{- end }}
+      TLS: {{ $db.tls }}
+      {{- end }}
     {{- end }}
 
-    user_creation_mode = {{ .Values.lensesHq.api.saml.userCreationMode | quote }}
-    users_group_membership_management_mode = {{ .Values.lensesHq.api.saml.usersGroupMembershipManagementMode | quote }}
-    ui_root_url = {{ .Values.lensesHq.api.saml.uiRootUrl | quote }}
-    group_attribute_key = {{ .Values.lensesHq.api.saml.groupAttributeKey | quote }}
-
-    [agents]
-    address = {{ .Values.lensesHq.agents.address | quote }}
-    {{ if (.Values.lensesHq.agents.tls).enabled }}
-    [agents.tls]
-    enabled = {{ .Values.lensesHq.agents.tls.enabled }}
-    {{ if (.Values.lensesHq.agents.tls.cert).referenceFromSecret }}
-    cert = """
-    $(LENSESHQ_AGENTS_TLS_CERT)
-    """
-    {{- else }}
-    cert = ""{{ .Values.lensesHq.agents.tls.cert.stringData | quote }}""
-    {{ end }}
-    key = """$(LENSESHQ_AGENTS_TLS_KEY)"""
-    verbose_logs = {{ .Values.lensesHq.agents.tls.verboseLogs }}
-    {{ end }}
-
-    [database]
-    {{- if .Values.lensesHq.postgres.extraParamSpecs }}
-    connection = "postgres://$(LENSESHQ_PG_USERNAME):$(LENSESHQ_PG_PASSWORD)@{{ .Values.lensesHq.postgres.host }}:{{ .Values.lensesHq.postgres.port }}/{{ .Values.lensesHq.postgres.database }}{{ .Values.lensesHq.postgres.extraParamSpecs }}"
-    {{- else }}
-    connection = "postgres://$(LENSESHQ_PG_USERNAME):$(LENSESHQ_PG_PASSWORD)@{{ .Values.lensesHq.postgres.host }}:{{ .Values.lensesHq.postgres.port }}/{{ .Values.lensesHq.postgres.database }}"
-    {{- end }}
-
-    [logger]
-    mode = {{ .Values.lensesHq.logger.mode | quote }}
-    level = {{ default "info" .Values.lensesHq.logger.level | quote }}
-
-    [metrics]
-    prometheus_address = {{ .Values.lensesHq.metrics.prometheusAddress | quote }}
+    logger:
+      mode: {{ .Values.lensesHq.logger.mode }}
+      level: {{ default "info" .Values.lensesHq.logger.level }}
+    metrics:
+      prometheusAddress: {{ .Values.lensesHq.metrics.prometheusAddress }}
