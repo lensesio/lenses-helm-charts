@@ -16,7 +16,14 @@ data:
       {{- range .Values.lensesHq.auth.administrators }}
         - {{ . }}
       {{- end }}
+      users:
+      {{- range .Values.lensesHq.auth.users }}
+        - username: {{ .username }}
+          password: {{ .password }}
+      {{- end }}
       saml:
+        enabled: {{ .Values.lensesHq.auth.saml.enabled }}
+        {{ if (.Values.lensesHq.auth.saml).enabled }}
         baseURL: {{ .Values.lensesHq.auth.saml.baseURL }}
         entityID: {{ .Values.lensesHq.auth.saml.entityID }}
         {{- if .Values.lensesHq.auth.saml.metadata.referenceFromSecret }}
@@ -28,6 +35,7 @@ data:
         groupMembershipMode: {{ .Values.lensesHq.auth.saml.usersGroupMembershipManagementMode }}
         uiRootURL: {{ .Values.lensesHq.auth.saml.uiRootURL }}
         groupAttributeKey: {{ .Values.lensesHq.auth.saml.groupAttributeKey }}
+        {{- end }}
     http:
       address: {{ .Values.lensesHq.http.address }}
       accessControlAllowOrigin:

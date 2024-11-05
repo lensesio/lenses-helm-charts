@@ -214,7 +214,16 @@ lensesHq:
     # **Required: false**
     administrators: []
 
+    # -- Adds uses for password based auth
+    # @section -- Lenses HQ AUTH startup values
+    # **Required: false**
+    users: []
+
     saml:
+      # -- Enables SAML / SSO authentication
+      # @section -- Lenses HQ SAML startup values
+      # **Required: true**
+      enabled: false
       # -- Defines base URL of Panoptes for IdP redirects.
       # @section -- Lenses HQ SAML startup values
       # **Required: true**

@@ -88,12 +88,14 @@ The command deploys Lenses HQ on the Kubernetes cluster in the example configura
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | lensesHq.auth.administrators | list | `[]` | Grants administrator rights to users. **Required: false** |
+| lensesHq.auth.users | list | `[]` | Adds uses for password based auth **Required: false** |
 
 ### Lenses HQ SAML startup values
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | lensesHq.auth.saml.baseURL | string | `""` | Defines base URL of Panoptes for IdP redirects. **Required: true** |
+| lensesHq.auth.saml.enabled | bool | `false` | Enables SAML / SSO authentication **Required: true** |
 | lensesHq.auth.saml.entityID | string | `""` | Defines the Entity ID. **Required: true** |
 | lensesHq.auth.saml.groupAttributeKey | string | `"groups"` | Sets the attribute name for group names. **Required: false** |
 | lensesHq.auth.saml.metadata | object | `{"referenceFromSecret":false,"secretKeyName":"metadata.xml","secretName":"","stringData":""}` | Contains the IdP issued XML metadata blob. Example: <?xml version="1.0" ... (big blob of xml) </md:EntityDescriptor> **Required: true** |
