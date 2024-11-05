@@ -1,6 +1,6 @@
 # lenses-hq
 
-![Version: 6.0.0-alpha.14](https://img.shields.io/badge/Version-6.0.0--alpha.14-informational?style=flat-square) ![AppVersion: 6.0.0-alpha.14](https://img.shields.io/badge/AppVersion-6.0.0--alpha.14-informational?style=flat-square)
+![Version: 6.0.0-alpha.15](https://img.shields.io/badge/Version-6.0.0--alpha.15-informational?style=flat-square) ![AppVersion: 6.0.0-alpha.14](https://img.shields.io/badge/AppVersion-6.0.0--alpha.14-informational?style=flat-square)
 
 A chart for Lenses HQ deployment which provides a unified, streamlined view of the entire event infrastructure—whether on-premises or in the cloud—through a single, comprehensive interface.
 
@@ -88,13 +88,6 @@ The command deploys Lenses HQ on the Kubernetes cluster in the example configura
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | lensesHq.auth.administrators | list | `[]` | Grants administrator rights to users. **Required: false** |
-| lensesHq.auth.tls.cert.referenceFromSecret | string | `false` | Enables usage of secret for certificate. **Required: false** |
-| lensesHq.auth.tls.cert.secretKeyName | string | `""` | Secret key where within a secret where certificate is sotred. **Required: false** |
-| lensesHq.auth.tls.cert.secretName | string | `""` | Secret name where certificate is stored. **Required: false** |
-| lensesHq.auth.tls.cert.stringData | string | `""` | Sets the PEM formatted public certificate. **Required: false** |
-| lensesHq.auth.tls.enabled | string | `false` | Enables or disables TLS. **Required: true** |
-| lensesHq.auth.tls.privateKey | string | `{"secret":{"key":"","name":""}}` | Sets the PEM formatted private key. **Required: false** |
-| lensesHq.auth.tls.verboseLogs | string | `false` | Enabled verbose of TLS debug logs **Required: true** |
 
 ### Lenses HQ SAML startup values
 
@@ -120,6 +113,22 @@ The command deploys Lenses HQ on the Kubernetes cluster in the example configura
 | lensesHq.http.accessControlAllowOrigin | string | `[]` | Sets the address the HTTP server listens at. **Required: false** |
 | lensesHq.http.address | string | `":8080"` | Sets the address the HTTP servers listens at. **Required: true** |
 | lensesHq.http.secureSessionCookies | bool | `true` | Sets the "Secure" attribute on session cookies. **Required: false** |
+| lensesHq.http.tls.cert.referenceFromSecret | string | `false` | Enables usage of secret for certificate. **Required: false** |
+| lensesHq.http.tls.cert.secretKeyName | string | `""` | Secret key where within a secret where certificate is sotred. **Required: false** |
+| lensesHq.http.tls.cert.secretName | string | `""` | Secret name where certificate is stored. **Required: false** |
+| lensesHq.http.tls.cert.stringData | string | `""` | Sets the PEM formatted public certificate. **Required: false** |
+| lensesHq.http.tls.enabled | string | `false` | Enables or disables TLS. **Required: true** |
+| lensesHq.http.tls.privateKey | string | `{"secret":{"key":"","name":""}}` | Sets the PEM formatted private key. **Required: false** |
+| lensesHq.http.tls.verboseLogs | string | `false` | Enabled verbose of TLS debug logs **Required: true** |
+
+### Lenses HQ licence values
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| lensesHq.licence.referenceFromSecret | string | `false` | Enables usage of secret for licence. **Required: false** |
+| lensesHq.licence.secretKeyName | string | `""` | Secret key where within a secret where licence is sotred. **Required: false** |
+| lensesHq.licence.secretName | string | `""` | Secret name where licence is stored. **Required: false** |
+| lensesHq.licence.stringData | string | `""` | Sets the licence as a stirng. **Required: false** |
 
 ### Lenses HQ startup values
 

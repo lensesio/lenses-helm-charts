@@ -433,6 +433,25 @@ lensesHq:
     # **Required: false**
     prometheusAddress: ":9090"
 
+  # @section -- Lenses HQ licence values
+  licence:
+    # -- (string) Enables usage of secret for licence.
+    # @section -- Lenses HQ licence values
+    # **Required: false**
+    referenceFromSecret: false
+    # -- (string) Secret name where licence is stored.
+    # @section -- Lenses HQ licence values
+    # **Required: false**
+    secretName: ""
+    # -- (string) Secret key where within a secret where licence is sotred.
+    # @section -- Lenses HQ licence values
+    # **Required: false**
+    secretKeyName: ""
+    # -- (string) Sets the licence as a stirng.
+    # @section -- Lenses HQ licence values
+    # **Required: false**
+    stringData: ""
+
   # @section -- Lenses HQ startup values
   # Disable livenessProbe, used while debugging
   livenessProbe:

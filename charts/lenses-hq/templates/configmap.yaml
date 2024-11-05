@@ -78,7 +78,12 @@ data:
       TLS: {{ $db.tls }}
       {{- end }}
     {{- end }}
-
+    licence:
+      {{- if .Values.lensesHq.licence.referenceFromSecret }}
+      key: $(LENSESHQ_LICENCE)
+      {{- else }}
+      key: {{ .Values.lensesHq.licence.stringData | indent 6 }}
+      {{- end }}
     logger:
       mode: {{ .Values.lensesHq.logger.mode }}
       level: {{ default "info" .Values.lensesHq.logger.level }}

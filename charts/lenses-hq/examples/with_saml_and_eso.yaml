@@ -124,6 +124,12 @@ lensesHq:
     mode: "text"
     level: "debug"
 
+  licence:
+    referenceFromSecret: false
+    secretName: hq-license
+    secretKeyName: key
+    stringData: "lenses_key_*"
+
   # Additional env variables appended to deployment
   # Follows the format of [EnvVar spec](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.21/#envvar-v1-core)
   additionalEnv:
