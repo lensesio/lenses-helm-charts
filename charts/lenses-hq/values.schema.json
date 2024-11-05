@@ -607,7 +607,7 @@
                                     "referenceFromSecret": {
                                         "type": "boolean",
                                         "default": false,
-                                        "title": "Read metadata xml file from ConfigMap Schema",
+                                        "title": "Read metadata xml file from Secret Schema",
                                         "examples": [
                                             true,
                                             false
@@ -618,7 +618,7 @@
                                         "default": "",
                                         "title": "Secret name where Saml metadata is stored Schema",
                                         "examples": [
-                                            "metadata-configmap"
+                                            "metadata-secret"
                                         ]
                                     },
                                     "secretKeyName": {
@@ -796,6 +796,49 @@
                         "address": ":8080",
                         "accessControlAllowOrigin":["https://example.io","http://example.io"]
                     }]
+                },
+                "licence": {
+                    "type": "object",
+                    "default": "",
+                    "title": "The Licence Schema",
+                    "examples": [
+                        ""
+                    ],
+                    "properties": {
+                        "referenceFromSecret": {
+                            "type": "boolean",
+                            "default": false,
+                            "title": "Read licence from secret Schema",
+                            "examples": [
+                                true,
+                                false
+                            ]
+                        },
+                        "secretName": {
+                            "type": "string",
+                            "default": "",
+                            "title": "Secret name where licence is stored Schema",
+                            "examples": [
+                                "licence-secret"
+                            ]
+                        },
+                        "secretKeyName": {
+                            "type": "string",
+                            "default": "",
+                            "title": "Secret key used to reference secret licence information.",
+                            "examples": [
+                                "licence"
+                            ]
+                        },
+                        "stringData": {
+                            "type": "string",
+                            "default": "",
+                            "title": " Contains the licence value.",
+                            "examples": [
+                                "licence_key_"
+                            ]
+                        }
+                    }
                 },
                 "storage": {
                     "type": "object",
