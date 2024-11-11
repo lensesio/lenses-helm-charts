@@ -226,7 +226,7 @@ lenses:
 
     # You can find examples at https://github.com/lensesio/lenses-helm-charts/tree/release/5.5/examples
     #connections:
-    #  grpcServer:
+    #  lensesHq:
     #    - name: lenses-hq
     #      version: 1
     #      tags: ['hq']
@@ -235,8 +235,8 @@ lenses:
     #          value: panoptes-backend.panoptes-master.svc.cluster.local
     #        port:
     #          value: 10000
-    #        apiKey:
-    #          value: ${LENSES_HQ_API_KEY}
+    #        agentKey:
+    #          value: ${LENSES_HQAGENT_KEY}
     #        sslEnabled:
     #          value: false
           # sslEnabledProtocols:

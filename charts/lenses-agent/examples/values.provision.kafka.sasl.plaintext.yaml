@@ -12,7 +12,7 @@ lenses:
     version: "2"
     path: /mnt/provision-secrets
     connections:
-      grpcServer:
+      lensesHq:
         - name: lenses-hq
           version: 1
           tags: ['hq']
@@ -21,7 +21,7 @@ lenses:
               value: hq-tls-test-lenses-hq.hq-agent-test.svc.cluster.local
             port:
               value: 10000
-            apiKey:
+            agentKey:
               # static evnvironment value
               value: ${LENSESHQ_AGENT_KEY}
       kafka:

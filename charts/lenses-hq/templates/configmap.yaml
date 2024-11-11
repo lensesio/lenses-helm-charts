@@ -31,6 +31,7 @@ data:
         {{- else }}
         metadata: {{ .Values.lensesHq.auth.saml.metadata.stringData | indent 10 }}
         {{- end }}
+        sessionDuration: {{ .Values.lensesHq.auth.saml.sessionDuration }}
         userCreationMode: {{ .Values.lensesHq.auth.saml.userCreationMode }}
         groupMembershipMode: {{ .Values.lensesHq.auth.saml.usersGroupMembershipManagementMode }}
         uiRootURL: {{ .Values.lensesHq.auth.saml.uiRootURL }}
@@ -80,9 +81,7 @@ data:
       schema: {{ $db.schema }}
       database: {{ $db.database }}
       params:
-      {{- range $db.params }}
-        {{ . }}
-      {{- end }}
+{{ toYaml $db.params | indent 8 }}
       TLS: {{ $db.tls }}
       {{- end }}
     {{- end }}
