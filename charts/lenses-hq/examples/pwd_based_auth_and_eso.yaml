@@ -69,7 +69,7 @@ lensesHq:
     address: ":8080"
     accessControlAllowOrigin:
       - "http://localhost:8080"
-  # Find more details in https://docs.lenses.io/current/installation/kubernetes/helm/#helm-storage
+  # Storage property has to be properly filled with Postgres database information
   storage:
     postgres:
       enabled: true
@@ -85,16 +85,12 @@ lensesHq:
           secretStoreRef:
             clusterSecretStore:
               name: [CLUSTER_SECRET_STORE_NAME]
-
   logger:
     mode: "text"
     level: "debug"
-
   license:
     referenceFromSecret: false
-    secretName: hq-license
-    secretKeyName: key
-    stringData: "lenses_key_*"
+    stringData: "license_key_2SFZ0BesCNu6NFv0-EOSIvY22ChSzNWXa5nSds2l4z3y7aBgRPKCVnaeMlS57hHNVboR2kKaQ8Mtv1LFt0MPBBACGhDT5If8PmTraUM5xXLz4MYv"
     acceptEULA: true
 
   # Additional env variables appended to deployment
