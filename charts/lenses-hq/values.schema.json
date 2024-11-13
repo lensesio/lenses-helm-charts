@@ -557,8 +557,7 @@
                     "default": {},
                     "title": "The Auth Schema",
                     "required": [
-                        "administrators",
-                        "saml"
+                        "administrators"
                 ],
                 "properties": {
                     "administrators": {
