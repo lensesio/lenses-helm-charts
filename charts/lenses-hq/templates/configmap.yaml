@@ -21,6 +21,7 @@ data:
         - username: {{ .username }}
           password: {{ .password }}
       {{- end }}
+      sessionDuration: {{ .Values.lensesHq.auth.sessionDuration }}
       saml:
         enabled: {{ .Values.lensesHq.auth.saml.enabled }}
         {{ if (.Values.lensesHq.auth.saml).enabled }}
@@ -31,7 +32,6 @@ data:
         {{- else }}
         metadata: {{ .Values.lensesHq.auth.saml.metadata.stringData | indent 10 }}
         {{- end }}
-        sessionDuration: {{ .Values.lensesHq.auth.saml.sessionDuration }}
         userCreationMode: {{ .Values.lensesHq.auth.saml.userCreationMode }}
         groupMembershipMode: {{ .Values.lensesHq.auth.saml.usersGroupMembershipManagementMode }}
         uiRootURL: {{ .Values.lensesHq.auth.saml.uiRootURL }}
@@ -85,12 +85,13 @@ data:
       TLS: {{ $db.tls }}
       {{- end }}
     {{- end }}
-    licence:
-      {{- if .Values.lensesHq.licence.referenceFromSecret }}
-      key: $(LENSESHQ_LICENCE)
+    license:
+      {{- if .Values.lensesHq.license.referenceFromSecret }}
+      key: $(LENSESHQ_LICENSE)
       {{- else }}
-      key: {{ .Values.lensesHq.licence.stringData | indent 6 }}
+      key: {{ .Values.lensesHq.license.stringData | indent 6 }}
       {{- end }}
+      acceptEULA: {{ .Values.lensesHq.license.acceptEULA }}
     logger:
       mode: {{ .Values.lensesHq.logger.mode }}
       level: {{ default "info" .Values.lensesHq.logger.level }}

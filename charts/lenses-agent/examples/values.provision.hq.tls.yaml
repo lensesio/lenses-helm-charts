@@ -96,7 +96,7 @@ lenses:
             port:
               value: 10000
             agentKey:
-              value: ${LENSES_HQAGENT_KEY}
+              value: ${LENSESHQ_AGENT_KEY}
             sslEnabled:
               value: true
             sslTruststore:

@@ -322,12 +322,6 @@
                     "type": "object",
                     "default": {},
                     "title": "The agent ingress Schema",
-                    "required": [
-                        "enabled",
-                        "host",
-                        "annotations",
-                        "tls"
-                    ],
                     "properties": {
                         "enabled": {
                             "type": "boolean",
@@ -338,57 +332,15 @@
                                 true
                             ]
                         },
-                        "host": {
+                        "stringData": {
                             "type": "string",
-                            "default": null,
-                            "title": "The host Schema",
+                            "default": "",
+                            "title": "Accepts a fully formatted ingress YAML as a string, allowing users to specify complete ingress configurations directly within the property.",
                             "examples": [
-                                null
+                                ""
                             ]
-                        },
-                        "annotations": {
-                            "type": "object",
-                            "default": {},
-                            "title": "The annotations Schema",
-                            "required": [],
-                            "properties": {},
-                            "examples": [{}]
-                        },
-                        "tls": {
-                            "type": "object",
-                            "default": {},
-                            "title": "The tls Schema",
-                            "required": [
-                                "enabled"
-                            ],
-                            "properties": {
-                                "enabled": {
-                                    "type": "boolean",
-                                    "default": false,
-                                    "title": "The enabled Schema",
-                                    "examples": [
-                                        false,
-                                        true
-                                    ]
-                                }
-                            },
-                            "examples": [{
-                                "enabled": false,
-                                "crt": "",
-                                "key": ""
-                            }]
                         }
-                    },
-                    "examples": [{
-                        "enabled": false,
-                        "host": null,
-                        "annotations": {},
-                        "tls": {
-                            "enabled": false,
-                            "crt": "",
-                            "key": ""
-                        }
-                    }]
+                    }
                 },
                 "http":{
                     "type": "object",
@@ -885,10 +837,10 @@
                         "accessControlAllowOrigin":["https://example.io","http://example.io"]
                     }]
                 },
-                "licence": {
+                "license": {
                     "type": "object",
                     "default": "",
-                    "title": "The Licence Schema",
+                    "title": "The license Schema",
                     "examples": [
                         ""
                     ],
@@ -896,7 +848,7 @@
                         "referenceFromSecret": {
                             "type": "boolean",
                             "default": false,
-                            "title": "Read licence from secret Schema",
+                            "title": "Read license from secret Schema",
                             "examples": [
                                 true,
                                 false
@@ -905,25 +857,33 @@
                         "secretName": {
                             "type": "string",
                             "default": "",
-                            "title": "Secret name where licence is stored Schema",
+                            "title": "Secret name where license is stored Schema",
                             "examples": [
-                                "licence-secret"
+                                "license-secret"
+                            ]
+                        },
+                        "acceptEULA": {
+                            "type": "boolean",
+                            "default": false,
+                            "title": "Marks the end-user license agreement (EULA) as accepted.",
+                            "examples": [
+                                false, true
                             ]
                         },
                         "secretKeyName": {
                             "type": "string",
                             "default": "",
-                            "title": "Secret key used to reference secret licence information.",
+                            "title": "Secret key used to reference secret license information.",
                             "examples": [
-                                "licence"
+                                "license"
                             ]
                         },
                         "stringData": {
                             "type": "string",
                             "default": "",
-                            "title": " Contains the licence value.",
+                            "title": " Contains the license value.",
                             "examples": [
-                                "licence_key_"
+                                "license_key_"
                             ]
                         }
                     }

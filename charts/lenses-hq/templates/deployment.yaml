@@ -151,12 +151,12 @@ spec:
                 name: {{ .Values.lensesHq.auth.saml.metadata.secretName }}
                 key: {{ .Values.lensesHq.auth.saml.metadata.secretKeyName }}
           {{- end }}
-          {{ if .Values.lensesHq.licence.referenceFromSecret }}
-          - name: LENSESHQ_LICENCE
+          {{ if .Values.lensesHq.license.referenceFromSecret }}
+          - name: LENSESHQ_LICENSE
             valueFrom:
               secretKeyRef:
-                name: {{ .Values.lensesHq.licence.secretName }}
-                key: {{ .Values.lensesHq.licence.secretKeyName }}
+                name: {{ .Values.lensesHq.license.secretName }}
+                key: {{ .Values.lensesHq.license.secretKeyName }}
           {{- end }}
           - name: LENSESHQ_PG_PASSWORD
             valueFrom:
