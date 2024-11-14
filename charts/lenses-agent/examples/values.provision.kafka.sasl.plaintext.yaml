@@ -22,7 +22,7 @@ lenses:
             port:
               value: 10000
             agentKey:
-              # static evnvironment value
+              # static environment value
               value: ${LENSESHQ_AGENT_KEY}
       kafka:
         - name: kafka

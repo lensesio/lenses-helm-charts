@@ -137,9 +137,10 @@ ingress:
     # -- (bool) If true, Ingress will be created
     # @section -- Lenses HQ Agent Ingress deployment service values
     enabled: false
-    # -- (string) Accepts a fully formatted ingress YAML as a string, allowing users to specify complete ingress configurations directly within the property.
+    # -- (string) Object defines the Kubernetes Ingress resource for the agent, including the apiVersion, kind, metadata (e.g., name),
+    #  and spec with routing rules, host, HTTP paths, and the backend service details (name and port).
     # @section -- Lenses HQ Agent Ingress deployment service values
-    stringData: |
+    agentConfig: {}
 
 
   http:

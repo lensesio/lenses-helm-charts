@@ -1,5 +1,3 @@
 {{- if .Values.ingress.agent.enabled }}
-{{- if .Values.ingress.agent.stringData }}
-{{- tpl .Values.ingress.agent.stringData . | nindent 0 }}
-{{- end }}
+{{- toYaml .Values.ingress.agent.agentConfig | nindent 0 }}
 {{- end -}}

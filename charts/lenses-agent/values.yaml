@@ -127,7 +127,7 @@ persistence:
     # -- (boolean) Extra volume creation dedicated for logs.
     # @section -- Persistence scope values
     enabled: true
-  ## Target an pre-existing volume claim to use it as Lenses Persistent volume
+  ## Target a pre-existing volume claim to use it as Lenses Persistent volume
   # existingClaim:
 
   ## Policies data Persistent Volume Storage Class
@@ -195,7 +195,7 @@ lenses:
 
         ## Key from secret's data where Lenses agent_key is being stored
         key: ""
-        ## Secret name whereLenses agent_key will be read from.
+        ## Secret name where Lenses agent_key will be read from.
         ## Not necessary when externalSecret is being used
         name: ""
         # Required in case secret.type: "externalSecret", alongisde secret.key

@@ -50,14 +50,14 @@ The command deploys Lenses HQ on the Kubernetes cluster in the example configura
 | resources | object | `{"limits":{"memory":"5Gi"},"requests":{"memory":"4Gi"}}` | Pod resources |
 | securityContext | dict | `{}` | Deployment security context |
 | strategy | dict | `{}` | Deployment strategy |
-| tolerations | dict | `{}` | Deployment tolerations |
+| tolerations | dict | `[]` | Deployment tolerations |
 
 ### Lenses HQ Agent Ingress deployment service values
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
+| ingress.agent.agentConfig | string | `{}` | Object defines the Kubernetes Ingress resource for the agent, including the apiVersion, kind, metadata (e.g., name),  and spec with routing rules, host, HTTP paths, and the backend service details (name and port). |
 | ingress.agent.enabled | bool | `false` | If true, Ingress will be created |
-| ingress.agent.stringData | string | `""` | Accepts a fully formatted ingress YAML as a string, allowing users to specify complete ingress configurations directly within the property. |
 
 ### Lenses HQ HTTP API deployment service values
 

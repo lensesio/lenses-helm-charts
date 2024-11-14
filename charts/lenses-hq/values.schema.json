@@ -332,10 +332,10 @@
                                 true
                             ]
                         },
-                        "stringData": {
-                            "type": "string",
-                            "default": "",
-                            "title": "Accepts a fully formatted ingress YAML as a string, allowing users to specify complete ingress configurations directly within the property.",
+                        "agentConfig": {
+                            "type": "object",
+                            "default": {},
+                            "title": "Object defines the Kubernetes Ingress resource for the agent, including the apiVersion, kind, metadata (e.g., name), and spec with routing rules, host, HTTP paths, and the backend service details (name and port).",
                             "examples": [
                                 ""
                             ]
