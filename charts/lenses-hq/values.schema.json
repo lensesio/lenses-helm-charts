@@ -332,7 +332,7 @@
                                 true
                             ]
                         },
-                        "agentConfig": {
+                        "agentIngressConfig": {
                             "type": "object",
                             "default": {},
                             "title": "Object defines the Kubernetes Ingress resource for the agent, including the apiVersion, kind, metadata (e.g., name), and spec with routing rules, host, HTTP paths, and the backend service details (name and port).",

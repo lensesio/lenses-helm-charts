@@ -140,7 +140,7 @@ ingress:
     # -- (string) Object defines the Kubernetes Ingress resource for the agent, including the apiVersion, kind, metadata (e.g., name),
     #  and spec with routing rules, host, HTTP paths, and the backend service details (name and port).
     # @section -- Lenses HQ Agent Ingress deployment service values
-    agentConfig: {}
+    agentIngressConfig: {}
 
 
   http:

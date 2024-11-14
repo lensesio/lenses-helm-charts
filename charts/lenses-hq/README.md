@@ -56,7 +56,7 @@ The command deploys Lenses HQ on the Kubernetes cluster in the example configura
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| ingress.agent.agentConfig | string | `{}` | Object defines the Kubernetes Ingress resource for the agent, including the apiVersion, kind, metadata (e.g., name),  and spec with routing rules, host, HTTP paths, and the backend service details (name and port). |
+| ingress.agent.agentIngressConfig | string | `{}` | Object defines the Kubernetes Ingress resource for the agent, including the apiVersion, kind, metadata (e.g., name),  and spec with routing rules, host, HTTP paths, and the backend service details (name and port). |
 | ingress.agent.enabled | bool | `false` | If true, Ingress will be created |
 
 ### Lenses HQ HTTP API deployment service values
