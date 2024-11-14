@@ -452,8 +452,7 @@
                             "default": {},
                             "title": "The tls Schema",
                             "required": [
-                                "enabled",
-                                "verboseLogs"
+                                "enabled"
                             ],
                             "properties": {
                                 "enabled": {

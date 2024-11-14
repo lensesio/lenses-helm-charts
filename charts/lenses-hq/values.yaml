@@ -18,7 +18,7 @@ strategy: {}
 nodeSelector: {}
 # -- (dict) Deployment tolerations
 # @section -- Custom deployment values
-tolerations: {}
+tolerations: []
 # -- (dict) Deployment affinity rules
 # @section -- Custom deployment values
 affinity: {}
