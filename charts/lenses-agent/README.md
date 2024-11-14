@@ -1,6 +1,6 @@
 # lenses-agent
 
-![Version: 6.0.0-alpha.16](https://img.shields.io/badge/Version-6.0.0--alpha.16-informational?style=flat-square) ![AppVersion: v6.0.0-alpha.1-3-g43652743b](https://img.shields.io/badge/AppVersion-v6.0.0--alpha.1--3--g43652743b-informational?style=flat-square)
+![Version: 6.0.0-alpha.16](https://img.shields.io/badge/Version-6.0.0--alpha.16-informational?style=flat-square) ![AppVersion: v6.0.0-alpha.1-8-g22f83c3e4](https://img.shields.io/badge/AppVersion-v6.0.0--alpha.1--8--g22f83c3e4-informational?style=flat-square)
 
 A chart for Lenses Agent deployment (ex. Lenses v5).
 
