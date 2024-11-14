@@ -1,0 +1,107 @@
+nameOverride: ""
+fullnameOverride: ""
+
+podTemplateAnnotations: {}
+labels: {}
+strategy: {}
+nodeSelector: {}
+tolerations: {}
+affinity: {}
+securityContext: {}
+resources:
+  requests:
+    cpu: 1
+    memory: 2Gi
+  limits:
+    cpu: 2
+    memory: 4Gi
+
+image:
+  repository:
+  #repository:
+  # -- Default to .Chart.AppVersion
+  # tag:
+  pullPolicy: Always
+  # -- imagePullSecrets: # any image pull secrets for private registries go here
+  #   - name: regcred
+
+# rbacEnable indicates if a the cluster has rbac enabled and a cluster role
+# and rolebinding should be created for the service account
+rbacEnable: true
+
+# In case rbac is enabled you can choose to enable namespace scoped roles or
+# cluster roles to be created
+namespaceScope: true
+
+# Lense HQ container port
+restPort: 8080
+# Lenses HQ service port, service targets restPort
+servicePort: 80
+servicePortName: lenses-hq
+
+# serviceAccount is the Service account to be used by Lenses to deploy apps
+serviceAccount:
+  create: false
+  name: default
+
+# Lenses service
+service:
+  enabled: true
+  type: ClusterIP
+  annotations: {}
+
+lensesHq:
+  agents:
+    address: ":10000"
+    tls:
+      enabled: false
+  auth:
+    administrators:
+     - "admin"
+    users:
+      - username: admin
+        password: $2a$10$DPQYpxj4Y2iTWeuF1n.ItewXnbYXh5/E9lQwDJ/cI/.gBboW2Hodm # bcrypt("admin").
+    saml:
+      enabled: false
+    tls:
+      enabled: false
+  http:
+    address: ":8080"
+    accessControlAllowOrigin:
+      - "http://localhost:8080"
+  # Storage property has to be properly filled with Postgres database information
+  storage:
+    postgres:
+      enabled: true
+      host: postgres-postgresql.postgres.svc.cluster.local
+      port: 5432
+      username: lenses
+      database: hq
+      passwordSecret:
+        type: "externalSecret"
+        name: postgres
+        key:  password
+        externalSecret:
+          secretStoreRef:
+            clusterSecretStore:
+              name: [CLUSTER_SECRET_STORE_NAME]
+  logger:
+    mode: "text"
+    level: "debug"
+  license:
+    referenceFromSecret: false
+    stringData: "license_key_2SFZ0BesCNu6NFv0-EOSIvY22ChSzNWXa5nSds2l4z3y7aBgRPKCVnaeMlS57hHNVboR2kKaQ8Mtv1LFt0MPBBACGhDT5If8PmTraUM5xXLz4MYv"
+    acceptEULA: true
+
+  # Additional env variables appended to deployment
+  # Follows the format of [EnvVar spec](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.21/#envvar-v1-core)
+  additionalEnv:
+    # - name: FOO
+    #   value: bar
+
+  # Disable livenessProbe, used while debugging
+  livenessProbe:
+    enabled: true
+
+  monitoring:
+    port: 9090

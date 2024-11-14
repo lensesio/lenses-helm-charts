@@ -1,6 +1,6 @@
 # lenses-hq
 
-![Version: 6.0.0-alpha.14](https://img.shields.io/badge/Version-6.0.0--alpha.14-informational?style=flat-square) ![AppVersion: 6.0.0-alpha.14](https://img.shields.io/badge/AppVersion-6.0.0--alpha.14-informational?style=flat-square)
+![Version: 6.0.0-alpha.16](https://img.shields.io/badge/Version-6.0.0--alpha.16-informational?style=flat-square) ![AppVersion: 6.0.0-alpha.16](https://img.shields.io/badge/AppVersion-6.0.0--alpha.16-informational?style=flat-square)
 
 A chart for Lenses HQ deployment which provides a unified, streamlined view of the entire event infrastructure—whether on-premises or in the cloud—through a single, comprehensive interface.
 
@@ -50,57 +50,52 @@ The command deploys Lenses HQ on the Kubernetes cluster in the example configura
 | resources | object | `{"limits":{"memory":"5Gi"},"requests":{"memory":"4Gi"}}` | Pod resources |
 | securityContext | dict | `{}` | Deployment security context |
 | strategy | dict | `{}` | Deployment strategy |
-| tolerations | dict | `{}` | Deployment tolerations |
+| tolerations | dict | `[]` | Deployment tolerations |
 
-### Lenses HQ deployment service values
+### Lenses HQ Agent Ingress deployment service values
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| ingress.annotations | dict | `{}` | Custom Ingress annotations |
-| ingress.enabled | bool | `false` | If true, Ingress will be created |
-| ingress.host | tpl/string | `nil` | Set custom host name. (DNS name convention) |
-| ingress.tls | object | `{"enabled":false,"secretName":""}` | TLS if enabled load the tls.crt and tls.keys as a secrets and enable TLS on the ingress |
-| ingress.tls.enabled | bool | `false` | Set to true to enable HTTPS |
-| ingress.tls.secretName | string | `""` | Secret name where tls certificates are being stored. The TLS secret must contain keys named tls.crt and tls.key that contain the certificate and private key to use for TLS. |
-| restPort | int | `8080` | Lenses HQ container port |
-| service.annotations | dict | `{}` | Additional service annotations |
-| service.enabled | bool | `true` | Deciding factor whether Lenses HQ service will be created and which type |
-| service.externalTrafficPolicy | string | `nil` |  |
-| service.type | string | `"ClusterIP"` | Type of service to be created. |
-| servicePort | int | `80` | Lenses HQ service port, service targets restPort |
-| servicePortName | string | `"lenses-hq"` | Lenses HQ service port name |
+| ingress.agent.agentIngressConfig | string | `{}` | Object defines the Kubernetes Ingress resource for the agent, including the apiVersion, kind, metadata (e.g., name),  and spec with routing rules, host, HTTP paths, and the backend service details (name and port). |
+| ingress.agent.enabled | bool | `false` | If true, Ingress will be created |
+
+### Lenses HQ HTTP API deployment service values
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| ingress.http.annotations | dict | `{}` | Custom Ingress annotations |
+| ingress.http.enabled | bool | `false` | If true, Ingress will be created |
+| ingress.http.host | tpl/string |  | Set custom host name. (DNS name convention) |
+| ingress.http.tls | object | `{"enabled":false,"secretName":""}` | TLS if enabled load the tls.crt and tls.keys as a secrets and enable TLS on the ingress |
+| ingress.http.tls.enabled | bool | `false` | Set to true to enable HTTPS |
+| ingress.http.tls.secretName | string | `""` | Secret name where tls certificates are being stored. The TLS secret must contain keys named tls.crt and tls.key that contain the certificate and private key to use for TLS. |
 
 ### Lenses HQ Agent startup values
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| lensesHq.agents.address | string | `":10000"` | Address wherefrom agent will be listening at. **Required: true** |
-| lensesHq.agents.tls.cert.referenceFromSecret | string | `false` | Enables usage of secret for certificate. **Required: false** |
-| lensesHq.agents.tls.cert.secretKeyName | string | `""` | Secret key where within a secret where certificate is sotred. **Required: false** |
-| lensesHq.agents.tls.cert.secretName | string | `""` | Secret name where certificate is stored. **Required: false** |
-| lensesHq.agents.tls.cert.stringData | string | `""` | Sets the PEM formatted public certificate. **Required: false** |
-| lensesHq.agents.tls.enabled | string | `false` | Enables or disables TLS. **Required: true** |
-| lensesHq.agents.tls.privateKey | string | `{"secret":{"key":"","name":""}}` | Sets the PEM formatted private key. **Required: false** |
-| lensesHq.agents.tls.verboseLogs | string | `false` | Enabled verbose of TLS debug logs **Required: true** |
+| lensesHq.agent.address | string | `":10000"` | Address wherefrom agent will be listening at. **Required: true** |
+| lensesHq.agent.tls.cert.referenceFromSecret | string | `false` | Enables usage of secret for certificate. **Required: false** |
+| lensesHq.agent.tls.cert.secretKeyName | string | `""` | Secret key where within a secret where certificate is sotred. **Required: false** |
+| lensesHq.agent.tls.cert.secretName | string | `""` | Secret name where certificate is stored. **Required: false** |
+| lensesHq.agent.tls.cert.stringData | string | `""` | Sets the PEM formatted public certificate. **Required: false** |
+| lensesHq.agent.tls.enabled | string | `false` | Enables or disables TLS. **Required: true** |
+| lensesHq.agent.tls.privateKey | string | `{"secret":{"key":"","name":""}}` | Sets the PEM formatted private key. **Required: false** |
+| lensesHq.agent.tls.verboseLogs | string | `false` | Enabled verbose of TLS debug logs **Required: true** |
 
 ### Lenses HQ AUTH startup values
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | lensesHq.auth.administrators | list | `[]` | Grants administrator rights to users. **Required: false** |
-| lensesHq.auth.tls.cert.referenceFromSecret | string | `false` | Enables usage of secret for certificate. **Required: false** |
-| lensesHq.auth.tls.cert.secretKeyName | string | `""` | Secret key where within a secret where certificate is sotred. **Required: false** |
-| lensesHq.auth.tls.cert.secretName | string | `""` | Secret name where certificate is stored. **Required: false** |
-| lensesHq.auth.tls.cert.stringData | string | `""` | Sets the PEM formatted public certificate. **Required: false** |
-| lensesHq.auth.tls.enabled | string | `false` | Enables or disables TLS. **Required: true** |
-| lensesHq.auth.tls.privateKey | string | `{"secret":{"key":"","name":""}}` | Sets the PEM formatted private key. **Required: false** |
-| lensesHq.auth.tls.verboseLogs | string | `false` | Enabled verbose of TLS debug logs **Required: true** |
+| lensesHq.auth.users | list | `[]` | Adds uses for password based auth **Required: false** |
 
 ### Lenses HQ SAML startup values
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | lensesHq.auth.saml.baseURL | string | `""` | Defines base URL of Panoptes for IdP redirects. **Required: true** |
+| lensesHq.auth.saml.enabled | bool | `false` | Enables SAML / SSO authentication **Required: true** |
 | lensesHq.auth.saml.entityID | string | `""` | Defines the Entity ID. **Required: true** |
 | lensesHq.auth.saml.groupAttributeKey | string | `"groups"` | Sets the attribute name for group names. **Required: false** |
 | lensesHq.auth.saml.metadata | object | `{"referenceFromSecret":false,"secretKeyName":"metadata.xml","secretName":"","stringData":""}` | Contains the IdP issued XML metadata blob. Example: <?xml version="1.0" ... (big blob of xml) </md:EntityDescriptor> **Required: true** |
@@ -111,6 +106,7 @@ The command deploys Lenses HQ on the Kubernetes cluster in the example configura
 | lensesHq.auth.saml.uiRootURL | string | `"/"` | Controls where to redirect to upon successful authentication. **Required: false** |
 | lensesHq.auth.saml.userCreationMode | string | `"manual"` | Controls how the creation of users should be handled in relation to SSO information Allowed values are: sso | manual **Required: false** |
 | lensesHq.auth.saml.usersGroupMembershipManagementMode | string | `"manual"` | Controls how the management of a user's group membership should be handled in relation to SSO information. Allowed values are: sso | manual **Required: false** |
+| lensesHq.auth.sessionDuration | string | `"24h"` | # Sets the duration of a session. The duration is a string that follows the Go time.Duration format. Valid time units are "ns", "us" (or "µs"), "ms", "s", "m", "h". The duration is used to set the expiration time of the session cookie. **Required: false** |
 
 ### Lenses HQ HTTP startup values
 
@@ -120,6 +116,23 @@ The command deploys Lenses HQ on the Kubernetes cluster in the example configura
 | lensesHq.http.accessControlAllowOrigin | string | `[]` | Sets the address the HTTP server listens at. **Required: false** |
 | lensesHq.http.address | string | `":8080"` | Sets the address the HTTP servers listens at. **Required: true** |
 | lensesHq.http.secureSessionCookies | bool | `true` | Sets the "Secure" attribute on session cookies. **Required: false** |
+| lensesHq.http.tls.cert.referenceFromSecret | string | `false` | Enables usage of secret for certificate. **Required: false** |
+| lensesHq.http.tls.cert.secretKeyName | string | `""` | Secret key where within a secret where certificate is sotred. **Required: false** |
+| lensesHq.http.tls.cert.secretName | string | `""` | Secret name where certificate is stored. **Required: false** |
+| lensesHq.http.tls.cert.stringData | string | `""` | Sets the PEM formatted public certificate. **Required: false** |
+| lensesHq.http.tls.enabled | string | `false` | Enables or disables TLS. **Required: true** |
+| lensesHq.http.tls.privateKey | string | `{"secret":{"key":"","name":""}}` | Sets the PEM formatted private key. **Required: false** |
+| lensesHq.http.tls.verboseLogs | string | `false` | Enabled verbose of TLS debug logs **Required: true** |
+
+### Lenses HQ license values
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| lensesHq.license.acceptEULA | string | `false` | Boolean 'acceptEULA' marks the end-user license agreement (EULA) as accepted. You can find the EULA at: https://lenses.io/legals/eula. **Required: false** |
+| lensesHq.license.referenceFromSecret | string | `false` | Enables usage of secret for license. **Required: false** |
+| lensesHq.license.secretKeyName | string | `""` | Secret key where within a secret where license is sotred. **Required: false** |
+| lensesHq.license.secretName | string | `""` | Secret name where license is stored. **Required: false** |
+| lensesHq.license.stringData | string | `""` | Sets the license as a stirng. **Required: false** |
 
 ### Lenses HQ startup values
 
@@ -173,11 +186,24 @@ The command deploys Lenses HQ on the Kubernetes cluster in the example configura
 | serviceAccount.create | bool | `false` | In case "true" new SA will be created with service.name as a SA name. |
 | serviceAccount.name | string | `"lenses"` | Name of Service Account. In case serviceAccount.create is *false*, existing SA with defined name here will be used. |
 
+### Lenses HQ deployment service values
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| restPort | int | `8080` | Lenses HQ container port |
+| service.annotations | dict | `{}` | Additional service annotations |
+| service.enabled | bool | `true` | Deciding factor whether Lenses HQ service will be created and which type |
+| service.externalTrafficPolicy | string | `nil` |  |
+| service.type | string | `"ClusterIP"` | Type of service to be created. |
+| servicePort | int | `80` | Lenses HQ service port, service targets restPort |
+| servicePortName | string | `"lenses-hq"` | Lenses HQ service port name |
+
 ### Other Values
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | fullnameOverride | string | `""` |  |
+| ingress.http.ingressClassName | string | `""` |  |
 | nameOverride | string | `""` |  |
 
 ----------------------------------------------

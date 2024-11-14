@@ -1,29 +1,29 @@
-{{- if .Values.ingress.enabled}}
-apiVersion: {{include "ingress.apiVersion" .}}
+{{- if .Values.ingress.http.enabled }}
+apiVersion: {{ include "ingress.apiVersion" . }}
 kind: Ingress
 metadata:
-  name:  {{include "fullname" .}}
+  name: {{ include "fullname" . }}-http
   labels:
-    app: {{include "fullname" .}}
-    chart: {{printf "%s-%s" .Chart.Name .Chart.Version}}
+    app: {{ include "fullname" . }}
+    chart: {{ printf "%s-%s" .Chart.Name .Chart.Version }}
     component: "lenses-hq"
-    heritage: {{.Release.Service}}
-    release: {{.Release.Name}}
-    lenses.io/app: {{include "fullname" .}}
+    heritage: {{ .Release.Service }}
+    release: {{ .Release.Name}}
+    lenses.io/app: {{ include "fullname" . }}
     lenses.io/app.type: lenses-hq-ingress
     {{- range $key, $value := .Values.labels }}
     {{ $key }}: {{ $value | quote }}
     {{- end}}
   annotations:
-  {{- range $key, $value := .Values.ingress.annotations}}
+  {{- range $key, $value := .Values.ingress.http.annotations}}
     {{$key}}: {{$value | quote}}
   {{- end}}
 spec:
-  {{- if .Values.ingress.ingressClassName}}
-  ingressClassName: {{.Values.ingress.ingressClassName | quote}}
+  {{- if .Values.ingress.http.ingressClassName}}
+  ingressClassName: {{ .Values.ingress.http.ingressClassName | quote}}
   {{- end}}
   rules:
-  - host: {{ .Values.ingress.host | quote }}
+  - host: {{ .Values.ingress.http.host | quote }}
     http:
       paths:
       - path: "/"
@@ -39,12 +39,12 @@ spec:
           serviceName: {{include "fullname" . | quote}}
           servicePort: {{.Values.servicePort}}
         {{- end}}
-  {{- if .Values.ingress.tls.enabled}}
+  {{- if .Values.ingress.http.tls.enabled}}
   tls:
     - hosts:
-      - {{ .Values.ingress.host | quote}}
-      {{- if .Values.ingress.tls.secretName}}
-      secretName: {{ .Values.ingress.tls.secretName}}
+      - {{ .Values.ingress.http.host | quote}}
+      {{- if .Values.ingress.http.tls.secretName}}
+      secretName: {{ .Values.ingress.http.tls.secretName}}
       {{- else}}
       secretName: {{ include "fullname" . | quote}}
       {{- end}}

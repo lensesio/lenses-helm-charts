@@ -4,6 +4,10 @@ image:
 ingress:
   host: lenses.url
 lensesHq:
+  agents:
+    address: ""
+    tls:
+      enabled: false
   postgres:
     passwordSecret:
       key: lenses-db-secret

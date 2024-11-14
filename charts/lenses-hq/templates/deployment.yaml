@@ -144,12 +144,19 @@ spec:
                 key: {{ .Values.lensesHq.http.tls.cert.secretKeyName }}
           {{- end }}
           {{- end }}
-          {{ if .Values.lensesHq.auth.saml.metadata.referenceFromSecret }}
+          {{ if and .Values.lensesHq.auth.saml.enabled .Values.lensesHq.auth.saml.metadata.referenceFromSecret }}
           - name: LENSESHQ_AUTH_SAML_METADATA
             valueFrom:
               secretKeyRef:
                 name: {{ .Values.lensesHq.auth.saml.metadata.secretName }}
                 key: {{ .Values.lensesHq.auth.saml.metadata.secretKeyName }}
+          {{- end }}
+          {{ if .Values.lensesHq.license.referenceFromSecret }}
+          - name: LENSESHQ_LICENSE
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.lensesHq.license.secretName }}
+                key: {{ .Values.lensesHq.license.secretKeyName }}
           {{- end }}
           - name: LENSESHQ_PG_PASSWORD
             valueFrom:

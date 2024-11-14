@@ -1,0 +1,3 @@
+{{- if .Values.ingress.agent.enabled }}
+{{- toYaml .Values.ingress.agent.agentIngressConfig | nindent 0 }}
+{{- end -}}

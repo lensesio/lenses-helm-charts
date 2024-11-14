@@ -127,7 +127,7 @@ persistence:
     # -- (boolean) Extra volume creation dedicated for logs.
     # @section -- Persistence scope values
     enabled: true
-  # Target an pre-existing volume claim to use it as Lenses Persistent volume
+  ## Target a pre-existing volume claim to use it as Lenses Persistent volume
   # existingClaim:
 
   ## Policies data Persistent Volume Storage Class
@@ -189,14 +189,14 @@ lenses:
         # @section -- Agent <-> HQ scope values
         type: ""
 
-        # Value which hold agentKey string and from which secret will be created
+        ## Value which hold agentKey string and from which secret will be created
         ## necessary only in case secret type is "createNew"
         # value: ""
 
-        # Key from secret's data where Lenses agent_key is being stored
+        ## Key from secret's data where Lenses agent_key is being stored
         key: ""
-        # Secret name whereLenses agent_key will be read from.
-        # Not necessary when externalSecret is being used
+        ## Secret name where Lenses agent_key will be read from.
+        ## Not necessary when externalSecret is being used
         name: ""
         # Required in case secret.type: "externalSecret", alongisde secret.key
         externalSecret:
@@ -205,10 +205,10 @@ lenses:
             clusterSecretStore:
               name: ""
 
-        # Required in case secret.type: "precreated": name & key
-        ## type: "precreated"
-        ## name: "secret-name"
-        ## key: "secret-key"
+        ## Required in case secret.type: "precreated": name & key
+        # type: "precreated"
+        # name: "secret-name"
+        # key: "secret-key"
 
   provision:
     # -- (boolean) Enables provisioning to automate connections from Agent
@@ -226,7 +226,7 @@ lenses:
 
     # You can find examples at https://github.com/lensesio/lenses-helm-charts/tree/release/5.5/examples
     #connections:
-    #  grpcServer:
+    #  lensesHq:
     #    - name: lenses-hq
     #      version: 1
     #      tags: ['hq']
@@ -235,8 +235,8 @@ lenses:
     #          value: panoptes-backend.panoptes-master.svc.cluster.local
     #        port:
     #          value: 10000
-    #        apiKey:
-    #          value: ${LENSES_HQ_API_KEY}
+    #        agentKey:
+    #          value: ${LENSESHQ_AGENT_KEY}
     #        sslEnabled:
     #          value: false
           # sslEnabledProtocols:

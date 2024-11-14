@@ -74,7 +74,7 @@
             "examples": [{}]
         },
         "tolerations": {
-            "type": "object",
+            "type": "array",
             "default": {},
             "title": "The tolerations Schema",
             "required": [],
@@ -317,45 +317,11 @@
             "type": "object",
             "default": {},
             "title": "The ingress Schema",
-            "required": [
-                "enabled",
-                "host",
-                "annotations",
-                "tls"
-            ],
-            "properties": {
-                "enabled": {
-                    "type": "boolean",
-                    "default": false,
-                    "title": "The enabled Schema",
-                    "examples": [
-                        false,
-                        true
-                    ]
-                },
-                "host": {
-                    "type": "string",
-                    "default": null,
-                    "title": "The host Schema",
-                    "examples": [
-                        null
-                    ]
-                },
-                "annotations": {
+            "properties":{
+                "agent":{
                     "type": "object",
                     "default": {},
-                    "title": "The annotations Schema",
-                    "required": [],
-                    "properties": {},
-                    "examples": [{}]
-                },
-                "tls": {
-                    "type": "object",
-                    "default": {},
-                    "title": "The tls Schema",
-                    "required": [
-                        "enabled"
-                    ],
+                    "title": "The agent ingress Schema",
                     "properties": {
                         "enabled": {
                             "type": "boolean",
@@ -365,25 +331,91 @@
                                 false,
                                 true
                             ]
+                        },
+                        "agentIngressConfig": {
+                            "type": "object",
+                            "default": {},
+                            "title": "Object defines the Kubernetes Ingress resource for the agent, including the apiVersion, kind, metadata (e.g., name), and spec with routing rules, host, HTTP paths, and the backend service details (name and port).",
+                            "examples": [
+                                ""
+                            ]
+                        }
+                    }
+                },
+                "http":{
+                    "type": "object",
+                    "default": {},
+                    "title": "The http ingress Schema",
+                    "required": [
+                        "enabled",
+                        "host",
+                        "annotations",
+                        "tls"
+                    ],
+                    "properties": {
+                        "enabled": {
+                            "type": "boolean",
+                            "default": false,
+                            "title": "Enables ingress for http",
+                            "examples": [
+                                false,
+                                true
+                            ]
+                        },
+                        "host": {
+                            "type": "string",
+                            "default": null,
+                            "title": "The host Schema",
+                            "examples": [
+                                null
+                            ]
+                        },
+                        "annotations": {
+                            "type": "object",
+                            "default": {},
+                            "title": "The annotations Schema",
+                            "required": [],
+                            "properties": {},
+                            "examples": [{}]
+                        },
+                        "tls": {
+                            "type": "object",
+                            "default": {},
+                            "title": "The tls Schema",
+                            "required": [
+                                "enabled"
+                            ],
+                            "properties": {
+                                "enabled": {
+                                    "type": "boolean",
+                                    "default": false,
+                                    "title": "The enabled Schema",
+                                    "examples": [
+                                        false,
+                                        true
+                                    ]
+                                }
+                            },
+                            "examples": [{
+                                "enabled": false,
+                                "crt": "",
+                                "key": ""
+                            }]
                         }
                     },
                     "examples": [{
                         "enabled": false,
-                        "crt": "",
-                        "key": ""
+                        "host": null,
+                        "annotations": {},
+                        "tls": {
+                            "enabled": false,
+                            "crt": "",
+                            "key": ""
+                        }
                     }]
                 }
-            },
-            "examples": [{
-                "enabled": false,
-                "host": null,
-                "annotations": {},
-                "tls": {
-                    "enabled": false,
-                    "crt": "",
-                    "key": ""
-                }
-            }]
+
+            }
         },
         "lensesHq": {
             "type": "object",
@@ -420,8 +452,7 @@
                             "default": {},
                             "title": "The tls Schema",
                             "required": [
-                                "enabled",
-                                "verboseLogs"
+                                "enabled"
                             ],
                             "properties": {
                                 "enabled": {
@@ -525,8 +556,7 @@
                     "default": {},
                     "title": "The Auth Schema",
                     "required": [
-                        "administrators",
-                        "saml"
+                        "administrators"
                 ],
                 "properties": {
                     "administrators": {
@@ -537,11 +567,41 @@
                             ["test@testcompany.com","test2@testcompany.com"]
                         ]
                     },
+                    "sessionDuration": {
+                        "type": "string",
+                        "default": "24h",
+                        "title": "Sets the duration of a session",
+                        "examples": [
+                            ["20h30m", "24h"]
+                        ]
+                    },
+                    "users": {
+                        "type": "array",
+                        "default": "",
+                        "title": "Username and password for password based auth.",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "username": {
+                                    "type": "string",
+                                    "description": "The username for the user"
+                                },
+                                "password": {
+                                    "type": "string",
+                                    "description": "The bcrypt hash of the user's password",
+                                    "pattern": "^\\$2[aby]\\$[0-9]{2}\\$[./A-Za-z0-9]{53}$"
+                                }
+                            },
+                            "required": ["username", "password"],
+                            "additionalProperties": false
+                        }
+                    },
                     "saml": {
                         "type": "object",
                         "default": {},
                         "title": "The SAML Schema",
                         "required": [
+                            "enabled",
                             "baseURL",
                             "entityID",
                             "metadata",
@@ -555,6 +615,15 @@
                                 "title": "The baseURL Schema",
                                 "examples": [
                                     "https://saml.example.com/api/saml/sso"
+                                ]
+                            },
+                            "enabled": {
+                                "type": "boolean",
+                                "default": false,
+                                "title": "Enables SAML / SSO",
+                                "examples": [
+                                   true,
+                                   false
                                 ]
                             },
                             "entityID": {
@@ -576,7 +645,7 @@
                                     "referenceFromSecret": {
                                         "type": "boolean",
                                         "default": false,
-                                        "title": "Read metadata xml file from ConfigMap Schema",
+                                        "title": "Read metadata xml file from Secret Schema",
                                         "examples": [
                                             true,
                                             false
@@ -587,7 +656,7 @@
                                         "default": "",
                                         "title": "Secret name where Saml metadata is stored Schema",
                                         "examples": [
-                                            "metadata-configmap"
+                                            "metadata-secret"
                                         ]
                                     },
                                     "secretKeyName": {
@@ -765,6 +834,57 @@
                         "address": ":8080",
                         "accessControlAllowOrigin":["https://example.io","http://example.io"]
                     }]
+                },
+                "license": {
+                    "type": "object",
+                    "default": "",
+                    "title": "The license Schema",
+                    "examples": [
+                        ""
+                    ],
+                    "properties": {
+                        "referenceFromSecret": {
+                            "type": "boolean",
+                            "default": false,
+                            "title": "Read license from secret Schema",
+                            "examples": [
+                                true,
+                                false
+                            ]
+                        },
+                        "secretName": {
+                            "type": "string",
+                            "default": "",
+                            "title": "Secret name where license is stored Schema",
+                            "examples": [
+                                "license-secret"
+                            ]
+                        },
+                        "acceptEULA": {
+                            "type": "boolean",
+                            "default": false,
+                            "title": "Marks the end-user license agreement (EULA) as accepted.",
+                            "examples": [
+                                false, true
+                            ]
+                        },
+                        "secretKeyName": {
+                            "type": "string",
+                            "default": "",
+                            "title": "Secret key used to reference secret license information.",
+                            "examples": [
+                                "license"
+                            ]
+                        },
+                        "stringData": {
+                            "type": "string",
+                            "default": "",
+                            "title": " Contains the license value.",
+                            "examples": [
+                                "license_key_"
+                            ]
+                        }
+                    }
                 },
                 "storage": {
                     "type": "object",

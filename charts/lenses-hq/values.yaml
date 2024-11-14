@@ -18,7 +18,7 @@ strategy: {}
 nodeSelector: {}
 # -- (dict) Deployment tolerations
 # @section -- Custom deployment values
-tolerations: {}
+tolerations: []
 # -- (dict) Deployment affinity rules
 # @section -- Custom deployment values
 affinity: {}
@@ -133,38 +133,53 @@ service:
   #   - 0.0.0.0/0
 
 ingress:
-  # -- (bool) If true, Ingress will be created
-  # @section -- Lenses HQ deployment service values
-  enabled: false
+  agent:
+    # -- (bool) If true, Ingress will be created
+    # @section -- Lenses HQ Agent Ingress deployment service values
+    enabled: false
+    # -- (string) Object defines the Kubernetes Ingress resource for the agent, including the apiVersion, kind, metadata (e.g., name),
+    #  and spec with routing rules, host, HTTP paths, and the backend service details (name and port).
+    # @section -- Lenses HQ Agent Ingress deployment service values
+    agentIngressConfig: {}
 
-  # -- (tpl/string) Set custom host name. (DNS name convention)
-  # @notationType -- tpl
-  # @section -- Lenses HQ deployment service values
-  host:
-  # ingressClassName:
 
-  # -- (dict) Custom Ingress annotations
-  # @section -- Lenses HQ deployment service values
-  annotations: {}
-    # Optionally add here the annotations related to the ingress provider, see examples below:
-    # kubernetes.io/ingress.class: traefik
-    # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: 'true'
-    # nginx.ingress.kubernetes.io/rewrite-target: /
-
-  # -- TLS if enabled load the tls.crt and tls.keys as a secrets and enable TLS on the ingress
-  # @section -- Lenses HQ deployment service values
-  tls:
-    # -- (bool) Set to true to enable HTTPS
-    # @section -- Lenses HQ deployment service values
+  http:
+    # -- (bool) If true, Ingress will be created
+    # @section -- Lenses HQ HTTP API deployment service values
     enabled: false
 
-    # -- (string) Secret name where tls certificates are being stored. The TLS secret must contain keys named tls.crt and tls.key that contain the certificate and private key to use for TLS.
-    # @section -- Lenses HQ deployment service values
-    secretName: ""
+    # -- (tpl/string) Set custom host name. (DNS name convention)
+    # @notationType -- tpl
+    # @section -- Lenses HQ HTTP API deployment service values
+    host: ""
+
+    # @notationType -- tpl
+    # @section -- Lenses HQ HTTP API deployment service values
+    ingressClassName: ""
+
+    # -- (dict) Custom Ingress annotations
+    # @section -- Lenses HQ HTTP API deployment service values
+    annotations: {}
+      # Optionally add here the annotations related to the ingress provider, see examples below:
+      # kubernetes.io/ingress.class: traefik
+      # kubernetes.io/ingress.class: nginx
+      # kubernetes.io/tls-acme: 'true'
+      # nginx.ingress.kubernetes.io/rewrite-target: /
+
+    # -- TLS if enabled load the tls.crt and tls.keys as a secrets and enable TLS on the ingress
+    # @section -- Lenses HQ HTTP API deployment service values
+    tls:
+      # -- (bool) Set to true to enable HTTPS
+      # @section -- Lenses HQ HTTP API deployment service values
+      enabled: false
+
+      # -- (string) Secret name where tls certificates are being stored.
+      # The TLS secret must contain keys named tls.crt and tls.key that contain the certificate and private key to use for TLS.
+      # @section -- Lenses HQ HTTP API deployment service values
+      secretName: ""
 
 lensesHq:
-  agents:
+  agent:
     # -- (string) Address wherefrom agent will be listening at.
     # @section -- Lenses HQ Agent startup values
     # **Required: true**
@@ -214,7 +229,25 @@ lensesHq:
     # **Required: false**
     administrators: []
 
+    # -- Adds uses for password based auth
+    # @section -- Lenses HQ AUTH startup values
+    # **Required: false**
+    users: []
+
+    # -- (string) # Sets the duration of a session. The duration is a
+    # string that follows the Go time.Duration format. Valid time units are "ns",
+    # "us" (or "µs"), "ms", "s", "m", "h". The duration is used to set the
+    # expiration time of the session cookie.
+    # @section -- Lenses HQ SAML startup values
+    # **Required: false**
+    sessionDuration: "24h"
+
+
     saml:
+      # -- Enables SAML / SSO authentication
+      # @section -- Lenses HQ SAML startup values
+      # **Required: true**
+      enabled: false
       # -- Defines base URL of Panoptes for IdP redirects.
       # @section -- Lenses HQ SAML startup values
       # **Required: true**
@@ -433,13 +466,36 @@ lensesHq:
     # **Required: false**
     prometheusAddress: ":9090"
 
+  # @section -- Lenses HQ license values
+  license:
+    # -- (string) Enables usage of secret for license.
+    # @section -- Lenses HQ license values
+    # **Required: false**
+    referenceFromSecret: false
+    # -- (string) Secret name where license is stored.
+    # @section -- Lenses HQ license values
+    # **Required: false**
+    secretName: ""
+    # -- (string) Secret key where within a secret where license is sotred.
+    # @section -- Lenses HQ license values
+    # **Required: false**
+    secretKeyName: ""
+    # -- (string) Sets the license as a stirng.
+    # @section -- Lenses HQ license values
+    # **Required: false**
+    stringData: ""
+    # -- (string) Boolean 'acceptEULA' marks the end-user license agreement (EULA) as accepted.
+    # You can find the EULA at: https://lenses.io/legals/eula.
+    # @section -- Lenses HQ license values
+    # **Required: false**
+    acceptEULA: false
+
   # @section -- Lenses HQ startup values
   # Disable livenessProbe, used while debugging
   livenessProbe:
     # -- (bool)
     # @section -- Lenses HQ startup values
     enabled: true
-
     tls:
       # -- Enabling HTTPS forliveness probe.
       # @section -- Lenses HQ startup values
