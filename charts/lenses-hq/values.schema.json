@@ -74,7 +74,7 @@
             "examples": [{}]
         },
         "tolerations": {
-            "type": "object",
+            "type": "array",
             "default": {},
             "title": "The tolerations Schema",
             "required": [],
