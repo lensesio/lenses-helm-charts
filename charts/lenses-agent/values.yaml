@@ -110,17 +110,20 @@ serviceAccount:
   annotations: {}
 
 persistence:
-  # -- (list) Access mode rights for created persistence volumes.
-  # @section -- Persistence scope values
-  accessModes:
-    - ReadWriteOnce
-  # -- (string) Size of persistence that will be created.
-  # @section -- Persistence scope values
-  size: 5Gi
   log:
     # -- (boolean) Extra volume creation dedicated for logs.
     # @section -- Persistence scope values
     enabled: true
+    # -- (boolean) Annotations dedicated for logs.
+    # @section -- Persistence scope values
+    annotations: {}
+    # -- (list) Access mode rights for created persistence volumes.
+    # @section -- Persistence scope values
+    accessModes:
+      - ReadWriteOnce
+    # -- (string) Size of persistence that will be created.
+    # @section -- Persistence scope values
+    size: 5Gi
   ## Target a pre-existing volume claim to use it as Lenses Persistent volume
   # existingClaim:
 

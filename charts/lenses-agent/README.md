@@ -133,9 +133,10 @@ The command deploys Lenses Agent on the Kubernetes cluster in the example config
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| persistence.accessModes | list | `["ReadWriteOnce"]` | Access mode rights for created persistence volumes. |
+| persistence.log.accessModes | list | `["ReadWriteOnce"]` | Access mode rights for created persistence volumes. |
+| persistence.log.annotations | boolean | `{}` | Annotations dedicated for logs. |
 | persistence.log.enabled | boolean | `true` | Extra volume creation dedicated for logs. |
-| persistence.size | string | `"5Gi"` | Size of persistence that will be created. |
+| persistence.log.size | string | `"5Gi"` | Size of persistence that will be created. |
 
 ### Lenses Agent deployment service values
 

@@ -45,13 +45,12 @@ serviceAccount:
 
 
 persistence:
-  enabled: true
-  accessModes:
-    - ReadWriteOnce
-  size: 5Gi
-  storageClass: ebs-csi-sc
   log:
     enabled: true
+    accessModes:
+      - ReadWriteOnce
+    size: 5Gi
+    storageClass: ebs-csi-sc
 
 additionalVolumeMounts:
   - name: grpc-truststore
