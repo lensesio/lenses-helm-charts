@@ -107,11 +107,6 @@ spec:
         - name: config
           configMap:
             name: {{include "fullname" . | quote}}
-        {{- if .Values.persistence.enabled }}
-        - name: storage
-          persistentVolumeClaim:
-            claimName: {{ default (include "claimName" .) .Values.persistence.existingClaim }}
-        {{- end }}
         {{- if .Values.persistence.log.enabled }}
         - name: logs
           persistentVolumeClaim:
@@ -149,10 +144,6 @@ spec:
           - name: config
             mountPath: "/mnt/settings/lenses.append.conf"
             subPath: "lenses.append.conf"
-          {{- if .Values.persistence.enabled }}
-          - name: storage
-            mountPath: "/data/storage"
-          {{- end }}
           {{- if .Values.persistence.log.enabled }}
           - name: logs
             mountPath: "/data/log"

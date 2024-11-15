@@ -110,12 +110,6 @@ serviceAccount:
   annotations: {}
 
 persistence:
-  # -- (boolean) If you use Data Policies module enable a Persistent Volume to keep your data policies rule.
-  # Also used when lenses.storage.enabled: false, and an H2 local filesystem database is used, instead of Postgresql.
-  # https://docs.lenses.io/current/installation/kubernetes/persistence/
-  # @section -- Persistence scope values
-  enabled: true
-
   # -- (list) Access mode rights for created persistence volumes.
   # @section -- Persistence scope values
   accessModes:

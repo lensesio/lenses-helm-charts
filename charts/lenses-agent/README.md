@@ -134,7 +134,6 @@ The command deploys Lenses Agent on the Kubernetes cluster in the example config
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | persistence.accessModes | list | `["ReadWriteOnce"]` | Access mode rights for created persistence volumes. |
-| persistence.enabled | boolean | `true` | If you use Data Policies module enable a Persistent Volume to keep your data policies rule. Also used when lenses.storage.enabled: false, and an H2 local filesystem database is used, instead of Postgresql. https://docs.lenses.io/current/installation/kubernetes/persistence/ |
 | persistence.log.enabled | boolean | `true` | Extra volume creation dedicated for logs. |
 | persistence.size | string | `"5Gi"` | Size of persistence that will be created. |
 
