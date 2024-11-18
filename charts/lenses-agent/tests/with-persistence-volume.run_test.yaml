@@ -18,9 +18,9 @@ tests:
         contains:
           path: spec.template.spec.volumes
           content:
-            name: storage
+            name: logs
             persistentVolumeClaim:
-              claimName: RELEASE-NAME-claim
+              claimName: RELEASE-NAME-logsclaim
       - template: logs-volume-claim.yaml
         contains:
           path: spec.accessModes

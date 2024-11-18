@@ -151,12 +151,10 @@ spec:
           {{- if .Values.additionalVolumeMounts }}
             {{- toYaml .Values.additionalVolumeMounts | nindent 10 }}
           {{- end }}
-        {{- if and .Values.lensesAgent.provision.enabled (eq .Values.lensesAgent.provision.version "2") }}
           - name: provision-secrets
             mountPath: {{ $.Values.lensesAgent.provision.path }}
           - name: provision-secrets-files
             mountPath: {{ $.Values.lensesAgent.provision.path }}/files
-        {{- end }}
         {{- if and (hasKey .Values "containerSecurityContext") (hasKey .Values.containerSecurityContext "readOnlyRootFilesystem") (eq .Values.containerSecurityContext.readOnlyRootFilesystem true) }}
           - name: tmp-volume
             mountPath: /tmp
@@ -209,14 +207,12 @@ spec:
         - name: LENSES_GRAFANA
           value: {{ .Values.lensesAgent.grafanaUrl | quote }}
         {{- end }}
-        {{- if and .Values.lensesAgent.provision.enabled (eq .Values.lensesAgent.provision.version "2") }}
         # Provisioning
         - name: LENSES_PROVISIONING_PATH
           value: {{ .Values.lensesAgent.provision.path }}
         {{- if .Values.lensesAgent.provision.interval }}
         - name: LENSES_PROVISIONING_INTERVAL
           value: {{ .Values.lensesAgent.provision.interval }}
-        {{- end }}
         {{- if .Values.monitoring.port }}
         - name: PROMETHEUS_METRICS_PORT
           value: {{ .Values.monitoring.port | quote }}

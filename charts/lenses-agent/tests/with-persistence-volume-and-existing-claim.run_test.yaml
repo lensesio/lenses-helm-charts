@@ -16,11 +16,11 @@ tests:
           path: spec.template.spec.containers[0].volumeMounts
           content:
             mountPath: /data/log
-            name: log
+            name: logs
       - template: deployment.yaml
         contains:
           path: spec.template.spec.volumes
           content:
-            name: storage
+            name: logs
             persistentVolumeClaim:
               claimName: foobar

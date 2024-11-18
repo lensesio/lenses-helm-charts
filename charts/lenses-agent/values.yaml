@@ -208,14 +208,6 @@ lensesAgent:
         # key: "secret-key"
 
   provision:
-    # -- (boolean) Enables provisioning to automate connections from Agent
-    # Possible values: createNew | precreated | externalSecret
-    # @section -- Agent Provision scope values
-    enabled: true
-    # -- (string) Version of provisioning that will be used, currently only "2" is supported.
-    # Property is still here as a transition phase and will be removed in the future.
-    # @section -- Agent Provision scope values
-    version: "2"
     # -- (string) Path where provisioner will be initiated.
     # @section -- Agent Provision scope values
     path: /mnt/provision-secrets

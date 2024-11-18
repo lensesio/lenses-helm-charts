@@ -10,8 +10,6 @@ tests:
     set:
       lensesAgent:
         provision:
-          enabled: true
-          version: "2"
           connections:
             key: this is valid yaml
             values:
@@ -44,8 +42,6 @@ tests:
     set:
       lensesAgent:
         provision:
-          enabled: true
-          version: "2"
     asserts:
       - template: provision-secrets-v2.yaml
         failedTemplate:
@@ -54,8 +50,6 @@ tests:
     set:
       lensesAgent:
         provision:
-          enabled: true
-          version: "2"
           connections:
             goo: loo
           secrets:
@@ -90,8 +84,6 @@ tests:
     set:
       lensesAgent:
         provision:
-          enabled: true
-          version: "2"
           connections:
             goo: loo
       additionalVolumes:
