@@ -20,7 +20,7 @@ tests:
           of: Deployment
       - equal:
           path: spec.template.spec.containers[0].image
-          value: lensesio/lenses:bar
+          value: lensesio/lensesAgent:bar
 
   - it: should test replica set cannot be overriden
     set:
@@ -80,7 +80,7 @@ tests:
 
   - it: should remove livenessProbe if disabled
     set:
-      lenses:
+      lensesAgent:
         livenessProbe:
           enabled: false
     asserts:
@@ -89,7 +89,7 @@ tests:
 
   - it: should add pauseExec if enabled
     set:
-      lenses:
+      lensesAgent:
         pauseExec:
           enabled: true
     asserts:
@@ -101,7 +101,7 @@ tests:
 
   - it: should add env vars when set
     set:
-      lenses:
+      lensesAgent:
         additionalEnv:
           - name: LENSES_CONNECTORS_INFO
             value: |

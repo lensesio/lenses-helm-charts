@@ -1,4 +1,4 @@
-lenses:
+lensesAgent:
   # Configuration necessary for agent connecting to HQ
   hq:
     agentKey:

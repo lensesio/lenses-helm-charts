@@ -175,7 +175,7 @@ containerSecurityContext:
   # @section -- Extras
   readOnlyRootFilesystem: false
 
-lenses:
+lensesAgent:
   # Configuration necessary for agent connecting to HQ
   # @section -- Agent <-> HQ scope values
   hq:

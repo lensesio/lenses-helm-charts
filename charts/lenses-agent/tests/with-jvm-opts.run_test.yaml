@@ -11,7 +11,7 @@ tests:
             value: any value
   - it: should work with user defined heapOpts
     set:
-      lenses:
+      lensesAgent:
         jvm:
           heapOpts: -Xmx8g -Xms8g
     asserts:

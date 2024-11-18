@@ -23,13 +23,13 @@ spec:
 {{- if (eq "-" .Values.persistence.log.storageClass)}}
   storageClassName: ""
 {{- else }}
-  storageClassName: {{.Values.persistence.log.storageClass}}
+  storageClassName: {{ .Values.persistence.log.storageClass }}
 {{- end }}
 {{- end }}
   resources:
     requests:
 {{- if and (hasKey .Values.persistence "log") (hasKey .Values.persistence.log "size")}}
-     storage: {{.Values.persistence.log.size | quote}}
+     storage: {{ .Values.persistence.log.size | quote }}
 {{- else }}
      storage: "300Mi"
 {{- end -}}
