@@ -22,7 +22,7 @@ tests:
       - template: provision-secrets-v2.yaml
         equal:
           path: stringData.provisioning\.yaml
-          value: |
+          value: |-
             key: this is valid yaml
             moreValues: |-
               and a multiline
@@ -41,7 +41,7 @@ tests:
   - it: should fail with provision enabled but without a yaml value
     set:
       lensesAgent:
-        provision:
+        provision: {}
     asserts:
       - template: provision-secrets-v2.yaml
         failedTemplate:

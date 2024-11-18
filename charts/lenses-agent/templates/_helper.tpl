@@ -46,7 +46,7 @@ Create a default fully qualified app name.
 {{- end -}}
 {{- end -}}
 
-{{- define "lensesImage" -}}
+{{- define "lensesAgentImage" -}}
 {{- if .Values.image.tag -}}
 {{ printf "%s:%s" .Values.image.repository .Values.image.tag }}
 {{- else -}}
@@ -95,7 +95,7 @@ __topology__metrics
 {{- end -}}
 
 
-{{- define "lensesAppendConf" -}}
+{{- define "lensesAgentAppendConf" -}}
 {{- if .Values.lensesAgent.storage.postgres.enabled }}
 lenses.storage.postgres.host={{ required "PostgreSQL 'host' value is mandatory" .Values.lensesAgent.storage.postgres.host | quote }}
 lenses.storage.postgres.database={{ required "PostgreSQL 'database' value is mandatory" .Values.lensesAgent.storage.postgres.database | quote }}

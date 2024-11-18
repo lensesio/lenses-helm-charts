@@ -214,22 +214,22 @@ lensesAgent:
     # Find more details in https://docs.lenses.io/5.5/installation/getting-started/helm/#helm-provision
 
     # You can find examples at https://github.com/lensesio/lenses-helm-charts/tree/release/5.5/examples
-    #connections:
-    #  lensesHq:
-    #    - name: lenses-hq
-    #      version: 1
-    #      tags: ['hq']
-    #      configuration:
-    #        server:
-    #          value: panoptes-backend.panoptes-master.svc.cluster.local
-    #        port:
-    #          value: 10000
-    #        agentKey:
-    #          value: ${LENSESHQ_AGENT_KEY}
-    #        sslEnabled:
-    #          value: false
-          # sslEnabledProtocols:
-          #  value: $LENSES_HQ_SSL_ENABLED_PROTOCOLS
+    connections:
+      #  lensesHq:
+      #    - name: lenses-hq
+      #      version: 1
+      #      tags: ['hq']
+      #      configuration:
+      #        server:
+      #          value: panoptes-backend.panoptes-master.svc.cluster.local
+      #        port:
+      #          value: 10000
+      #        agentKey:
+      #          value: ${LENSESHQ_AGENT_KEY}
+      #        sslEnabled:
+      #          value: false
+      #        sslEnabledProtocols:
+      #          value: $LENSES_HQ_SSL_ENABLED_PROTOCOLS
       #kafka:
       #  - name: kafka
       #    version: 1
@@ -244,10 +244,10 @@ lensesAgent:
       #        value: SCRAM-SHA-256
       #      protocol:
       #        value: SASL_PLAINTEXT
-            #metricsType:
-            #  value: JMX
-            #metricsPort:
-            #  value: 9581
+      #      metricsType:
+      #        value: JMX
+      #      metricsPort:
+      #        value: 9581
       # confluentSchemaRegistry:
       #   - name: schema-registry
       #     version: 1

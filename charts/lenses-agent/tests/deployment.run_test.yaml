@@ -40,8 +40,10 @@ tests:
 
   - it: checksum annotation should change with custom append section
     set:
-      lenses.append.conf: |
-        lenses.test="true"
+      lensesAgent:
+        append:
+          conf: |
+            lenses.test="true"
     asserts:
       - equal:
           path: spec.template.metadata.annotations.checksum/lenses\.append\.conf

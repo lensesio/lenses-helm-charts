@@ -56,8 +56,8 @@ spec:
         {{- range $key, $value := .Values.podTemplateAnnotations }}
         {{ $key }}: {{ $value | quote }}
         {{- end }}
-        {{- if  (include "lensesAppendConf" .) }}
-        checksum/lenses.append.conf: {{ include "lensesAppendConf" . | sha256sum }}
+        {{- if  (include "lensesAgentAppendConf" .) }}
+        checksum/lenses.append.conf: {{ include "lensesAgentAppendConf" . | sha256sum }}
         {{- end }}
     spec:
       {{- if .Values.nodeSelector }}
@@ -87,11 +87,9 @@ spec:
         - name: provision-secrets
           secret:
             secretName: {{include "provisionFullname" . | quote}}
-        {{- if eq .Values.lensesAgent.provision.version "2" }}
         - name: provision-secrets-files
           secret:
             secretName: {{ (printf "%s-%s" (include "provisionFullname" .) "files") | quote}}
-        {{- end }}
        {{- if and (hasKey .Values "containerSecurityContext") (hasKey .Values.containerSecurityContext "readOnlyRootFilesystem") (eq .Values.containerSecurityContext.readOnlyRootFilesystem true) }}
         - name: tmp-volume
           emptyDir: {}
@@ -121,7 +119,7 @@ spec:
       {{- end }}
       containers:
       - name: {{ .Chart.Name }}
-        image: {{ include "lensesImage" . | quote }}
+        image: {{ include "lensesAgentImage" . | quote }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         {{- if .Values.containerSecurityContext }}
         securityContext:
