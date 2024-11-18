@@ -1,7 +1,7 @@
 suite: enable existing volume claim and check the changes in deployment
 templates:
   - deployment.yaml
-  - volume-claim.yaml
+  - logs-volume-claim.yaml
 tests:
   - it: should work
     set:
@@ -15,8 +15,8 @@ tests:
         contains:
           path: spec.template.spec.containers[0].volumeMounts
           content:
-            mountPath: /data/storage
-            name: storage
+            mountPath: /data/log
+            name: log
       - template: deployment.yaml
         contains:
           path: spec.template.spec.volumes
