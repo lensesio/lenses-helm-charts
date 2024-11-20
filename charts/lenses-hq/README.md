@@ -70,6 +70,12 @@ The command deploys Lenses HQ on the Kubernetes cluster in the example configura
 | ingress.http.tls.enabled | bool | `false` | Set to true to enable HTTPS |
 | ingress.http.tls.secretName | string | `""` | Secret name where tls certificates are being stored. The TLS secret must contain keys named tls.crt and tls.key that contain the certificate and private key to use for TLS. |
 
+### Extras
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| lensesHq.additionalEnv | string | `nil` | Additional env variables appended to deployment Follows the format of [EnvVar spec](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.21/#envvar-v1-core) |
+
 ### Lenses HQ Agent startup values
 
 | Key | Type | Default | Description |

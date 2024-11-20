@@ -24,7 +24,7 @@ data:
       sessionDuration: {{ .Values.lensesHq.auth.sessionDuration }}
       saml:
         enabled: {{ .Values.lensesHq.auth.saml.enabled }}
-        {{ if (.Values.lensesHq.auth.saml).enabled }}
+        {{- if (.Values.lensesHq.auth.saml).enabled }}
         baseURL: {{ .Values.lensesHq.auth.saml.baseURL }}
         entityID: {{ .Values.lensesHq.auth.saml.entityID }}
         {{- if .Values.lensesHq.auth.saml.metadata.referenceFromSecret }}

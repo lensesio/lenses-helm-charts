@@ -116,13 +116,13 @@ spec:
         resources:
           {{- toYaml .Values.resources | nindent 10 }}
         env:
-          {{ if (.Values.lensesHq.agents.tls).enabled }}
+          {{- if (.Values.lensesHq.agents.tls).enabled }}
           - name: LENSESHQ_AGENTS_TLS_KEY
             valueFrom:
               secretKeyRef:
                 name: {{.Values.lensesHq.agents.tls.privateKey.secret.name }}
                 key: {{ .Values.lensesHq.agents.tls.privateKey.secret.key }}
-          {{ if (.Values.lensesHq.agents.tls.cert).referenceFromSecret }}
+          {{- if (.Values.lensesHq.agents.tls.cert).referenceFromSecret }}
           - name: LENSESHQ_AGENTS_TLS_CERT
             valueFrom:
               secretKeyRef:
@@ -130,13 +130,13 @@ spec:
                 key: {{ .Values.lensesHq.agents.tls.cert.secretKeyName }}
           {{- end }}
           {{- end }}
-          {{ if (.Values.lensesHq.http.tls).enabled }}
+          {{- if (.Values.lensesHq.http.tls).enabled }}
           - name: LENSESHQ_HTTP_TLS_KEY
             valueFrom:
               secretKeyRef:
                 name: {{ .Values.lensesHq.http.tls.privateKey.secret.name }}
                 key: {{ .Values.lensesHq.http.tls.privateKey.secret.key }}
-          {{ if (.Values.lensesHq.http.tls.cert).referenceFromSecret }}
+          {{- if (.Values.lensesHq.http.tls.cert).referenceFromSecret }}
           - name: LENSESHQ_HTTP_TLS_CERT
             valueFrom:
               secretKeyRef:
@@ -144,14 +144,14 @@ spec:
                 key: {{ .Values.lensesHq.http.tls.cert.secretKeyName }}
           {{- end }}
           {{- end }}
-          {{ if and .Values.lensesHq.auth.saml.enabled .Values.lensesHq.auth.saml.metadata.referenceFromSecret }}
+          {{- if and .Values.lensesHq.auth.saml.enabled .Values.lensesHq.auth.saml.metadata.referenceFromSecret }}
           - name: LENSESHQ_AUTH_SAML_METADATA
             valueFrom:
               secretKeyRef:
                 name: {{ .Values.lensesHq.auth.saml.metadata.secretName }}
                 key: {{ .Values.lensesHq.auth.saml.metadata.secretKeyName }}
           {{- end }}
-          {{ if .Values.lensesHq.license.referenceFromSecret }}
+          {{- if .Values.lensesHq.license.referenceFromSecret }}
           - name: LENSESHQ_LICENSE
             valueFrom:
               secretKeyRef:
@@ -182,6 +182,12 @@ spec:
             {{- end }}
           {{- end}}
             {{- end }}
+
+          # Additional env variables
+          {{- if .Values.lensesHq.additionalEnv }}
+          {{- toYaml .Values.lensesHq.additionalEnv | nindent 10 }}
+          {{- end }}
+
       {{- if .Values.sidecarContainers }}
       {{- toYaml .Values.sidecarContainers | nindent 6 }}
       {{- end }}

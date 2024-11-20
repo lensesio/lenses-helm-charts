@@ -501,6 +501,13 @@ lensesHq:
       # @section -- Lenses HQ startup values
       enabled: false
 
+  # -- (string) Additional env variables appended to deployment
+  # @section -- Extras
+  # Follows the format of [EnvVar spec](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.21/#envvar-v1-core)
+  additionalEnv:
+    # - name: FOO
+    #   value: bar
+
 # -- (map) Sidecar container enablement.
 # @raw
 #
