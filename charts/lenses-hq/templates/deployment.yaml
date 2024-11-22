@@ -31,8 +31,8 @@ spec:
       labels:
         app: {{ include "fullname" . | quote }}
         component: "lenses-hq"
-        hostPort:  {{ include "extractPort" .Values.lensesHq.http.address | quote }}
-        containerPort:  {{ include "extractPort" .Values.lensesHq.http.address | quote }}
+        hostPort: {{ include "extractPort" .Values.lensesHq.http.address | quote }}
+        containerPort: {{ include "extractPort" .Values.lensesHq.http.address | quote }}
         {{- range $key, $value := .Values.labels }}
         {{ $key }}: {{ $value | quote }}
         {{- end }}
