@@ -78,3 +78,8 @@ Return the appropriate apiVersion for ingress.
   {{- fail "Only one database can be enabled at a time. Please check your configuration in values.yaml." -}}
 {{- end }}
 {{- end }}
+
+{{- define "extractPort" -}}
+{{- $address := printf "%s" . -}}
+{{- regexReplaceAll ".*:(\\d+)$" $address "$1" | int -}}
+{{- end -}}

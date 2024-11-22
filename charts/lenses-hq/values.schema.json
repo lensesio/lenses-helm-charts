@@ -9,7 +9,6 @@
         "image",
         "rbacEnable",
         "namespaceScope",
-        "restPort",
         "servicePort",
         "servicePortName",
         "serviceAccount",
@@ -204,14 +203,6 @@
             "title": "The namespaceScope Schema",
             "examples": [
                 true
-            ]
-        },
-        "restPort": {
-            "type": "integer",
-            "default": 0,
-            "title": "The restPort Schema",
-            "examples": [
-                3030
             ]
         },
         "servicePort": {

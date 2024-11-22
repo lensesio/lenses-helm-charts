@@ -1,0 +1,43 @@
+suite: extract_port tests
+templates:
+  - templates/service.yaml
+
+tests:
+  - it: should extract port from IPv4 address
+    set:
+      lensesHq:
+        agents:
+          address: "127.1.1.1:10000"
+    asserts:
+      - equal:
+          path: spec.ports[2].port
+          value: 10000
+
+  - it: should extract port from IPv6 address
+    set:
+      lensesHq:
+        agents:
+          address: "[c0:3c:59:11:23:26]:10000"
+    asserts:
+      - equal:
+          path: spec.ports[2].port
+          value: 10000
+  - it: should extract port when only port is provided
+    set:
+      lensesHq:
+        agents:
+          address: ":10000"
+    asserts:
+      - equal:
+          path: spec.ports[2].port
+          value: 10000
+
+  - it: should extract port from address with only a port
+    set:
+      lensesHq:
+        agents:
+          address: ":10000"
+    asserts:
+      - equal:
+          path: spec.ports[2].port
+          value: 10000

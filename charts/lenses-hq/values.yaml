@@ -50,7 +50,7 @@ resources:
 image:
   # -- Image repository
   # @section -- Custom deployment values
-  repository:
+  repository: ""
 
   # -- Default to .Chart.AppVersion
   # tag:
@@ -69,9 +69,6 @@ rbacEnable: true
 # @section -- Permission scope values
 namespaceScope: true
 
-# -- (int) Lenses HQ container port
-# @section -- Lenses HQ deployment service values
-restPort: 8080
 # -- (int) Lenses HQ service port, service targets restPort
 # @section -- Lenses HQ deployment service values
 servicePort: 80
@@ -179,7 +176,7 @@ ingress:
       secretName: ""
 
 lensesHq:
-  agent:
+  agents:
     # -- (string) Address wherefrom agent will be listening at.
     # @section -- Lenses HQ Agent startup values
     # **Required: true**
@@ -504,7 +501,7 @@ lensesHq:
   # -- (string) Additional env variables appended to deployment
   # @section -- Extras
   # Follows the format of [EnvVar spec](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.21/#envvar-v1-core)
-  additionalEnv:
+  additionalEnv: []
     # - name: FOO
     #   value: bar
 

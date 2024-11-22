@@ -41,9 +41,9 @@ The command deploys Lenses HQ on the Kubernetes cluster in the example configura
 |-----|------|---------|-------------|
 | affinity | dict | `{}` | Deployment affinity rules |
 | annotations | dict | `{}` | Custom deployment annotations |
-| image | object | `{"pullPolicy":"IfNotPresent","repository":null}` | Image map |
+| image | object | `{"pullPolicy":"IfNotPresent","repository":""}` | Image map |
 | image.pullPolicy | string | `"IfNotPresent"` | Image pullPolicy |
-| image.repository | string | `nil` | Image repository |
+| image.repository | string | `""` | Image repository |
 | labels | dict | `{}` | Deployment labels |
 | nodeSelector | dict | `{}` | Deployment nodeSelector |
 | podTemplateAnnotations | dict | `{}` | Annotations here go into the PodTemplateSpec at deployment.spec.template.annotations. |
@@ -74,20 +74,20 @@ The command deploys Lenses HQ on the Kubernetes cluster in the example configura
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| lensesHq.additionalEnv | string | `nil` | Additional env variables appended to deployment Follows the format of [EnvVar spec](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.21/#envvar-v1-core) |
+| lensesHq.additionalEnv | string | `[]` | Additional env variables appended to deployment Follows the format of [EnvVar spec](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.21/#envvar-v1-core) |
 
 ### Lenses HQ Agent startup values
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| lensesHq.agent.address | string | `":10000"` | Address wherefrom agent will be listening at. **Required: true** |
-| lensesHq.agent.tls.cert.referenceFromSecret | string | `false` | Enables usage of secret for certificate. **Required: false** |
-| lensesHq.agent.tls.cert.secretKeyName | string | `""` | Secret key where within a secret where certificate is sotred. **Required: false** |
-| lensesHq.agent.tls.cert.secretName | string | `""` | Secret name where certificate is stored. **Required: false** |
-| lensesHq.agent.tls.cert.stringData | string | `""` | Sets the PEM formatted public certificate. **Required: false** |
-| lensesHq.agent.tls.enabled | string | `false` | Enables or disables TLS. **Required: true** |
-| lensesHq.agent.tls.privateKey | string | `{"secret":{"key":"","name":""}}` | Sets the PEM formatted private key. **Required: false** |
-| lensesHq.agent.tls.verboseLogs | string | `false` | Enabled verbose of TLS debug logs **Required: true** |
+| lensesHq.agents.address | string | `":10000"` | Address wherefrom agent will be listening at. **Required: true** |
+| lensesHq.agents.tls.cert.referenceFromSecret | string | `false` | Enables usage of secret for certificate. **Required: false** |
+| lensesHq.agents.tls.cert.secretKeyName | string | `""` | Secret key where within a secret where certificate is sotred. **Required: false** |
+| lensesHq.agents.tls.cert.secretName | string | `""` | Secret name where certificate is stored. **Required: false** |
+| lensesHq.agents.tls.cert.stringData | string | `""` | Sets the PEM formatted public certificate. **Required: false** |
+| lensesHq.agents.tls.enabled | string | `false` | Enables or disables TLS. **Required: true** |
+| lensesHq.agents.tls.privateKey | string | `{"secret":{"key":"","name":""}}` | Sets the PEM formatted private key. **Required: false** |
+| lensesHq.agents.tls.verboseLogs | string | `false` | Enabled verbose of TLS debug logs **Required: true** |
 
 ### Lenses HQ AUTH startup values
 
@@ -196,7 +196,6 @@ The command deploys Lenses HQ on the Kubernetes cluster in the example configura
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| restPort | int | `8080` | Lenses HQ container port |
 | service.annotations | dict | `{}` | Additional service annotations |
 | service.enabled | bool | `true` | Deciding factor whether Lenses HQ service will be created and which type |
 | service.externalTrafficPolicy | string | `nil` |  |

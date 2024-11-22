@@ -31,8 +31,8 @@ spec:
       labels:
         app: {{ include "fullname" . | quote }}
         component: "lenses-hq"
-        hostPort: {{ .Values.restPort | quote }}
-        containerPort: {{ .Values.restPort | quote }}
+        hostPort:  {{ include "extractPort" .Values.lensesHq.http.address | quote }}
+        containerPort:  {{ include "extractPort" .Values.lensesHq.http.address | quote }}
         {{- range $key, $value := .Values.labels }}
         {{ $key }}: {{ $value | quote }}
         {{- end }}
@@ -87,20 +87,20 @@ spec:
           {{- toYaml .Values.containerSecurityContext | nindent 10 }}
         {{- end }}
         ports:
-          - containerPort: {{ .Values.restPort }}
+          - containerPort: {{ include "extractPort" .Values.lensesHq.http.address }}
             name: {{ .Values.servicePortName }}
             protocol: TCP
-          - containerPort: {{ int (trimPrefix ":" .Values.lensesHq.agents.address) }}
+          - containerPort: {{ include "extractPort" .Values.lensesHq.agents.address }}
             name: agents
             protocol: TCP
-          - containerPort: {{ regexReplaceAll "^[^0-9]*" .Values.lensesHq.metrics.prometheusAddress "" | int }}
+          - containerPort: {{ include "extractPort" .Values.lensesHq.metrics.prometheusAddress }}
             name: metrics
             protocol: TCP
         {{- if .Values.lensesHq.livenessProbe.enabled }}
         livenessProbe:
           httpGet:
             path: /
-            port: {{ .Values.restPort }}
+            port: {{ include "extractPort" .Values.lensesHq.http.address }}
           {{- if .Values.lensesHq.livenessProbe.tls.enabled }}
             scheme: HTTPS
           {{- end }}
