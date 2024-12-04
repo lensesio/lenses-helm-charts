@@ -6,19 +6,7 @@ fullnameOverride: ""
 image:
   repository:
   # Default to .Chart.AppVersion
-  tag: panoptes
   pullPolicy: Always
-  imagePullSecrets: # any image pull secrets for private registries go here
-    - name: gcr-key
-
-annotations: {}
-podTemplateAnnotations: {} # Annotations here go into the PodTemplateSpec at deployment.spec.template.annotations.
-labels: {}
-strategy: {}
-nodeSelector: {}
-tolerations: {}
-affinity: {}
-securityContext: {}
 
 monitoring:
   enabled: true
@@ -32,7 +20,6 @@ resources:
   #   cpu: 2
     memory: 5Gi
 
-
 rbacEnable: true
 
 # Lenses container port
@@ -43,24 +30,14 @@ serviceAccount:
   create: true
   name: lenses
 
-
-persistence:
-  log:
-    enabled: true
-    accessModes:
-      - ReadWriteOnce
-    size: 5Gi
-    storageClass: ebs-csi-sc
-
 additionalVolumeMounts:
-  - name: grpc-truststore
-    mountPath: "/mnt/provision-secrets/grpc"
+  - name: hq-truststore
+    mountPath: "/mnt/provision-secrets/hq"
 
 additionalVolumes:
-  - name: grpc-truststore
+  - name: hq-truststore
     secret:
       secretName: hq-agent-test-authority
-
 
 # Lenses service
 service:
@@ -71,6 +48,15 @@ containerSecurityContext:
   readOnlyRootFilesystem: false
 
 lensesAgent:
+  # Postgres connection
+  storage:
+    postgres:
+      enabled: true
+      host: postgres.url
+      port: 5432
+      username: postgres
+      password: changeMe
+      database: agent
   # Configuration necessary for agent connecting to HQ
   hq:
     agentKey:
@@ -78,8 +64,7 @@ lensesAgent:
         # createNew | precreated | externalSecret
         type: "createNew"
         name: "agentKey"
-        value: "agent_key_kU919kP32b0w7EiV_6d9Lv4Tm3dmvPH4bjyOz4vgqukSLTZ3o"
-
+        value: "agent_key_*"
   provision:
     path: /mnt/provision-secrets
     connections:
@@ -97,7 +82,7 @@ lensesAgent:
             sslEnabled:
               value: true
             sslTruststore:
-              file: "/mnt/provision-secrets/grpc/truststore.jks"
+              file: "/mnt/provision-secrets/hq/truststore.jks"
             sslTruststorePassword:
               value: ${LENSES_HQ_AGENT_TRUSTSTORE_PWD}
       kafka:
@@ -107,7 +92,7 @@ lensesAgent:
           configuration:
             kafkaBootstrapServers:
               value:
-                - SASL_PLAINTEXT://enjoy-v3-dev-2-kafka-bootstrap.kafka-dev.svc.cluster.local:9093
+                - SASL_PLAINTEXT://kafka-1.svc.cluster.local:9093
             saslJaasConfig:
               value: org.apache.kafka.common.security.scram.ScramLoginModule required username="lenses-admin-dev-2" password="GLQ8TB3WTUBDQgc6SHwKxW4GIG1nk67w";
             saslMechanism:
@@ -118,18 +103,6 @@ lensesAgent:
              value: JMX
             metricsPort:
              value: 9999
-
-
-  sql:
-    # processorImage: lensesioextra/sql-processor
-    # processorImageTag: 5.5
-    mode: IN_PROC
-    heap: 1024M
-    minHeap: 128M
-    memLimit: 1152M
-    memRequest: 128M
-    livenessInitialDelay: 60 seconds
-
   additionalEnv:
     - name: LENSES_HQ_AGENT_TRUSTSTORE_PWD
       valueFrom:

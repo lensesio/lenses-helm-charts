@@ -341,7 +341,7 @@ lensesAgent:
       # Set the username for postgres connection
       # Use the value "external" to bypass the Helm validation and handle the username externally.
       # The common use case for using "external" is to take the actual value from a Kubernetes Secret resource already deployed.
-      # To do so, add the following definition under 'lenses.additionalEnv' key:
+      # To do so, add the following definition under 'lensesAgent.additionalEnv' key:
       # - name: LENSES_STORAGE_POSTGRES_USERNAME
       #   valueFrom:
       #     secretKeyRef:
@@ -354,7 +354,7 @@ lensesAgent:
       # Set the password for postgres connection
       # Use the value "external" to bypass the Helm validation and handle the password externally.
       # The common use case for using "external" is to take the actual value from a Kubernetes Secret resource already deployed.
-      # To do so, add the following definition under 'lenses.additionalEnv' key:
+      # To do so, add the following definition under 'lensesAgent.additionalEnv' key:
       # - name: LENSES_STORAGE_POSTGRES_PASSWORD
       #   valueFrom:
       #     secretKeyRef:
