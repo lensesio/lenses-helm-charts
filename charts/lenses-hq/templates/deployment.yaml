@@ -37,7 +37,7 @@ spec:
         {{ $key }}: {{ $value | quote }}
         {{- end }}
       annotations:
-        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+        checksum/config: {{ include "lensesHqConfigmap" . | sha256sum }}
         {{- range $key, $value := .Values.podTemplateAnnotations }}
         {{ $key }}: {{ $value | quote }}
         {{- end }}

@@ -187,10 +187,10 @@ The command deploys Lenses HQ on the Kubernetes cluster in the example configura
 |-----|------|---------|-------------|
 | namespaceScope | bool | `true` | In case rbac is enabled you can choose to enable creation on namespace scoped roles instead of cluster roles instead |
 | rbacEnable | bool | `true` | rbacEnable indicates if a the cluster has rbac enabled and a cluster role  and rolebinding should be created for the service account |
-| serviceAccount | object | `{"annotations":{},"create":false,"name":"lenses"}` | User to be used by Lenses to deploy apps |
+| serviceAccount | object | `{"annotations":{},"create":false,"name":"default"}` | User to be used by Lenses to deploy apps |
 | serviceAccount.annotations | dict | `{}` | Additional service account annotations. |
 | serviceAccount.create | bool | `false` | In case "true" new SA will be created with service.name as a SA name. |
-| serviceAccount.name | string | `"lenses"` | Name of Service Account. In case serviceAccount.create is *false*, existing SA with defined name here will be used. |
+| serviceAccount.name | string | `"default"` | Name of Service Account. In case serviceAccount.create is *false*, existing SA with defined name here will be used. |
 
 ### Lenses HQ deployment service values
 

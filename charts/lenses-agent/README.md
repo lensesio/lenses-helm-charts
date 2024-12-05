@@ -82,10 +82,8 @@ The command deploys Lenses Agent on the Kubernetes cluster in the example config
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| lensesAgent.provision.enabled | boolean | `true` | Enables provisioning to automate connections from Agent |
 | lensesAgent.provision.path | string | `"/mnt/provision-secrets"` | Path where provisioner will be initiated. |
 | lensesAgent.provision.secrets | dict | `{}` | Secrets base64 encoded (such as keystores) which will be placed within provisioner folder upon initialisation. |
-| lensesAgent.provision.version | string | `"2"` | Version of provisioning that will be used, currently only "2" is supported. Property is still here as a transition phase and will be removed in the future. |
 
 ### Agent SQL Processor scope values
 
@@ -156,6 +154,7 @@ The command deploys Lenses Agent on the Kubernetes cluster in the example config
 | lensesAgent.hq.agentKey.secret.externalSecret.secretStoreRef.clusterSecretStore.name | string | `""` |  |
 | lensesAgent.hq.agentKey.secret.key | string | `""` |  |
 | lensesAgent.hq.agentKey.secret.name | string | `""` |  |
+| lensesAgent.provision.connections | string | `nil` |  |
 | nameOverride | string | `""` |  |
 
 ----------------------------------------------

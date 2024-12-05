@@ -1,0 +1,7 @@
+lensesHq:
+  storage:
+    postgres:
+      enabled: true
+      host: example.com
+      database: foo-db
+      username: foo

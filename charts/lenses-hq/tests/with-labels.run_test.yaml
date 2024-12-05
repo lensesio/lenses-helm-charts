@@ -1,0 +1,14 @@
+suite: add custom labels and verify that resources get them
+templates:
+  - templates/deployment.yaml
+  - templates/service.yaml
+  #- configmap.yaml
+tests:
+  - it: should work
+    set:
+      labels:
+        foo: bar
+    asserts:
+      - equal:
+          path: metadata.labels.foo
+          value: bar

@@ -8,6 +8,8 @@ lensesHq:
     address: ""
     tls:
       enabled: false
-  postgres:
-    passwordSecret:
-      key: lenses-db-secret
+  storage:
+    postgres:
+      enabled: true
+      passwordSecret:
+        key: lenses-db-secret

@@ -76,6 +76,8 @@ Return the appropriate apiVersion for ingress.
 {{- end }}
 {{- if gt $enabledCount 1 }}
   {{- fail "Only one database can be enabled at a time. Please check your configuration in values.yaml." -}}
+{{ else if eq $enabledCount 0 }}
+  {{- fail "Database is not enabled as a storage method for HQ. Please check your configuration in values.yaml." -}}
 {{- end }}
 {{- end }}
 
@@ -83,3 +85,93 @@ Return the appropriate apiVersion for ingress.
 {{- $address := printf "%s" . -}}
 {{- regexReplaceAll ".*:(\\d+)$" $address "$1" | int -}}
 {{- end -}}
+
+{{- define "lensesHqConfigmap" -}}
+auth:
+  administrators:
+  {{- range .Values.lensesHq.auth.administrators }}
+    - {{ . }}
+  {{- end }}
+  users:
+  {{- range .Values.lensesHq.auth.users }}
+    - username: {{ .username }}
+      password: {{ .password }}
+  {{- end }}
+  sessionDuration: {{ .Values.lensesHq.auth.sessionDuration }}
+  saml:
+    enabled: {{ .Values.lensesHq.auth.saml.enabled }}
+    {{- if (.Values.lensesHq.auth.saml).enabled }}
+    baseURL: {{ .Values.lensesHq.auth.saml.baseURL }}
+    entityID: {{ .Values.lensesHq.auth.saml.entityID }}
+    {{- if .Values.lensesHq.auth.saml.metadata.referenceFromSecret }}
+    metadata: $(LENSESHQ_AUTH_SAML_METADATA)
+    {{- else }}
+    metadata: {{ .Values.lensesHq.auth.saml.metadata.stringData | indent 10 }}
+    {{- end }}
+    userCreationMode: {{ .Values.lensesHq.auth.saml.userCreationMode }}
+    groupMembershipMode: {{ .Values.lensesHq.auth.saml.usersGroupMembershipManagementMode }}
+    uiRootURL: {{ .Values.lensesHq.auth.saml.uiRootURL }}
+    groupAttributeKey: {{ .Values.lensesHq.auth.saml.groupAttributeKey }}
+    {{- end }}
+http:
+  address: {{ .Values.lensesHq.http.address }}
+  accessControlAllowOrigin:
+  {{- range .Values.lensesHq.http.accessControlAllowOrigin }}
+    - {{ . }}
+  {{- end }}
+  accessControlAllowCredentials: {{ .Values.lensesHq.http.accessControlAllowCredentials }}
+  secureSessionCookies: {{ .Values.lensesHq.http.secureSessionCookies }}
+  {{ if (.Values.lensesHq.auth.tls).enabled }}
+  tls:
+    enabled: {{ .Values.lensesHq.auth.tls.enabled -}}
+    {{ if (.Values.lensesHq.auth.tls.cert).referenceFromSecret }}
+    cert: $(LENSESHQ_AUTH_TLS_CERT)
+    {{- else }}
+    cert: |-
+{{ .Values.lensesHq.auth.tls.cert.stringData | indent 10 }}
+    {{ end }}
+    key: $(LENSESHQ_AUTH_TLS_KEY)
+    verboseLogs: {{ .Values.lensesHq.auth.tls.verboseLogs }}
+    {{ end }}
+agents:
+  address: {{ .Values.lensesHq.agents.address }}
+  {{ if (.Values.lensesHq.agents.tls).enabled }}
+  tls:
+    enabled: {{ .Values.lensesHq.agents.tls.enabled }}
+    {{ if (.Values.lensesHq.agents.tls.cert).referenceFromSecret }}
+    cert: $(LENSESHQ_AGENTS_TLS_CERT)
+    {{- else }}
+    cert: |-
+{{ .Values.lensesHq.agents.tls.cert.stringData | indent 10 }}
+    {{ end }}
+    key: $(LENSESHQ_AGENTS_TLS_KEY)
+    verboseLogs: {{ .Values.lensesHq.agents.tls.verboseLogs }}
+    {{ end }}
+database:
+  {{- include "validate.singleEnabledDatabase" . -}}
+{{- range $name, $db := .Values.lensesHq.storage }}
+  {{- if $db.enabled }}
+  host: {{ $db.host }}:{{ $db.port }}
+  username: $(LENSESHQ_PG_USERNAME)
+  password: $(LENSESHQ_PG_PASSWORD)
+  schema: {{ $db.schema }}
+  database: {{ $db.database }}
+  params:
+{{ toYaml $db.params | indent 8 }}
+  TLS: {{ $db.tls }}
+  {{- end }}
+{{- end }}
+license:
+  {{- if .Values.lensesHq.license.referenceFromSecret }}
+  key: $(LENSESHQ_LICENSE)
+  {{- else }}
+  key: {{ .Values.lensesHq.license.stringData | indent 6 }}
+  {{- end }}
+  acceptEULA: {{ .Values.lensesHq.license.acceptEULA }}
+logger:
+  mode: {{ .Values.lensesHq.logger.mode }}
+  level: {{ default "info" .Values.lensesHq.logger.level }}
+metrics:
+  prometheusAddress: {{ .Values.lensesHq.metrics.prometheusAddress }}
+
+{{- end }}
