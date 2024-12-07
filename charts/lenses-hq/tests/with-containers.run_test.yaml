@@ -1,6 +1,4 @@
 suite: using sidecar and init containers
-values:
-  - values/values.yaml
 templates:
   - deployment.yaml
 tests:
