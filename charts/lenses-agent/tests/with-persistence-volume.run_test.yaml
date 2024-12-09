@@ -1,7 +1,7 @@
 suite: enable existing Volume claim and check the changes in deployment
 templates:
   - deployment.yaml
-  - volume-claim.yaml
+  - logs-volume-claim.yaml
 tests:
   - it: should work with default values
     asserts:
@@ -12,21 +12,21 @@ tests:
         contains:
           path: spec.template.spec.containers[0].volumeMounts
           content:
-            mountPath: /data/storage
-            name: storage
+            mountPath: /data/log
+            name: logs
       - template: deployment.yaml
         contains:
           path: spec.template.spec.volumes
           content:
-            name: storage
+            name: logs
             persistentVolumeClaim:
-              claimName: RELEASE-NAME-claim
-      - template: volume-claim.yaml
+              claimName: RELEASE-NAME-logsclaim
+      - template: logs-volume-claim.yaml
         contains:
           path: spec.accessModes
           content:
             ReadWriteOnce
-      - template: volume-claim.yaml
+      - template: logs-volume-claim.yaml
         equal:
           path: spec.resources.requests.storage
           value: 5Gi
@@ -36,10 +36,10 @@ tests:
         annotations:
           foo: bar
     asserts:
-      - template: volume-claim.yaml
+      - template: logs-volume-claim.yaml
         isKind:
           of: PersistentVolumeClaim
-      - template: volume-claim.yaml
+      - template: logs-volume-claim.yaml
         equal:
           path: metadata.annotations.foo
           value: bar

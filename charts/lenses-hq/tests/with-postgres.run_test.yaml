@@ -1,0 +1,27 @@
+suite: using postgres as database
+templates:
+  - deployment.yaml
+  - configmap.yaml
+tests:
+  - it: "should fail if postgres is not enabled"
+    set:
+      lensesHq:
+        storage:
+          postgres:
+            enabled: false
+    asserts:
+      - template: deployment.yaml
+        failedTemplate:
+          errorMessage: Database is not enabled as a storage method for HQ. Please check your configuration in values.yaml.
+
+  - it: "should pass if postgres is enabled"
+    set:
+      lensesHq:
+        storage:
+          postgres:
+            enabled: true
+    asserts:
+      - template: "templates/configmap.yaml"
+        matchRegex:
+          path: data.config\.yaml
+          pattern: "database:\\s+host:\\s+.*"

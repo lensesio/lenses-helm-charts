@@ -1,4 +1,4 @@
-lensesAgent:
+lensesHq:
   storage:
     postgres:
       enabled: true

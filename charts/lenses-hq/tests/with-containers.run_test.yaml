@@ -1,0 +1,40 @@
+suite: using sidecar and init containers
+templates:
+  - deployment.yaml
+tests:
+  - it: should work when a sidecar container is set
+    set:
+      sidecarContainers:
+        - name: sidecar
+          image: alpine
+          command: ["sh", "-c", "watch date"]
+    asserts:
+      - isKind:
+          of: Deployment
+      - equal:
+          path: spec.template.spec.containers[1].name
+          value: sidecar
+      - equal:
+          path: spec.template.spec.containers[1].image
+          value: alpine
+      - equal:
+          path: spec.template.spec.containers[1].command
+          value: ["sh", "-c", "watch date"]
+  - it: should work when an init container is set
+    set:
+      initContainers:
+        - name: init
+          image: alpine
+          command: ["sh", "-c", "date"]
+    asserts:
+      - isKind:
+          of: Deployment
+      - equal:
+          path: spec.template.spec.initContainers[0].name
+          value: init
+      - equal:
+          path: spec.template.spec.initContainers[0].image
+          value: alpine
+      - equal:
+          path: spec.template.spec.initContainers[0].command
+          value: ["sh", "-c", "date"]

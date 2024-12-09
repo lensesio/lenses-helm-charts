@@ -1,13 +1,20 @@
-lenses:
+lensesAgent:
+  # Postgres connection
+  storage:
+    postgres:
+      enabled: true
+      host: postgres.url
+      port: 5432
+      username: postgres
+      password: changeMe
+      database: agent
   hq:
     agentKey:
       secret:
         type: "createNew"
         name: "agentKey"
-        value: "agent_key_kU919kP32b0w7EiV_6d9Lv4Tm3dmvPH4bjyOz4vgqukSLTZ3o"
+        value: "agent_key_*"
   provision:
-    enabled: true
-    version: "2"
     path: /mnt/provision-secrets
     connections:
       lensesHq:

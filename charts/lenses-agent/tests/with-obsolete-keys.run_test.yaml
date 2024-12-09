@@ -4,7 +4,7 @@ templates:
 tests:
   - it: should fail if kafka key is still set
     set:
-      lenses:
+      lensesAgent:
         kafka:
           bootstrapServers:
             - name: kafka
@@ -15,22 +15,22 @@ tests:
     asserts:
       - template: deployment.yaml
         failedTemplate:
-          errorMessage: Setting configuration value .Values.lenses.kafka is deprecated. Please use the provision yaml instead. See documentation here.
+          errorMessage: Setting configuration value .Values.lensesAgent.kafka is deprecated. Please use the provision yaml instead. See documentation here.
   - it: should fail if schemaRegistries key is still set
     set:
-      lenses:
+      lensesAgent:
         schemaRegistries:
           enabled: true
     asserts:
       - template: deployment.yaml
         failedTemplate:
-          errorMessage: Setting configuration value .Values.lenses.schemaRegistries is deprecated. Please use the provision yaml instead. See documentation here.
+          errorMessage: Setting configuration value .Values.lensesAgent.schemaRegistries is deprecated. Please use the provision yaml instead. See documentation here.
   - it: should fail if connectClusters key is still set
     set:
-      lenses:
+      lensesAgent:
         connectClusters:
           enabled: true
     asserts:
       - template: deployment.yaml
         failedTemplate:
-          errorMessage: Setting configuration value .Values.lenses.connectClusters is deprecated. Please use the provision yaml instead. See documentation here.
+          errorMessage: Setting configuration value .Values.lensesAgent.connectClusters is deprecated. Please use the provision yaml instead. See documentation here.

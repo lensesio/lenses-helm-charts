@@ -110,23 +110,20 @@ serviceAccount:
   annotations: {}
 
 persistence:
-  # -- (boolean) If you use Data Policies module enable a Persistent Volume to keep your data policies rule.
-  # Also used when lenses.storage.enabled: false, and an H2 local filesystem database is used, instead of Postgresql.
-  # https://docs.lenses.io/current/installation/kubernetes/persistence/
-  # @section -- Persistence scope values
-  enabled: true
-
-  # -- (list) Access mode rights for created persistence volumes.
-  # @section -- Persistence scope values
-  accessModes:
-    - ReadWriteOnce
-  # -- (string) Size of persistence that will be created.
-  # @section -- Persistence scope values
-  size: 5Gi
   log:
     # -- (boolean) Extra volume creation dedicated for logs.
     # @section -- Persistence scope values
     enabled: true
+    # -- (boolean) Annotations dedicated for logs.
+    # @section -- Persistence scope values
+    annotations: {}
+    # -- (list) Access mode rights for created persistence volumes.
+    # @section -- Persistence scope values
+    accessModes:
+      - ReadWriteOnce
+    # -- (string) Size of persistence that will be created.
+    # @section -- Persistence scope values
+    size: 5Gi
   ## Target a pre-existing volume claim to use it as Lenses Persistent volume
   # existingClaim:
 
@@ -178,7 +175,7 @@ containerSecurityContext:
   # @section -- Extras
   readOnlyRootFilesystem: false
 
-lenses:
+lensesAgent:
   # Configuration necessary for agent connecting to HQ
   # @section -- Agent <-> HQ scope values
   hq:
@@ -211,36 +208,28 @@ lenses:
         # key: "secret-key"
 
   provision:
-    # -- (boolean) Enables provisioning to automate connections from Agent
-    # Possible values: createNew | precreated | externalSecret
-    # @section -- Agent Provision scope values
-    enabled: true
-    # -- (string) Version of provisioning that will be used, currently only "2" is supported.
-    # Property is still here as a transition phase and will be removed in the future.
-    # @section -- Agent Provision scope values
-    version: "2"
     # -- (string) Path where provisioner will be initiated.
     # @section -- Agent Provision scope values
     path: /mnt/provision-secrets
     # Find more details in https://docs.lenses.io/5.5/installation/getting-started/helm/#helm-provision
 
     # You can find examples at https://github.com/lensesio/lenses-helm-charts/tree/release/5.5/examples
-    #connections:
-    #  lensesHq:
-    #    - name: lenses-hq
-    #      version: 1
-    #      tags: ['hq']
-    #      configuration:
-    #        server:
-    #          value: panoptes-backend.panoptes-master.svc.cluster.local
-    #        port:
-    #          value: 10000
-    #        agentKey:
-    #          value: ${LENSESHQ_AGENT_KEY}
-    #        sslEnabled:
-    #          value: false
-          # sslEnabledProtocols:
-          #  value: $LENSES_HQ_SSL_ENABLED_PROTOCOLS
+    connections:
+      #  lensesHq:
+      #    - name: lenses-hq
+      #      version: 1
+      #      tags: ['hq']
+      #      configuration:
+      #        server:
+      #          value: panoptes-backend.panoptes-master.svc.cluster.local
+      #        port:
+      #          value: 10000
+      #        agentKey:
+      #          value: ${LENSESHQ_AGENT_KEY}
+      #        sslEnabled:
+      #          value: false
+      #        sslEnabledProtocols:
+      #          value: $LENSES_HQ_SSL_ENABLED_PROTOCOLS
       #kafka:
       #  - name: kafka
       #    version: 1
@@ -255,10 +244,10 @@ lenses:
       #        value: SCRAM-SHA-256
       #      protocol:
       #        value: SASL_PLAINTEXT
-            #metricsType:
-            #  value: JMX
-            #metricsPort:
-            #  value: 9581
+      #      metricsType:
+      #        value: JMX
+      #      metricsPort:
+      #        value: 9581
       # confluentSchemaRegistry:
       #   - name: schema-registry
       #     version: 1
@@ -352,7 +341,7 @@ lenses:
       # Set the username for postgres connection
       # Use the value "external" to bypass the Helm validation and handle the username externally.
       # The common use case for using "external" is to take the actual value from a Kubernetes Secret resource already deployed.
-      # To do so, add the following definition under 'lenses.additionalEnv' key:
+      # To do so, add the following definition under 'lensesAgent.additionalEnv' key:
       # - name: LENSES_STORAGE_POSTGRES_USERNAME
       #   valueFrom:
       #     secretKeyRef:
@@ -365,7 +354,7 @@ lenses:
       # Set the password for postgres connection
       # Use the value "external" to bypass the Helm validation and handle the password externally.
       # The common use case for using "external" is to take the actual value from a Kubernetes Secret resource already deployed.
-      # To do so, add the following definition under 'lenses.additionalEnv' key:
+      # To do so, add the following definition under 'lensesAgent.additionalEnv' key:
       # - name: LENSES_STORAGE_POSTGRES_PASSWORD
       #   valueFrom:
       #     secretKeyRef:

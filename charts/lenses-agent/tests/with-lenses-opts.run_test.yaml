@@ -11,7 +11,7 @@ tests:
             value: ""
   - it: should succeed with lenses opts arguments
     set:
-      lenses:
+      lensesAgent:
         lensesOpts: "-Djava.security.krb5.conf=/path/to/krb5.conf"
     asserts:
       - contains:
@@ -21,7 +21,7 @@ tests:
             value: "-Djava.security.krb5.conf=/path/to/krb5.conf"
   - it: should succeed with multiple lenses opts arguments
     set:
-      lenses:
+      lensesAgent:
         lensesOpts: "-Djava.security.krb5.conf=/path/to/krb5.conf -Dlogback.configurationFile=file:/path/to/logback.xml"
     asserts:
       - contains:
@@ -31,7 +31,7 @@ tests:
             value: "-Djava.security.krb5.conf=/path/to/krb5.conf -Dlogback.configurationFile=file:/path/to/logback.xml"
   - it: should succeed with lenses.opts.keyStoreFileData
     set:
-      lenses:
+      lensesAgent:
         opts:
           keyStoreFileData: YmluYXJ5LWRhdGE=
     asserts:
@@ -42,7 +42,7 @@ tests:
             value: '-Djavax.net.ssl.keyStore="/mnt/secrets/lenses.opts.keystore.jks" '
   - it: should succeed lenses.opts.keyStorePassword
     set:
-      lenses:
+      lensesAgent:
         opts:
           keyStorePassword: foobar
     asserts:
@@ -53,7 +53,7 @@ tests:
             value: '-Djavax.net.ssl.keyStorePassword="${CLIENT_OPTS_KEYSTORE_PASSWORD}" '
   - it: should succeed with lenses.opts.trustStoreFileData
     set:
-      lenses:
+      lensesAgent:
         opts:
           trustStoreFileData: YmluYXJ5LWRhdGE=
     asserts:
@@ -64,7 +64,7 @@ tests:
             value: '-Djavax.net.ssl.trustStore="/mnt/secrets/lenses.opts.truststore.jks" '
   - it: should succeed lenses.opts.trustStorePassword
     set:
-      lenses:
+      lensesAgent:
         opts:
           trustStorePassword: foobar
     asserts:
@@ -75,7 +75,7 @@ tests:
             value: '-Djavax.net.ssl.trustStorePassword="${CLIENT_OPTS_TRUSTSTORE_PASSWORD}" '
   - it: should succeed custom logback xml
     set:
-      lenses:
+      lensesAgent:
         logbackXml: /opt/lenses/logback-debug.xml
     asserts:
       - contains:

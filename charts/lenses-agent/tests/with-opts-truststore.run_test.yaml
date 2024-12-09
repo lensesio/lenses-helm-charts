@@ -5,19 +5,19 @@ templates:
 tests:
   - it: should fail with JVM trustStoreFileData
     set:
-      lenses:
+      lensesAgent:
         jvm:
           trustStoreFileData: bGFsYQ==
     asserts:
       - template: secrets.yaml
         failedTemplate:
-          errorMessage: .Values.lenses.jvm.trustStoreFileData is deprecated in favor of Values.lenses.opts.trustStoreFileData, please use the latter.
+          errorMessage: .Values.lensesAgent.jvm.trustStoreFileData is deprecated in favor of Values.lensesAgent.opts.trustStoreFileData, please use the latter.
   - it: should fail with JVM trustStorePassword
     set:
-      lenses:
+      lensesAgent:
         jvm:
           trustStorePassword: foobar
     asserts:
       - template: secrets.yaml
         failedTemplate:
-          errorMessage: .Values.lenses.jvm.trustStorePassword is deprecated in favor of Values.lenses.opts.trustStorePassword, please use the latter.
+          errorMessage: .Values.lensesAgent.jvm.trustStorePassword is deprecated in favor of Values.lensesAgent.opts.trustStorePassword, please use the latter.

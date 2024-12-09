@@ -8,10 +8,8 @@ templates:
 tests:
   - it: should work with provision connections set
     set:
-      lenses:
+      lensesAgent:
         provision:
-          enabled: true
-          version: "2"
           connections:
             key: this is valid yaml
             values:
@@ -24,7 +22,7 @@ tests:
       - template: provision-secrets-v2.yaml
         equal:
           path: stringData.provisioning\.yaml
-          value: |
+          value: |-
             key: this is valid yaml
             moreValues: |-
               and a multiline
@@ -42,20 +40,16 @@ tests:
 
   - it: should fail with provision enabled but without a yaml value
     set:
-      lenses:
-        provision:
-          enabled: true
-          version: "2"
+      lensesAgent:
+        provision: {}
     asserts:
       - template: provision-secrets-v2.yaml
         failedTemplate:
           errorMessage: provisioning connections is required to provision Lenses
   - it: should work with provision secrets set
     set:
-      lenses:
+      lensesAgent:
         provision:
-          enabled: true
-          version: "2"
           connections:
             goo: loo
           secrets:
@@ -88,10 +82,8 @@ tests:
 
   - it: should work when custom volumes and volume mounts are used to load additional plugins (UDFs) in Lenses
     set:
-      lenses:
+      lensesAgent:
         provision:
-          enabled: true
-          version: "2"
           connections:
             goo: loo
       additionalVolumes:

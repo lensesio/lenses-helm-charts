@@ -18,18 +18,18 @@ metadata:
     lenses.io/app.type: lenses-agent-volume-claim
 spec:
   accessModes:
-{{toYaml .Values.persistence.accessModes | indent 4}}
-{{- if .Values.persistence.storageClass }}
-{{- if (eq "-" .Values.persistence.storageClass)}}
+{{toYaml .Values.persistence.log.accessModes | indent 4}}
+{{- if .Values.persistence.log.storageClass }}
+{{- if (eq "-" .Values.persistence.log.storageClass)}}
   storageClassName: ""
 {{- else }}
-  storageClassName: {{.Values.persistence.storageClass}}
+  storageClassName: {{ .Values.persistence.log.storageClass }}
 {{- end }}
 {{- end }}
   resources:
     requests:
 {{- if and (hasKey .Values.persistence "log") (hasKey .Values.persistence.log "size")}}
-     storage: {{.Values.persistence.log.size | quote}}
+     storage: {{ .Values.persistence.log.size | quote }}
 {{- else }}
      storage: "300Mi"
 {{- end -}}

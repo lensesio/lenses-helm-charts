@@ -38,13 +38,13 @@ The command deploys Lenses Agent on the Kubernetes cluster in the example config
 | additionalVolumeMounts | list | `nil` | Additional volume mounts to use in Lenses delpoyments, for example to load additional plugins (UDFs) in Lenses Use it in conjuction with lenses.additionalVolumes |
 | additionalVolumes | list | `nil` | Additional volumes to use in Lenses delpoyments either by Lenses for other sidecars like Lenses provisioner. |
 | containerSecurityContext.readOnlyRootFilesystem | list | `false` | Enabling read only root filesystem. |
-| lenses.additionalEnv | string | `nil` | Additional env variables appended to deployment Follows the format of [EnvVar spec](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.21/#envvar-v1-core) |
-| lenses.append.conf | string | `""` | Additional parameters which usually go to lenses.conf and are not supported by this Helm Chart. |
-| lenses.grafanaUrl | string | `nil` | URL for Grafana UI |
-| lenses.lensesOpts | string | `""` | For additional generic JVM settings |
-| lenses.livenessProbe.enabled | string | `true` | Disables livenessProbe, used while debugging |
-| lenses.pauseExec.enabled | string | `false` | Pauses execution of Lenses start up script to allow the user to login into the container and check the running environment, used while debugging |
-| lenses.topics.suffix | string | `nil` | Suffix to add to lenses system topics, for example if you are running more than one Lenses on the same kafka cluster |
+| lensesAgent.additionalEnv | string | `nil` | Additional env variables appended to deployment Follows the format of [EnvVar spec](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.21/#envvar-v1-core) |
+| lensesAgent.append.conf | string | `""` | Additional parameters which usually go to lenses.conf and are not supported by this Helm Chart. |
+| lensesAgent.grafanaUrl | string | `nil` | URL for Grafana UI |
+| lensesAgent.lensesOpts | string | `""` | For additional generic JVM settings |
+| lensesAgent.livenessProbe.enabled | string | `true` | Disables livenessProbe, used while debugging |
+| lensesAgent.pauseExec.enabled | string | `false` | Pauses execution of Lenses start up script to allow the user to login into the container and check the running environment, used while debugging |
+| lensesAgent.topics.suffix | string | `nil` | Suffix to add to lenses system topics, for example if you are running more than one Lenses on the same kafka cluster |
 
 ### Custom deployment values
 
@@ -67,49 +67,47 @@ The command deploys Lenses Agent on the Kubernetes cluster in the example config
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| lenses.hq.agentKey.secret.type | string | `""` | Secret type for referencing / creating agent key Possible values: createNew | precreated | externalSecret |
+| lensesAgent.hq.agentKey.secret.type | string | `""` | Secret type for referencing / creating agent key Possible values: createNew | precreated | externalSecret |
 
 ### Agent JVM scope values
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| lenses.jvm.heapOpts | string | `nil` | heapOpts are any overrides for Lenses Heap JVM options. Please adjust this in sync with 'resources.limits.memory' |
-| lenses.jvm.logBackOpts | string | `nil` | logBackOpts are any logging options. Lenses is using the logback library. |
-| lenses.jvm.performanceOpts | string | `nil` | performanceOpts are any jvm tuning options to add to the jvm |
-| lenses.opts | string | `{"trustStoreFileData":"","trustStorePassword":""}` | Global truststore/keystore for the JVM. base64 encoded truststore data openssl base64 < kafka.truststore.jks | tr -d '\n' |
+| lensesAgent.jvm.heapOpts | string | `nil` | heapOpts are any overrides for Lenses Heap JVM options. Please adjust this in sync with 'resources.limits.memory' |
+| lensesAgent.jvm.logBackOpts | string | `nil` | logBackOpts are any logging options. Lenses is using the logback library. |
+| lensesAgent.jvm.performanceOpts | string | `nil` | performanceOpts are any jvm tuning options to add to the jvm |
+| lensesAgent.opts | string | `{"trustStoreFileData":"","trustStorePassword":""}` | Global truststore/keystore for the JVM. base64 encoded truststore data openssl base64 < kafka.truststore.jks | tr -d '\n' |
 
 ### Agent Provision scope values
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| lenses.provision.enabled | boolean | `true` | Enables provisioning to automate connections from Agent Possible values: createNew | precreated | externalSecret |
-| lenses.provision.path | string | `"/mnt/provision-secrets"` | Path where provisioner will be initiated. |
-| lenses.provision.secrets | dict | `{}` | Secrets base64 encoded (such as keystores) which will be placed within provisioner folder upon initialisation. |
-| lenses.provision.version | string | `"2"` | Version of provisioning that will be used, currently only "2" is supported. Property is still here as a transition phase and will be removed in the future. |
+| lensesAgent.provision.path | string | `"/mnt/provision-secrets"` | Path where provisioner will be initiated. |
+| lensesAgent.provision.secrets | dict | `{}` | Secrets base64 encoded (such as keystores) which will be placed within provisioner folder upon initialisation. |
 
 ### Agent SQL Processor scope values
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| lenses.sql.heap | string | `"1024M"` | Setting heap for each individual SQL Processor |
-| lenses.sql.livenessInitialDelay | string | `"60 seconds"` | Setting initial delay when SQL processor is being started |
-| lenses.sql.memLimit | string | `"1152M"` | Setting memory limit for each individual SQL Processor |
-| lenses.sql.memRequest | string | `"128M"` | Setting memory limit for each individual SQL Processor |
-| lenses.sql.minHeap | string | `"128M"` | Setting min heap for each individual SQL Processor |
-| lenses.sql.mode | string | `"IN_PROC"` | Setting execution mode for SQL Processors Example: IN_PROC | KUBERNETES |
+| lensesAgent.sql.heap | string | `"1024M"` | Setting heap for each individual SQL Processor |
+| lensesAgent.sql.livenessInitialDelay | string | `"60 seconds"` | Setting initial delay when SQL processor is being started |
+| lensesAgent.sql.memLimit | string | `"1152M"` | Setting memory limit for each individual SQL Processor |
+| lensesAgent.sql.memRequest | string | `"128M"` | Setting memory limit for each individual SQL Processor |
+| lensesAgent.sql.minHeap | string | `"128M"` | Setting min heap for each individual SQL Processor |
+| lensesAgent.sql.mode | string | `"IN_PROC"` | Setting execution mode for SQL Processors Example: IN_PROC | KUBERNETES |
 
 ### Agent Database scope values
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| lenses.storage.postgres | dict | `{"database":null,"enabled":false,"host":null,"password":null,"port":null,"schema":null,"username":null}` | Connection details for Postgres database |
-| lenses.storage.postgres.database | string | `nil` | Postgres database name that Agent will connect to and communicate with. |
-| lenses.storage.postgres.enabled | boolean | `false` | Enables postgres database connection, otherwise H2 as internal database will be used. |
-| lenses.storage.postgres.host | string | `nil` | Postgres database host details |
-| lenses.storage.postgres.password | string | `nil` | Postgres user password details |
-| lenses.storage.postgres.port | int | `nil` | Postgres database port details |
-| lenses.storage.postgres.schema | string | `nil` | Postgres schema, defaults to public in case not defined. |
-| lenses.storage.postgres.username | string | `nil` | Postgres database user details |
+| lensesAgent.storage.postgres | dict | `{"database":null,"enabled":false,"host":null,"password":null,"port":null,"schema":null,"username":null}` | Connection details for Postgres database |
+| lensesAgent.storage.postgres.database | string | `nil` | Postgres database name that Agent will connect to and communicate with. |
+| lensesAgent.storage.postgres.enabled | boolean | `false` | Enables postgres database connection, otherwise H2 as internal database will be used. |
+| lensesAgent.storage.postgres.host | string | `nil` | Postgres database host details |
+| lensesAgent.storage.postgres.password | string | `nil` | Postgres user password details |
+| lensesAgent.storage.postgres.port | int | `nil` | Postgres database port details |
+| lensesAgent.storage.postgres.schema | string | `nil` | Postgres schema, defaults to public in case not defined. |
+| lensesAgent.storage.postgres.username | string | `nil` | Postgres database user details |
 
 ### Monitoring scope values
 
@@ -133,10 +131,10 @@ The command deploys Lenses Agent on the Kubernetes cluster in the example config
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| persistence.accessModes | list | `["ReadWriteOnce"]` | Access mode rights for created persistence volumes. |
-| persistence.enabled | boolean | `true` | If you use Data Policies module enable a Persistent Volume to keep your data policies rule. Also used when lenses.storage.enabled: false, and an H2 local filesystem database is used, instead of Postgresql. https://docs.lenses.io/current/installation/kubernetes/persistence/ |
+| persistence.log.accessModes | list | `["ReadWriteOnce"]` | Access mode rights for created persistence volumes. |
+| persistence.log.annotations | boolean | `{}` | Annotations dedicated for logs. |
 | persistence.log.enabled | boolean | `true` | Extra volume creation dedicated for logs. |
-| persistence.size | string | `"5Gi"` | Size of persistence that will be created. |
+| persistence.log.size | string | `"5Gi"` | Size of persistence that will be created. |
 
 ### Lenses Agent deployment service values
 
@@ -152,10 +150,11 @@ The command deploys Lenses Agent on the Kubernetes cluster in the example config
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | fullnameOverride | string | `""` |  |
-| lenses.hq.agentKey.secret.externalSecret.name | string | `""` |  |
-| lenses.hq.agentKey.secret.externalSecret.secretStoreRef.clusterSecretStore.name | string | `""` |  |
-| lenses.hq.agentKey.secret.key | string | `""` |  |
-| lenses.hq.agentKey.secret.name | string | `""` |  |
+| lensesAgent.hq.agentKey.secret.externalSecret.name | string | `""` |  |
+| lensesAgent.hq.agentKey.secret.externalSecret.secretStoreRef.clusterSecretStore.name | string | `""` |  |
+| lensesAgent.hq.agentKey.secret.key | string | `""` |  |
+| lensesAgent.hq.agentKey.secret.name | string | `""` |  |
+| lensesAgent.provision.connections | string | `nil` |  |
 | nameOverride | string | `""` |  |
 
 ----------------------------------------------

@@ -17,7 +17,7 @@ tests:
           of: Secret
   - it: should fail with postgres enabled and no other settings
     set:
-      lenses:
+      lensesAgent:
         storage:
           postgres:
             enabled: true
@@ -27,7 +27,7 @@ tests:
           errorMessage: PostgreSQL 'host' value is mandatory
   - it: should fail with postgres enabled and only host is set
     set:
-      lenses:
+      lensesAgent:
         storage:
           postgres:
             enabled: true

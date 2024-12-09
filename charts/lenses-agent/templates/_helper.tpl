@@ -46,7 +46,7 @@ Create a default fully qualified app name.
 {{- end -}}
 {{- end -}}
 
-{{- define "lensesImage" -}}
+{{- define "lensesAgentImage" -}}
 {{- if .Values.image.tag -}}
 {{ printf "%s:%s" .Values.image.repository .Values.image.tag }}
 {{- else -}}
@@ -71,69 +71,67 @@ Create a default fully qualified app name.
 {{- end -}}
 
 {{- define "metricTopic" -}}
-{{- if .Values.lenses.topics.suffix -}}
-_kafka_lenses_metrics_{{ .Values.lenses.topics.suffix }}
+{{- if .Values.lensesAgent.topics.suffix -}}
+_kafka_lenses_metrics_{{ .Values.lensesAgent.topics.suffix }}
 {{- else -}}
 _kafka_lenses_metrics
 {{- end -}}
 {{- end -}}
 
 {{- define "topologyTopic" -}}
-{{- if .Values.lenses.topics.suffix -}}
-__topology_{{ .Values.lenses.topics.suffix }}
+{{- if .Values.lensesAgent.topics.suffix -}}
+__topology_{{ .Values.lensesAgent.topics.suffix }}
 {{- else -}}
 __topology
 {{- end -}}
 {{- end -}}
 
 {{- define "externalMetricsTopic" -}}
-{{- if .Values.lenses.topics.suffix -}}
-__topology__metrics_{{ .Values.lenses.topics.suffix }}
+{{- if .Values.lensesAgent.topics.suffix -}}
+__topology__metrics_{{ .Values.lensesAgent.topics.suffix }}
 {{- else -}}
 __topology__metrics
 {{- end -}}
 {{- end -}}
 
 
-{{- define "lensesAppendConf" -}}
-{{- if .Values.lenses.storage.postgres.enabled }}
-lenses.storage.postgres.host={{ required "PostgreSQL 'host' value is mandatory" .Values.lenses.storage.postgres.host | quote }}
-lenses.storage.postgres.database={{ required "PostgreSQL 'database' value is mandatory" .Values.lenses.storage.postgres.database | quote }}
-{{- if not (eq (default "not-external" .Values.lenses.storage.postgres.username) "external") }}
-lenses.storage.postgres.username={{ required "PostgreSQL 'username' value is mandatory" .Values.lenses.storage.postgres.username | quote }}
+{{- define "lensesAgentAppendConf" -}}
+{{- if .Values.lensesAgent.storage.postgres.enabled }}
+lenses.storage.postgres.host={{ required "PostgreSQL 'host' value is mandatory" .Values.lensesAgent.storage.postgres.host | quote }}
+lenses.storage.postgres.database={{ required "PostgreSQL 'database' value is mandatory" .Values.lensesAgent.storage.postgres.database | quote }}
+{{- if not (eq (default "not-external" .Values.lensesAgent.storage.postgres.username) "external") }}
+lenses.storage.postgres.username={{ required "PostgreSQL 'username' value is mandatory" .Values.lensesAgent.storage.postgres.username | quote }}
 {{- end }}
-{{- if and .Values.lenses.storage.postgres.enabled .Values.lenses.storage.postgres.password }}
-{{- if not (eq (default "not-external" .Values.lenses.storage.postgres.password) "external") }}
-lenses.storage.postgres.password={{ required "PostgreSQL 'password' value is mandatory" .Values.lenses.storage.postgres.password | quote }}
+{{- if and .Values.lensesAgent.storage.postgres.enabled .Values.lensesAgent.storage.postgres.password }}
+{{- if not (eq (default "not-external" .Values.lensesAgent.storage.postgres.password) "external") }}
+lenses.storage.postgres.password={{ required "PostgreSQL 'password' value is mandatory" .Values.lensesAgent.storage.postgres.password | quote }}
 {{- end -}}
 {{- end -}}
-{{- if .Values.lenses.storage.postgres.port }}
-lenses.storage.postgres.port={{  .Values.lenses.storage.postgres.port | quote }}
+{{- if .Values.lensesAgent.storage.postgres.port }}
+lenses.storage.postgres.port={{  .Values.lensesAgent.storage.postgres.port | quote }}
 {{- end }}
-{{- if .Values.lenses.storage.postgres.schema }}
-lenses.storage.postgres.schema={{ .Values.lenses.storage.postgres.schema | quote }}
-{{- end }}
-{{- end }}
-{{- if and .Values.lenses.provision.enabled }}
-lenses.provisioning.path={{ required "Provisioning 'path' value is mandatory" .Values.lenses.provision.path | quote }}
-{{- if .Values.lenses.provision.interval }}
-lenses.provisioning.interval={{ .Values.lenses.provision.interval }}
+{{- if .Values.lensesAgent.storage.postgres.schema }}
+lenses.storage.postgres.schema={{ .Values.lensesAgent.storage.postgres.schema | quote }}
 {{- end }}
 {{- end }}
-{{ default "" .Values.lenses.append.conf }}
+lenses.provisioning.path={{ required "Provisioning 'path' value is mandatory" .Values.lensesAgent.provision.path | quote }}
+{{- if .Values.lensesAgent.provision.interval }}
+lenses.provisioning.interval={{ .Values.lensesAgent.provision.interval }}
+{{- end }}
+{{ default "" .Values.lensesAgent.append.conf }}
 {{- end -}}
 
 {{- define "lensesOpts" -}}
-{{- if .Values.lenses.opts.keyStoreFileData }}-Djavax.net.ssl.keyStore="/mnt/secrets/lenses.opts.keystore.jks" {{ end -}}
-{{- if .Values.lenses.opts.keyStorePassword }}-Djavax.net.ssl.keyStorePassword="${CLIENT_OPTS_KEYSTORE_PASSWORD}" {{ end -}}
-{{- if .Values.lenses.opts.trustStoreFileData }}-Djavax.net.ssl.trustStore="/mnt/secrets/lenses.opts.truststore.jks" {{ end -}}
-{{- if .Values.lenses.opts.trustStorePassword }}-Djavax.net.ssl.trustStorePassword="${CLIENT_OPTS_TRUSTSTORE_PASSWORD}" {{ end -}}
-{{- if .Values.lenses.lensesOpts }}{{- .Values.lenses.lensesOpts }}{{- end -}}
+{{- if .Values.lensesAgent.opts.keyStoreFileData }}-Djavax.net.ssl.keyStore="/mnt/secrets/lenses.opts.keystore.jks" {{ end -}}
+{{- if .Values.lensesAgent.opts.keyStorePassword }}-Djavax.net.ssl.keyStorePassword="${CLIENT_OPTS_KEYSTORE_PASSWORD}" {{ end -}}
+{{- if .Values.lensesAgent.opts.trustStoreFileData }}-Djavax.net.ssl.trustStore="/mnt/secrets/lenses.opts.truststore.jks" {{ end -}}
+{{- if .Values.lensesAgent.opts.trustStorePassword }}-Djavax.net.ssl.trustStorePassword="${CLIENT_OPTS_TRUSTSTORE_PASSWORD}" {{ end -}}
+{{- if .Values.lensesAgent.lensesOpts }}{{- .Values.lensesAgent.lensesOpts }}{{- end -}}
 {{- end -}}
 
 {{- define "lensesLogBackOpts" -}}
-{{- if .Values.lenses.logbackXml }}-Dlogback.configurationFile="file:{{ .Values.lenses.logbackXml}}" {{ end -}}
-{{- if .Values.lenses.jvm.logBackOpts }}{{- .Values.lenses.jvm.logBackOpts }}{{- end -}}
+{{- if .Values.lensesAgent.logbackXml }}-Dlogback.configurationFile="file:{{ .Values.lensesAgent.logbackXml}}" {{ end -}}
+{{- if .Values.lensesAgent.jvm.logBackOpts }}{{- .Values.lensesAgent.jvm.logBackOpts }}{{- end -}}
 {{- end -}}
 
 {{- define "agentKeySecretName" -}}

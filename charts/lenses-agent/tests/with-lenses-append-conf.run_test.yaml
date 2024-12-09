@@ -4,7 +4,7 @@ templates:
 tests:
   - it: should work when lenses append is used
     set:
-      lenses:
+      lensesAgent:
         append:
           conf: |
             lenses.kubernetes.namespaces = {
@@ -21,7 +21,7 @@ tests:
             }
   - it: should work when lenses append is used along with postgres
     set:
-      lenses:
+      lensesAgent:
         storage:
           postgres:
             enabled: true

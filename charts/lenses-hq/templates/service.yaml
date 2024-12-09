@@ -29,11 +29,11 @@ spec:
     {{- if include "nodePort" . }}
     nodePort: {{ include "nodePort" . }}
     {{- end }}
-    targetPort:  {{ .Values.restPort }}
+    targetPort: {{ include "extractPort" .Values.lensesHq.http.address }}
   - name: http-metrics
-    port: {{ regexReplaceAll "^[^0-9]*" .Values.lensesHq.metrics.prometheusAddress "" | int }}
+    port: {{ include "extractPort" .Values.lensesHq.metrics.prometheusAddress }}
   - name: agents
-    port: {{ int (trimPrefix ":" .Values.lensesHq.agents.address) }}
+    port: {{ include "extractPort" .Values.lensesHq.agents.address }}
     targetPort: agents
   selector:
     app: {{ include "fullname" . }}

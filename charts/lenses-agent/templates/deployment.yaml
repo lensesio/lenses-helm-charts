@@ -1,8 +1,8 @@
 {{/* Deliberately fail helm deployment if these values are set */}}
 {{- $outer := . -}}
 {{- range tuple "zookeepers" "schemaRegistries" "connectClusters" "kafka" }}
-  {{- if hasKey $outer.Values.lenses . }}
-    {{ fail (printf "%s%s%s" "Setting configuration value .Values.lenses." . " is deprecated. Please use the provision yaml instead. See documentation here.") }}
+  {{- if hasKey $outer.Values.lensesAgent . }}
+    {{ fail (printf "%s%s%s" "Setting configuration value .Values.lensesAgent." . " is deprecated. Please use the provision yaml instead. See documentation here.") }}
   {{ end }}
 {{ end }}
 
@@ -56,8 +56,8 @@ spec:
         {{- range $key, $value := .Values.podTemplateAnnotations }}
         {{ $key }}: {{ $value | quote }}
         {{- end }}
-        {{- if  (include "lensesAppendConf" .) }}
-        checksum/lenses.append.conf: {{ include "lensesAppendConf" . | sha256sum }}
+        {{- if  (include "lensesAgentAppendConf" .) }}
+        checksum/lenses.append.conf: {{ include "lensesAgentAppendConf" . | sha256sum }}
         {{- end }}
     spec:
       {{- if .Values.nodeSelector }}
@@ -87,11 +87,9 @@ spec:
         - name: provision-secrets
           secret:
             secretName: {{include "provisionFullname" . | quote}}
-        {{- if eq .Values.lenses.provision.version "2" }}
         - name: provision-secrets-files
           secret:
             secretName: {{ (printf "%s-%s" (include "provisionFullname" .) "files") | quote}}
-        {{- end }}
        {{- if and (hasKey .Values "containerSecurityContext") (hasKey .Values.containerSecurityContext "readOnlyRootFilesystem") (eq .Values.containerSecurityContext.readOnlyRootFilesystem true) }}
         - name: tmp-volume
           emptyDir: {}
@@ -107,11 +105,6 @@ spec:
         - name: config
           configMap:
             name: {{include "fullname" . | quote}}
-        {{- if .Values.persistence.enabled }}
-        - name: storage
-          persistentVolumeClaim:
-            claimName: {{ default (include "claimName" .) .Values.persistence.existingClaim }}
-        {{- end }}
         {{- if .Values.persistence.log.enabled }}
         - name: logs
           persistentVolumeClaim:
@@ -126,7 +119,7 @@ spec:
       {{- end }}
       containers:
       - name: {{ .Chart.Name }}
-        image: {{ include "lensesImage" . | quote }}
+        image: {{ include "lensesAgentImage" . | quote }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         {{- if .Values.containerSecurityContext }}
         securityContext:
@@ -134,7 +127,7 @@ spec:
         {{- end }}
         ports:
         - containerPort: {{ .Values.restPort }}
-        {{- if .Values.lenses.livenessProbe.enabled }}
+        {{- if .Values.lensesAgent.livenessProbe.enabled }}
         livenessProbe:
           httpGet:
             path: /
@@ -149,10 +142,6 @@ spec:
           - name: config
             mountPath: "/mnt/settings/lenses.append.conf"
             subPath: "lenses.append.conf"
-          {{- if .Values.persistence.enabled }}
-          - name: storage
-            mountPath: "/data/storage"
-          {{- end }}
           {{- if .Values.persistence.log.enabled }}
           - name: logs
             mountPath: "/data/log"
@@ -160,12 +149,10 @@ spec:
           {{- if .Values.additionalVolumeMounts }}
             {{- toYaml .Values.additionalVolumeMounts | nindent 10 }}
           {{- end }}
-        {{- if and .Values.lenses.provision.enabled (eq .Values.lenses.provision.version "2") }}
           - name: provision-secrets
-            mountPath: {{ $.Values.lenses.provision.path }}
+            mountPath: {{ $.Values.lensesAgent.provision.path }}
           - name: provision-secrets-files
-            mountPath: {{ $.Values.lenses.provision.path }}/files
-        {{- end }}
+            mountPath: {{ $.Values.lensesAgent.provision.path }}/files
         {{- if and (hasKey .Values "containerSecurityContext") (hasKey .Values.containerSecurityContext "readOnlyRootFilesystem") (eq .Values.containerSecurityContext.readOnlyRootFilesystem true) }}
           - name: tmp-volume
             mountPath: /tmp
@@ -177,11 +164,11 @@ spec:
         env:
         - name: LENSES_OPTS
           value: {{include "lensesOpts" . | default "" | quote}}
-        {{- if .Values.lenses.opts.trustStoreFileData }}
+        {{- if .Values.lensesAgent.opts.trustStoreFileData }}
         - name: CLIENT_OPTS_TRUSTSTORE_FILE
           value: "/mnt/secrets/lenses.opts.truststore.jks"
         {{- end }}
-        {{- if .Values.lenses.opts.trustStorePassword }}
+        {{- if .Values.lensesAgent.opts.trustStorePassword }}
         - name: CLIENT_OPTS_TRUSTSTORE_PASSWORD
           valueFrom:
             secretKeyRef:
@@ -190,8 +177,8 @@ spec:
         {{- end }}
         - name: LENSES_HEAP_OPTS
           value: |-
-                {{- if (.Values.lenses.jvm).heapOpts }}
-                {{ .Values.lenses.jvm.heapOpts }}
+                {{- if (.Values.lensesAgent.jvm).heapOpts }}
+                {{ .Values.lensesAgent.jvm.heapOpts }}
                 {{- else }}
                 {{- $limitsMemory := (.Values.resources.limits).memory | default "5Gi" -}}
                 {{- $limitsMemoryGi := regexReplaceAll "[^0-9]" $limitsMemory "" | int -}}
@@ -206,26 +193,24 @@ spec:
                 {{- end }}
         - name: LENSES_LOG4J_OPTS
           value: {{include "lensesLogBackOpts" . | default "" | quote}}
-        {{- if.Values.lenses.jvm.performanceOpts }}
+        {{- if.Values.lensesAgent.jvm.performanceOpts }}
         - name: LENSES_PERFORMANCE_OPTS
-          value: {{ .Values.lenses.jvm.performanceOpts | quote }}
+          value: {{ .Values.lensesAgent.jvm.performanceOpts | quote }}
         {{- end }}
         - name: LENSES_PORT
           value: {{ .Values.restPort | quote }}
         - name: LENSES_JMX_PORT
           value: "9101"
-        {{- if .Values.lenses.grafanaUrl }}
+        {{- if .Values.lensesAgent.grafanaUrl }}
         - name: LENSES_GRAFANA
-          value: {{ .Values.lenses.grafanaUrl | quote }}
+          value: {{ .Values.lensesAgent.grafanaUrl | quote }}
         {{- end }}
-        {{- if and .Values.lenses.provision.enabled (eq .Values.lenses.provision.version "2") }}
         # Provisioning
         - name: LENSES_PROVISIONING_PATH
-          value: {{ .Values.lenses.provision.path }}
-        {{- if .Values.lenses.provision.interval }}
+          value: {{ .Values.lensesAgent.provision.path }}
+        {{- if .Values.lensesAgent.provision.interval }}
         - name: LENSES_PROVISIONING_INTERVAL
-          value: {{ .Values.lenses.provision.interval }}
-        {{- end }}
+          value: {{ .Values.lensesAgent.provision.interval }}
         {{- if .Values.monitoring.port }}
         - name: PROMETHEUS_METRICS_PORT
           value: {{ .Values.monitoring.port | quote }}
@@ -236,15 +221,15 @@ spec:
         - name: LENSESHQ_AGENT_KEY
           valueFrom:
             secretKeyRef:
-            {{- if contains "createNew" .Values.lenses.hq.agentKey.secret.type }}
+            {{- if contains "createNew" .Values.lensesAgent.hq.agentKey.secret.type }}
               name: {{ include "agentKeySecretName" . }}
               key: key
-            {{ else if contains "precreated" .Values.lenses.hq.agentKey.secret.type }}
-              name: {{ .Values.lenses.hq.agentKey.secret.name }}
-              key: {{ .Values.lenses.hq.agentKey.secret.key }}
-            {{ else if contains "externalSecret" .Values.lenses.hq.agentKey.secret.type }}
+            {{ else if contains "precreated" .Values.lensesAgent.hq.agentKey.secret.type }}
+              name: {{ .Values.lensesAgent.hq.agentKey.secret.name }}
+              key: {{ .Values.lensesAgent.hq.agentKey.secret.key }}
+            {{ else if contains "externalSecret" .Values.lensesAgent.hq.agentKey.secret.type }}
               name: {{ include "agentKeySecretName" . }}
-              key: {{ .Values.lenses.hq.agentKey.secret.key }}
+              key: {{ .Values.lensesAgent.hq.agentKey.secret.key }}
             {{- end }}
         - name: LENSES_TOPICS_EXTERNAL_TOPOLOGY
           value: {{include "topologyTopic" . | quote}}
@@ -255,24 +240,24 @@ spec:
 
         # Kubernetes Processors
         - name: LENSES_SQL_EXECUTION_MODE
-          value: {{ .Values.lenses.sql.mode | quote }}
+          value: {{ .Values.lensesAgent.sql.mode | quote }}
 
         # Kubernetes processors
-        {{- if eq .Values.lenses.sql.mode "KUBERNETES"}}
+        {{- if eq .Values.lensesAgent.sql.mode "KUBERNETES"}}
         - name: LENSES_KUBERNETES_PROCESSOR_IMAGE_NAME
-          value: {{ .Values.lenses.sql.processorImage | quote }}
+          value: {{ .Values.lensesAgent.sql.processorImage | quote }}
         - name: LENSES_KUBERNETES_PROCESSOR_IMAGE_TAG
-          value: {{ .Values.lenses.sql.processorImageTag | quote }}
+          value: {{ .Values.lensesAgent.sql.processorImageTag | quote }}
         - name: LENSES_KUBERNETES_POD_HEAP
-          value: {{ .Values.lenses.sql.heap | quote }}
+          value: {{ .Values.lensesAgent.sql.heap | quote }}
         - name: LENSES_KUBERNETES_POD_MIN_HEAP
-          value: {{ .Values.lenses.sql.minHeap | quote }}
+          value: {{ .Values.lensesAgent.sql.minHeap | quote }}
         - name: LENSES_KUBERNETES_POD_MEM_LIMIT
-          value: {{ .Values.lenses.sql.memLimit | quote }}
+          value: {{ .Values.lensesAgent.sql.memLimit | quote }}
         - name: LENSES_KUBERNETES_POD_MEM_REQUEST
-          value: {{ .Values.lenses.sql.memRequest | quote }}
+          value: {{ .Values.lensesAgent.sql.memRequest | quote }}
         - name: LENSES_KUBERNETES_POD_LIVENESS_INITIAL_DELAY
-          value: {{ .Values.lenses.sql.livenessInitialDelay | quote }}
+          value: {{ .Values.lensesAgent.sql.livenessInitialDelay | quote }}
         {{- end }}
 
         # Lenses configuration flags
@@ -286,24 +271,24 @@ spec:
         - name: LT_PACKAGE_VERSION
           value: "{{ .Chart.Version }}"
 
-        {{- if .Values.lenses.pauseExec.enabled }}
+        {{- if .Values.lensesAgent.pauseExec.enabled }}
         - name: PAUSE_EXEC
           value: "true"
         {{- end }}
 
-        {{- range $key, $value := .Values.lenses.env }}
+        {{- range $key, $value := .Values.lensesAgent.env }}
         - name: {{ $key | quote }}
           value: {{ $value | quote }}
         {{- end }}
 
-        {{- range $key, $value := .Values.lenses.configOverrides }}
+        {{- range $key, $value := .Values.lensesAgent.configOverrides }}
         - name: {{ printf "%s" $key | replace "." "_" | upper | quote }}
           value: {{ $value | quote }}
         {{- end }}
 
         # Additional env variables
-        {{- if .Values.lenses.additionalEnv }}
-        {{- toYaml .Values.lenses.additionalEnv | nindent 8 }}
+        {{- if .Values.lensesAgent.additionalEnv }}
+        {{- toYaml .Values.lensesAgent.additionalEnv | nindent 8 }}
         {{- end }}
 
       {{- if .Values.sidecarContainers }}

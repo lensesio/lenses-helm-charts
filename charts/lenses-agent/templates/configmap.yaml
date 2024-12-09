@@ -11,4 +11,4 @@ metadata:
     lenses.io/app.type: lenses-agent-configmap
 data:
   "lenses.append.conf": |
-    {{- include "lensesAppendConf" . | nindent 4 }}
+    {{- include "lensesAgentAppendConf" . | nindent 4 }}

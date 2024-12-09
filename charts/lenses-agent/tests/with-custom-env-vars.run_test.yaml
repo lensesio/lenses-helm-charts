@@ -4,7 +4,7 @@ templates:
 tests:
   - it: should work when custom env vars is set
     set:
-      lenses:
+      lensesAgent:
         env:
           FOO: "bar"
     asserts:
@@ -16,7 +16,7 @@ tests:
             value: bar
   - it: should work when custom multiline env vars is set
     set:
-      lenses:
+      lensesAgent:
         env:
           LENSES_CONNECTORS_INFO: |
             [
