@@ -437,11 +437,14 @@ lensesHq:
         # @section -- Lenses HQ Database startup values
         key:
         externalSecret:
+
           secretStoreRef:
-            clusterSecretStore:
-              # -- (string) Name of cluster secret store created by ESO.
-              # @section -- Lenses HQ Database startup values
-              name:
+            # -- (string) Type of secret store created by ESO.
+            # @section -- Lenses HQ Database startup values
+            type: ""
+            # -- (string) Name of cluster secret store created by ESO.
+            # @section -- Lenses HQ Database startup values
+            name: ""
 
   # @section -- Lenses HQ startup values
   logger:
