@@ -435,9 +435,10 @@ lensesHq:
 
         # -- (string) Secret key where password will be read from
         # @section -- Lenses HQ Database startup values
-        key:
-        externalSecret:
+        key: ""
 
+        externalSecret:
+          additionalSpecs: {}
           secretStoreRef:
             # -- (string) Type of secret store created by ESO.
             # @section -- Lenses HQ Database startup values
