@@ -1,6 +1,6 @@
 # lenses-hq
 
-![Version: 6.0.0-alpha.17](https://img.shields.io/badge/Version-6.0.0--alpha.17-informational?style=flat-square) ![AppVersion: 6.0.0-alpha.17](https://img.shields.io/badge/AppVersion-6.0.0--alpha.17-informational?style=flat-square)
+![Version: 6.0.0-alpha.18](https://img.shields.io/badge/Version-6.0.0--alpha.18-informational?style=flat-square) ![AppVersion: 6.0.0-alpha.18](https://img.shields.io/badge/AppVersion-6.0.0--alpha.18-informational?style=flat-square)
 
 A chart for Lenses HQ deployment which provides a unified, streamlined view of the entire event infrastructure—whether on-premises or in the cloud—through a single, comprehensive interface.
 
@@ -169,6 +169,7 @@ The command deploys Lenses HQ on the Kubernetes cluster in the example configura
 | lensesHq.storage.postgres.host | string | `""` | Hostname of running database instance. **Required: true** |
 | lensesHq.storage.postgres.params | string | `{}` | Contains connection string parameters as key/values pairs. It allows    fine-grained control of connection settings. The parameters can be found    here: https://www.postgresql.org/docs/current/libpq-connect.html#LIBPQ-PARAMKEYWORDS **Required: false** |
 | lensesHq.storage.postgres.passwordSecret | object | `{"externalSecret":{"additionalSpecs":{},"secretStoreRef":{"name":"","type":""}},"key":"","name":"","password":"","type":"precreated"}` | Definition of secret that has been precreated and has postgres database password |
+| lensesHq.storage.postgres.passwordSecret.externalSecret.additionalSpecs | string | `{}` | Additional specifications that would enhance `spec:` of created ExternalSecret |
 | lensesHq.storage.postgres.passwordSecret.externalSecret.secretStoreRef.name | string | `""` | Name of cluster secret store created by ESO. |
 | lensesHq.storage.postgres.passwordSecret.externalSecret.secretStoreRef.type | string | `""` | Type of secret store created by ESO. |
 | lensesHq.storage.postgres.passwordSecret.key | string | `""` | Secret key where password will be read from |

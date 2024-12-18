@@ -438,6 +438,8 @@ lensesHq:
         key: ""
 
         externalSecret:
+          # -- (string) Additional specifications that would enhance `spec:` of created ExternalSecret
+          # @section -- Lenses HQ Database startup values
           additionalSpecs: {}
           secretStoreRef:
             # -- (string) Type of secret store created by ESO.
