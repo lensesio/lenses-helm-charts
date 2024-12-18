@@ -1021,6 +1021,23 @@
                                             ]
                                         }
                                     },
+                                    "key": {
+                                        "type": "string",
+                                        "default": null,
+                                        "title": "The key Schema",
+                                        "examples": [
+                                            "secretKeyName",
+                                            "/hello-service/password"
+                                        ]
+                                    },
+                                    "password": {
+                                        "type": ["string", "null"],
+                                        "default": null,
+                                        "title": "Password for createNew type",
+                                        "examples": [
+                                            "abc123def"
+                                        ]
+                                    },
                                     "externalSecret": {
                                         "type": "object",
                                         "default": {},
@@ -1029,58 +1046,34 @@
                                             "secretStoreRef"
                                         ],
                                         "properties": {
+                                            "additionalSpecs":{
+                                                "type":"object",
+                                                "default": {},
+                                                "title": "Schema for extending externalSecret specs"
+                                            },
                                             "secretStoreRef":{
                                                 "type":"object",
                                                 "default": {},
                                                 "title": "Schema for externalSecret reference in case of externalSecret usage",
                                                 "required":[
-                                                    "clusterSecretStore"
+                                                    "type",
+                                                    "name"
                                                 ],
                                                 "properties": {
-                                                    "clusterSecretStore": {
-                                                        "type": "object",
-                                                        "default": {},
-                                                        "title": "Schema for externalSecret reference in case of externalSecret usage",
-                                                        "required": [
-                                                            "name"
-                                                        ],
-                                                        "properties": {
-                                                            "name": {
-                                                                "type": ["string", "null"],
-                                                                "default": "",
-                                                                "examples": [
-                                                                    "secretName"
-                                                                ]
-                                                            }
-                                                        }
+                                                    "type": {
+                                                        "type": "string",
+                                                        "default": "",
+                                                        "title": "Type of external secret store"
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "default": "",
+                                                        "title": "The secret name reference"
                                                     }
                                                 }
                                             }
-                                        },
-                                        "key": {
-                                            "type": "string",
-                                            "default": null,
-                                            "title": "The key Schema",
-                                            "examples": [
-                                                "secretKeyName",
-                                                "/hello-service/password"
-                                            ]
-                                        },
-                                        "password": {
-                                            "type": ["string", "null"],
-                                            "default": null,
-                                            "title": "Password for createNew type",
-                                            "examples": [
-                                                "abc123def"
-                                            ]
                                         }
-                                    },
-                                    "examples": [{
-                                        "type": "precreated",
-                                        "name": null,
-                                        "key": null,
-                                        "password": null
-                                    }]
+                                    }
                                 }
                             }
                         }

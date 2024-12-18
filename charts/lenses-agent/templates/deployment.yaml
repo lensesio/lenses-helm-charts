@@ -181,15 +181,23 @@ spec:
                 {{ .Values.lensesAgent.jvm.heapOpts }}
                 {{- else }}
                 {{- $limitsMemory := (.Values.resources.limits).memory | default "5Gi" -}}
-                {{- $limitsMemoryGi := regexReplaceAll "[^0-9]" $limitsMemory "" | int -}}
+                {{- $limitsMemoryGi := 0 }}
+                {{- $memory := "" }}
 
-                {{- if lt $limitsMemoryGi 5 -}}
-                {{- fail (printf "requests.limits.memory must be at least 5Gi. Current value: %s" .Values.resources.limits.memory) -}}
-                {{- else }}
-                {{- $xmx := sub $limitsMemoryGi 2 }}
-                {{- $xms := div $xmx 2 }}
-                {{ printf "-Xms%dG -Xmx%dG" $xms $xmx }}
-                {{- end }}
+                  {{- if regexMatch "[0-9]+Mi" $limitsMemory -}}
+                    {{- $memory = regexReplaceAll "[^0-9]" $limitsMemory "" | int -}}
+                    {{- $limitsMemoryGi = (round (div $memory 1024) 0) | int -}}
+                  {{- else }}
+                    {{- $limitsMemoryGi = regexReplaceAll "[^0-9]" $limitsMemory "" | int -}}
+                  {{- end -}}
+
+                  {{- if lt $limitsMemoryGi 5 -}}
+                    {{- fail (printf "requests.limits.memory must be at least 5Gi. Current value: %d" $limitsMemoryGi) -}}
+                  {{- else }}
+                    {{- $xmx := sub $limitsMemoryGi 2 }}
+                    {{- $xms := div $xmx 2 }}
+                    {{ printf "-Xms%dG -Xmx%dG" $xms $xmx }}
+                  {{- end }}
                 {{- end }}
         - name: LENSES_LOG4J_OPTS
           value: {{include "lensesLogBackOpts" . | default "" | quote}}

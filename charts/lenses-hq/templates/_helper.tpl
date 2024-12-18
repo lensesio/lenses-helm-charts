@@ -121,17 +121,17 @@ http:
   {{- end }}
   accessControlAllowCredentials: {{ .Values.lensesHq.http.accessControlAllowCredentials }}
   secureSessionCookies: {{ .Values.lensesHq.http.secureSessionCookies }}
-  {{ if (.Values.lensesHq.auth.tls).enabled }}
+  {{ if (.Values.lensesHq.http.tls).enabled }}
   tls:
-    enabled: {{ .Values.lensesHq.auth.tls.enabled -}}
-    {{ if (.Values.lensesHq.auth.tls.cert).referenceFromSecret }}
-    cert: $(LENSESHQ_AUTH_TLS_CERT)
+    enabled: {{ .Values.lensesHq.http.tls.enabled -}}
+    {{ if (.Values.lensesHq.http.tls.cert).referenceFromSecret }}
+    cert: $(LENSESHQ_HTTP_TLS_CERT)
     {{- else }}
     cert: |-
-{{ .Values.lensesHq.auth.tls.cert.stringData | indent 10 }}
+{{ .Values.lensesHq.http.tls.cert.stringData | indent 10 }}
     {{ end }}
-    key: $(LENSESHQ_AUTH_TLS_KEY)
-    verboseLogs: {{ .Values.lensesHq.auth.tls.verboseLogs }}
+    key: $(LENSESHQ_HTTP_TLS_KEY)
+    verboseLogs: {{ .Values.lensesHq.http.tls.verboseLogs }}
     {{ end }}
 agents:
   address: {{ .Values.lensesHq.agents.address }}

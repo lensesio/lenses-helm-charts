@@ -435,13 +435,19 @@ lensesHq:
 
         # -- (string) Secret key where password will be read from
         # @section -- Lenses HQ Database startup values
-        key:
+        key: ""
+
         externalSecret:
+          # -- (string) Additional specifications that would enhance `spec:` of created ExternalSecret
+          # @section -- Lenses HQ Database startup values
+          additionalSpecs: {}
           secretStoreRef:
-            clusterSecretStore:
-              # -- (string) Name of cluster secret store created by ESO.
-              # @section -- Lenses HQ Database startup values
-              name:
+            # -- (string) Type of secret store created by ESO.
+            # @section -- Lenses HQ Database startup values
+            type: ""
+            # -- (string) Name of cluster secret store created by ESO.
+            # @section -- Lenses HQ Database startup values
+            name: ""
 
   # @section -- Lenses HQ startup values
   logger:
