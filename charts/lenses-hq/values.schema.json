@@ -678,6 +678,89 @@
                                     "manual"
                                 ]
                             },
+                            "authnRequestSignature": {
+                                "type": "object",
+                                "default": {},
+                                "title": "The tls Schema",
+                                "properties": {
+                                    "enabled": {
+                                        "type": "boolean",
+                                        "default": false,
+                                        "title": "Boolean value to enable TLS between The Agent and HQ",
+                                        "examples": [
+                                            true,
+                                            false
+                                        ]
+                                    },
+                                    "authnRequestSigningCert":{
+                                        "type": "object",
+                                        "default": {},
+                                        "title": "The cert Schema",
+                                        "properties": {
+                                            "referneceFromSecret":{
+                                                "type": "boolean",
+                                                "default": false,
+                                                "title": "Option to enable option to reference certificate from precreated secret",
+                                                "examples": [
+                                                    true,
+                                                    false
+                                                ]
+                                            },
+                                            "secretName":{
+                                                "type": "string",
+                                                "default": "",
+                                                "title": "Secret name where certificate is being stored.",
+                                                "examples": [
+                                                    "hq-pub-cert"
+                                                ]
+                                            },
+                                            "secretKeyName":{
+                                                "type": "string",
+                                                "default": "",
+                                                "title": "Secret name where certificate is being stored.",
+                                                "examples": [
+                                                  "hq.pem.crt"
+                                                ]
+                                            },
+                                            "stringData":{
+                                                "type": "string",
+                                                "default": "",
+                                                "title": "Certificate in plain text"
+                                            }
+                                        }
+                                    },
+                                    "authnRequestSigningKey":{
+                                        "type": "object",
+                                        "default": {},
+                                        "title": "Schema for private key reference",
+                                        "properties": {
+                                            "secret":{
+                                                "type": "object",
+                                                "default": {},
+                                                "title": "Schema for private key secret",
+                                                "properties": {
+                                                    "name":{
+                                                        "type": "string",
+                                                        "default": "",
+                                                        "title": "Name of a secret where key is being stored",
+                                                        "examples": [
+                                                            "hq-cert-pk"
+                                                        ]
+                                                    },
+                                                    "key":{
+                                                        "type": "string",
+                                                        "default": "",
+                                                        "title": "Name of key under which private key is stored within a Kubernetes secret",
+                                                        "examples": [
+                                                            "hq-tls-test.key.pem"
+                                                        ]
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            },
                             "usersGroupMembershipManagementMode": {
                                 "type": "string",
                                 "default": "",

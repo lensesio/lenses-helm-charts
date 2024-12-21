@@ -113,6 +113,17 @@ auth:
     uiRootURL: {{ .Values.lensesHq.auth.saml.uiRootURL }}
     groupAttributeKey: {{ .Values.lensesHq.auth.saml.groupAttributeKey }}
     {{- end }}
+    authnRequestSignature:
+      enabled: {{ .Values.lensesHq.auth.saml.authnRequestSignature.enabled -}}
+      {{ if (.Values.lensesHq.auth.saml.authnRequestSignature).enabled }}
+      {{ if (.Values.lensesHq.auth.saml.authnRequestSignature.authnRequestSigningCert).referenceFromSecret }}
+      cert: $(LENSESHQ_AUTH_SAML_SIGNREQ_CERT)
+      {{- else }}
+      cert: |-
+{{ .Values.lensesHq.auth.saml.authnRequestSignature.authnRequestSigningCert.stringData | indent 8 }}
+      {{ end }}
+      key: $(LENSESHQ_AUTH_SAML_SIGNREQ_KEY)
+      {{- end }}
 http:
   address: {{ .Values.lensesHq.http.address }}
   accessControlAllowOrigin:
