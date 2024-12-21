@@ -301,27 +301,33 @@ lensesHq:
       groupAttributeKey: "groups"
 
       authnRequestSignature:
+        # -- Enabled setting signature certificate in case "Request Signature Verification"
+        # enabled on IdP side
+        # @section -- Lenses HQ SAML startup values
+        # **Required: false**
         enabled: true
         authnRequestSigningCert:
           # -- (string) Enables usage of secret for certificate.
-          # @section -- Lenses HQ Agent startup values
+          # @section -- Lenses HQ SAML startup values
           # **Required: false**
           referenceFromSecret: false
           # -- (string) Secret name where certificate is stored.
-          # @section -- Lenses HQ Agent startup values
+          # @section -- Lenses HQ SAML startup values
           # **Required: false**
           secretName: ""
           # -- (string) Secret key where within a secret where certificate is sotred.
-          # @section -- Lenses HQ Agent startup values
+          # @section -- Lenses HQ SAML startup values
           # **Required: false**
           secretKeyName: ""
           # -- (string) Sets the PEM formatted public certificate.
-          # @section -- Lenses HQ Agent startup values
+          # @section -- Lenses HQ SAML startup values
           # **Required: false**
           stringData: |
 
       authnRequestSigningKey:
-        # Reference to precreated secret name and key.
+        # -- (string) Reference to precreated secret name and key.
+        # @section -- Lenses HQ SAML startup values
+        # **Required: false**
         secret:
           name: ""
           key: ""
