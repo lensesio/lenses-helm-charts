@@ -324,13 +324,13 @@ lensesHq:
           # **Required: false**
           stringData: |
 
-      authnRequestSigningKey:
-        # -- (string) Reference to precreated secret name and key.
-        # @section -- Lenses HQ SAML startup values
-        # **Required: false**
-        secret:
-          name: ""
-          key: ""
+        authnRequestSigningKey:
+          # -- (string) Reference to precreated secret name and key.
+          # @section -- Lenses HQ SAML startup values
+          # **Required: false**
+          secret:
+            name: ""
+            key: ""
   http:
     # -- (string) Sets the address the HTTP servers listens at.
     # @section -- Lenses HQ HTTP startup values
