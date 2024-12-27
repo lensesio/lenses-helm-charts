@@ -1,6 +1,6 @@
 # lenses-hq
 
-![Version: 6.0.0-alpha.18](https://img.shields.io/badge/Version-6.0.0--alpha.18-informational?style=flat-square) ![AppVersion: 6.0.0-alpha.18](https://img.shields.io/badge/AppVersion-6.0.0--alpha.18-informational?style=flat-square)
+![Version: 6.0.0-alpha.19](https://img.shields.io/badge/Version-6.0.0--alpha.19-informational?style=flat-square) ![AppVersion: 6.0.0-alpha.19](https://img.shields.io/badge/AppVersion-6.0.0--alpha.19-informational?style=flat-square)
 
 A chart for Lenses HQ deployment which provides a unified, streamlined view of the entire event infrastructure—whether on-premises or in the cloud—through a single, comprehensive interface.
 
@@ -100,6 +100,12 @@ The command deploys Lenses HQ on the Kubernetes cluster in the example configura
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
+| lensesHq.auth.saml.authnRequestSignature.authnRequestSigningCert.referenceFromSecret | string | `false` | Enables usage of secret for certificate. **Required: false** |
+| lensesHq.auth.saml.authnRequestSignature.authnRequestSigningCert.secretKeyName | string | `""` | Secret key where within a secret where certificate is sotred. **Required: false** |
+| lensesHq.auth.saml.authnRequestSignature.authnRequestSigningCert.secretName | string | `""` | Secret name where certificate is stored. **Required: false** |
+| lensesHq.auth.saml.authnRequestSignature.authnRequestSigningCert.stringData | string | `""` | Sets the PEM formatted public certificate. **Required: false** |
+| lensesHq.auth.saml.authnRequestSignature.enabled | bool | `true` | Enabled setting signature certificate in case "Request Signature Verification" enabled on IdP side **Required: false** |
+| lensesHq.auth.saml.authnRequestSigningKey.secret | string | `{"key":"","name":""}` | Reference to precreated secret name and key. **Required: false** |
 | lensesHq.auth.saml.baseURL | string | `""` | Defines base URL of Panoptes for IdP redirects. **Required: true** |
 | lensesHq.auth.saml.enabled | bool | `false` | Enables SAML / SSO authentication **Required: true** |
 | lensesHq.auth.saml.entityID | string | `""` | Defines the Entity ID. **Required: true** |
