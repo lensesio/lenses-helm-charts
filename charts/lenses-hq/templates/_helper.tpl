@@ -115,14 +115,18 @@ auth:
     {{- end }}
     authnRequestSignature:
       enabled: {{ .Values.lensesHq.auth.saml.authnRequestSignature.enabled -}}
-      {{ if (.Values.lensesHq.auth.saml.authnRequestSignature).enabled }}
-      {{ if (.Values.lensesHq.auth.saml.authnRequestSignature.authnRequestSigningCert).referenceFromSecret }}
+      {{- if (.Values.lensesHq.auth.saml.authnRequestSignature).enabled }}
+      {{- if (.Values.lensesHq.auth.saml.authnRequestSignature.authnRequestSigningCert).referenceFromSecret }}
       cert: $(LENSESHQ_AUTH_SAML_SIGNREQ_CERT)
       {{- else }}
+      {{ if (not (empty .Values.lensesHq.auth.saml.authnRequestSignature.authnRequestSigningCert.stringData)) }}
       cert: |-
 {{ .Values.lensesHq.auth.saml.authnRequestSignature.authnRequestSigningCert.stringData | indent 8 }}
-      {{ end }}
+      {{- end }}
+      {{- end }}
+      {{ if (not (empty .Values.lensesHq.auth.saml.authnRequestSignature.authnRequestSigningKey.secret.name)) }}
       key: $(LENSESHQ_AUTH_SAML_SIGNREQ_KEY)
+      {{- end -}}
       {{- end }}
 http:
   address: {{ .Values.lensesHq.http.address }}
@@ -167,8 +171,10 @@ database:
   password: $(LENSESHQ_PG_PASSWORD)
   schema: {{ $db.schema }}
   database: {{ $db.database }}
+  {{- if $db.params }}
   params:
 {{ toYaml $db.params | indent 8 }}
+  {{- end }}
   TLS: {{ $db.tls }}
   {{- end }}
 {{- end }}

@@ -236,7 +236,7 @@ spec:
               name: {{ .Values.lensesAgent.hq.agentKey.secret.name }}
               key: {{ .Values.lensesAgent.hq.agentKey.secret.key }}
             {{ else if contains "externalSecret" .Values.lensesAgent.hq.agentKey.secret.type }}
-              name: {{ include "agentKeySecretName" . }}
+              name: {{ .Values.lensesAgent.hq.agentKey.secret.name }}
               key: {{ .Values.lensesAgent.hq.agentKey.secret.key }}
             {{- end }}
         - name: LENSES_TOPICS_EXTERNAL_TOPOLOGY
