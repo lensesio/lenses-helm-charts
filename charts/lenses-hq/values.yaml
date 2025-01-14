@@ -50,7 +50,7 @@ resources:
 image:
   # -- Image repository
   # @section -- Custom deployment values
-  repository: ""
+  repository: "lensting/lenses-hq:6-preview"
 
   # -- Default to .Chart.AppVersion
   # tag:

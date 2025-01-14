@@ -52,9 +52,9 @@ The command deploys Lenses Agent on the Kubernetes cluster in the example config
 |-----|------|---------|-------------|
 | affinity | dict | `{}` | Deployment affinity rules |
 | annotations | dict | `{}` | Custom deployment annotations |
-| image | object | `{"pullPolicy":"IfNotPresent","repository":"lensesio/lenses"}` | Image map |
+| image | object | `{"pullPolicy":"IfNotPresent","repository":"lensting/lenses-agent:6-preview"}` | Image map |
 | image.pullPolicy | string | `"IfNotPresent"` | Image pullPolicy |
-| image.repository | string | `"lensesio/lenses"` | Image repository |
+| image.repository | string | `"lensting/lenses-agent:6-preview"` | Image repository |
 | labels | dict | `{}` | Deployment labels |
 | nodeSelector | dict | `{}` | Deployment nodeSelector |
 | podTemplateAnnotations | dict | `{}` | Annotations here go into the PodTemplateSpec at deployment.spec.template.annotations. |
