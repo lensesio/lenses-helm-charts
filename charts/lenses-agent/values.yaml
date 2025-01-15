@@ -198,7 +198,6 @@ lensesAgent:
         # Required in case secret.type: "externalSecret", alongisde secret.key
         # @section -- Agent <-> HQ scope values
         externalSecret:
-          name: ""
           # -- (string) Additional specifications that would enhance `spec:` of created ExternalSecret
           # @section -- Agent <-> HQ scope values
           additionalSpecs: {}
