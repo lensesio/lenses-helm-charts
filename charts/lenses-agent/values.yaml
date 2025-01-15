@@ -8,7 +8,7 @@ fullnameOverride: ""
 image:
   # -- Image repository
   # @section -- Custom deployment values
-  repository: lensting/lenses-agent:6-preview
+  repository: lensting/lenses-agent
 
   # -- Default to .Chart.AppVersion
   # tag:
