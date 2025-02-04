@@ -52,9 +52,9 @@ The command deploys Lenses Agent on the Kubernetes cluster in the example config
 |-----|------|---------|-------------|
 | affinity | dict | `{}` | Deployment affinity rules |
 | annotations | dict | `{}` | Custom deployment annotations |
-| image | object | `{"pullPolicy":"IfNotPresent","repository":"lensting/lenses-agent:6-preview"}` | Image map |
+| image | object | `{"pullPolicy":"IfNotPresent","repository":"lensting/lenses-agent"}` | Image map |
 | image.pullPolicy | string | `"IfNotPresent"` | Image pullPolicy |
-| image.repository | string | `"lensting/lenses-agent:6-preview"` | Image repository |
+| image.repository | string | `"lensting/lenses-agent"` | Image repository |
 | labels | dict | `{}` | Deployment labels |
 | nodeSelector | dict | `{}` | Deployment nodeSelector |
 | podTemplateAnnotations | dict | `{}` | Annotations here go into the PodTemplateSpec at deployment.spec.template.annotations. |
@@ -153,7 +153,6 @@ The command deploys Lenses Agent on the Kubernetes cluster in the example config
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | fullnameOverride | string | `""` |  |
-| lensesAgent.hq.agentKey.secret.externalSecret.name | string | `""` |  |
 | lensesAgent.hq.agentKey.secret.key | string | `""` |  |
 | lensesAgent.hq.agentKey.secret.name | string | `""` |  |
 | lensesAgent.provision.connections | string | `nil` |  |

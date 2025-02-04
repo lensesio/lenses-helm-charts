@@ -41,9 +41,9 @@ The command deploys Lenses HQ on the Kubernetes cluster in the example configura
 |-----|------|---------|-------------|
 | affinity | dict | `{}` | Deployment affinity rules |
 | annotations | dict | `{}` | Custom deployment annotations |
-| image | object | `{"pullPolicy":"IfNotPresent","repository":"lensting/lenses-hq:6-preview"}` | Image map |
+| image | object | `{"pullPolicy":"IfNotPresent","repository":"lensting/lenses-hq"}` | Image map |
 | image.pullPolicy | string | `"IfNotPresent"` | Image pullPolicy |
-| image.repository | string | `"lensting/lenses-hq:6-preview"` | Image repository |
+| image.repository | string | `"lensting/lenses-hq"` | Image repository |
 | labels | dict | `{}` | Deployment labels |
 | nodeSelector | dict | `{}` | Deployment nodeSelector |
 | podTemplateAnnotations | dict | `{}` | Annotations here go into the PodTemplateSpec at deployment.spec.template.annotations. |
