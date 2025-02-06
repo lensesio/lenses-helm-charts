@@ -8,7 +8,7 @@ fullnameOverride: ""
 image:
   # -- Image repository
   # @section -- Custom deployment values
-  repository: lensesio/lenses
+  repository: lensting/lenses-agent
 
   # -- Default to .Chart.AppVersion
   # tag:
@@ -196,11 +196,18 @@ lensesAgent:
         ## Not necessary when externalSecret is being used
         name: ""
         # Required in case secret.type: "externalSecret", alongisde secret.key
+        # @section -- Agent <-> HQ scope values
         externalSecret:
-          name: ""
+          # -- (string) Additional specifications that would enhance `spec:` of created ExternalSecret
+          # @section -- Agent <-> HQ scope values
+          additionalSpecs: {}
           secretStoreRef:
-            clusterSecretStore:
-              name: ""
+            # -- (string) Type of secret store created by ESO.
+            # @section -- Agent <-> HQ scope values
+            type: ""
+            # -- (string) Name of cluster secret store created by ESO.
+            # @section -- Agent <-> HQ scope values
+            name: ""
 
         ## Required in case secret.type: "precreated": name & key
         # type: "precreated"

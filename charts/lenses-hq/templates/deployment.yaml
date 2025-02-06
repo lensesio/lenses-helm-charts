@@ -144,13 +144,15 @@ spec:
                 key: {{ .Values.lensesHq.http.tls.cert.secretKeyName }}
           {{- end }}
           {{- end }}
-          {{ if (.Values.lensesHq.auth.saml.authnRequestSignature).enabled }}
+          {{ if and ((.Values.lensesHq.auth.saml.authnRequestSignature).enabled) }}
+          {{ if (not (empty .Values.lensesHq.auth.saml.authnRequestSignature.authnRequestSigningKey.secret.name)) }}
           - name: LENSESHQ_AUTH_SAML_SIGNREQ_KEY
             valueFrom:
               secretKeyRef:
                 name: {{ .Values.lensesHq.auth.saml.authnRequestSignature.authnRequestSigningKey.secret.name }}
                 key: {{ .Values.lensesHq.auth.saml.authnRequestSignature.authnRequestSigningKey.secret.key }}
-          {{- if (.Values.lensesHq.auth.saml.authnRequestSignature).authnRequestSigningCert.referenceFromSecret }}
+          {{- end }}
+          {{- if  (.Values.lensesHq.auth.saml.authnRequestSignature).authnRequestSigningCert.referenceFromSecret }}
           - name: LENSESHQ_AUTH_SAML_SIGNREQ_CERT
             valueFrom:
               secretKeyRef:

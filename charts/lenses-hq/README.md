@@ -1,6 +1,6 @@
 # lenses-hq
 
-![Version: 6.0.0-alpha.19](https://img.shields.io/badge/Version-6.0.0--alpha.19-informational?style=flat-square) ![AppVersion: 6.0.0-alpha.19](https://img.shields.io/badge/AppVersion-6.0.0--alpha.19-informational?style=flat-square)
+![Version: 6.0.0-alpha.20](https://img.shields.io/badge/Version-6.0.0--alpha.20-informational?style=flat-square) ![AppVersion: 6.0.0-alpha.20](https://img.shields.io/badge/AppVersion-6.0.0--alpha.20-informational?style=flat-square)
 
 A chart for Lenses HQ deployment which provides a unified, streamlined view of the entire event infrastructure—whether on-premises or in the cloud—through a single, comprehensive interface.
 
@@ -41,9 +41,9 @@ The command deploys Lenses HQ on the Kubernetes cluster in the example configura
 |-----|------|---------|-------------|
 | affinity | dict | `{}` | Deployment affinity rules |
 | annotations | dict | `{}` | Custom deployment annotations |
-| image | object | `{"pullPolicy":"IfNotPresent","repository":""}` | Image map |
+| image | object | `{"pullPolicy":"IfNotPresent","repository":"lensting/lenses-hq"}` | Image map |
 | image.pullPolicy | string | `"IfNotPresent"` | Image pullPolicy |
-| image.repository | string | `""` | Image repository |
+| image.repository | string | `"lensting/lenses-hq"` | Image repository |
 | labels | dict | `{}` | Deployment labels |
 | nodeSelector | dict | `{}` | Deployment nodeSelector |
 | podTemplateAnnotations | dict | `{}` | Annotations here go into the PodTemplateSpec at deployment.spec.template.annotations. |
@@ -104,8 +104,8 @@ The command deploys Lenses HQ on the Kubernetes cluster in the example configura
 | lensesHq.auth.saml.authnRequestSignature.authnRequestSigningCert.secretKeyName | string | `""` | Secret key where within a secret where certificate is sotred. **Required: false** |
 | lensesHq.auth.saml.authnRequestSignature.authnRequestSigningCert.secretName | string | `""` | Secret name where certificate is stored. **Required: false** |
 | lensesHq.auth.saml.authnRequestSignature.authnRequestSigningCert.stringData | string | `""` | Sets the PEM formatted public certificate. **Required: false** |
+| lensesHq.auth.saml.authnRequestSignature.authnRequestSigningKey.secret | string | `{"key":"","name":""}` | Reference to precreated secret name and key. **Required: false** |
 | lensesHq.auth.saml.authnRequestSignature.enabled | bool | `true` | Enabled setting signature certificate in case "Request Signature Verification" enabled on IdP side **Required: false** |
-| lensesHq.auth.saml.authnRequestSigningKey.secret | string | `{"key":"","name":""}` | Reference to precreated secret name and key. **Required: false** |
 | lensesHq.auth.saml.baseURL | string | `""` | Defines base URL of Panoptes for IdP redirects. **Required: true** |
 | lensesHq.auth.saml.enabled | bool | `false` | Enables SAML / SSO authentication **Required: true** |
 | lensesHq.auth.saml.entityID | string | `""` | Defines the Entity ID. **Required: true** |

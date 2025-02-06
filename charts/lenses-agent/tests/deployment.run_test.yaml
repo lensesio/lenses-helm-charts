@@ -8,7 +8,7 @@ tests:
           of: Deployment
       - equal:
           path: spec.template.spec.containers[0].image
-          value: lensesio/lenses
+          value: lensting/lenses-agent
       - isEmpty:
           path: metadata.annotations
 
@@ -20,7 +20,7 @@ tests:
           of: Deployment
       - equal:
           path: spec.template.spec.containers[0].image
-          value: lensesio/lenses:bar
+          value: lensting/lenses-agent:bar
 
   - it: should test replica set cannot be overriden
     set:

@@ -1,6 +1,6 @@
 # lenses-agent
 
-![Version: 6.0.0-alpha.19](https://img.shields.io/badge/Version-6.0.0--alpha.19-informational?style=flat-square) ![AppVersion: v6.0.0-alpha.5](https://img.shields.io/badge/AppVersion-v6.0.0--alpha.5-informational?style=flat-square)
+![Version: 6.0.0-alpha.20](https://img.shields.io/badge/Version-6.0.0--alpha.20-informational?style=flat-square) ![AppVersion: v6.0.0-alpha.6](https://img.shields.io/badge/AppVersion-v6.0.0--alpha.6-informational?style=flat-square)
 
 A chart for Lenses Agent deployment (ex. Lenses v5).
 
@@ -52,9 +52,9 @@ The command deploys Lenses Agent on the Kubernetes cluster in the example config
 |-----|------|---------|-------------|
 | affinity | dict | `{}` | Deployment affinity rules |
 | annotations | dict | `{}` | Custom deployment annotations |
-| image | object | `{"pullPolicy":"IfNotPresent","repository":"lensesio/lenses"}` | Image map |
+| image | object | `{"pullPolicy":"IfNotPresent","repository":"lensting/lenses-agent"}` | Image map |
 | image.pullPolicy | string | `"IfNotPresent"` | Image pullPolicy |
-| image.repository | string | `"lensesio/lenses"` | Image repository |
+| image.repository | string | `"lensting/lenses-agent"` | Image repository |
 | labels | dict | `{}` | Deployment labels |
 | nodeSelector | dict | `{}` | Deployment nodeSelector |
 | podTemplateAnnotations | dict | `{}` | Annotations here go into the PodTemplateSpec at deployment.spec.template.annotations. |
@@ -67,6 +67,9 @@ The command deploys Lenses Agent on the Kubernetes cluster in the example config
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
+| lensesAgent.hq.agentKey.secret.externalSecret.additionalSpecs | string | `{}` | Additional specifications that would enhance `spec:` of created ExternalSecret |
+| lensesAgent.hq.agentKey.secret.externalSecret.secretStoreRef.name | string | `""` | Name of cluster secret store created by ESO. |
+| lensesAgent.hq.agentKey.secret.externalSecret.secretStoreRef.type | string | `""` | Type of secret store created by ESO. |
 | lensesAgent.hq.agentKey.secret.type | string | `""` | Secret type for referencing / creating agent key Possible values: createNew | precreated | externalSecret |
 
 ### Agent JVM scope values
@@ -150,8 +153,6 @@ The command deploys Lenses Agent on the Kubernetes cluster in the example config
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | fullnameOverride | string | `""` |  |
-| lensesAgent.hq.agentKey.secret.externalSecret.name | string | `""` |  |
-| lensesAgent.hq.agentKey.secret.externalSecret.secretStoreRef.clusterSecretStore.name | string | `""` |  |
 | lensesAgent.hq.agentKey.secret.key | string | `""` |  |
 | lensesAgent.hq.agentKey.secret.name | string | `""` |  |
 | lensesAgent.provision.connections | string | `nil` |  |
