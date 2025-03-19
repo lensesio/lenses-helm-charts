@@ -224,12 +224,15 @@ lensesHq:
     # -- Grants administrator rights to users.
     # @section -- Lenses HQ AUTH startup values
     # **Required: false**
-    administrators: []
+    administrators:
+      - "admin"
 
     # -- Adds uses for password based auth
     # @section -- Lenses HQ AUTH startup values
     # **Required: false**
-    users: []
+    users:
+      - username: admin
+        password: $2a$10$DPQYpxj4Y2iTWeuF1n.ItewXnbYXh5/E9lQwDJ/cI/.gBboW2Hodm # bcrypt("admin").
 
     # -- (string) # Sets the duration of a session. The duration is a
     # string that follows the Go time.Duration format. Valid time units are "ns",
@@ -238,7 +241,6 @@ lensesHq:
     # @section -- Lenses HQ SAML startup values
     # **Required: false**
     sessionDuration: "24h"
-
 
     saml:
       # -- Enables SAML / SSO authentication
@@ -513,10 +515,10 @@ lensesHq:
     # @section -- Lenses HQ license values
     # **Required: false**
     secretKeyName: ""
-    # -- (string) Sets the license as a stirng.
+    # -- (string) Sets the license as a string. Community license available as a default.
     # @section -- Lenses HQ license values
     # **Required: false**
-    stringData: ""
+    stringData: "license_key_2SFZ0BesCNu6NFv0-EOSIvY22ChSzNWXa5nSds2l4z3y7aBgRPKCVnaeMlS57hHNVboR2kKaQ8Mtv1LFt0MPBBACGhDT5If8PmTraUM5xXLz4MYv"
     # -- (string) Boolean 'acceptEULA' marks the end-user license agreement (EULA) as accepted.
     # You can find the EULA at: https://lenses.io/legals/eula.
     # @section -- Lenses HQ license values
