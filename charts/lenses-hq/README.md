@@ -93,8 +93,8 @@ The command deploys Lenses HQ on the Kubernetes cluster in the example configura
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| lensesHq.auth.administrators | list | `[]` | Grants administrator rights to users. **Required: false** |
-| lensesHq.auth.users | list | `[]` | Adds uses for password based auth **Required: false** |
+| lensesHq.auth.administrators | list | `["admin"]` | Grants administrator rights to users. **Required: false** |
+| lensesHq.auth.users | list | `[{"password":"$2a$10$DPQYpxj4Y2iTWeuF1n.ItewXnbYXh5/E9lQwDJ/cI/.gBboW2Hodm","username":"admin"}]` | Adds uses for password based auth **Required: false** |
 
 ### Lenses HQ SAML startup values
 
@@ -144,7 +144,7 @@ The command deploys Lenses HQ on the Kubernetes cluster in the example configura
 | lensesHq.license.referenceFromSecret | string | `false` | Enables usage of secret for license. **Required: false** |
 | lensesHq.license.secretKeyName | string | `""` | Secret key where within a secret where license is sotred. **Required: false** |
 | lensesHq.license.secretName | string | `""` | Secret name where license is stored. **Required: false** |
-| lensesHq.license.stringData | string | `""` | Sets the license as a stirng. **Required: false** |
+| lensesHq.license.stringData | string | `"license_key_2SFZ0BesCNu6NFv0-EOSIvY22ChSzNWXa5nSds2l4z3y7aBgRPKCVnaeMlS57hHNVboR2kKaQ8Mtv1LFt0MPBBACGhDT5If8PmTraUM5xXLz4MYv"` | Sets the license as a string. Community license available as a default. **Required: false** |
 
 ### Lenses HQ startup values
 

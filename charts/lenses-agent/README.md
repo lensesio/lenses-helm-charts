@@ -103,9 +103,9 @@ The command deploys Lenses Agent on the Kubernetes cluster in the example config
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| lensesAgent.storage.postgres | dict | `{"database":null,"enabled":false,"host":null,"password":null,"port":null,"schema":null,"username":null}` | Connection details for Postgres database |
+| lensesAgent.storage.postgres | dict | `{"database":null,"enabled":true,"host":null,"password":null,"port":null,"schema":null,"username":null}` | Connection details for Postgres database |
 | lensesAgent.storage.postgres.database | string | `nil` | Postgres database name that Agent will connect to and communicate with. |
-| lensesAgent.storage.postgres.enabled | boolean | `false` | Enables postgres database connection, otherwise H2 as internal database will be used. |
+| lensesAgent.storage.postgres.enabled | boolean | `true` | Enables postgres database connection, otherwise H2 as internal database will be used. |
 | lensesAgent.storage.postgres.host | string | `nil` | Postgres database host details |
 | lensesAgent.storage.postgres.password | string | `nil` | Postgres user password details |
 | lensesAgent.storage.postgres.port | int | `nil` | Postgres database port details |
@@ -123,8 +123,8 @@ The command deploys Lenses Agent on the Kubernetes cluster in the example config
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| namespaceScope | bool | `false` | Enables namespaceScope which indicates that if the cluster has rbac and namespaceScope is enabled  role and role binding on namespace level will be created |
-| rbacEnable | bool | `false` | Enables rbac which indicates if a the cluster has rbac enabled and a cluster role and clusterrolebinding should be created for the service account |
+| namespaceScope | bool | `true` | Enables namespaceScope which indicates that if the cluster has rbac and namespaceScope is enabled  role and role binding on namespace level will be created |
+| rbacEnable | bool | `true` | Enables rbac which indicates if a the cluster has rbac enabled and a cluster role and clusterrolebinding should be created for the service account |
 | serviceAccount | object | `{"annotations":{},"create":false,"name":"default"}` | User to be used by Lenses to deploy apps |
 | serviceAccount.annotations | dict | `{}` | Additional service account annotations. |
 | serviceAccount.create | bool | `false` | In case "true" new SA will be created with service.name as a SA name. |
