@@ -41,16 +41,16 @@ securityContext: {}
 resources:
   requests:
   #   cpu: 1
-    memory: 4Gi
+    memory: 2Gi
   limits:
   #   cpu: 2
-    memory: 5Gi
+    memory: 4Gi
 # -- Image map
 # @section -- Custom deployment values
 image:
   # -- Image repository
   # @section -- Custom deployment values
-  repository: "lensting/lenses-hq"
+  repository: "lensting/lenses-hq:6.0-preview"
 
   # -- Default to .Chart.AppVersion
   # tag:
