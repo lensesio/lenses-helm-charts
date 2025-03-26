@@ -79,12 +79,12 @@ resources:
 # -- (bool) Enables rbac which indicates if a the cluster has rbac enabled and a cluster role
 # and clusterrolebinding should be created for the service account
 # @section -- Permission scope values
-rbacEnable: false
+rbacEnable: true
 
 # -- (bool) Enables namespaceScope which indicates that if the cluster has rbac and namespaceScope is enabled
 #  role and role binding on namespace level will be created
 # @section -- Permission scope values
-namespaceScope: false
+namespaceScope: true
 
 # -- (int) Lenses Agent container port
 # @section -- Lenses Agent deployment service values

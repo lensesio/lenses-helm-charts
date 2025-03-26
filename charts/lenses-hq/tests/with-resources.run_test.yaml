@@ -6,10 +6,10 @@ tests:
     asserts:
       - equal:
           path: spec.template.spec.containers[0].resources.requests.memory
-          value: 4Gi
+          value: 2Gi
       - equal:
           path: spec.template.spec.containers[0].resources.limits.memory
-          value: 5Gi
+          value: 4Gi
   - it: should work with cpu set
     set:
       resources:
