@@ -337,7 +337,7 @@ lensesAgent:
     postgres:
       # -- (boolean) Enables postgres database connection, otherwise H2 as internal database will be used.
       # @section -- Agent Database scope values
-      enabled: true
+      enabled: false
       # -- (string) Postgres database host details
       # @section -- Agent Database scope values
       host:
