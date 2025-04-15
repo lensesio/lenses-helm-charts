@@ -1,0 +1,48 @@
+lensesAgent:
+  # Postgres connection
+  storage:
+    postgres:
+      enabled: true
+      host: postgres.url
+      port: 5432
+      username: postgres
+      password: changeMe
+      database: agent
+  hq:
+    agentKey:
+      secret:
+        type: "createNew"
+        name: "agentKey"
+        value: "agent_key_*"
+  provision:
+    path: /mnt/provision-secrets
+    connections:
+      lensesHq:
+        - name: lenses-hq
+          version: 1
+          tags: ['hq']
+          configuration:
+            server:
+              value: hq-tls-test-lenses-hq.hq-agent-test.svc.cluster.local
+            port:
+              value: 10000
+            agentKey:
+              value: ${LENSESHQ_AGENT_KEY}
+      kafka:
+      - name: kafka
+        version: 1
+        tags: ['my-tag']
+        configuration:
+          kafkaBootstrapServers:
+            value:
+              - SASL_SSL://[YOUR_BOOTSTRAP_SERVER]
+              - SASL_SSL://[YOUR_BOOTSTRAP_SERVER]
+          protocol:
+            value: SASL_SSL
+          saslMechanism:
+            value: PLAIN
+          saslJaasConfig:
+            value: |
+              org.apache.kafka.common.security.plain.PlainLoginModule required
+              username="token"
+              password="[YOUR_API_KEY]";

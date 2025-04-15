@@ -21,7 +21,7 @@ To get started:
   * Lenses Agent [values.yaml](./charts/lenses/values.yaml)
   * Lenses HQ [values.yaml](./charts/lenses-hq/values.yaml).
 * Documentation for the chart can be found at our [documentation
- website](https://docs.proxy.lenses.io/next).
+ website](https://docs.lenses.io/latest/deployment/installation/helm).
 * Find many sample snippets for _values_ and how to combine them under the
   * Lenses Agent [examples directory](./charts/lenses-agent/examples/)
   * Lenses HQ [examples directory](./charts/lenses-hq/examples/).
