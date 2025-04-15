@@ -1,6 +1,6 @@
 # lenses-agent
 
-![Version: 6.0.0-la.1](https://img.shields.io/badge/Version-6.0.0--la.1-informational?style=flat-square) ![AppVersion: v6.0.0-la.1](https://img.shields.io/badge/AppVersion-v6.0.0--la.1-informational?style=flat-square)
+![Version: 6.0.0](https://img.shields.io/badge/Version-6.0.0-informational?style=flat-square) ![AppVersion: 6.0.0](https://img.shields.io/badge/AppVersion-6.0.0-informational?style=flat-square)
 
 A chart for Lenses Agent deployment (ex. Lenses v5).
 
@@ -103,9 +103,9 @@ The command deploys Lenses Agent on the Kubernetes cluster in the example config
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| lensesAgent.storage.postgres | dict | `{"database":null,"enabled":true,"host":null,"password":null,"port":null,"schema":null,"username":null}` | Connection details for Postgres database |
+| lensesAgent.storage.postgres | dict | `{"database":null,"enabled":false,"host":null,"password":null,"port":null,"schema":null,"username":null}` | Connection details for Postgres database |
 | lensesAgent.storage.postgres.database | string | `nil` | Postgres database name that Agent will connect to and communicate with. |
-| lensesAgent.storage.postgres.enabled | boolean | `true` | Enables postgres database connection, otherwise H2 as internal database will be used. |
+| lensesAgent.storage.postgres.enabled | boolean | `false` | Enables postgres database connection, otherwise H2 as internal database will be used. |
 | lensesAgent.storage.postgres.host | string | `nil` | Postgres database host details |
 | lensesAgent.storage.postgres.password | string | `nil` | Postgres user password details |
 | lensesAgent.storage.postgres.port | int | `nil` | Postgres database port details |

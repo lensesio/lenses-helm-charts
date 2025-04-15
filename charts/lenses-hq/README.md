@@ -1,6 +1,6 @@
 # lenses-hq
 
-![Version: 6.0.0-la.1](https://img.shields.io/badge/Version-6.0.0--la.1-informational?style=flat-square) ![AppVersion: 6.0.0-la.1](https://img.shields.io/badge/AppVersion-6.0.0--la.1-informational?style=flat-square)
+![Version: 6.0.0](https://img.shields.io/badge/Version-6.0.0-informational?style=flat-square) ![AppVersion: 6.0.0](https://img.shields.io/badge/AppVersion-6.0.0-informational?style=flat-square)
 
 A chart for Lenses HQ deployment which provides a unified, streamlined view of the entire event infrastructure—whether on-premises or in the cloud—through a single, comprehensive interface.
 
@@ -47,7 +47,7 @@ The command deploys Lenses HQ on the Kubernetes cluster in the example configura
 | labels | dict | `{}` | Deployment labels |
 | nodeSelector | dict | `{}` | Deployment nodeSelector |
 | podTemplateAnnotations | dict | `{}` | Annotations here go into the PodTemplateSpec at deployment.spec.template.annotations. |
-| resources | object | `{"limits":{"memory":"5Gi"},"requests":{"memory":"4Gi"}}` | Pod resources |
+| resources | object | `{"limits":{"memory":"4Gi"},"requests":{"memory":"2Gi"}}` | Pod resources |
 | securityContext | dict | `{}` | Deployment security context |
 | strategy | dict | `{}` | Deployment strategy |
 | tolerations | dict | `[]` | Deployment tolerations |

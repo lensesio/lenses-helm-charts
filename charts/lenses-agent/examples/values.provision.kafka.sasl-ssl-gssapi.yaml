@@ -1,0 +1,79 @@
+lensesAgent:
+  # Postgres connection
+  storage:
+    postgres:
+      enabled: true
+      host: postgres.url
+      port: 5432
+      username: postgres
+      password: changeMe
+      database: agent
+  hq:
+    agentKey:
+      secret:
+        type: "createNew"
+        name: "agentKey"
+        value: "agent_key_*"
+  provision:
+    path: /mnt/provision-secrets
+    connections:
+      lensesHq:
+        - name: lenses-hq
+          version: 1
+          tags: ['hq']
+          configuration:
+            server:
+              value: hq-tls-test-lenses-hq.hq-agent-test.svc.cluster.local
+            port:
+              value: 10000
+            agentKey:
+              value: ${LENSESHQ_AGENT_KEY}
+      kafka:
+      - name: Kafka
+        version: 1
+        tags: [my-tag]
+        configuration:
+          kafkaBootstrapServers:
+            value:
+              - SASL_SSL://your.kafka.broker.0:9092
+              - SASL_SSL://your.kafka.broker.1:9092
+          protocol:
+            value: SASL_SSL
+          sslTruststore:
+            file: /path/to/truststore.jks
+          sslTruststorePassword:
+            value: truststorePassword
+          saslMechanism:
+            value: GSSAPI
+          saslJaasConfig:
+            value: |
+              com.sun.security.auth.module.Krb5LoginModule required
+              useKeyTab=true
+              storeKey=true
+              useTicketCache=false
+              serviceName=kafka
+              principal="my-principal@DOMAIN.COM";
+          keytab:
+            file: /path/to/keytab.jks
+
+additionalVolumeMounts:
+  - name: agent-truststore
+    mountPath: "/mnt/provision-secrets/agent"
+  - name: keytab
+    mountPath: "/path/to/agent.keytab"
+
+additionalVolumes:
+  - name: agent-truststore
+    secret:
+      secretName: agent-truststore
+  - name: keytab
+    secret:
+      secretName: agent-keytab
+# TIP:
+# Use following code snippet in order to read keypassword - keystorepassword - truststorepassword from secret  additionalEnv:
+  # additionalEnv:
+  #   - name: LENSES_AGENT_TRUSTSTORE_PWD
+  #     valueFrom:
+  #       secretKeyRef:
+  #         name: [SECRET_NAME]
+  #         key: [SECRET_KEY]
