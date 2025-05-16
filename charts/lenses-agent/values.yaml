@@ -8,7 +8,7 @@ fullnameOverride: ""
 image:
   # -- Image repository
   # @section -- Custom deployment values
-  repository: lensting/lenses-agent
+  repository: lensesio/lenses-agent
 
   # -- Default to .Chart.AppVersion
   # tag:
@@ -379,7 +379,7 @@ lensesAgent:
 
   sql:
     # processorImage: lensesioextra/sql-processor
-    # processorImageTag: 5.5
+    # processorImageTag: 6.0
 
     # -- (string) Setting execution mode for SQL Processors
     # Example: IN_PROC | KUBERNETES
