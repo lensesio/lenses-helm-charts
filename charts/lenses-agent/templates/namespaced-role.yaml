@@ -26,6 +26,7 @@ rules:
     - pods
     - replicasets
     - deployments
+    - deployments/scale
     - ingresses
     - secrets
     - statefulsets
