@@ -23,6 +23,7 @@ rules:
     - create
 - apiGroups: ["", "extensions", "apps"]
   resources:
+    - configmaps
     - pods
     - replicasets
     - deployments
