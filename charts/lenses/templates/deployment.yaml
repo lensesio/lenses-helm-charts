@@ -474,3 +474,6 @@ spec:
       initContainers:
       {{- toYaml .Values.initContainers | nindent 6 }}
       {{- end }}
+      {{- if .Values.priorityClassName }}
+      priorityClassName: {{ .Values.priorityClassName | quote }}
+      {{- end }}

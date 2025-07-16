@@ -117,3 +117,16 @@ tests:
               {
                 "foo": "bar"
               }
+
+  - it: should not set priorityClassName by default
+    asserts:
+      - isNull:
+          path: spec.template.spec.priorityClassName
+
+  - it: should set priorityClassName when configured
+    set:
+      priorityClassName: high-priority
+    asserts:
+      - equal:
+          path: spec.template.spec.priorityClassName
+          value: high-priority
