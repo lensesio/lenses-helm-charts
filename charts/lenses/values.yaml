@@ -494,10 +494,6 @@ sidecarContainers:
 #     image: alpine
 #     command: ["sh", "-c", "date"]
 
-# Optionally set the PriorityClass for the Lenses pod
-# See: https://kubernetes.io/docs/concepts/scheduling-eviction/pod-priority-preemption/#priorityclass
-priorityClassName: ""
-
 # Optionally add arbitrary fields to the pod spec (e.g. priorityClassName, priority, etc)
 additionalPodSpec: {}
 
