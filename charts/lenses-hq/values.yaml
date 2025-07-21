@@ -202,7 +202,7 @@ lensesHq:
         # @section -- Lenses HQ Agent startup values
         # **Required: false**
         secretName: ""
-        # -- (string) Secret key where within a secret where certificate is sotred.
+        # -- (string) Secret key where within a secret where certificate is stored.
         # @section -- Lenses HQ Agent startup values
         # **Required: false**
         secretKeyName: ""
@@ -219,6 +219,15 @@ lensesHq:
         secret:
           name: ""
           key: ""
+
+    # -- (string) Contains Agent gRPC configuration.
+    # @section -- Lenses HQ Agent startup values
+    # **Required: false**
+    grpc:
+      # -- (string) Overrides the default maximum body size in bytes for proxied API responses.
+      # @section -- Lenses HQ Agent startup values
+      # **Required: false**
+      apiMaxRecvMessageSize: 33554432
 
   auth:
     # -- Grants administrator rights to users.

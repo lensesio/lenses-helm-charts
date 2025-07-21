@@ -438,6 +438,21 @@
                                 ":10000"
                             ]
                         },
+                        "grpc": {
+                            "type": "object",
+                            "default": {},
+                            "title": "The Agent GRPC Configuration Schema",
+                            "properties": {
+                                "apiMaxRecvMessageSize": {
+                                    "type": "integer",
+                                    "default": 33554432,
+                                    "title": "Overrides the default maximum body size in bytes for proxied API responses.",
+                                    "examples": [
+                                        33554432
+                                    ]
+                                }
+                            }
+                        },
                         "tls": {
                             "type": "object",
                             "default": {},

@@ -162,6 +162,8 @@ agents:
     key: $(LENSESHQ_AGENTS_TLS_KEY)
     verboseLogs: {{ .Values.lensesHq.agents.tls.verboseLogs }}
     {{ end }}
+  grpc:
+    apiMaxRecvMessageSize: {{ .Values.lensesHq.agents.grpc.apiMaxRecvMessageSize }}
 database:
   {{- include "validate.singleEnabledDatabase" . -}}
 {{- range $name, $db := .Values.lensesHq.storage }}

@@ -1,6 +1,6 @@
 # lenses-hq
 
-![Version: 6.0.7](https://img.shields.io/badge/Version-6.0.5-informational?style=flat-square) ![AppVersion: 6.0.5](https://img.shields.io/badge/AppVersion-6.0.5-informational?style=flat-square)
+![Version: 6.0.8](https://img.shields.io/badge/Version-6.0.8-informational?style=flat-square) ![AppVersion: 6.0.8](https://img.shields.io/badge/AppVersion-6.0.8-informational?style=flat-square)
 
 A chart for Lenses HQ deployment which provides a unified, streamlined view of the entire event infrastructure—whether on-premises or in the cloud—through a single, comprehensive interface.
 
@@ -81,8 +81,10 @@ The command deploys Lenses HQ on the Kubernetes cluster in the example configura
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | lensesHq.agents.address | string | `":10000"` | Address wherefrom agent will be listening at. **Required: true** |
+| lensesHq.agents.grpc | string | `{"apiMaxRecvMessageSize":33554432}` | Contains Agent gRPC configuration. **Required: false** |
+| lensesHq.agents.grpc.apiMaxRecvMessageSize | string | `33554432` | Overrides the default maximum body size in bytes for proxied API responses. **Required: false** |
 | lensesHq.agents.tls.cert.referenceFromSecret | string | `false` | Enables usage of secret for certificate. **Required: false** |
-| lensesHq.agents.tls.cert.secretKeyName | string | `""` | Secret key where within a secret where certificate is sotred. **Required: false** |
+| lensesHq.agents.tls.cert.secretKeyName | string | `""` | Secret key where within a secret where certificate is stored. **Required: false** |
 | lensesHq.agents.tls.cert.secretName | string | `""` | Secret name where certificate is stored. **Required: false** |
 | lensesHq.agents.tls.cert.stringData | string | `""` | Sets the PEM formatted public certificate. **Required: false** |
 | lensesHq.agents.tls.enabled | string | `false` | Enables or disables TLS. **Required: true** |
