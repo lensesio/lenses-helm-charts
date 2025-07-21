@@ -130,3 +130,29 @@ tests:
       - equal:
           path: spec.template.spec.priorityClassName
           value: high-priority
+
+  - it: should render additionalPodSpec and additionalContainerSpec fields from values.yaml
+    asserts:
+      - equal:
+          path: spec.template.spec.priorityClassName
+          value: tenant-stateless
+      - equal:
+          path: spec.template.spec.priority
+          value: 1000
+      - equal:
+          path: spec.template.spec.containers[0].tty
+          value: true
+      - equal:
+          path: spec.template.spec.containers[0].stdin
+          value: true
+
+  - it: should not render additionalPodSpec and additionalContainerSpec fields when empty
+    asserts:
+      - isNull:
+          path: spec.template.spec.priorityClassName
+      - isNull:
+          path: spec.template.spec.priority
+      - isNull:
+          path: spec.template.spec.containers[0].tty
+      - isNull:
+          path: spec.template.spec.containers[0].stdin
