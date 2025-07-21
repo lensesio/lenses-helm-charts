@@ -117,7 +117,14 @@ tests:
               {
                 "foo": "bar"
               }
-  - it: should render additionalPodSpec and additionalContainerSpec fields from values.yaml
+  - it: should render additionalPodSpec and additionalContainerSpec fields when set
+    set:
+      additionalPodSpec:
+        priorityClassName: tenant-stateless
+        priority: 1000
+      additionalContainerSpec:
+        tty: true
+        stdin: true
     asserts:
       - equal:
           path: spec.template.spec.priorityClassName
@@ -133,6 +140,9 @@ tests:
           value: true
 
   - it: should not render additionalPodSpec and additionalContainerSpec fields when empty
+    set:
+      additionalPodSpec: {}
+      additionalContainerSpec: {}
     asserts:
       - isNull:
           path: spec.template.spec.priorityClassName
