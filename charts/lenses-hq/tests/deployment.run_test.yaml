@@ -1,0 +1,59 @@
+suite: test deployment
+templates:
+  - deployment.yaml
+tests:
+  - it: should test docker image tag override
+    set:
+      image.tag: bar
+    asserts:
+      - isKind:
+          of: Deployment
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: lensesio/lenses-hq:bar
+
+  - it: should test replica set cannot be overriden
+    set:
+      replicaCount: 10
+    asserts:
+      - isKind:
+          of: Deployment
+      - equal:
+          path: spec.replicas
+          value: 1
+
+  - it: should render additionalPodSpec and additionalContainerSpec fields when set
+    set:
+      additionalPodSpec:
+        priorityClassName: tenant-stateless
+        priority: 1000
+      additionalContainerSpec:
+        tty: true
+        stdin: true
+    asserts:
+      - equal:
+          path: spec.template.spec.priorityClassName
+          value: tenant-stateless
+      - equal:
+          path: spec.template.spec.priority
+          value: 1000
+      - equal:
+          path: spec.template.spec.containers[0].tty
+          value: true
+      - equal:
+          path: spec.template.spec.containers[0].stdin
+          value: true
+
+  - it: should not render additionalPodSpec and additionalContainerSpec fields when empty
+    set:
+      additionalPodSpec: {}
+      additionalContainerSpec: {}
+    asserts:
+      - isNull:
+          path: spec.template.spec.priorityClassName
+      - isNull:
+          path: spec.template.spec.priority
+      - isNull:
+          path: spec.template.spec.containers[0].tty
+      - isNull:
+          path: spec.template.spec.containers[0].stdin

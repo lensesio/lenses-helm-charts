@@ -157,6 +157,14 @@ additionalVolumes:
   #   persistentVolumeClaim:
   #     claimName: lenses-plugins
 
+# -- (list) Optionally add arbitrary fields to the pod spec (e.g. priorityClassName, priority, etc)
+# @section -- Extras
+additionalPodSpec:
+
+# -- (list) # Optionally add arbitrary fields to the main container spec (e.g. tty, stdin, etc)
+# @section -- Extras
+additionalContainerSpec:
+
 # @section -- Lenses Agent deployment service values
 service:
   # -- (bool) Deciding factor whether Lenses HQ service will be created and which type

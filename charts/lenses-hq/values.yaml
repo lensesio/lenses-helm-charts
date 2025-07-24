@@ -552,6 +552,15 @@ lensesHq:
     # - name: FOO
     #   value: bar
 
+
+# -- (list) Optionally add arbitrary fields to the pod spec (e.g. priorityClassName, priority, etc)
+# @section -- Extras
+additionalPodSpec:
+
+# -- (list) # Optionally add arbitrary fields to the main container spec (e.g. tty, stdin, etc)
+# @section -- Extras
+additionalContainerSpec:
+
 # -- (map) Sidecar container enablement.
 # @raw
 #

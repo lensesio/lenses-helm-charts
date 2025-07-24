@@ -83,6 +83,9 @@ spec:
       dnsConfig:
         {{- toYaml .Values.dnsConfig | nindent 8 }}
       {{- end }}
+      {{- if .Values.additionalPodSpec }}
+      {{- toYaml .Values.additionalPodSpec | nindent 6 }}
+      {{- end }}
       volumes:
         - name: provision-secrets
           secret:
@@ -121,6 +124,9 @@ spec:
       - name: {{ .Chart.Name }}
         image: {{ include "lensesAgentImage" . | quote }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
+        {{- if .Values.additionalContainerSpec }}
+        {{- toYaml .Values.additionalContainerSpec | nindent 8 }}
+        {{- end }}
         {{- if .Values.containerSecurityContext }}
         securityContext:
           {{- toYaml .Values.containerSecurityContext | nindent 10 }}

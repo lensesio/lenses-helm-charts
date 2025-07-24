@@ -1,6 +1,6 @@
 # lenses-hq
 
-![Version: 6.0.8](https://img.shields.io/badge/Version-6.0.8-informational?style=flat-square) ![AppVersion: 6.0.8](https://img.shields.io/badge/AppVersion-6.0.8-informational?style=flat-square)
+![Version: 6.0.9](https://img.shields.io/badge/Version-6.0.9-informational?style=flat-square) ![AppVersion: 6.0.9](https://img.shields.io/badge/AppVersion-6.0.9-informational?style=flat-square)
 
 A chart for Lenses HQ deployment which provides a unified, streamlined view of the entire event infrastructure—whether on-premises or in the cloud—through a single, comprehensive interface.
 
@@ -34,6 +34,14 @@ The command deploys Lenses HQ on the Kubernetes cluster in the example configura
 ## Parameters
 
 ## Values
+
+### Extras
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| additionalContainerSpec | list | `nil` | # Optionally add arbitrary fields to the main container spec (e.g. tty, stdin, etc) |
+| additionalPodSpec | list | `nil` | Optionally add arbitrary fields to the pod spec (e.g. priorityClassName, priority, etc) |
+| lensesHq.additionalEnv | string | `[]` | Additional env variables appended to deployment Follows the format of [EnvVar spec](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.21/#envvar-v1-core) |
 
 ### Custom deployment values
 
@@ -69,12 +77,6 @@ The command deploys Lenses HQ on the Kubernetes cluster in the example configura
 | ingress.http.tls | object | `{"enabled":false,"secretName":""}` | TLS if enabled load the tls.crt and tls.keys as a secrets and enable TLS on the ingress |
 | ingress.http.tls.enabled | bool | `false` | Set to true to enable HTTPS |
 | ingress.http.tls.secretName | string | `""` | Secret name where tls certificates are being stored. The TLS secret must contain keys named tls.crt and tls.key that contain the certificate and private key to use for TLS. |
-
-### Extras
-
-| Key | Type | Default | Description |
-|-----|------|---------|-------------|
-| lensesHq.additionalEnv | string | `[]` | Additional env variables appended to deployment Follows the format of [EnvVar spec](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.21/#envvar-v1-core) |
 
 ### Lenses HQ Agent startup values
 

@@ -1,6 +1,6 @@
 # lenses-agent
 
-![Version: 6.0.3](https://img.shields.io/badge/Version-6.0.3-informational?style=flat-square) ![AppVersion: 6.0.3](https://img.shields.io/badge/AppVersion-6.0.3-informational?style=flat-square)
+![Version: 6.0.4](https://img.shields.io/badge/Version-6.0.4-informational?style=flat-square) ![AppVersion: 6.0.4](https://img.shields.io/badge/AppVersion-6.0.4-informational?style=flat-square)
 
 A chart for Lenses Agent deployment (ex. Lenses v5).
 
@@ -35,6 +35,8 @@ The command deploys Lenses Agent on the Kubernetes cluster in the example config
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
+| additionalContainerSpec | list | `nil` | # Optionally add arbitrary fields to the main container spec (e.g. tty, stdin, etc) |
+| additionalPodSpec | list | `nil` | Optionally add arbitrary fields to the pod spec (e.g. priorityClassName, priority, etc) |
 | additionalVolumeMounts | list | `nil` | Additional volume mounts to use in Lenses delpoyments, for example to load additional plugins (UDFs) in Lenses Use it in conjuction with lenses.additionalVolumes |
 | additionalVolumes | list | `nil` | Additional volumes to use in Lenses delpoyments either by Lenses for other sidecars like Lenses provisioner. |
 | containerSecurityContext.readOnlyRootFilesystem | list | `false` | Enabling read only root filesystem. |
