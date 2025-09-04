@@ -6,9 +6,10 @@ tests:
     asserts:
       - isKind:
           of: Deployment
-      - equal:
+      - matchRegex:
           path: spec.template.spec.containers[0].image
-          value: lensesio/lenses-agent
+          # lensesio/k2k:[version][optional string during dev]
+          pattern: ^lensesio/lenses-agent:\d+\.\d+\.\d+.*$
       - isEmpty:
           path: metadata.annotations
 

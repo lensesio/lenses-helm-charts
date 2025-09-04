@@ -50,7 +50,7 @@ Create a default fully qualified app name.
 {{- if .Values.image.tag -}}
 {{ printf "%s:%s" .Values.image.repository .Values.image.tag }}
 {{- else -}}
-{{ printf "%s" .Values.image.repository  }}
+{{ printf "%s:%s" .Values.image.repository .Chart.AppVersion  }}
 {{- end -}}
 {{- end -}}
 
