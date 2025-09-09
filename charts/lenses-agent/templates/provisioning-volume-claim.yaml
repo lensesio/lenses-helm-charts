@@ -1,0 +1,37 @@
+{{- if and .Values.persistence.provisioning.enabled (not .Values.persistence.provisioning.existingClaim) -}}
+
+apiVersion: "v1"
+kind: "PersistentVolumeClaim"
+metadata:
+  name: {{include "provisioningClaimName" .}}
+{{- if .Values.persistence.provisioning.annotations}}
+  annotations:
+{{toYaml .Values.persistence.provisioning.annotations | indent 4}}
+{{- end }}
+  labels:
+    app: {{include "name" .}}
+    chart: {{printf "%s-%s" .Chart.Name .Chart.Version}}
+    component: "lenses-agent"
+    heritage: {{.Release.Service}}
+    release: {{.Release.Name}}
+    lenses.io/app: {{include "name" .}}
+    lenses.io/app.type: lenses-agent-volume-claim
+spec:
+  accessModes:
+{{toYaml .Values.persistence.provisioning.accessModes | indent 4}}
+{{- if .Values.persistence.provisioning.storageClass }}
+{{- if (eq "-" .Values.persistence.provisioning.storageClass)}}
+  storageClassName: ""
+{{- else }}
+  storageClassName: {{ .Values.persistence.provisioning.storageClass }}
+{{- end }}
+{{- end }}
+  resources:
+    requests:
+{{- if and (hasKey .Values.persistence "provisioning") (hasKey .Values.persistence.provisioning "size")}}
+     storage: {{ .Values.persistence.provisioning.size | quote }}
+{{- else }}
+     storage: "50Mi"
+{{- end -}}
+
+{{- end -}}

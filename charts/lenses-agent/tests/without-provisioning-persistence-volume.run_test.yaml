@@ -1,0 +1,26 @@
+suite: disable provisioning volume and check the changes in deployment
+templates:
+  - deployment.yaml
+tests:
+  - it: should work when provisioning persistence enabled is false
+    set:
+      persistence:
+        provisioning:
+          enabled: false
+    asserts:
+      - template: deployment.yaml
+        isKind:
+          of: Deployment
+      - template: deployment.yaml
+        notContains:
+          path: spec.template.spec.containers[0].volumeMounts
+          content:
+            mountPath: /data/provisioning
+            name: provisioning
+      - template: deployment.yaml
+        notContains:
+          path: spec.template.spec.volumes
+          content:
+            name: provisioning
+            persistentVolumeClaim:
+              claimName: RELEASE-NAME-provisioningclaim

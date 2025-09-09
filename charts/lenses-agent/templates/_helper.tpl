@@ -46,6 +46,14 @@ Create a default fully qualified app name.
 {{- end -}}
 {{- end -}}
 
+{{- define "provisioningClaimName" -}}
+{{- if .Values.fullnameOverride -}}
+{{- printf "%s-%s" (.Values.fullnameOverride | trunc 50 | trimSuffix "-") "provisioningclaim" -}}
+{{- else -}}
+{{- printf "%s-%s" (.Release.Name | trunc 50 | trimSuffix "-") "provisioningclaim" -}}
+{{- end -}}
+{{- end -}}
+
 {{- define "lensesAgentImage" -}}
 {{- if .Values.image.tag -}}
 {{ printf "%s:%s" .Values.image.repository .Values.image.tag }}

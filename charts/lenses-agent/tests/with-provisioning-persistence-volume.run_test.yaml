@@ -1,0 +1,73 @@
+suite: enable provisioning volume and check the changes in deployment
+templates:
+  - deployment.yaml
+  - provisioning-volume-claim.yaml
+tests:
+  - it: should work with default values
+    set:
+      persistence:
+        provisioning:
+          enabled: true
+    asserts:
+      - template: deployment.yaml
+        isKind:
+          of: Deployment
+      - template: deployment.yaml
+        contains:
+          path: spec.template.spec.containers[0].volumeMounts
+          content:
+            mountPath: /data/provisioning
+            name: provisioning
+      - template: deployment.yaml
+        contains:
+          path: spec.template.spec.volumes
+          content:
+            name: provisioning
+            persistentVolumeClaim:
+              claimName: RELEASE-NAME-provisioningclaim
+      - template: provisioning-volume-claim.yaml
+        contains:
+          path: spec.accessModes
+          content:
+            ReadWriteOnce
+      - template: provisioning-volume-claim.yaml
+        equal:
+          path: spec.resources.requests.storage
+          value: 50Mi
+  - it: should work with additional annotations values
+    set:
+      persistence:
+        provisioning:
+          enabled: true
+          annotations:
+            foo: bar
+    asserts:
+      - template: provisioning-volume-claim.yaml
+        isKind:
+          of: PersistentVolumeClaim
+      - template: provisioning-volume-claim.yaml
+        equal:
+          path: metadata.annotations.foo
+          value: bar
+  - it: should work with custom storage size
+    set:
+      persistence:
+        provisioning:
+          enabled: true
+          size: 100Mi
+    asserts:
+      - template: provisioning-volume-claim.yaml
+        equal:
+          path: spec.resources.requests.storage
+          value: 100Mi
+  - it: should work with custom storage class
+    set:
+      persistence:
+        provisioning:
+          enabled: true
+          storageClass: fast-ssd
+    asserts:
+      - template: provisioning-volume-claim.yaml
+        equal:
+          path: spec.storageClassName
+          value: fast-ssd

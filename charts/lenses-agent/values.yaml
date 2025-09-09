@@ -148,9 +148,33 @@ persistence:
     # -- (string) Storageclass for the persistence volume. In case a storageclass is not defined, the default storageclass will be used.
     # @section -- Persistence scope values
     storageClass: ""
-    # -- (boolean) Annotations dedicated for persistence.
+    # -- (string) Annotations dedicated for persistence.
     # @section -- Persistence scope values
     annotations: {}
+    # -- (string)  Target a pre-existing volume claim to use it as Lenses Persistent volume
+    # @section -- Persistence scope values
+    existingClaim: ""
+
+  provisioning:
+    # -- (boolean) Extra volume creation dedicated for provisioning data managed via the HQ. Should be combined with the PROVISION_HQ_URL and PROVISION_AGENT_KEY environment variables.
+    # @section -- Persistence scope values
+    enabled: false
+    # -- (list) Access mode rights for created persistence volumes.
+    # @section -- Persistence scope values
+    accessModes:
+      - ReadWriteOnce
+    # -- (string) Size of persistence that will be created.
+    # @section -- Persistence scope values
+    size: 50Mi
+    # -- (string) Storageclass for the persistence volume. In case a storageclass is not defined, the default storageclass will be used.
+    # @section -- Persistence scope values
+    storageClass: ""
+    # -- (string) Annotations dedicated for persistance.
+    # @section -- Persistence scope values
+    annotations: {}
+    # -- (string)  Target a pre-existing volume claim to use it as Lenses Persistent volume
+    # @section -- Persistence scope values
+    existingClaim: ""
 
   ## Policies data Persistent Volume Storage Class
   ## If defined, storageClassName: <storageClass>

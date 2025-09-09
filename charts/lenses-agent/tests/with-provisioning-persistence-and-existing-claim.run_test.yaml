@@ -1,0 +1,38 @@
+suite: enable existing provisioning volume claim and check the changes in deployment
+templates:
+  - deployment.yaml
+  - provisioning-volume-claim.yaml
+tests:
+  - it: should work with existing claim for provisioning volume
+    set:
+      persistence:
+        provisioning:
+          enabled: true
+          existingClaim: my-provisioning-claim
+    asserts:
+      - template: deployment.yaml
+        isKind:
+          of: Deployment
+      - template: deployment.yaml
+        contains:
+          path: spec.template.spec.containers[0].volumeMounts
+          content:
+            mountPath: /data/provisioning
+            name: provisioning
+      - template: deployment.yaml
+        contains:
+          path: spec.template.spec.volumes
+          content:
+            name: provisioning
+            persistentVolumeClaim:
+              claimName: my-provisioning-claim
+  - it: should not create PVC when using existing claim
+    set:
+      persistence:
+        provisioning:
+          enabled: true
+          existingClaim: my-provisioning-claim
+    asserts:
+      - template: provisioning-volume-claim.yaml
+        hasDocuments:
+          count: 0
