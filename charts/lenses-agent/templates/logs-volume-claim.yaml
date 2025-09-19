@@ -1,12 +1,12 @@
-{{- if and .Values.persistence.log.enabled (not .Values.persistence.existingClaim) -}}
+{{- if and .Values.persistence.log.enabled (not .Values.persistence.log.existingClaim) -}}
 
 apiVersion: "v1"
 kind: "PersistentVolumeClaim"
 metadata:
-  name: {{include "logsClaimName" .}}
-{{- if .Values.persistence.annotations}}
+  name: {{ include "logsClaimName" . }}
+{{- if .Values.persistence.log.annotations}}
   annotations:
-{{toYaml .Values.persistence.annotations | indent 4}}
+{{toYaml .Values.persistence.log.annotations | indent 4}}
 {{- end }}
   labels:
     app: {{include "name" .}}
@@ -15,7 +15,7 @@ metadata:
     heritage: {{.Release.Service}}
     release: {{.Release.Name}}
     lenses.io/app: {{include "name" .}}
-    lenses.io/app.type: lenses-agent-volume-claim
+    lenses.io/app.type: lenses-agent-logs-volume-claim
 spec:
   accessModes:
 {{toYaml .Values.persistence.log.accessModes | indent 4}}

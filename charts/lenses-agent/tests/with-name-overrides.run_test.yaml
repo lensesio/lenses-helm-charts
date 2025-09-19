@@ -2,6 +2,7 @@ suite: using name overrides
 templates:
   - deployment.yaml
   - logs-volume-claim.yaml
+  - storageH2-volume-claim.yaml
 tests:
   - template: deployment.yaml
     it: should work without any overrides
@@ -12,12 +13,20 @@ tests:
 
   - template: logs-volume-claim.yaml
     it: should work for volume-claim without any overrides
+    set:
+      persistence:
+        log:
+          enabled: true
     asserts:
       - equal:
           path: metadata.name
           value: RELEASE-NAME-logsclaim
   - template: deployment.yaml
     it: when override release name is overriden metadata.name should change
+    set:
+      persistence:
+        log:
+          enabled: true
     release:
       name: bar
     asserts:
@@ -36,6 +45,10 @@ tests:
 
   - template: logs-volume-claim.yaml
     it: when override release name is overriden metadata.name for logs-volume-claim should change
+    set:
+      persistence:
+        log:
+          enabled: true
     release:
       name: bar
     asserts:
@@ -54,6 +67,10 @@ tests:
 
   - template: deployment.yaml
     it: when override release name and includes 'lenses' metadata.name should change and should not add another 'lenses' suffix
+    set:
+      persistence:
+        log:
+          enabled: true
     release:
       name: bar-lenses-agent-foo
     asserts:
@@ -72,6 +89,10 @@ tests:
 
   - template: logs-volume-claim.yaml
     it: when override release name and includes 'lenses' metadata.name for logs-volume-claim should change and should not add another 'lenses' suffix
+    set:
+      persistence:
+        log:
+          enabled: true
     release:
       name: bar-lenses-agent-foo
     asserts:
@@ -88,6 +109,9 @@ tests:
   - template: deployment.yaml
     it: when set nameOverride, metadata.name should change
     set:
+      persistence:
+        log:
+          enabled: true
       nameOverride: bar
     asserts:
       - equal:
@@ -97,15 +121,33 @@ tests:
   - template: logs-volume-claim.yaml
     it: when set nameOverride, metadata.name for logs-volume-claim should NOT change
     set:
+      persistence:
+        log:
+          enabled: true
       nameOverride: bar
     asserts:
       - equal:
           path: metadata.name
           value: RELEASE-NAME-logsclaim
 
+  - template: storageH2-volume-claim.yaml
+    it: when set nameOverride, metadata.name for storageH2-volume-claim should NOT change
+    set:
+      persistence:
+        storageH2:
+          enabled: true
+      nameOverride: bar
+    asserts:
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-storageh2claim
+
   - template: deployment.yaml
     it: when set fullnameOverride, metadata.name should change
     set:
+      persistence:
+        log:
+          enabled: true
       fullnameOverride: bar
     asserts:
       - equal:
@@ -115,11 +157,26 @@ tests:
   - template: logs-volume-claim.yaml
     it: when set fullnameOverride, metadata.name for logs-volume-claim should change
     set:
+      persistence:
+        log:
+          enabled: true
       fullnameOverride: bar
     asserts:
       - equal:
           path: metadata.name
           value: bar-logsclaim
+
+  - template: storageH2-volume-claim.yaml
+    it: when set fullnameOverride, metadata.name for storageH2-volume-claim should change
+    set:
+      persistence:
+        storageH2:
+          enabled: true
+      fullnameOverride: bar
+    asserts:
+      - equal:
+          path: metadata.name
+          value: bar-storageclaim
 
   - template: deployment.yaml
     it: when override fullnameOverride with over 63 chars, the metadata.name should contain the set value but limited to 63 chars
@@ -135,6 +192,9 @@ tests:
   - template: logs-volume-claim.yaml
     it: when override fullnameOverride with over 67 chars, the metadata.name for logs-volume-claim should contain the set value but limited to 67 chars
     set:
+      persistence:
+        log:
+          enabled: true
       # 100 chars
       fullnameOverride: bm0f9ee5y-zgpo3qvok-9ntof267e-56i7rd29y-glwnknta1-kjbhk72gy-rgt84nngv-743j4q37f-mr047wtu1-mxey6qg78
     asserts:
@@ -142,6 +202,20 @@ tests:
           path: metadata.name
           # 67 chars
           value: bm0f9ee5y-zgpo3qvok-9ntof267e-56i7rd29y-glwnknta1-kjbhk72-logsclaim
+
+  - template: storageH2-volume-claim.yaml
+    it: when override fullnameOverride with over 67 chars, the metadata.name for logs-volume-claim should contain the set value but limited to 67 chars
+    set:
+      persistence:
+        storageH2:
+          enabled: true
+      # 100 chars
+      fullnameOverride: bm0f9ee5y-zgpo3qvok-9ntof267e-56i7rd29y-glwnknta1-kjbhk72gy-rgt84nngv-743j4q37f-mr047wtu1-mxey6qg78
+    asserts:
+      - equal:
+          path: metadata.name
+          # 67 chars
+          value: bm0f9ee5y-zgpo3qvok-9ntof267e-56i7rd29y-glwnknta1-kjbhk72-storageclaim
 
   - template: deployment.yaml
     it: when override nameOverride with over 63 chars, the metadata.name should contain the set value but limited to 63 chars

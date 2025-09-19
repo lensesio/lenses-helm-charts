@@ -482,6 +482,7 @@ lensesHq:
           # -- (string) Additional specifications that would enhance `spec:` of created ExternalSecret
           # @section -- Lenses HQ Database startup values
           additionalSpecs: {}
+          creationPolicy: "Owner"
           secretStoreRef:
             # -- (string) Type of secret store created by ESO.
             # @section -- Lenses HQ Database startup values
@@ -560,6 +561,25 @@ additionalPodSpec:
 # -- (list) # Optionally add arbitrary fields to the main container spec (e.g. tty, stdin, etc)
 # @section -- Extras
 additionalContainerSpec:
+
+# -- (list) Additional volume mounts to use in Lenses delpoyments, for example to load additional plugins (UDFs) in Lenses
+# Use it in conjuction with lenses.additionalVolumes
+# @section -- Extras
+additionalVolumeMounts:
+  # - name: lenses-plugins
+  #   mountPath: "/data/plugins"
+
+# -- (list) Additional volumes to use in Lenses delpoyments either by Lenses for other sidecars.
+# @section -- Extras
+additionalVolumes:
+  # Example usages:
+  # - name: secrets
+  #   secret:
+  #     secretName: lenses-super-secrets
+  # Note: PersistentVolumeClaim should already exist before deploying Helm chart
+  # - name: lenses-plugins
+  #   persistentVolumeClaim:
+  #     claimName: lenses-plugins
 
 # -- (map) Sidecar container enablement.
 # @raw

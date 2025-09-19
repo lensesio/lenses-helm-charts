@@ -1,26 +1,48 @@
 suite: enable existing volume claim and check the changes in deployment
 templates:
   - deployment.yaml
-  - logs-volume-claim.yaml
 tests:
-  - it: should work
+  - it: should mount logs volume with existing claim
     set:
       persistence:
-        existingClaim: foobar
+        log:
+          existingClaim: foobar
     asserts:
       - template: deployment.yaml
         isKind:
           of: Deployment
       - template: deployment.yaml
-        contains:
+        notContains:
           path: spec.template.spec.containers[0].volumeMounts
           content:
             mountPath: /data/log
             name: logs
       - template: deployment.yaml
-        contains:
+        notContains:
           path: spec.template.spec.volumes
           content:
             name: logs
+            persistentVolumeClaim:
+              claimName: foobar
+  - it: should mount storage volume with existing claim
+    set:
+      persistence:
+        storageH2:
+          existingClaim: foobar
+    asserts:
+      - template: deployment.yaml
+        isKind:
+          of: Deployment
+      - template: deployment.yaml
+        notContains:
+          path: spec.template.spec.containers[0].volumeMounts
+          content:
+            mountPath: /data/storage
+            name: storage
+      - template: deployment.yaml
+        notContains:
+          path: spec.template.spec.volumes
+          content:
+            name: storage
             persistentVolumeClaim:
               claimName: foobar

@@ -108,10 +108,15 @@ spec:
         - name: config
           configMap:
             name: {{include "fullname" . | quote}}
+        {{- if .Values.persistence.storageH2.enabled }}
+        - name: storage
+          persistentVolumeClaim:
+            claimName: {{ default (include "storageH2ClaimName" .) .Values.persistence.storageH2.existingClaim }}
+        {{- end }}
         {{- if .Values.persistence.log.enabled }}
         - name: logs
           persistentVolumeClaim:
-            claimName: {{ default (include "logsClaimName" .) .Values.persistence.existingClaim }}
+            claimName: {{ default (include "logsClaimName" .) .Values.persistence.log.existingClaim }}
         {{- end }}
         {{- if .Values.additionalVolumes }}
           {{- toYaml .Values.additionalVolumes | nindent 8 }}
@@ -148,6 +153,10 @@ spec:
           - name: config
             mountPath: "/mnt/settings/lenses.append.conf"
             subPath: "lenses.append.conf"
+          {{- if .Values.persistence.storageH2.enabled }}
+          - name: storage
+            mountPath: "/data/storage"
+          {{- end }}
           {{- if .Values.persistence.log.enabled }}
           - name: logs
             mountPath: "/data/log"

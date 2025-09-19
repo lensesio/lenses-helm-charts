@@ -110,13 +110,33 @@ serviceAccount:
   annotations: {}
 
 persistence:
+  storageH2:
+    # -- (boolean) If you use Data Policies module enable a Persistent Volume to keep your data policies rule.
+    # Also used when lenses.storage.enabled: false, and an H2 local filesystem database is used, instead of Postgresql.
+    # https://docs.lenses.io/current/installation/kubernetes/persistence/
+    # @section -- Persistence scope values
+    enabled: false
+      # -- (list) Access mode rights for created persistence volumes.
+    # @section -- Persistence scope values
+    accessModes:
+      - ReadWriteOnce
+    # -- (string) Size of persistence that will be created.
+    # @section -- Persistence scope values
+    size: 5Gi
+    # -- (string) Storageclass for the persistence volume. In case a storageclass is not defined, the default storageclass will be used.
+    # @section -- Persistence scope values
+    storageClass: ""
+    # -- (string) Annotations dedicated for persistence.
+    # @section -- Persistence scope values
+    annotations: {}
+    # -- (string)  Target a pre-existing volume claim to use it as Lenses Persistent volume
+    # @section -- Persistence scope values
+    existingClaim: ""
+
   log:
     # -- (boolean) Extra volume creation dedicated for logs.
     # @section -- Persistence scope values
-    enabled: true
-    # -- (boolean) Annotations dedicated for logs.
-    # @section -- Persistence scope values
-    annotations: {}
+    enabled: false
     # -- (list) Access mode rights for created persistence volumes.
     # @section -- Persistence scope values
     accessModes:
@@ -124,8 +144,12 @@ persistence:
     # -- (string) Size of persistence that will be created.
     # @section -- Persistence scope values
     size: 5Gi
-  ## Target a pre-existing volume claim to use it as Lenses Persistent volume
-  # existingClaim:
+    # -- (string) Storageclass for the persistence volume. In case a storageclass is not defined, the default storageclass will be used.
+    # @section -- Persistence scope values
+    storageClass: ""
+    # -- (boolean) Annotations dedicated for persistence.
+    # @section -- Persistence scope values
+    annotations: {}
 
   ## Policies data Persistent Volume Storage Class
   ## If defined, storageClassName: <storageClass>
@@ -209,6 +233,7 @@ lensesAgent:
           # -- (string) Additional specifications that would enhance `spec:` of created ExternalSecret
           # @section -- Agent <-> HQ scope values
           additionalSpecs: {}
+          creationPolicy: "Owner"
           secretStoreRef:
             # -- (string) Type of secret store created by ESO.
             # @section -- Agent <-> HQ scope values

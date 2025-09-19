@@ -30,11 +30,11 @@ Create a default fully qualified app name.
 {{- end -}}
 {{- end -}}
 
-{{- define "claimName" -}}
+{{- define "storageH2ClaimName" -}}
 {{- if .Values.fullnameOverride -}}
-{{- printf "%s-%s" (.Values.fullnameOverride | trunc 57 | trimSuffix "-") "claim" -}}
+{{- printf "%s-%s" (.Values.fullnameOverride | trunc 57 | trimSuffix "-") "storageclaim" -}}
 {{- else -}}
-{{- printf "%s-%s" (.Release.Name | trunc 57 | trimSuffix "-") "claim" -}}
+{{- printf "%s-%s" (.Release.Name | trunc 57 | trimSuffix "-") "storageh2claim" -}}
 {{- end -}}
 {{- end -}}
 

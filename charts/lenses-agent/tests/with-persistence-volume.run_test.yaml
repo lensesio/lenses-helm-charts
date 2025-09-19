@@ -2,8 +2,13 @@ suite: enable existing Volume claim and check the changes in deployment
 templates:
   - deployment.yaml
   - logs-volume-claim.yaml
+  - storageH2-volume-claim.yaml
 tests:
   - it: should work with default values
+    set:
+      persistence:
+        log:
+          enabled: true
     asserts:
       - template: deployment.yaml
         isKind:
@@ -33,13 +38,61 @@ tests:
   - it: should work with additional annotations values
     set:
       persistence:
-        annotations:
-          foo: bar
+        log:
+          enabled: true
+          annotations:
+            foo: bar
     asserts:
       - template: logs-volume-claim.yaml
         isKind:
           of: PersistentVolumeClaim
       - template: logs-volume-claim.yaml
+        equal:
+          path: metadata.annotations.foo
+          value: bar
+  - it: should work with default values
+    set:
+      persistence:
+        storageH2:
+          enabled: true
+    asserts:
+      - template: deployment.yaml
+        isKind:
+          of: Deployment
+      - template: deployment.yaml
+        contains:
+          path: spec.template.spec.containers[0].volumeMounts
+          content:
+            mountPath: /data/storage
+            name: storage
+      - template: deployment.yaml
+        contains:
+          path: spec.template.spec.volumes
+          content:
+            name: storage
+            persistentVolumeClaim:
+              claimName: RELEASE-NAME-storageh2claim
+      - template: storageH2-volume-claim.yaml
+        contains:
+          path: spec.accessModes
+          content:
+            ReadWriteOnce
+      - template: storageH2-volume-claim.yaml
+        equal:
+          path: spec.resources.requests.storage
+          value: 5Gi
+  - it: should work with additional annotations values
+    set:
+      persistence:
+        storageH2:
+          enabled: true
+          annotations:
+            foo: bar
+    asserts:
+      - template: storageH2-volume-claim.yaml
+        isKind:
+          of: PersistentVolumeClaim
+      - template: storageH2-volume-claim.yaml
         equal:
           path: metadata.annotations.foo
           value: bar

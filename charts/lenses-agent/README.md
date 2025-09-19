@@ -1,6 +1,6 @@
 # lenses-agent
 
-![Version: 6.0.4](https://img.shields.io/badge/Version-6.0.4-informational?style=flat-square) ![AppVersion: 6.0.4](https://img.shields.io/badge/AppVersion-6.0.4-informational?style=flat-square)
+![Version: 6.0.7](https://img.shields.io/badge/Version-6.0.7-informational?style=flat-square) ![AppVersion: 6.0.6](https://img.shields.io/badge/AppVersion-6.0.6-informational?style=flat-square)
 
 A chart for Lenses Agent deployment (ex. Lenses v5).
 
@@ -137,9 +137,16 @@ The command deploys Lenses Agent on the Kubernetes cluster in the example config
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | persistence.log.accessModes | list | `["ReadWriteOnce"]` | Access mode rights for created persistence volumes. |
-| persistence.log.annotations | boolean | `{}` | Annotations dedicated for logs. |
-| persistence.log.enabled | boolean | `true` | Extra volume creation dedicated for logs. |
+| persistence.log.annotations | boolean | `{}` | Annotations dedicated for persistence. |
+| persistence.log.enabled | boolean | `false` | Extra volume creation dedicated for logs. |
 | persistence.log.size | string | `"5Gi"` | Size of persistence that will be created. |
+| persistence.log.storageClass | string | `""` | Storageclass for the persistence volume. In case a storageclass is not defined, the default storageclass will be used. |
+| persistence.storageH2.accessModes | list | `["ReadWriteOnce"]` | Access mode rights for created persistence volumes. |
+| persistence.storageH2.annotations | string | `{}` | Annotations dedicated for persistence. |
+| persistence.storageH2.enabled | boolean | `false` | If you use Data Policies module enable a Persistent Volume to keep your data policies rule. Also used when lenses.storage.enabled: false, and an H2 local filesystem database is used, instead of Postgresql. https://docs.lenses.io/current/installation/kubernetes/persistence/ |
+| persistence.storageH2.existingClaim | string | `""` | Target a pre-existing volume claim to use it as Lenses Persistent volume |
+| persistence.storageH2.size | string | `"5Gi"` | Size of persistence that will be created. |
+| persistence.storageH2.storageClass | string | `""` | Storageclass for the persistence volume. In case a storageclass is not defined, the default storageclass will be used. |
 
 ### Lenses Agent deployment service values
 
@@ -155,6 +162,7 @@ The command deploys Lenses Agent on the Kubernetes cluster in the example config
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | fullnameOverride | string | `""` |  |
+| lensesAgent.hq.agentKey.secret.externalSecret.creationPolicy | string | `"Owner"` |  |
 | lensesAgent.hq.agentKey.secret.key | string | `""` |  |
 | lensesAgent.hq.agentKey.secret.name | string | `""` |  |
 | lensesAgent.provision.connections | string | `nil` |  |

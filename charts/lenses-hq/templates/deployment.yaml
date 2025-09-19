@@ -75,6 +75,9 @@ spec:
             items:
               - key: config.yaml
                 path: config.yaml
+        {{- if .Values.additionalVolumes }}
+          {{- toYaml .Values.additionalVolumes | nindent 8 }}
+        {{- end }}
       serviceAccountName: {{ .Values.serviceAccount.name }}
       {{- if .Values.image.imagePullSecrets }}
       imagePullSecrets: {{ .Values.image.imagePullSecrets | toYaml | nindent 8 }}

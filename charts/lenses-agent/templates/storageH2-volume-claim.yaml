@@ -1,0 +1,31 @@
+{{- if and .Values.persistence.storageH2.enabled (not .Values.persistence.storageH2.existingClaim) -}}
+apiVersion: "v1"
+kind: "PersistentVolumeClaim"
+metadata:
+  name: {{ include "storageH2ClaimName" . }}
+{{- if .Values.persistence.storageH2.annotations }}
+  annotations:
+{{ toYaml .Values.persistence.storageH2.annotations | indent 4 }}
+{{- end }}
+  labels:
+    app: {{ include "name" . }}
+    chart: {{ printf "%s-%s" .Chart.Name .Chart.Version }}
+    component: "lenses-agent"
+    heritage: {{ .Release.Service }}
+    release: {{ .Release.Name }}
+    lenses.io/app: {{ include "name" . }}
+    lenses.io/app.type: lenses-agent-storageH2-volume-claim
+spec:
+  accessModes:
+{{ toYaml .Values.persistence.storageH2.accessModes | indent 4 }}
+{{- if .Values.persistence.storageH2.storageClass }}
+{{- if (eq "-" .Values.persistence.storageH2.storageClass) }}
+  storageClassName: ""
+{{- else }}
+  storageClassName: {{ .Values.persistence.storageH2.storageClass }}
+{{- end }}
+{{- end }}
+  resources:
+    requests:
+      storage: {{ .Values.persistence.storageH2.size | quote }}
+{{- end -}}
