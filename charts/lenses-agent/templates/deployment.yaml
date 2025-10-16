@@ -271,10 +271,6 @@ spec:
           value: {{ .Values.lensesAgent.sql.processorImage | quote }}
         - name: LENSES_KUBERNETES_PROCESSOR_IMAGE_TAG
           value: {{ .Values.lensesAgent.sql.processorImageTag | quote }}
-        - name: LENSES_KUBERNETES_POD_HEAP
-          value: {{ .Values.lensesAgent.sql.heap | quote }}
-        - name: LENSES_KUBERNETES_POD_MIN_HEAP
-          value: {{ .Values.lensesAgent.sql.minHeap | quote }}
         - name: LENSES_KUBERNETES_POD_MEM_LIMIT
           value: {{ .Values.lensesAgent.sql.memLimit | quote }}
         - name: LENSES_KUBERNETES_POD_MEM_REQUEST

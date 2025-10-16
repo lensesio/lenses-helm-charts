@@ -1,6 +1,6 @@
 # lenses-agent
 
-![Version: 6.0.7](https://img.shields.io/badge/Version-6.0.7-informational?style=flat-square) ![AppVersion: 6.0.6](https://img.shields.io/badge/AppVersion-6.0.6-informational?style=flat-square)
+![Version: 6.0.8](https://img.shields.io/badge/Version-6.0.8-informational?style=flat-square) ![AppVersion: 6.0.7](https://img.shields.io/badge/AppVersion-6.0.7-informational?style=flat-square)
 
 A chart for Lenses Agent deployment (ex. Lenses v5).
 
@@ -94,11 +94,9 @@ The command deploys Lenses Agent on the Kubernetes cluster in the example config
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| lensesAgent.sql.heap | string | `"1024M"` | Setting heap for each individual SQL Processor |
 | lensesAgent.sql.livenessInitialDelay | string | `"60 seconds"` | Setting initial delay when SQL processor is being started |
 | lensesAgent.sql.memLimit | string | `"1152M"` | Setting memory limit for each individual SQL Processor |
 | lensesAgent.sql.memRequest | string | `"128M"` | Setting memory limit for each individual SQL Processor |
-| lensesAgent.sql.minHeap | string | `"128M"` | Setting min heap for each individual SQL Processor |
 | lensesAgent.sql.mode | string | `"IN_PROC"` | Setting execution mode for SQL Processors Example: IN_PROC | KUBERNETES |
 
 ### Agent Database scope values

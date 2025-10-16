@@ -81,8 +81,9 @@ resources:
 # @section -- Permission scope values
 rbacEnable: true
 
-# -- (bool) Enables namespaceScope which indicates that if the cluster has rbac and namespaceScope is enabled
-#  role and role binding on namespace level will be created
+# -- (bool) Enables namespaceScope which indicates that if the cluster has rbac and namespaceScope is enabled role and
+# role binding on namespace level will be created. If SQL_PROCESSOR_MODE is set to KUBERNETES, this option should either
+# be false (giving the Agent access to all namespaces), or the namespaces the agent can access must be set explicitly.
 # @section -- Permission scope values
 namespaceScope: true
 
@@ -416,16 +417,10 @@ lensesAgent:
 
     # -- (string) Setting execution mode for SQL Processors
     # Example: IN_PROC | KUBERNETES
+    # If you have set namespaceScope: true, then setting this to KUBERNETES might prevent the Agent from booting succesfully
+    # unless you explicitly set the namespaces the Agent can access
     # @section -- Agent SQL Processor scope values
     mode: IN_PROC
-
-    # -- (string) Setting heap for each individual SQL Processor
-    # @section -- Agent SQL Processor scope values
-    heap: 1024M
-
-    # -- (string) Setting min heap for each individual SQL Processor
-    # @section -- Agent SQL Processor scope values
-    minHeap: 128M
 
     # -- (string) Setting memory limit for each individual SQL Processor
     # @section -- Agent SQL Processor scope values
