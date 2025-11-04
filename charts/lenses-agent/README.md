@@ -97,7 +97,7 @@ The command deploys Lenses Agent on the Kubernetes cluster in the example config
 | lensesAgent.sql.livenessInitialDelay | string | `"60 seconds"` | Setting initial delay when SQL processor is being started |
 | lensesAgent.sql.memLimit | string | `"1152M"` | Setting memory limit for each individual SQL Processor |
 | lensesAgent.sql.memRequest | string | `"128M"` | Setting memory limit for each individual SQL Processor |
-| lensesAgent.sql.mode | string | `"IN_PROC"` | Setting execution mode for SQL Processors Example: IN_PROC | KUBERNETES |
+| lensesAgent.sql.mode | string | `"IN_PROC"` | Setting execution mode for SQL Processors Example: IN_PROC | KUBERNETES If you have set namespaceScope: true, then setting this to KUBERNETES might prevent the Agent from booting succesfully unless you explicitly set the namespaces the Agent can access |
 
 ### Agent Database scope values
 
@@ -123,7 +123,7 @@ The command deploys Lenses Agent on the Kubernetes cluster in the example config
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| namespaceScope | bool | `true` | Enables namespaceScope which indicates that if the cluster has rbac and namespaceScope is enabled  role and role binding on namespace level will be created |
+| namespaceScope | bool | `true` | Enables namespaceScope which indicates that if the cluster has rbac and namespaceScope is enabled role and role binding on namespace level will be created. If SQL_PROCESSOR_MODE is set to KUBERNETES, this option should either be false (giving the Agent access to all namespaces), or the namespaces the agent can access must be set explicitly. |
 | rbacEnable | bool | `true` | Enables rbac which indicates if a the cluster has rbac enabled and a cluster role and clusterrolebinding should be created for the service account |
 | serviceAccount | object | `{"annotations":{},"create":false,"name":"default"}` | User to be used by Lenses to deploy apps |
 | serviceAccount.annotations | dict | `{}` | Additional service account annotations. |
@@ -154,6 +154,12 @@ The command deploys Lenses Agent on the Kubernetes cluster in the example config
 | service.annotations | dict | `{}` | Additional service annotations |
 | service.enabled | bool | `true` | Deciding factor whether Lenses HQ service will be created and which type |
 | servicePortName | string | `"lenses-agent"` | Lenses Agent service port name |
+
+### Lenses Aget deployment service values
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| service.type | string | `"ClusterIP"` | Type of service to be created. |
 
 ### Other Values
 
