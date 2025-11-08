@@ -27,6 +27,6 @@ spec:
     port: {{ .Values.restPort}}
   selector:
     app: {{ include "fullname" . }}
-    component: "lenses"
+    component: "lenses-agent"
 
 {{- end -}}

@@ -44,7 +44,7 @@ spec:
     metadata:
       labels:
         app: {{include "fullname" . | quote}}
-        component: "lenses"
+        component: "lenses-agent"
         hostPort: {{ .Values.restPort | quote }}
         containerPort: {{ .Values.restPort | quote }}
         {{- range $key, $value := .Values.labels }}
