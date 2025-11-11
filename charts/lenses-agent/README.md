@@ -1,6 +1,6 @@
 # lenses-agent
 
-![Version: 6.0.8](https://img.shields.io/badge/Version-6.0.8-informational?style=flat-square) ![AppVersion: 6.0.7](https://img.shields.io/badge/AppVersion-6.0.7-informational?style=flat-square)
+![Version: 6.1.0](https://img.shields.io/badge/Version-6.1.0-informational?style=flat-square) ![AppVersion: 6.1.0](https://img.shields.io/badge/AppVersion-6.1.0-informational?style=flat-square)
 
 A chart for Lenses Agent deployment (ex. Lenses v5).
 
@@ -135,10 +135,17 @@ The command deploys Lenses Agent on the Kubernetes cluster in the example config
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | persistence.log.accessModes | list | `["ReadWriteOnce"]` | Access mode rights for created persistence volumes. |
-| persistence.log.annotations | boolean | `{}` | Annotations dedicated for persistence. |
+| persistence.log.annotations | string | `{}` | Annotations dedicated for persistence. |
 | persistence.log.enabled | boolean | `false` | Extra volume creation dedicated for logs. |
+| persistence.log.existingClaim | string | `""` | Target a pre-existing volume claim to use it as Lenses Persistent volume |
 | persistence.log.size | string | `"5Gi"` | Size of persistence that will be created. |
 | persistence.log.storageClass | string | `""` | Storageclass for the persistence volume. In case a storageclass is not defined, the default storageclass will be used. |
+| persistence.provisioning.accessModes | list | `["ReadWriteOnce"]` | Access mode rights for created persistence volumes. |
+| persistence.provisioning.annotations | string | `{}` | Annotations dedicated for persistance. |
+| persistence.provisioning.enabled | boolean | `false` | Extra volume creation dedicated for provisioning data managed via the HQ. Should be combined with the PROVISION_HQ_URL and PROVISION_AGENT_KEY environment variables. |
+| persistence.provisioning.existingClaim | string | `""` | Target a pre-existing volume claim to use it as Lenses Persistent volume |
+| persistence.provisioning.size | string | `"50Mi"` | Size of persistence that will be created. |
+| persistence.provisioning.storageClass | string | `""` | Storageclass for the persistence volume. In case a storageclass is not defined, the default storageclass will be used. |
 | persistence.storageH2.accessModes | list | `["ReadWriteOnce"]` | Access mode rights for created persistence volumes. |
 | persistence.storageH2.annotations | string | `{}` | Annotations dedicated for persistence. |
 | persistence.storageH2.enabled | boolean | `false` | If you use Data Policies module enable a Persistent Volume to keep your data policies rule. Also used when lenses.storage.enabled: false, and an H2 local filesystem database is used, instead of Postgresql. https://docs.lenses.io/current/installation/kubernetes/persistence/ |

@@ -1,6 +1,6 @@
 # lenses-hq
 
-![Version: 6.0.13](https://img.shields.io/badge/Version-6.0.13-informational?style=flat-square) ![AppVersion: 6.0.12](https://img.shields.io/badge/AppVersion-6.0.12-informational?style=flat-square)
+![Version: 6.1.0](https://img.shields.io/badge/Version-6.1.0-informational?style=flat-square) ![AppVersion: 6.1.0](https://img.shields.io/badge/AppVersion-6.1.0-informational?style=flat-square)
 
 A chart for Lenses HQ deployment which provides a unified, streamlined view of the entire event infrastructure—whether on-premises or in the cloud—through a single, comprehensive interface.
 
@@ -41,8 +41,6 @@ The command deploys Lenses HQ on the Kubernetes cluster in the example configura
 |-----|------|---------|-------------|
 | additionalContainerSpec | list | `nil` | # Optionally add arbitrary fields to the main container spec (e.g. tty, stdin, etc) |
 | additionalPodSpec | list | `nil` | Optionally add arbitrary fields to the pod spec (e.g. priorityClassName, priority, etc) |
-| additionalVolumeMounts | list | `nil` | Additional volume mounts to use in Lenses delpoyments, for example to load additional plugins (UDFs) in Lenses Use it in conjuction with lenses.additionalVolumes |
-| additionalVolumes | list | `nil` | Additional volumes to use in Lenses delpoyments either by Lenses for other sidecars. |
 | additionalVolumeMounts | list | `nil` | Additional volume mounts to use in Lenses delpoyments, for example to load additional plugins (UDFs) in Lenses Use it in conjuction with lenses.additionalVolumes |
 | additionalVolumes | list | `nil` | Additional volumes to use in Lenses delpoyments either by Lenses for other sidecars. |
 | lensesHq.additionalEnv | string | `[]` | Additional env variables appended to deployment Follows the format of [EnvVar spec](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.21/#envvar-v1-core) |
@@ -182,7 +180,6 @@ The command deploys Lenses HQ on the Kubernetes cluster in the example configura
 | lensesHq.storage.postgres.enabled | string | `true` | Enabling postgres engine. This flag is here as there might be support of multiple database engines in the future. **Required: true** |
 | lensesHq.storage.postgres.host | string | `""` | Hostname of running database instance. **Required: true** |
 | lensesHq.storage.postgres.params | string | `{}` | Contains connection string parameters as key/values pairs. It allows    fine-grained control of connection settings. The parameters can be found    here: https://www.postgresql.org/docs/current/libpq-connect.html#LIBPQ-PARAMKEYWORDS **Required: false** |
-| lensesHq.storage.postgres.passwordSecret | object | `{"externalSecret":{"additionalSpecs":{},"creationPolicy":"Owner","secretStoreRef":{"name":"","type":""}},"key":"","name":"","password":"","type":"precreated"}` | Definition of secret that has been precreated and has postgres database password |
 | lensesHq.storage.postgres.passwordSecret | object | `{"externalSecret":{"additionalSpecs":{},"creationPolicy":"Owner","secretStoreRef":{"name":"","type":""}},"key":"","name":"","password":"","type":"precreated"}` | Definition of secret that has been precreated and has postgres database password |
 | lensesHq.storage.postgres.passwordSecret.externalSecret.additionalSpecs | string | `{}` | Additional specifications that would enhance `spec:` of created ExternalSecret |
 | lensesHq.storage.postgres.passwordSecret.externalSecret.secretStoreRef.name | string | `""` | Name of cluster secret store created by ESO. |
