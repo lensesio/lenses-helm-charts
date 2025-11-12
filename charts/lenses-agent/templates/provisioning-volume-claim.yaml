@@ -1,5 +1,4 @@
 {{- if and .Values.persistence.provisioning.enabled (not .Values.persistence.provisioning.existingClaim) -}}
-
 apiVersion: "v1"
 kind: "PersistentVolumeClaim"
 metadata:

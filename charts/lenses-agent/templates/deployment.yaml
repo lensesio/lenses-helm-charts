@@ -174,14 +174,16 @@ spec:
           {{- if .Values.persistence.provisioning.enabled }}
           - name: provisioning
             mountPath: "/data/provisioning"
-          {{- end }}
-          {{- if .Values.additionalVolumeMounts }}
-            {{- toYaml .Values.additionalVolumeMounts | nindent 10 }}
-          {{- end }}
+          {{ else }}
           - name: provision-secrets
             mountPath: {{ $.Values.lensesAgent.provision.path }}
           - name: provision-secrets-files
             mountPath: {{ $.Values.lensesAgent.provision.path }}/files
+          {{- end }}
+          {{- if .Values.additionalVolumeMounts }}
+            {{- toYaml .Values.additionalVolumeMounts | nindent 10 }}
+          {{- end }}
+
         {{- if and (hasKey .Values "containerSecurityContext") (hasKey .Values.containerSecurityContext "readOnlyRootFilesystem") (eq .Values.containerSecurityContext.readOnlyRootFilesystem true) }}
           - name: tmp-volume
             mountPath: /tmp
@@ -243,8 +245,13 @@ spec:
           value: {{ .Values.lensesAgent.grafanaUrl | quote }}
         {{- end }}
         # Provisioning
+        {{- if .Values.persistence.provisioning.enabled }}
+        - name: LENSES_PROVISIONING_PATH
+          value: /data/provisioning
+        {{ else }}
         - name: LENSES_PROVISIONING_PATH
           value: {{ .Values.lensesAgent.provision.path }}
+        {{- end }}
         {{- if .Values.lensesAgent.provision.interval }}
         - name: LENSES_PROVISIONING_INTERVAL
           value: {{ .Values.lensesAgent.provision.interval }}
@@ -254,7 +261,7 @@ spec:
         {{- end }}
         {{- end }}
 
-        # HQ
+        {{- if not .Values.persistence.provisioning.enabled }}
         - name: LENSESHQ_AGENT_KEY
           valueFrom:
             secretKeyRef:
@@ -268,6 +275,7 @@ spec:
               name: {{ .Values.lensesAgent.hq.agentKey.secret.name }}
               key: {{ .Values.lensesAgent.hq.agentKey.secret.key }}
             {{- end }}
+        {{- end }}
         - name: LENSES_TOPICS_EXTERNAL_TOPOLOGY
           value: {{include "topologyTopic" . | quote}}
         - name: LENSES_TOPICS_EXTERNAL_METRICS

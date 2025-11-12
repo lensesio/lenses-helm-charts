@@ -122,7 +122,9 @@ lenses.storage.postgres.port={{  .Values.lensesAgent.storage.postgres.port | quo
 lenses.storage.postgres.schema={{ .Values.lensesAgent.storage.postgres.schema | quote }}
 {{- end }}
 {{- end }}
+{{- if not .Values.persistence.provisioning.enabled }}
 lenses.provisioning.path={{ required "Provisioning 'path' value is mandatory" .Values.lensesAgent.provision.path | quote }}
+{{- end }}
 {{- if .Values.lensesAgent.provision.interval }}
 lenses.provisioning.interval={{ .Values.lensesAgent.provision.interval }}
 {{- end }}
