@@ -1023,10 +1023,12 @@
                                     "type": "object",
                                     "default": null,
                                     "title": "Extra database connection parameters Schema",
-                                    "examples": {
-                                        "application_name": "example",
-                                        "sslmode": "required"
-                                    }
+                                    "examples": [
+                                        {
+                                            "application_name": "example",
+                                            "sslmode": "required"
+                                        }
+                                    ]
                                 },
                                 "port": {
                                     "type": "integer",
