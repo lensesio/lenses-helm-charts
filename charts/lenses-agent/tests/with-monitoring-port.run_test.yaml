@@ -1,0 +1,37 @@
+suite: with monitoring port
+templates:
+  - deployment.yaml
+tests:
+  - it: should expose metrics port when monitoring is enabled (default)
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].ports
+          content:
+            name: metrics
+            containerPort: 9102
+            protocol: TCP
+
+  - it: should expose metrics port with custom port value
+    set:
+      monitoring:
+        enabled: true
+        port: 9090
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].ports
+          content:
+            name: metrics
+            containerPort: 9090
+            protocol: TCP
+
+  - it: should not expose metrics port when monitoring is disabled
+    set:
+      monitoring:
+        enabled: false
+    asserts:
+      - notContains:
+          path: spec.template.spec.containers[0].ports
+          content:
+            name: metrics
+          any: true
+
