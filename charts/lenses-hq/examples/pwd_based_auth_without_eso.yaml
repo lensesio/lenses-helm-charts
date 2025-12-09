@@ -7,7 +7,7 @@ resources:
     memory: 4Gi
 
 image:
-  repository: lenstinglensting/lenses-hq:6-preview
+  repository: lensesio/lenses-hq
   pullPolicy: Always
 
 rbacEnable: false

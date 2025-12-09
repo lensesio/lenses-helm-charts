@@ -148,6 +148,11 @@ spec:
         {{- end }}
         ports:
         - containerPort: {{ .Values.restPort }}
+        {{- if .Values.monitoring.enabled }}
+        - name: metrics
+          containerPort: {{ .Values.monitoring.port }}
+          protocol: TCP
+        {{- end }}
         {{- if .Values.lensesAgent.livenessProbe.enabled }}
         livenessProbe:
           httpGet:
