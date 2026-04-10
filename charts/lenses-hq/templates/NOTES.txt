@@ -44,3 +44,28 @@ Ingress enabled.
 
 Visit the UI at https://{{ .Values.ingress.host }}
 {{- end}}
+
+{{- if .Values.mcp.enabled }}
+==================================================
+=  MCP SIDECAR                                   =
+==================================================
+MCP sidecar is enabled. The lensesio/mcp container listens on pod port 8000.
+  - Advertised to clients as : {{ .Values.mcp.mcpAdvertisedUrl }}
+  - Points clients to HQ at  : {{ .Values.mcp.lensesAdvertisedUrl }}
+{{- if (((.Values.lensesHq.auth).oauth2).authorizationServer).enabled }}
+  - HQ embedded OAuth 2.1 authorization server is enabled (issuerURL: {{ .Values.lensesHq.auth.oauth2.authorizationServer.issuerURL }})
+
+Make sure HQ's /oauth2/introspect endpoint stays cluster-internal. MCP needs
+unauthenticated access to it (which is why unauthenticatedIntrospection is
+required); exposing the endpoint through a public Ingress would turn it into
+a token-validity oracle.
+{{- else }}
+
+WARNING: HQ embedded OAuth 2.1 authorization server is NOT enabled. MCP clients
+will not be able to discover an authorization server via
+{{ .Values.mcp.lensesAdvertisedUrl }}/.well-known/oauth-authorization-server. Enable it with:
+    --set lensesHq.auth.oauth2.authorizationServer.enabled=true
+    --set lensesHq.auth.oauth2.authorizationServer.issuerURL={{ .Values.mcp.lensesAdvertisedUrl }}
+    --set lensesHq.auth.oauth2.authorizationServer.unauthenticatedIntrospection=true
+{{- end }}
+{{- end }}

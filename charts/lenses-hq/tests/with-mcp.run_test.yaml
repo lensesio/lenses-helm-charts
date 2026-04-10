@@ -1,0 +1,324 @@
+suite: test MCP sidecar
+templates:
+  - deployment.yaml
+  - service-mcp.yaml
+  - ingress-mcp.yaml
+  - configmap.yaml
+tests:
+  - it: should not render the MCP sidecar container when mcp.enabled is false
+    template: deployment.yaml
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].name
+          value: lenses-hq
+      - isNull:
+          path: spec.template.spec.containers[1]
+
+  - it: should not render the MCP service when mcp.enabled is false
+    template: service-mcp.yaml
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: should not render the MCP ingress when mcp.enabled is false
+    template: ingress-mcp.yaml
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: should render the MCP sidecar container with the expected env vars when enabled
+    template: deployment.yaml
+    set:
+      mcp:
+        enabled: true
+        lensesAdvertisedUrl: https://hq.example.com
+        mcpAdvertisedUrl: https://mcp.example.com
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[1].name
+          value: mcp
+      - matchRegex:
+          path: spec.template.spec.containers[1].image
+          pattern: ^lensesio/mcp:.+$
+      - equal:
+          path: spec.template.spec.containers[1].ports[0].containerPort
+          value: 8000
+      - equal:
+          path: spec.template.spec.containers[1].ports[0].name
+          value: mcp
+      - contains:
+          path: spec.template.spec.containers[1].env
+          content:
+            name: TRANSPORT
+            value: "http"
+      - contains:
+          path: spec.template.spec.containers[1].env
+          content:
+            name: LENSES_ADVERTISED_URL
+            value: https://hq.example.com
+      - contains:
+          path: spec.template.spec.containers[1].env
+          content:
+            name: MCP_ADVERTISED_URL
+            value: https://mcp.example.com
+
+  - it: should point LENSES_URL at the HQ cluster service on servicePort
+    template: deployment.yaml
+    set:
+      mcp.enabled: true
+      mcp.lensesAdvertisedUrl: https://hq.example.com
+      mcp.mcpAdvertisedUrl: https://mcp.example.com
+    release:
+      name: rel
+      namespace: lenses
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[1].env
+          content:
+            name: LENSES_URL
+            value: http://rel-lenses-hq.lenses.svc.cluster.local:80
+
+  - it: should use mcp.image.tag when set, overriding the Chart.yaml annotation
+    template: deployment.yaml
+    set:
+      mcp.enabled: true
+      mcp.lensesAdvertisedUrl: https://hq.example.com
+      mcp.mcpAdvertisedUrl: https://mcp.example.com
+      mcp.image.tag: "9.9.9-rc1"
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[1].image
+          value: lensesio/mcp:9.9.9-rc1
+
+  - it: should render the MCP service with targetPort mcp when enabled
+    template: service-mcp.yaml
+    set:
+      mcp.enabled: true
+      mcp.lensesAdvertisedUrl: https://hq.example.com
+      mcp.mcpAdvertisedUrl: https://mcp.example.com
+    release:
+      name: rel
+      namespace: lenses
+    asserts:
+      - hasDocuments:
+          count: 1
+      - equal:
+          path: metadata.name
+          value: rel-lenses-hq-mcp
+      - equal:
+          path: spec.ports[0].name
+          value: mcp
+      - equal:
+          path: spec.ports[0].targetPort
+          value: mcp
+
+  - it: should render the MCP ingress when mcp.ingress.enabled is true
+    template: ingress-mcp.yaml
+    set:
+      mcp.enabled: true
+      mcp.lensesAdvertisedUrl: https://hq.example.com
+      mcp.mcpAdvertisedUrl: https://mcp.example.com
+      mcp.ingress.enabled: true
+      mcp.ingress.host: mcp.example.com
+    release:
+      name: rel
+      namespace: lenses
+    asserts:
+      - hasDocuments:
+          count: 1
+      - equal:
+          path: spec.rules[0].host
+          value: mcp.example.com
+      - equal:
+          path: metadata.name
+          value: rel-lenses-hq-mcp
+
+  - it: should fail when issuerURL does not match mcp.lensesAdvertisedUrl
+    template: deployment.yaml
+    set:
+      mcp.enabled: true
+      mcp.lensesAdvertisedUrl: https://hq.example.com
+      mcp.mcpAdvertisedUrl: https://mcp.example.com
+      lensesHq.auth.oauth2.authorizationServer.enabled: true
+      lensesHq.auth.oauth2.authorizationServer.issuerURL: https://other.example.com
+      lensesHq.auth.oauth2.authorizationServer.unauthenticatedIntrospection: true
+    asserts:
+      - failedTemplate:
+          errorMessage: 'mcp.lensesAdvertisedUrl ("https://hq.example.com") must equal lensesHq.auth.oauth2.authorizationServer.issuerURL ("https://other.example.com"). OAuth 2.1 and RFC 8414 require the issuer identifier to match the URL MCP clients use.'
+
+  - it: should surface the empty-issuerURL error before the must-equal comparison
+    template: deployment.yaml
+    set:
+      mcp.enabled: true
+      mcp.lensesAdvertisedUrl: https://hq.example.com
+      mcp.mcpAdvertisedUrl: https://mcp.example.com
+      lensesHq.auth.oauth2.authorizationServer.enabled: true
+      lensesHq.auth.oauth2.authorizationServer.issuerURL: ""
+      lensesHq.auth.oauth2.authorizationServer.unauthenticatedIntrospection: true
+    asserts:
+      - failedTemplate:
+          errorMessage: "lensesHq.auth.oauth2.authorizationServer.issuerURL must be set when the authorization server is enabled"
+
+  - it: should fail when MCP is enabled but HQ oauth2 unauthenticatedIntrospection is false
+    template: deployment.yaml
+    set:
+      mcp.enabled: true
+      mcp.lensesAdvertisedUrl: https://hq.example.com
+      mcp.mcpAdvertisedUrl: https://mcp.example.com
+      lensesHq.auth.oauth2.authorizationServer.enabled: true
+      lensesHq.auth.oauth2.authorizationServer.issuerURL: https://hq.example.com
+      lensesHq.auth.oauth2.authorizationServer.unauthenticatedIntrospection: false
+    asserts:
+      - failedTemplate:
+          errorMessage: "lensesHq.auth.oauth2.authorizationServer.unauthenticatedIntrospection must be true when the MCP sidecar is enabled. MCP's token verifier posts to /oauth2/introspect without client credentials, so HQ must accept unauthenticated introspection requests. Keep the introspect endpoint cluster-internal."
+
+  - it: should fail when mcp.enabled is true but lensesAdvertisedUrl is empty
+    template: deployment.yaml
+    set:
+      mcp.enabled: true
+      mcp.mcpAdvertisedUrl: https://mcp.example.com
+    asserts:
+      - failedTemplate:
+          errorMessage: "mcp.lensesAdvertisedUrl must be set when mcp.enabled is true. It is the public URL clients use to reach Lenses HQ."
+
+  - it: should fail when mcp.enabled is true but mcpAdvertisedUrl is empty
+    template: deployment.yaml
+    set:
+      mcp.enabled: true
+      mcp.lensesAdvertisedUrl: https://hq.example.com
+    asserts:
+      - failedTemplate:
+          errorMessage: "mcp.mcpAdvertisedUrl must be set when mcp.enabled is true. It is the public URL clients use to reach the MCP server."
+
+  - it: should fail when mcp ingress is enabled but service is disabled
+    template: deployment.yaml
+    set:
+      mcp.enabled: true
+      mcp.lensesAdvertisedUrl: https://hq.example.com
+      mcp.mcpAdvertisedUrl: https://mcp.example.com
+      mcp.ingress.enabled: true
+      mcp.ingress.host: mcp.example.com
+      mcp.service.enabled: false
+    asserts:
+      - failedTemplate:
+          errorMessage: "mcp.ingress.enabled=true requires mcp.service.enabled=true. The Ingress backend references the MCP Service."
+
+  - it: should fail when mcp.ingress.host does not match the host in mcp.mcpAdvertisedUrl
+    template: deployment.yaml
+    set:
+      mcp.enabled: true
+      mcp.lensesAdvertisedUrl: https://hq.example.com
+      mcp.mcpAdvertisedUrl: https://mcp.example.com
+      mcp.ingress.enabled: true
+      mcp.ingress.host: mcp-staging.example.com
+    asserts:
+      - failedTemplate:
+          errorMessage: 'mcp.ingress.host ("mcp-staging.example.com") must match the host in mcp.mcpAdvertisedUrl ("https://mcp.example.com", host="mcp.example.com"). The Ingress must serve the URL MCP clients are told to dial.'
+
+  - it: should fail when any HQ listener collides with reserved MCP port 8000
+    template: deployment.yaml
+    set:
+      mcp.enabled: true
+      mcp.lensesAdvertisedUrl: https://hq.example.com
+      mcp.mcpAdvertisedUrl: https://mcp.example.com
+      lensesHq.http.address: ":8000"
+    asserts:
+      - failedTemplate:
+          errorMessage: "port 8000 is reserved for the MCP sidecar. Change lensesHq.http.address, lensesHq.agents.address or lensesHq.metrics.prometheusAddress to use a different port."
+
+  - it: should use https scheme in LENSES_URL when HQ HTTP TLS is enabled
+    template: deployment.yaml
+    set:
+      mcp.enabled: true
+      mcp.lensesAdvertisedUrl: https://hq.example.com
+      mcp.mcpAdvertisedUrl: https://mcp.example.com
+      lensesHq.http.tls.enabled: true
+      lensesHq.http.tls.privateKey.secret.name: hq-tls
+      lensesHq.http.tls.privateKey.secret.key: tls.key
+      lensesHq.http.tls.cert.stringData: "dummy"
+    release:
+      name: rel
+      namespace: lenses
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[1].env
+          content:
+            name: LENSES_URL
+            value: https://rel-lenses-hq.lenses.svc.cluster.local:80
+
+  - it: should honor a custom clusterDomain in LENSES_URL
+    template: deployment.yaml
+    set:
+      mcp.enabled: true
+      mcp.lensesAdvertisedUrl: https://hq.example.com
+      mcp.mcpAdvertisedUrl: https://mcp.example.com
+      mcp.clusterDomain: mesh.internal
+    release:
+      name: rel
+      namespace: lenses
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[1].env
+          content:
+            name: LENSES_URL
+            value: http://rel-lenses-hq.lenses.svc.mesh.internal:80
+
+  - it: should render liveness and readiness probes on the MCP sidecar
+    template: deployment.yaml
+    set:
+      mcp.enabled: true
+      mcp.lensesAdvertisedUrl: https://hq.example.com
+      mcp.mcpAdvertisedUrl: https://mcp.example.com
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[1].livenessProbe.tcpSocket.port
+          value: mcp
+      - equal:
+          path: spec.template.spec.containers[1].readinessProbe.tcpSocket.port
+          value: mcp
+
+  - it: should allow disabling probes independently
+    template: deployment.yaml
+    set:
+      mcp.enabled: true
+      mcp.lensesAdvertisedUrl: https://hq.example.com
+      mcp.mcpAdvertisedUrl: https://mcp.example.com
+      mcp.livenessProbe.enabled: false
+      mcp.readinessProbe.enabled: false
+    asserts:
+      - isNull:
+          path: spec.template.spec.containers[1].livenessProbe
+      - isNull:
+          path: spec.template.spec.containers[1].readinessProbe
+
+  - it: "should render the oauth2 authorizationServer block in the configmap when enabled"
+    set:
+      mcp.enabled: true
+      mcp.lensesAdvertisedUrl: https://hq.example.com
+      mcp.mcpAdvertisedUrl: https://mcp.example.com
+      lensesHq.auth.oauth2.authorizationServer.enabled: true
+      lensesHq.auth.oauth2.authorizationServer.issuerURL: https://hq.example.com
+      lensesHq.auth.oauth2.authorizationServer.unauthenticatedIntrospection: true
+      lensesHq.auth.oauth2.authorizationServer.requirePKCE: false
+      lensesHq.auth.oauth2.authorizationServer.dcr: true
+    asserts:
+      - template: "templates/configmap.yaml"
+        matchRegex:
+          path: data.config\.yaml
+          pattern: "oauth2:\\s+authorizationServer:\\s+enabled: true"
+      - template: "templates/configmap.yaml"
+        matchRegex:
+          path: data.config\.yaml
+          pattern: 'issuerURL: "https://hq.example.com"'
+      - template: "templates/configmap.yaml"
+        matchRegex:
+          path: data.config\.yaml
+          pattern: "requirePKCE: false"
+      - template: "templates/configmap.yaml"
+        matchRegex:
+          path: data.config\.yaml
+          pattern: "dcr: true"
+      - template: "templates/configmap.yaml"
+        matchRegex:
+          path: data.config\.yaml
+          pattern: "unauthenticatedIntrospection: true"

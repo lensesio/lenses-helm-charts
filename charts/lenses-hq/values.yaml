@@ -76,6 +76,11 @@ servicePort: 80
 # @section -- Lenses HQ deployment service values
 servicePortName: lenses-hq
 
+# NOTE: When `mcp.enabled` is true, the MCP sidecar listens on pod port **8000**
+# (the `lensesio/mcp` image default, which is not configurable here). If you
+# change `lensesHq.http.address` / `lensesHq.agents.address` / `lensesHq.metrics.prometheusAddress`
+# below, do not use port 8000 — it is reserved for MCP.
+
 # -- User to be used by Lenses to deploy apps
 # @section -- Permission scope values
 serviceAccount:
@@ -173,6 +178,127 @@ ingress:
       # -- (string) Secret name where tls certificates are being stored.
       # The TLS secret must contain keys named tls.crt and tls.key that contain the certificate and private key to use for TLS.
       # @section -- Lenses HQ HTTP API deployment service values
+      secretName: ""
+
+# @section -- MCP sidecar values
+mcp:
+  # -- (bool) Deploy the Lenses MCP Server (`lensesio/mcp`) as a sidecar container
+  # alongside HQ, with its own Service and optional Ingress. When enabled, the
+  # MCP container listens on pod port **8000** (image default, not configurable).
+  # @section -- MCP sidecar values
+  enabled: false
+
+  # -- (dict) MCP sidecar container image.
+  # @section -- MCP sidecar values
+  image:
+    # -- Image repository.
+    # @section -- MCP sidecar values
+    repository: lensesio/mcp
+    # -- Default to Chart.yaml `annotations.mcpAppVersion`, then `.Chart.AppVersion`.
+    # tag:
+    # -- Image pullPolicy.
+    # @section -- MCP sidecar values
+    pullPolicy: IfNotPresent
+
+  # -- (string) Public URL at which Lenses HQ is reachable by MCP clients — typically
+  # the HQ ingress URL, e.g. `https://hq.example.com`. Mapped to the MCP container
+  # env var `LENSES_ADVERTISED_URL`. When HQ's embedded OAuth 2.1 authorization server
+  # is used (`lensesHq.auth.oauth2.authorizationServer.enabled`), this URL **must**
+  # match `lensesHq.auth.oauth2.authorizationServer.issuerURL` — RFC 8414 requires
+  # the issuer identifier to be byte-identical to the URL clients dial.
+  # @section -- MCP sidecar values
+  lensesAdvertisedUrl: ""
+
+  # -- (string) Public URL at which the MCP server is reachable by MCP clients —
+  # typically the MCP ingress URL, e.g. `https://mcp.example.com`. Mapped to the
+  # MCP container env var `MCP_ADVERTISED_URL`.
+  # @section -- MCP sidecar values
+  mcpAdvertisedUrl: ""
+
+  # -- (string) Kubernetes cluster DNS domain. Used to build the in-cluster
+  # `LENSES_URL` that MCP uses to reach the HQ Service. Override this on clusters
+  # that use a non-default DNS suffix.
+  # @section -- MCP sidecar values
+  clusterDomain: "cluster.local"
+
+  # -- (dict) Resources for the MCP sidecar container.
+  # @section -- MCP sidecar values
+  resources:
+    requests:
+      memory: 256Mi
+    limits:
+      memory: 512Mi
+
+  # -- (dict) Liveness probe for the MCP sidecar. Uses a TCP socket check against
+  # the MCP port because the `lensesio/mcp` image does not expose a dedicated
+  # `/health` endpoint.
+  # @section -- MCP sidecar values
+  livenessProbe:
+    enabled: true
+
+  # -- (dict) Readiness probe for the MCP sidecar. Required so the MCP Service
+  # does not route traffic until MCP is actually listening during pod startup.
+  # @section -- MCP sidecar values
+  readinessProbe:
+    enabled: true
+
+  # -- (list) Additional env variables appended to the MCP sidecar container.
+  # Follows the format of [EnvVar spec](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.21/#envvar-v1-core).
+  # Note: entries here are appended after the chart-managed env vars; setting a
+  # duplicate key (e.g. `LENSES_URL`, `TRANSPORT`, `LENSES_ADVERTISED_URL`,
+  # `MCP_ADVERTISED_URL`) is rejected by the Kubernetes API.
+  # @section -- MCP sidecar values
+  additionalEnv: []
+    # - name: INTROSPECTION_CACHE_TTL
+    #   value: "60"
+
+  # @section -- MCP sidecar values
+  service:
+    # -- (bool) Create a dedicated Kubernetes Service for the MCP sidecar.
+    # @section -- MCP sidecar values
+    enabled: true
+
+    # -- (string) Type of service to be created.
+    # @section -- MCP sidecar values
+    type: ClusterIP
+
+    # -- (int) Service port. Targets the fixed MCP container port `8000`.
+    # @section -- MCP sidecar values
+    port: 80
+
+    # -- (dict) Additional service annotations.
+    # @section -- MCP sidecar values
+    annotations: {}
+
+  # @section -- MCP sidecar values
+  ingress:
+    # -- (bool) If true, an Ingress resource is created for the MCP service.
+    # @section -- MCP sidecar values
+    enabled: false
+
+    # -- (string) Set custom host name (DNS name convention). Should correspond to
+    # the host in `mcp.mcpAdvertisedUrl`.
+    # @section -- MCP sidecar values
+    host: ""
+
+    # -- (string) Ingress class name.
+    # @section -- MCP sidecar values
+    ingressClassName: ""
+
+    # -- (dict) Custom Ingress annotations.
+    # @section -- MCP sidecar values
+    annotations: {}
+
+    # -- TLS. When enabled, the Ingress terminates TLS using the referenced secret.
+    # @section -- MCP sidecar values
+    tls:
+      # -- (bool) Set to true to enable HTTPS.
+      # @section -- MCP sidecar values
+      enabled: false
+
+      # -- (string) Secret name where tls certificates are stored. The TLS secret
+      # must contain keys named `tls.crt` and `tls.key`.
+      # @section -- MCP sidecar values
       secretName: ""
 
 lensesHq:
@@ -342,6 +468,53 @@ lensesHq:
           secret:
             name: ""
             key: ""
+
+    # @section -- Lenses HQ OAuth2 startup values
+    oauth2:
+      # -- Controls HQ's OAuth2 embedded authorization server. Rendered into HQ's
+      # config only when `authorizationServer.enabled` is true.
+      # @section -- Lenses HQ OAuth2 startup values
+      authorizationServer:
+        # -- (bool) Enables HQ's embedded OAuth 2.1 authorization server.
+        # @section -- Lenses HQ OAuth2 startup values
+        # **Required: false**
+        enabled: false
+
+        # -- (string) The OAuth 2.0 Authorization Server issuer identifier
+        # ([RFC 8414](https://datatracker.ietf.org/doc/html/rfc8414)). Must equal the
+        # URL that clients use to reach HQ and therefore **must match
+        # `mcp.lensesAdvertisedUrl`** when the MCP sidecar is enabled.
+        # @section -- Lenses HQ OAuth2 startup values
+        # **Required: true when enabled**
+        issuerURL: ""
+
+        # -- (string) Absolute maximum lifetime of an authorization grant
+        # (Go time.Duration format). Default 2160h (90 days).
+        # @section -- Lenses HQ OAuth2 startup values
+        # **Required: false**
+        grantLifetime: "2160h"
+
+        # -- (bool) Requires PKCE (S256) for all authorization requests.
+        # OAuth 2.1 mandates PKCE; leave enabled unless you know why you're disabling it.
+        # @section -- Lenses HQ OAuth2 startup values
+        # **Required: false**
+        requirePKCE: true
+
+        # -- (bool) Enables the dynamic client registration endpoint
+        # ([RFC 7591](https://datatracker.ietf.org/doc/html/rfc7591)).
+        # @section -- Lenses HQ OAuth2 startup values
+        # **Required: false**
+        dcr: false
+
+        # -- (bool) Allows unauthenticated requests to the `/oauth2/introspect`
+        # endpoint. MUST be `true` when the MCP sidecar is enabled, because
+        # MCP's `DiscoveryTokenVerifier` posts to the introspection endpoint
+        # without client credentials. Keep the HQ introspect endpoint
+        # cluster-internal — never expose it through a public ingress.
+        # @section -- Lenses HQ OAuth2 startup values
+        # **Required: false**
+        unauthenticatedIntrospection: false
+
   http:
     # -- (string) Sets the address the HTTP servers listens at.
     # @section -- Lenses HQ HTTP startup values

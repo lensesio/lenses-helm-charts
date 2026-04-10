@@ -213,6 +213,51 @@ spec:
           {{- toYaml .Values.lensesHq.additionalEnv | nindent 10 }}
           {{- end }}
 
+      {{- if .Values.mcp.enabled }}
+      {{- include "validate.mcpRequiredValues" . -}}
+      {{- $scheme := ternary "https" "http" (default false ((.Values.lensesHq.http).tls).enabled) }}
+      {{- $clusterDomain := default "cluster.local" .Values.mcp.clusterDomain }}
+      - name: mcp
+        image: {{ include "lensesMcpImage" . | quote }}
+        imagePullPolicy: {{ .Values.mcp.image.pullPolicy }}
+        {{- if .Values.containerSecurityContext }}
+        securityContext:
+          {{- toYaml .Values.containerSecurityContext | nindent 10 }}
+        {{- end }}
+        ports:
+          - containerPort: 8000
+            name: mcp
+            protocol: TCP
+        {{- if .Values.mcp.livenessProbe.enabled }}
+        livenessProbe:
+          tcpSocket:
+            port: mcp
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        {{- end }}
+        {{- if .Values.mcp.readinessProbe.enabled }}
+        readinessProbe:
+          tcpSocket:
+            port: mcp
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        {{- end }}
+        resources:
+          {{- toYaml .Values.mcp.resources | nindent 10 }}
+        env:
+          - name: TRANSPORT
+            value: "http"
+          - name: LENSES_URL
+            value: {{ printf "%s://%s.%s.svc.%s:%v" $scheme (include "fullname" .) .Release.Namespace $clusterDomain .Values.servicePort | quote }}
+          - name: LENSES_ADVERTISED_URL
+            value: {{ .Values.mcp.lensesAdvertisedUrl | quote }}
+          - name: MCP_ADVERTISED_URL
+            value: {{ .Values.mcp.mcpAdvertisedUrl | quote }}
+          {{- if .Values.mcp.additionalEnv }}
+          {{- toYaml .Values.mcp.additionalEnv | nindent 10 }}
+          {{- end }}
+      {{- end }}
+
       {{- if .Values.sidecarContainers }}
       {{- toYaml .Values.sidecarContainers | nindent 6 }}
       {{- end }}

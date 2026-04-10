@@ -32,6 +32,192 @@
                 ""
             ]
         },
+        "mcp": {
+            "type": "object",
+            "default": {},
+            "title": "The mcp Schema",
+            "properties": {
+                "enabled": {
+                    "type": "boolean",
+                    "default": false,
+                    "title": "Deploys the Lenses MCP server as an HQ sidecar",
+                    "examples": [
+                        true,
+                        false
+                    ]
+                },
+                "image": {
+                    "type": "object",
+                    "default": {},
+                    "title": "The MCP image Schema",
+                    "properties": {
+                        "repository": {
+                            "type": "string",
+                            "default": "lensesio/mcp",
+                            "title": "MCP image repository",
+                            "examples": [
+                                "lensesio/mcp"
+                            ]
+                        },
+                        "tag": {
+                            "type": "string",
+                            "default": "",
+                            "title": "MCP image tag. Defaults to Chart.yaml annotations.mcpAppVersion, then .Chart.AppVersion"
+                        },
+                        "pullPolicy": {
+                            "type": "string",
+                            "default": "IfNotPresent",
+                            "pattern": "^(Always|IfNotPresent|Never)$",
+                            "examples": [
+                                "IfNotPresent",
+                                "Always"
+                            ]
+                        }
+                    }
+                },
+                "lensesAdvertisedUrl": {
+                    "type": "string",
+                    "default": "",
+                    "title": "Public URL at which Lenses HQ is reachable by MCP clients. Maps to LENSES_ADVERTISED_URL.",
+                    "examples": [
+                        "https://hq.example.com"
+                    ]
+                },
+                "mcpAdvertisedUrl": {
+                    "type": "string",
+                    "default": "",
+                    "title": "Public URL at which the MCP server is reachable by MCP clients. Maps to MCP_ADVERTISED_URL.",
+                    "examples": [
+                        "https://mcp.example.com"
+                    ]
+                },
+                "clusterDomain": {
+                    "type": "string",
+                    "default": "cluster.local",
+                    "title": "Kubernetes cluster DNS domain used to build the in-cluster LENSES_URL",
+                    "examples": [
+                        "cluster.local"
+                    ]
+                },
+                "resources": {
+                    "type": "object",
+                    "default": {},
+                    "title": "The MCP sidecar resources Schema"
+                },
+                "livenessProbe": {
+                    "type": "object",
+                    "default": {},
+                    "title": "The MCP sidecar livenessProbe Schema",
+                    "properties": {
+                        "enabled": {
+                            "type": "boolean",
+                            "default": true,
+                            "examples": [
+                                true,
+                                false
+                            ]
+                        }
+                    }
+                },
+                "readinessProbe": {
+                    "type": "object",
+                    "default": {},
+                    "title": "The MCP sidecar readinessProbe Schema",
+                    "properties": {
+                        "enabled": {
+                            "type": "boolean",
+                            "default": true,
+                            "examples": [
+                                true,
+                                false
+                            ]
+                        }
+                    }
+                },
+                "additionalEnv": {
+                    "type": "array",
+                    "default": [],
+                    "title": "The MCP additionalEnv Schema",
+                    "items": {
+                        "type": "object"
+                    }
+                },
+                "service": {
+                    "type": "object",
+                    "default": {},
+                    "title": "The MCP service Schema",
+                    "properties": {
+                        "enabled": {
+                            "type": "boolean",
+                            "default": true
+                        },
+                        "type": {
+                            "type": "string",
+                            "default": "ClusterIP",
+                            "examples": [
+                                "ClusterIP",
+                                "NodePort",
+                                "LoadBalancer"
+                            ]
+                        },
+                        "port": {
+                            "type": "integer",
+                            "default": 80,
+                            "examples": [
+                                80
+                            ]
+                        },
+                        "annotations": {
+                            "type": "object",
+                            "default": {}
+                        }
+                    }
+                },
+                "ingress": {
+                    "type": "object",
+                    "default": {},
+                    "title": "The MCP ingress Schema",
+                    "properties": {
+                        "enabled": {
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "host": {
+                            "type": "string",
+                            "default": "",
+                            "examples": [
+                                "mcp.example.com"
+                            ]
+                        },
+                        "ingressClassName": {
+                            "type": "string",
+                            "default": "",
+                            "examples": [
+                                "nginx"
+                            ]
+                        },
+                        "annotations": {
+                            "type": "object",
+                            "default": {}
+                        },
+                        "tls": {
+                            "type": "object",
+                            "default": {},
+                            "properties": {
+                                "enabled": {
+                                    "type": "boolean",
+                                    "default": false
+                                },
+                                "secretName": {
+                                    "type": "string",
+                                    "default": ""
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "annotations": {
             "type": "object",
             "default": {},
@@ -794,6 +980,73 @@
                             "userCreationMode": "",
                             "usersGroupMembershipManagementMode": ""
                         }]
+                    },
+                    "oauth2": {
+                        "type": "object",
+                        "default": {},
+                        "title": "The oauth2 Schema",
+                        "properties": {
+                            "authorizationServer": {
+                                "type": "object",
+                                "default": {},
+                                "title": "The authorizationServer Schema",
+                                "properties": {
+                                    "enabled": {
+                                        "type": "boolean",
+                                        "default": false,
+                                        "title": "Enables HQ's embedded OAuth 2.1 authorization server",
+                                        "examples": [
+                                            true,
+                                            false
+                                        ]
+                                    },
+                                    "issuerURL": {
+                                        "type": "string",
+                                        "default": "",
+                                        "title": "The issuerURL Schema",
+                                        "examples": [
+                                            "https://hq.example.com"
+                                        ]
+                                    },
+                                    "grantLifetime": {
+                                        "type": "string",
+                                        "default": "2160h",
+                                        "title": "The grantLifetime Schema",
+                                        "examples": [
+                                            "2160h",
+                                            "168h"
+                                        ]
+                                    },
+                                    "requirePKCE": {
+                                        "type": "boolean",
+                                        "default": true,
+                                        "title": "The requirePKCE Schema",
+                                        "examples": [
+                                            true,
+                                            false
+                                        ]
+                                    },
+                                    "dcr": {
+                                        "type": "boolean",
+                                        "default": false,
+                                        "title": "The dcr Schema",
+                                        "examples": [
+                                            true,
+                                            false
+                                        ]
+                                    },
+                                    "unauthenticatedIntrospection": {
+                                        "type": "boolean",
+                                        "default": false,
+                                        "title": "The unauthenticatedIntrospection Schema",
+                                        "examples": [
+                                            true,
+                                            false
+                                        ]
+                                    }
+                                }
+                            }
+                        }
                     }
                  }
                 },

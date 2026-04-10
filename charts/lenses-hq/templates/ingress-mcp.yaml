@@ -1,0 +1,52 @@
+{{- if and .Values.mcp.enabled .Values.mcp.ingress.enabled }}
+apiVersion: {{ include "ingress.apiVersion" . }}
+kind: Ingress
+metadata:
+  name: {{ include "fullname" . }}-mcp
+  labels:
+    app: {{ include "fullname" . }}
+    chart: {{ printf "%s-%s" .Chart.Name .Chart.Version }}
+    component: "lenses-mcp"
+    heritage: {{ .Release.Service }}
+    release: {{ .Release.Name}}
+    lenses.io/app: {{ include "fullname" . }}
+    lenses.io/app.type: lenses-mcp-ingress
+    {{- range $key, $value := .Values.labels }}
+    {{ $key }}: {{ $value | quote }}
+    {{- end}}
+  annotations:
+  {{- range $key, $value := .Values.mcp.ingress.annotations}}
+    {{$key}}: {{$value | quote}}
+  {{- end}}
+spec:
+  {{- if .Values.mcp.ingress.ingressClassName}}
+  ingressClassName: {{ .Values.mcp.ingress.ingressClassName | quote}}
+  {{- end}}
+  rules:
+  - host: {{ .Values.mcp.ingress.host | quote }}
+    http:
+      paths:
+      - path: "/"
+        {{- if .Capabilities.APIVersions.Has "networking.k8s.io/v1/Ingress"}}
+        pathType: Prefix
+        backend:
+          service:
+            name: {{printf "%s-mcp" (include "fullname" .) | quote}}
+            port:
+              number: {{.Values.mcp.service.port}}
+        {{- else}}
+        backend:
+          serviceName: {{printf "%s-mcp" (include "fullname" .) | quote}}
+          servicePort: {{.Values.mcp.service.port}}
+        {{- end}}
+  {{- if .Values.mcp.ingress.tls.enabled}}
+  tls:
+    - hosts:
+      - {{ .Values.mcp.ingress.host | quote}}
+      {{- if .Values.mcp.ingress.tls.secretName}}
+      secretName: {{ .Values.mcp.ingress.tls.secretName}}
+      {{- else}}
+      secretName: {{ printf "%s-mcp" (include "fullname" .) | quote}}
+      {{- end}}
+  {{- end -}}
+{{- end -}}

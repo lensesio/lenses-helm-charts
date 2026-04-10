@@ -30,6 +30,63 @@ Create a default fully qualified app name.
 {{- end -}}
 {{- end -}}
 
+{{- define "lensesMcpImage" -}}
+{{- $repo := ((.Values.mcp).image).repository -}}
+{{- if not $repo -}}
+{{- fail "mcp.image.repository must be set when mcp.enabled is true" -}}
+{{- end -}}
+{{- $tag := "" -}}
+{{- if ((.Values.mcp).image).tag -}}
+{{- $tag = .Values.mcp.image.tag -}}
+{{- else if index .Chart.Annotations "mcpAppVersion" -}}
+{{- $tag = index .Chart.Annotations "mcpAppVersion" -}}
+{{- else -}}
+{{- $tag = .Chart.AppVersion -}}
+{{- end -}}
+{{ printf "%s:%s" $repo $tag }}
+{{- end -}}
+
+{{- define "validate.mcpRequiredValues" -}}
+{{- if .Values.mcp.enabled }}
+{{- if empty .Values.mcp.lensesAdvertisedUrl }}
+{{- fail "mcp.lensesAdvertisedUrl must be set when mcp.enabled is true. It is the public URL clients use to reach Lenses HQ." }}
+{{- end }}
+{{- if empty .Values.mcp.mcpAdvertisedUrl }}
+{{- fail "mcp.mcpAdvertisedUrl must be set when mcp.enabled is true. It is the public URL clients use to reach the MCP server." }}
+{{- end }}
+{{- if and .Values.mcp.ingress.enabled (not .Values.mcp.service.enabled) }}
+{{- fail "mcp.ingress.enabled=true requires mcp.service.enabled=true. The Ingress backend references the MCP Service." }}
+{{- end }}
+{{- $hqHttp := include "extractPort" .Values.lensesHq.http.address | int }}
+{{- $hqAgents := include "extractPort" .Values.lensesHq.agents.address | int }}
+{{- $hqMetrics := include "extractPort" .Values.lensesHq.metrics.prometheusAddress | int }}
+{{- if or (eq $hqHttp 8000) (eq $hqAgents 8000) (eq $hqMetrics 8000) }}
+{{- fail "port 8000 is reserved for the MCP sidecar. Change lensesHq.http.address, lensesHq.agents.address or lensesHq.metrics.prometheusAddress to use a different port." }}
+{{- end }}
+{{- if and .Values.mcp.ingress.enabled .Values.mcp.ingress.host }}
+{{- $advertisedHost := regexReplaceAll "^https?://([^/:]+).*$" .Values.mcp.mcpAdvertisedUrl "${1}" }}
+{{- if ne $advertisedHost .Values.mcp.ingress.host }}
+{{- fail (printf "mcp.ingress.host (%q) must match the host in mcp.mcpAdvertisedUrl (%q, host=%q). The Ingress must serve the URL MCP clients are told to dial." .Values.mcp.ingress.host .Values.mcp.mcpAdvertisedUrl $advertisedHost) }}
+{{- end }}
+{{- end }}
+{{- end }}
+{{- end -}}
+
+{{- define "validate.mcpIssuerMatches" -}}
+{{- if and .Values.mcp.enabled (((.Values.lensesHq.auth).oauth2).authorizationServer).enabled }}
+{{- $authSrv := .Values.lensesHq.auth.oauth2.authorizationServer }}
+{{- if empty $authSrv.issuerURL }}
+{{- fail "lensesHq.auth.oauth2.authorizationServer.issuerURL must be set when the authorization server is enabled" }}
+{{- end }}
+{{- if ne $authSrv.issuerURL .Values.mcp.lensesAdvertisedUrl }}
+{{- fail (printf "mcp.lensesAdvertisedUrl (%q) must equal lensesHq.auth.oauth2.authorizationServer.issuerURL (%q). OAuth 2.1 and RFC 8414 require the issuer identifier to match the URL MCP clients use." .Values.mcp.lensesAdvertisedUrl $authSrv.issuerURL) }}
+{{- end }}
+{{- if not $authSrv.unauthenticatedIntrospection }}
+{{- fail "lensesHq.auth.oauth2.authorizationServer.unauthenticatedIntrospection must be true when the MCP sidecar is enabled. MCP's token verifier posts to /oauth2/introspect without client credentials, so HQ must accept unauthenticated introspection requests. Keep the introspect endpoint cluster-internal." }}
+{{- end }}
+{{- end }}
+{{- end -}}
+
 {{- define "nodePort" -}}
 {{- if and .Values.service.nodePort .Values.nodePort -}}
 {{- if eq .Values.service.nodePort .Values.nodePort -}}
@@ -87,6 +144,7 @@ Return the appropriate apiVersion for ingress.
 {{- end -}}
 
 {{- define "lensesHqConfigmap" -}}
+{{- include "validate.mcpIssuerMatches" . -}}
 auth:
   administrators:
   {{- range .Values.lensesHq.auth.administrators }}
@@ -128,6 +186,20 @@ auth:
       key: $(LENSESHQ_AUTH_SAML_SIGNREQ_KEY)
       {{- end -}}
       {{- end }}
+  {{- if (((.Values.lensesHq.auth).oauth2).authorizationServer).enabled }}
+  {{- $authSrv := .Values.lensesHq.auth.oauth2.authorizationServer }}
+  {{- if empty $authSrv.issuerURL }}
+  {{- fail "lensesHq.auth.oauth2.authorizationServer.issuerURL must be set when the authorization server is enabled" }}
+  {{- end }}
+  oauth2:
+    authorizationServer:
+      enabled: true
+      issuerURL: {{ $authSrv.issuerURL | quote }}
+      grantLifetime: {{ default "2160h" $authSrv.grantLifetime | quote }}
+      requirePKCE: {{ $authSrv.requirePKCE }}
+      dcr: {{ $authSrv.dcr }}
+      unauthenticatedIntrospection: {{ $authSrv.unauthenticatedIntrospection }}
+  {{- end }}
 http:
   address: {{ .Values.lensesHq.http.address }}
   accessControlAllowOrigin:
