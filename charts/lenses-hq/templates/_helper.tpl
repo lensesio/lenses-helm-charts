@@ -84,6 +84,9 @@ Create a default fully qualified app name.
 {{- if not $authSrv.unauthenticatedIntrospection }}
 {{- fail "lensesHq.auth.oauth2.authorizationServer.unauthenticatedIntrospection must be true when the MCP sidecar is enabled. MCP's token verifier posts to /oauth2/introspect without client credentials, so HQ must accept unauthenticated introspection requests. Keep the introspect endpoint cluster-internal." }}
 {{- end }}
+{{- if not $authSrv.dcr }}
+{{- fail "lensesHq.auth.oauth2.authorizationServer.dcr must be true when the MCP sidecar is enabled. MCP clients register themselves via dynamic client registration (RFC 7591)." }}
+{{- end }}
 {{- end }}
 {{- end -}}
 

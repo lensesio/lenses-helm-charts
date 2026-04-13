@@ -172,6 +172,20 @@ tests:
       - failedTemplate:
           errorMessage: "lensesHq.auth.oauth2.authorizationServer.unauthenticatedIntrospection must be true when the MCP sidecar is enabled. MCP's token verifier posts to /oauth2/introspect without client credentials, so HQ must accept unauthenticated introspection requests. Keep the introspect endpoint cluster-internal."
 
+  - it: should fail when MCP is enabled but HQ oauth2 dcr is false
+    template: deployment.yaml
+    set:
+      mcp.enabled: true
+      mcp.lensesAdvertisedUrl: https://hq.example.com
+      mcp.mcpAdvertisedUrl: https://mcp.example.com
+      lensesHq.auth.oauth2.authorizationServer.enabled: true
+      lensesHq.auth.oauth2.authorizationServer.issuerURL: https://hq.example.com
+      lensesHq.auth.oauth2.authorizationServer.unauthenticatedIntrospection: true
+      lensesHq.auth.oauth2.authorizationServer.dcr: false
+    asserts:
+      - failedTemplate:
+          errorMessage: "lensesHq.auth.oauth2.authorizationServer.dcr must be true when the MCP sidecar is enabled. MCP clients register themselves via dynamic client registration (RFC 7591)."
+
   - it: should fail when mcp.enabled is true but lensesAdvertisedUrl is empty
     template: deployment.yaml
     set:
@@ -245,23 +259,6 @@ tests:
           content:
             name: LENSES_URL
             value: https://rel-lenses-hq.lenses.svc.cluster.local:80
-
-  - it: should honor a custom clusterDomain in LENSES_URL
-    template: deployment.yaml
-    set:
-      mcp.enabled: true
-      mcp.lensesAdvertisedUrl: https://hq.example.com
-      mcp.mcpAdvertisedUrl: https://mcp.example.com
-      mcp.clusterDomain: mesh.internal
-    release:
-      name: rel
-      namespace: lenses
-    asserts:
-      - contains:
-          path: spec.template.spec.containers[1].env
-          content:
-            name: LENSES_URL
-            value: http://rel-lenses-hq.lenses.svc.mesh.internal:80
 
   - it: should render liveness and readiness probes on the MCP sidecar
     template: deployment.yaml

@@ -79,6 +79,7 @@
                     "type": "string",
                     "default": "",
                     "title": "Public URL at which Lenses HQ is reachable by MCP clients. Maps to LENSES_ADVERTISED_URL.",
+                    "pattern": "^(https?://.*)?$",
                     "examples": [
                         "https://hq.example.com"
                     ]
@@ -87,16 +88,9 @@
                     "type": "string",
                     "default": "",
                     "title": "Public URL at which the MCP server is reachable by MCP clients. Maps to MCP_ADVERTISED_URL.",
+                    "pattern": "^(https?://.*)?$",
                     "examples": [
                         "https://mcp.example.com"
-                    ]
-                },
-                "clusterDomain": {
-                    "type": "string",
-                    "default": "cluster.local",
-                    "title": "Kubernetes cluster DNS domain used to build the in-cluster LENSES_URL",
-                    "examples": [
-                        "cluster.local"
                     ]
                 },
                 "resources": {

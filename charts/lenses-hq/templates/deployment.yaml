@@ -216,7 +216,6 @@ spec:
       {{- if .Values.mcp.enabled }}
       {{- include "validate.mcpRequiredValues" . -}}
       {{- $scheme := ternary "https" "http" (default false ((.Values.lensesHq.http).tls).enabled) }}
-      {{- $clusterDomain := default "cluster.local" .Values.mcp.clusterDomain }}
       - name: mcp
         image: {{ include "lensesMcpImage" . | quote }}
         imagePullPolicy: {{ .Values.mcp.image.pullPolicy }}
@@ -247,8 +246,10 @@ spec:
         env:
           - name: TRANSPORT
             value: "http"
+          - name: OAUTH_ENABLED
+            value: "true"
           - name: LENSES_URL
-            value: {{ printf "%s://%s.%s.svc.%s:%v" $scheme (include "fullname" .) .Release.Namespace $clusterDomain .Values.servicePort | quote }}
+            value: {{ printf "%s://%s.%s.svc.cluster.local:%v" $scheme (include "fullname" .) .Release.Namespace .Values.servicePort | quote }}
           - name: LENSES_ADVERTISED_URL
             value: {{ .Values.mcp.lensesAdvertisedUrl | quote }}
           - name: MCP_ADVERTISED_URL

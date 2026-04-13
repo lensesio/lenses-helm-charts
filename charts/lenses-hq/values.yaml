@@ -215,12 +215,6 @@ mcp:
   # @section -- MCP sidecar values
   mcpAdvertisedUrl: ""
 
-  # -- (string) Kubernetes cluster DNS domain. Used to build the in-cluster
-  # `LENSES_URL` that MCP uses to reach the HQ Service. Override this on clusters
-  # that use a non-default DNS suffix.
-  # @section -- MCP sidecar values
-  clusterDomain: "cluster.local"
-
   # -- (dict) Resources for the MCP sidecar container.
   # @section -- MCP sidecar values
   resources:
@@ -501,7 +495,8 @@ lensesHq:
         requirePKCE: true
 
         # -- (bool) Enables the dynamic client registration endpoint
-        # ([RFC 7591](https://datatracker.ietf.org/doc/html/rfc7591)).
+        # ([RFC 7591](https://datatracker.ietf.org/doc/html/rfc7591)). MUST be `true`
+        # when the MCP sidecar is enabled — MCP clients register themselves via DCR.
         # @section -- Lenses HQ OAuth2 startup values
         # **Required: false**
         dcr: false
