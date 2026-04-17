@@ -1,0 +1,57 @@
+name: Helm Docs Check
+
+on:
+  pull_request:
+    paths:
+      - 'charts/**/Chart.yaml'
+      - 'charts/**/values.yaml'
+      - 'charts/**/README.md.gotmpl'
+      - 'charts/**/README.md'
+  push:
+    branches:
+      - 'release/**'
+    paths:
+      - 'charts/**/Chart.yaml'
+      - 'charts/**/values.yaml'
+      - 'charts/**/README.md.gotmpl'
+      - 'charts/**/README.md'
+
+env:
+  HELM_DOCS_VERSION: "1.14.2"
+
+jobs:
+  helm-docs:
+    name: Validate Helm Docs
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install helm-docs
+        run: |
+          curl -sSL "https://github.com/norwoodj/helm-docs/releases/download/v${HELM_DOCS_VERSION}/helm-docs_${HELM_DOCS_VERSION}_Linux_x86_64.tar.gz" | tar xz
+          sudo mv helm-docs /usr/local/bin/
+          helm-docs --version
+
+      - name: Run helm-docs
+        run: helm-docs --chart-search-root=charts
+
+      - name: Check for changes
+        run: |
+          if ! git diff --exit-code -- 'charts/**/README.md'; then
+            echo ""
+            echo "=========================================="
+            echo "ERROR: README.md is out of sync!"
+            echo "=========================================="
+            echo ""
+            echo "The committed README.md does not match what helm-docs generates."
+            echo "This means values.yaml or README.md.gotmpl was changed"
+            echo "but README.md was not regenerated."
+            echo ""
+            echo "To fix, run locally:"
+            echo "  helm-docs --chart-search-root=charts"
+            echo ""
+            echo "Then commit the updated README.md file(s)."
+            exit 1
+          fi
+          echo "helm-docs check passed - README.md is up to date"

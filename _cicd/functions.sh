@@ -106,6 +106,40 @@ setup_helm() {
     eval "$(helm env)"
     helm plugin install https://github.com/quintush/helm-unittest --version master || true
     helm plugin ls
+
+    echo "=== Installing helm-docs"
+    local helm_docs_version="1.14.2"
+    mkdir -p "${HOME}/.local/bin"
+    curl -sSL "https://github.com/norwoodj/helm-docs/releases/download/v${helm_docs_version}/helm-docs_${helm_docs_version}_Linux_x86_64.tar.gz" | tar xz -C "${HOME}/.local/bin"
+    export PATH="${HOME}/.local/bin:${PATH}"
+    helm-docs --version
+}
+
+check_helm_docs() {
+    echo "=== Checking helm-docs are up to date"
+    echo "=== (README.md must match what helm-docs generates from values.yaml + README.md.gotmpl)"
+
+    export PATH="${HOME}/.local/bin:${PATH}"
+    helm-docs --chart-search-root="${SCRIPTS_DIR}/../charts"
+
+    if ! git diff --exit-code "${SCRIPTS_DIR}/../charts"/*/README.md; then
+        echo ""
+        echo "=========================================="
+        echo "ERROR: README.md is out of sync!"
+        echo "=========================================="
+        echo ""
+        echo "The committed README.md does not match what helm-docs generates."
+        echo "This means values.yaml or README.md.gotmpl was changed"
+        echo "but README.md was not regenerated."
+        echo ""
+        echo "To fix, run locally:"
+        echo "  helm-docs --chart-search-root=charts"
+        echo ""
+        echo "Then commit the updated README.md file(s)."
+        exit 1
+    fi
+
+    echo "=== helm-docs check passed - README.md is up to date"
 }
 
 package_all() {

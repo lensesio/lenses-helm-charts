@@ -65,6 +65,7 @@ pipeline {
                     jenkinsHelper.info("Release public: ${env.RELEASE_PUBLIC}")
 
                     sh("_cicd/functions.sh setup_helm")
+                    sh("_cicd/functions.sh check_helm_docs")
                     sh("_cicd/functions.sh package_all")
 
                     echo "==== Recording test results"
