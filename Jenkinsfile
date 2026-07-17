@@ -208,6 +208,44 @@ GIT_BRANCH=${env.GIT_BRANCH}
             }
         }
 
+        // OPS-2624: helm.repo.lenses.io serving moves to Cloud Run. Runs
+        // alongside the VM upload stage until the legacy VM is decommissioned.
+        // Auth is the worker VM's own identity (jenkins-workers@lenses-ci):
+        // run.developer scoped to the helm-repo service + actAs on its runtime
+        // SA — no key credential, so no gcloud.withServiceAccount here.
+        // Gated on RELEASE_PUBLIC: development builds bake staging-URL
+        // snapshots and must never reach the production service.
+        stage('Deploy Helm repo Docker image to Cloud Run') {
+            when {
+                environment name: 'RELEASE_PUBLIC', value: 'true'
+            }
+            environment {
+                DOCKER_IMAGE = 'eu.gcr.io/lenses-ci/lenses-helm-chart-repo'
+            }
+            agent {
+                docker {
+                    image 'google/cloud-sdk'
+                    args '-e HOME=/tmp'
+                    reuseNode true
+                }
+            }
+            steps {
+                script {
+                    sh "gcloud run deploy helm-repo --project=lensesio-production-public --region=europe-west1 --image='${env.DOCKER_IMAGE}:${env.GIT_COMMIT}'"
+                }
+            }
+            post {
+                always {
+                    jiraSendDeploymentInfo(
+                        site: 'landoop.atlassian.net',
+                        environmentId: "helm-repo-cloud-run",
+                        environmentName: 'helm-origin.repo.lenses.io',
+                        environmentType: 'production'
+                    )
+                }
+            }
+        }
+
         stage('Deploy to Kubernetes staging cluster using ArgoCD') {
             when {
                 not {
