@@ -154,35 +154,6 @@ pipeline {
             }
         }
 
-        stage('Upload static assets to production Lenses website') {
-            when {
-                environment name: 'RELEASE_PUBLIC', value: 'true'
-            }
-            environment {
-                SSH_HOST = credentials('ssh-host')
-            }
-            steps {
-                script {
-                    dir('_cicd/image/charts') {
-                        // Upload the updated site to helm.repo.lenses.io
-                        sshagent (credentials: ['57dab1e7-d47f-4c57-8eef-c107c4bb707a']) {
-                            sh "${WORKSPACE}/_cicd/functions.sh upload_site"
-                        }
-                    }
-                }
-            }
-            post {
-                always {
-                    jiraSendDeploymentInfo(
-                        site: 'landoop.atlassian.net',
-                        environmentId: "ans-ci-backend-eu-01.landoop.com.",
-                        environmentName: 'helm.repo.lenses.io',
-                        environmentType: 'production'
-                    )
-                }
-            }
-        }
-
         stage('Build Helm repo Docker image') {
             environment {
                 DOCKER_IMAGE = 'eu.gcr.io/lenses-ci/lenses-helm-chart-repo'
@@ -210,8 +181,8 @@ GIT_BRANCH=${env.GIT_BRANCH}
             }
         }
 
-        // OPS-2624: helm.repo.lenses.io serving moves to Cloud Run. Runs
-        // alongside the VM upload stage until the legacy VM is decommissioned.
+        // OPS-2624: helm.repo.lenses.io is served from Cloud Run (origin
+        // helm-origin.repo.lenses.io, fronted by Scarf); the legacy VM is retired.
         // Auth is the worker VM's own identity (jenkins-workers@lenses-ci):
         // run.developer scoped to the helm-repo service + actAs on its runtime
         // SA — no key credential, so no gcloud.withServiceAccount here.
@@ -241,7 +212,7 @@ GIT_BRANCH=${env.GIT_BRANCH}
                     jiraSendDeploymentInfo(
                         site: 'landoop.atlassian.net',
                         environmentId: "helm-repo-cloud-run",
-                        environmentName: 'helm-origin.repo.lenses.io',
+                        environmentName: 'helm.repo.lenses.io',
                         environmentType: 'production'
                     )
                 }
