@@ -11,24 +11,6 @@ fi
 
 REPO_LABEL="ephemeral"
 
-upload_site() {
-    # local remote_path="/tmp/helm.repo.lenses.io"
-    local remote_path="/mnt/persistent/helm.repo.lenses.io"
-
-    mkdir -p "${HOME}/.ssh"
-    ssh-keyscan -t rsa ${SSH_HOST#*@} >> ~/.ssh/known_hosts
-
-    cat <<EOF | ssh ${SSH_HOST}
-mkdir -p "${remote_path}"
-EOF
-    # Copy all files to proper path
-    # TODO: Use rsync to update only the changed ones
-    scp -r . "${SSH_HOST}:${remote_path}"
-    cat <<EOF | ssh ${SSH_HOST}
-ls -lsa "${remote_path}"
-EOF
-}
-
 clone_site() {
     # Get index.yaml
     local add_args=""
