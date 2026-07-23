@@ -267,5 +267,8 @@ logger:
   level: {{ default "info" .Values.lensesHq.logger.level }}
 metrics:
   prometheusAddress: {{ .Values.lensesHq.metrics.prometheusAddress }}
-
+{{- with .Values.lensesHq.dev }}
+dev:
+{{- toYaml . | nindent 2 }}
+{{- end }}
 {{- end }}
