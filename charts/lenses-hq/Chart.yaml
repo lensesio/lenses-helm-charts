@@ -2,8 +2,8 @@ apiVersion: v1
 description: A chart for Lenses HQ deployment which provides a unified, streamlined view of the entire event infrastructure—whether on-premises or in the cloud—through a single, comprehensive interface.
 icon: https://www.lenses.io/images/logos/icon_ellipse2red.png
 name: lenses-hq
-version: 6.2.7
-appVersion: 6.2.6
+version: 6.2.8
+appVersion: 6.2.7
 annotations:
   # Image tag used by the optional MCP sidecar (lensesio/mcp). Pinned here so
   # the MCP image cadence is decoupled from the chart/appVersion. Users can

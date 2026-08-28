@@ -1,6 +1,6 @@
 # lenses-hq
 
-![Version: 6.2.7](https://img.shields.io/badge/Version-6.2.7-informational?style=flat-square) ![AppVersion: 6.2.6](https://img.shields.io/badge/AppVersion-6.2.6-informational?style=flat-square)
+![Version: 6.2.8](https://img.shields.io/badge/Version-6.2.8-informational?style=flat-square) ![AppVersion: 6.2.7](https://img.shields.io/badge/AppVersion-6.2.7-informational?style=flat-square)
 
 A chart for Lenses HQ deployment which provides a unified, streamlined view of the entire event infrastructure—whether on-premises or in the cloud—through a single, comprehensive interface.
 
