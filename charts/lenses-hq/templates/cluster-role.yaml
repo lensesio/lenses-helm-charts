@@ -21,12 +21,11 @@ rules:
     - watch
     - get
     - create
-- apiGroups: ["", "extensions", "apps"]
+- apiGroups: ["", "apps"]
   resources:
     - pods
     - replicasets
     - deployments
-    - ingresses
     - secrets
     #- statefulsets
     - services

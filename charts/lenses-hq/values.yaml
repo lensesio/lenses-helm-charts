@@ -60,7 +60,9 @@ image:
   # -- imagePullSecrets: # any image pull secrets for private registries go here
   #   - name: regcred
 
-# -- (bool) rbacEnable indicates if a the cluster has rbac enabled and a cluster role  and rolebinding should be created for the service account
+# -- (bool) Create a Role/ClusterRole and binding for the ServiceAccount.
+# Lenses HQ does not call the Kubernetes API -- apps are deployed by the Lenses
+# Agent using its own permissions -- so this can be set to `false`.
 # @section -- Permission scope values
 rbacEnable: true
 
@@ -91,6 +93,12 @@ serviceAccount:
   # -- (string) Name of Service Account. In case serviceAccount.create is *false*, existing SA with defined name here will be used.
   # @section -- Permission scope values
   name: default
+
+  # -- (bool) Mount the ServiceAccount token into the pod. Applies to every
+  # container in the pod, including the MCP sidecar. Neither Lenses HQ nor the
+  # MCP sidecar calls the Kubernetes API, so this can be set to `false`.
+  # @section -- Permission scope values
+  automountToken: true
 
   # -- (dict) Additional service account annotations.
   # @section -- Permission scope values

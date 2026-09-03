@@ -238,9 +238,10 @@ The command deploys Lenses HQ on the Kubernetes cluster in the example configura
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | namespaceScope | bool | `true` | In case rbac is enabled you can choose to enable creation on namespace scoped roles instead of cluster roles instead |
-| rbacEnable | bool | `true` | rbacEnable indicates if a the cluster has rbac enabled and a cluster role  and rolebinding should be created for the service account |
-| serviceAccount | object | `{"annotations":{},"create":false,"name":"default"}` | User to be used by Lenses to deploy apps |
+| rbacEnable | bool | `true` | Create a Role/ClusterRole and binding for the ServiceAccount. Lenses HQ does not call the Kubernetes API -- apps are deployed by the Lenses Agent using its own permissions -- so this can be set to `false`. |
+| serviceAccount | object | `{"annotations":{},"automountToken":true,"create":false,"name":"default"}` | User to be used by Lenses to deploy apps |
 | serviceAccount.annotations | dict | `{}` | Additional service account annotations. |
+| serviceAccount.automountToken | bool | `true` | Mount the ServiceAccount token into the pod. Applies to every container in the pod, including the MCP sidecar. Neither Lenses HQ nor the MCP sidecar calls the Kubernetes API, so this can be set to `false`. |
 | serviceAccount.create | bool | `false` | In case "true" new SA will be created with service.name as a SA name. |
 | serviceAccount.name | string | `"default"` | Name of Service Account. In case serviceAccount.create is *false*, existing SA with defined name here will be used. |
 

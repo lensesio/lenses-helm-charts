@@ -79,6 +79,9 @@ spec:
           {{- toYaml .Values.additionalVolumes | nindent 8 }}
         {{- end }}
       serviceAccountName: {{ .Values.serviceAccount.name }}
+      {{- if eq (toString .Values.serviceAccount.automountToken) "false" }}
+      automountServiceAccountToken: false
+      {{- end }}
       {{- if .Values.image.imagePullSecrets }}
       imagePullSecrets: {{ .Values.image.imagePullSecrets | toYaml | nindent 8 }}
       {{- end }}
