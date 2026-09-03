@@ -14,24 +14,30 @@ rules:
 - apiGroups: [""]
   resources:
     - namespaces
-    - persistentvolumes
-    - persistentvolumeclaims
   verbs:
     - list
     - watch
     - get
-    - create
-- apiGroups: ["", "extensions", "apps"]
+- apiGroups: [""]
   resources:
     - configmaps
     - pods
+    - secrets
+    - services
+  verbs:
+    - list
+    - watch
+    - get
+    - update
+    - create
+    - delete
+    - patch
+- apiGroups: ["apps"]
+  resources:
     - replicasets
     - deployments
     - deployments/scale
-    - ingresses
-    - secrets
     - statefulsets
-    - services
   verbs:
     - list
     - watch
@@ -45,9 +51,6 @@ rules:
     - pods/log
   verbs:
     - get
-    - list
-    - watch
-    - create
 - apiGroups: [""]
   resources:
     - events
