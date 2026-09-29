@@ -126,7 +126,9 @@ pipeline {
             }
             environment {
                 SOURCE_HELM_REPO_URL = "${env.BUILD_MODE == 'release' ? 'https://lenses.jfrog.io/artifactory/helm-charts/' : 'https://lenses.jfrog.io/artifactory/lenses-private-helm-repo/'}"
-                TARGET_HELM_REPO_URL = "${env.BUILD_MODE == 'release' ? 'https://helm.repo.lenses.io' : 'https://helm.repo.staging.lenses.io'}"
+                // Dev images point at localhost: test one with `docker run -p 8080:80 <image>`
+                // + `helm repo add dev http://localhost:8080`. Anywhere else, pulls fail loudly.
+                TARGET_HELM_REPO_URL = "${env.BUILD_MODE == 'release' ? 'https://helm.repo.lenses.io' : 'http://localhost:8080'}"
             }
             steps {
                 script {
@@ -214,7 +216,7 @@ GIT_BRANCH=${env.GIT_BRANCH}
         // Auth is the worker VM's own identity (jenkins-workers@lenses-ci):
         // run.developer scoped to the helm-repo service + actAs on its runtime
         // SA — no key credential, so no gcloud.withServiceAccount here.
-        // Gated on RELEASE_PUBLIC: development builds bake staging-URL
+        // Gated on RELEASE_PUBLIC: development builds bake localhost-URL
         // snapshots and must never reach the production service.
         stage('Deploy Helm repo Docker image to Cloud Run') {
             when {
