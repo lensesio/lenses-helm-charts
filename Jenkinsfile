@@ -245,35 +245,6 @@ GIT_BRANCH=${env.GIT_BRANCH}
                 }
             }
         }
-
-        stage('Deploy to Kubernetes staging cluster using ArgoCD') {
-            when {
-                not {
-                    branch 'master'
-                }
-            }
-            steps{
-                script {
-                    deliveryHelper.commitToState (
-                        path: 'cluster/production-internal/lenses-helm-chart-repo',
-                        file: 'values.yaml',
-                        branch: 'main',
-                        replaceStrategy: 'tag',
-                        value: env.GIT_COMMIT
-                    )
-                }
-            }
-            post {
-                success {
-                    jiraSendDeploymentInfo(
-                        site: 'landoop.atlassian.net',
-                        environmentId: "production-internal",
-                        environmentName: 'help.repo.staging.lenses.io',
-                        environmentType: 'staging'
-                    )
-                }
-            }
-        }
     }
     post {
         always {
