@@ -130,7 +130,84 @@ lenses.provisioning.path={{ required "Provisioning 'path' value is mandatory" .V
 lenses.provisioning.interval={{ .Values.lenses.provision.interval }}
 {{- end }}
 {{- end }}
+{{- $sqlNamespaces := include "sqlNamespaces" . }}
+{{- if and $sqlNamespaces (or (eq .Values.lenses.sql.mode "KUBERNETES") .Values.lenses.sql.namespaces) }}
+lenses.kubernetes.namespaces {
+  incluster = {{ splitList "," $sqlNamespaces | toJson }}
+}
+{{- end }}
 {{ default "" .Values.lenses.append.conf }}
+{{- end -}}
+
+{{/*
+ServiceAccount the Lenses pod runs as, and the only RBAC subject. Without a name it is
+the release full name when the chart creates it, and `default` otherwise, as before 5.5.25.
+Before chart 5.5.25 serviceAccount was a string naming an existing ServiceAccount (default
+"default"). That form is still accepted, e.g. from `helm upgrade --reuse-values`, and
+creates nothing.
+*/}}
+{{- define "serviceAccountName" -}}
+{{- if kindIs "map" .Values.serviceAccount -}}
+{{- if .Values.serviceAccount.name -}}
+{{- .Values.serviceAccount.name -}}
+{{- else if .Values.serviceAccount.create -}}
+{{- include "fullname" . -}}
+{{- else -}}
+default
+{{- end -}}
+{{- else -}}
+{{- default "default" .Values.serviceAccount -}}
+{{- end -}}
+{{- end -}}
+
+{{- define "serviceAccountCreate" -}}
+{{- if and (kindIs "map" .Values.serviceAccount) .Values.serviceAccount.create -}}
+true
+{{- end -}}
+{{- end -}}
+
+{{/*
+Comma-separated namespaces Lenses can deploy SQL Processors to. Empty means all of them:
+Lenses then lists namespaces and watches cluster-wide, which needs the ClusterRole. The
+list is pinned in lenses.append.conf in KUBERNETES mode, or whenever it is set explicitly.
+*/}}
+{{- define "sqlNamespaces" -}}
+{{- $namespaces := .Values.lenses.sql.namespaces | default list -}}
+{{- if and (not $namespaces) .Values.rbacEnable .Values.namespaceScope -}}
+{{- $namespaces = list .Release.Namespace -}}
+{{- end -}}
+{{- $namespaces | uniq | join "," -}}
+{{- end -}}
+
+{{/*
+What Lenses 5.5 calls to run SQL Processors in KUBERNETES mode (lenses-core
+flows-deployments, fabric8 4.13.3). The Role and ClusterRole add their own namespaces rule.
+*/}}
+{{- define "rbacRules" -}}
+# Deploy (create), scale (get + patch), stop (delete) and status (watch).
+- apiGroups: ["apps"]
+  resources: ["deployments"]
+  verbs: ["create", "get", "patch", "delete", "watch"]
+# fabric8 4.13.3 retries an apps/v1 request that returned 404 against extensions/v1beta1.
+# Kubernetes 1.16+ does not serve that group, so this grants nothing, but without it the
+# retry gets 403 instead of 404 and stopping a processor whose Deployment is gone fails.
+- apiGroups: ["extensions"]
+  resources: ["deployments"]
+  verbs: ["create", "get", "patch", "delete"]
+# Processor secrets: createOrReplace on deploy (create, or get + update), delete on stop.
+- apiGroups: [""]
+  resources: ["secrets"]
+  verbs: ["create", "get", "update", "delete"]
+# Processor status (watch) and logs (get).
+- apiGroups: [""]
+  resources: ["pods"]
+  verbs: ["get", "watch"]
+- apiGroups: [""]
+  resources: ["pods/log"]
+  verbs: ["get"]
+- apiGroups: [""]
+  resources: ["events"]
+  verbs: ["watch"]
 {{- end -}}
 
 {{- define "securityConf" -}}

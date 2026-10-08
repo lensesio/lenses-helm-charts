@@ -1,0 +1,45 @@
+{{- if and .Values.rbacEnable .Values.namespaceScope }}
+{{- $root := . }}
+{{- range $namespace := splitList "," (include "sqlNamespaces" .) }}
+---
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: {{ include "fullname" $root }}
+  namespace: {{ $namespace }}
+  labels:
+    app: {{ include "fullname" $root }}
+    chart: {{ printf "%s-%s" $root.Chart.Name $root.Chart.Version }}
+    release: {{ $root.Release.Name }}
+    heritage: {{ $root.Release.Service }}
+    lenses.io/app: {{ include "fullname" $root }}
+    lenses.io/app.type: lenses-role
+rules:
+{{ include "rbacRules" $root }}
+# The log viewer reads the processor's namespace first. A Role grants this namespace only.
+- apiGroups: [""]
+  resources: ["namespaces"]
+  verbs: ["get"]
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: {{ include "fullname" $root }}
+  namespace: {{ $namespace }}
+  labels:
+    app: {{ include "fullname" $root }}
+    chart: {{ printf "%s-%s" $root.Chart.Name $root.Chart.Version }}
+    release: {{ $root.Release.Name }}
+    heritage: {{ $root.Release.Service }}
+    lenses.io/app: {{ include "fullname" $root }}
+    lenses.io/app.type: lenses-role-binding
+subjects:
+  - kind: ServiceAccount
+    namespace: {{ $root.Release.Namespace }}
+    name: {{ include "serviceAccountName" $root }}
+roleRef:
+  kind: Role
+  name: {{ include "fullname" $root }}
+  apiGroup: rbac.authorization.k8s.io
+{{- end }}
+{{- end }}

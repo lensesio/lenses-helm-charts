@@ -45,3 +45,27 @@ Ingress enabled.
 
 Visit the UI at https://{{ .Values.ingress.host }}
 {{- end}}
+
+{{- if eq .Values.lenses.sql.mode "KUBERNETES" }}
+{{- $sqlNamespaces := include "sqlNamespaces" . }}
+
+==================================================
+=  SQL PROCESSORS                                =
+==================================================
+Lenses can deploy SQL Processors to: {{ if $sqlNamespaces }}{{ splitList "," $sqlNamespaces | join ", " }}{{ else }}all namespaces{{ end }}
+{{- if contains "lenses.kubernetes.namespaces" (default "" .Values.lenses.append.conf) }}
+lenses.append.conf also sets lenses.kubernetes.namespaces. Its incluster list, if any,
+replaces the one above, and any other clusters it lists are added.
+{{- end }}
+{{- end }}
+
+{{- if and .Values.rbacEnable (eq (include "serviceAccountName" .) "default") }}
+
+==================================================
+=  RECOMMENDED: A DEDICATED SERVICEACCOUNT       =
+==================================================
+Lenses runs as the `default` ServiceAccount of namespace {{ .Release.Namespace }}, so the
+Kubernetes permissions the chart grants it also apply to every pod there that does not
+set its own ServiceAccount. Set serviceAccount.create to true to give Lenses its own.
+See the 5.5.25 notes in Release-notes.md before you change it.
+{{- end }}

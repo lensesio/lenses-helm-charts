@@ -47,9 +47,17 @@ resources:
   #   cpu: 2
     memory: 5Gi
 
-# rbacEnable indicates if a the cluster has rbac enabled and a cluster role
-# and rolebinding should be created for the service account
+# rbacEnable creates the Kubernetes permissions Lenses needs to deploy, scale, stop and
+# view the logs of SQL Processors when lenses.sql.mode is KUBERNETES. The permissions are
+# granted to the ServiceAccount below only.
 rbacEnable: true
+
+# namespaceScope grants those permissions with a Role and RoleBinding in each namespace
+# listed in lenses.sql.namespaces (default: the release namespace), and limits Lenses to
+# those namespaces, instead of a ClusterRole and ClusterRoleBinding for every namespace.
+# Recommended, but list every namespace your SQL Processors run in first: Lenses cannot
+# manage processors outside the list.
+namespaceScope: false
 
 # Lenses container port
 restPort: 3030
@@ -57,8 +65,21 @@ restPort: 3030
 servicePort: 80
 servicePortName: lenses
 
-# serviceAccount is the Service account to be used by Lenses to deploy apps
-serviceAccount: default
+# serviceAccount is the ServiceAccount the Lenses pod runs as, and the only subject the
+# RBAC above is bound to.
+serviceAccount:
+  # Create a dedicated ServiceAccount. Recommended: Lenses otherwise runs as the namespace's
+  # `default` ServiceAccount, so the RBAC above also applies to every pod in the namespace
+  # that does not set its own ServiceAccount.
+  create: false
+  # Defaults to the release full name (e.g. "lenses") when create is true, and to `default`
+  # otherwise. It cannot be "default" when create is true.
+  name: ""
+  # Annotations for the created ServiceAccount, e.g. for EKS IRSA or GKE Workload Identity.
+  annotations: {}
+  # Mount the ServiceAccount token into the pod. Lenses only calls the Kubernetes API in
+  # KUBERNETES mode, so with lenses.sql.mode IN_PROC or CONNECT this can be false.
+  automountToken: true
 
 # If you use Data Policies module enable a Persistent Volume to keep your data policies rule.
 # Also used when lenses.storage.enabled: false, and an H2 local filesystem database is used, instead of Postgresql.
@@ -340,6 +361,11 @@ lenses:
     # processorImage: lensesioextra/sql-processor
     # processorImageTag: 5.5
     mode: IN_PROC
+    # Namespaces Lenses can deploy SQL Processors to in KUBERNETES mode. The chart sets
+    # lenses.kubernetes.namespaces to this list, and with namespaceScope creates a Role and
+    # RoleBinding in each. The namespaces must already exist. Empty means every namespace,
+    # or only the release namespace when rbacEnable and namespaceScope are true.
+    namespaces: []
     heap: 1024M
     minHeap: 128M
     memLimit: 1152M

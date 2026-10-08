@@ -1,5 +1,71 @@
 # Release notes for Lenses Helm chart
 
+## Release 5.5.25
+
+Security hardening of the Kubernetes permissions the chart gives Lenses. **No action is
+needed:** with unchanged values, Lenses keeps its ServiceAccount and cluster-wide access,
+and only the unused permissions are removed. The new options below are opt-in.
+
+### What changed
+
+- **Only the permissions Lenses 5.5 uses.** The ClusterRole no longer grants `list` or
+  `watch` on Secrets, write access to pods, or any access to services, ingresses,
+  replicasets, statefulsets, persistent volumes or claims, and it can no longer create
+  namespaces. See `rbacRules` in `templates/_helper.tpl` for the full list. Deploying,
+  scaling, stopping and deleting SQL Processors and viewing their logs work as before.
+- **New optional values:**
+  - `serviceAccount.create`, `serviceAccount.name`, `serviceAccount.annotations` and
+    `serviceAccount.automountToken`: give Lenses its own ServiceAccount. The old form
+    `serviceAccount: <name>` still works.
+  - `namespaceScope`: grant the permissions with a `Role` and `RoleBinding` per namespace
+    instead of a `ClusterRole`.
+  - `lenses.sql.namespaces`: the namespaces Lenses deploys SQL Processors to. In
+    `KUBERNETES` mode the chart sets `lenses.kubernetes.namespaces` to this list.
+
+If `lenses.sql.mode` is `IN_PROC` or `CONNECT` (the default is `IN_PROC`), Lenses makes no
+Kubernetes API calls. You can set `rbacEnable: false` and `serviceAccount.automountToken:
+false`.
+
+### Recommended: a dedicated ServiceAccount and namespace scope
+
+By default Lenses runs as the namespace's `default` ServiceAccount, so the permissions the
+chart grants it also apply to every pod in that namespace that does not set its own
+ServiceAccount. To restrict them to Lenses, and to the namespaces your SQL Processors use:
+
+1. **Find the namespaces where your SQL Processors run:**
+
+   ```bash
+   kubectl get deployments -A -l lenses.io/lenses-user=Lenses \
+     -o custom-columns=NAMESPACE:.metadata.namespace,NAME:.metadata.name
+   ```
+
+2. **Set the values**, listing every namespace from step 1 (they must already exist):
+
+   ```yaml
+   serviceAccount:
+     create: true
+   namespaceScope: true
+   lenses:
+     sql:
+       namespaces: [lenses, lenses-processors]
+   ```
+
+   Lenses cannot manage processors in namespaces missing from the list. They keep
+   running, but Lenses shows them as stopped, and deleting one in Lenses leaves its
+   Deployment running. Adding the namespace to the list and upgrading again restores them.
+
+3. **Move anything you attached to the `default` ServiceAccount.** If you added
+   `imagePullSecrets` or cloud IAM annotations (EKS IRSA, GKE Workload Identity, Azure
+   Workload Identity) to `default`, use `image.imagePullSecrets` and
+   `serviceAccount.annotations` instead.
+
+4. **If you manage RBAC yourself** (`rbacEnable: false`, with your own `Role`/`RoleBinding`
+   as described in the Lenses 5.5 documentation), bind it to the new ServiceAccount, which
+   is named after the release (e.g. `lenses`). A `lenses.kubernetes.namespaces` setting in
+   `lenses.append.conf` is merged with the one the chart writes from `lenses.sql.namespaces`:
+   its `incluster` list replaces the chart's, and any other clusters it lists are added. Keep
+   the two in step, or move the list to `lenses.sql.namespaces`.
+
 ## Release 4.3.11
 
 - `Values.lenses.jvm.trustStoreFileData` has been deprecated  in favor of `Values.lenses.opts.trustStoreFileData` since they were duplicates, please use the latter.

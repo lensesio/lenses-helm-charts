@@ -1,0 +1,235 @@
+suite: RBAC for SQL Processors in KUBERNETES mode
+templates:
+  - role.yaml
+  - cluster-role.yaml
+  - cluster-role-binding.yaml
+  - configmap.yaml
+release:
+  name: lenses
+  namespace: lenses
+tests:
+  - it: should keep the cluster-wide binding to the default ServiceAccount by default, with only the rules Lenses uses
+    set:
+      lenses:
+        sql:
+          mode: KUBERNETES
+    asserts:
+      - template: role.yaml
+        hasDocuments:
+          count: 0
+      - template: cluster-role.yaml
+        isKind:
+          of: ClusterRole
+      - template: cluster-role.yaml
+        equal:
+          path: rules
+          value:
+            - apiGroups: ["apps"]
+              resources: ["deployments"]
+              verbs: ["create", "get", "patch", "delete", "watch"]
+            - apiGroups: ["extensions"]
+              resources: ["deployments"]
+              verbs: ["create", "get", "patch", "delete"]
+            - apiGroups: [""]
+              resources: ["secrets"]
+              verbs: ["create", "get", "update", "delete"]
+            - apiGroups: [""]
+              resources: ["pods"]
+              verbs: ["get", "watch"]
+            - apiGroups: [""]
+              resources: ["pods/log"]
+              verbs: ["get"]
+            - apiGroups: [""]
+              resources: ["events"]
+              verbs: ["watch"]
+            - apiGroups: [""]
+              resources: ["namespaces"]
+              verbs: ["get", "list"]
+      - template: cluster-role-binding.yaml
+        equal:
+          path: subjects
+          value:
+            - kind: ServiceAccount
+              namespace: lenses
+              name: default
+      - template: configmap.yaml
+        notMatchRegex:
+          path: data.lenses\.append\.conf
+          pattern: lenses\.kubernetes\.namespaces
+
+  - it: should grant a namespaced Role in the release namespace with namespaceScope
+    set:
+      namespaceScope: true
+      serviceAccount:
+        create: true
+      lenses:
+        sql:
+          mode: KUBERNETES
+    asserts:
+      - template: role.yaml
+        hasDocuments:
+          count: 2
+      - template: role.yaml
+        documentIndex: 0
+        isKind:
+          of: Role
+      - template: role.yaml
+        documentIndex: 0
+        equal:
+          path: metadata.namespace
+          value: lenses
+      - template: role.yaml
+        documentIndex: 0
+        equal:
+          path: rules
+          value:
+            - apiGroups: ["apps"]
+              resources: ["deployments"]
+              verbs: ["create", "get", "patch", "delete", "watch"]
+            - apiGroups: ["extensions"]
+              resources: ["deployments"]
+              verbs: ["create", "get", "patch", "delete"]
+            - apiGroups: [""]
+              resources: ["secrets"]
+              verbs: ["create", "get", "update", "delete"]
+            - apiGroups: [""]
+              resources: ["pods"]
+              verbs: ["get", "watch"]
+            - apiGroups: [""]
+              resources: ["pods/log"]
+              verbs: ["get"]
+            - apiGroups: [""]
+              resources: ["events"]
+              verbs: ["watch"]
+            - apiGroups: [""]
+              resources: ["namespaces"]
+              verbs: ["get"]
+      - template: role.yaml
+        documentIndex: 1
+        isKind:
+          of: RoleBinding
+      - template: role.yaml
+        documentIndex: 1
+        equal:
+          path: subjects
+          value:
+            - kind: ServiceAccount
+              namespace: lenses
+              name: lenses
+      - template: cluster-role.yaml
+        hasDocuments:
+          count: 0
+      - template: cluster-role-binding.yaml
+        hasDocuments:
+          count: 0
+      - template: configmap.yaml
+        matchRegex:
+          path: data.lenses\.append\.conf
+          pattern: 'lenses\.kubernetes\.namespaces \{\n  incluster = \["lenses"\]\n\}'
+
+  - it: should not pin namespaces outside KUBERNETES mode unless they are listed
+    set:
+      namespaceScope: true
+    asserts:
+      - template: role.yaml
+        hasDocuments:
+          count: 2
+      - template: configmap.yaml
+        notMatchRegex:
+          path: data.lenses\.append\.conf
+          pattern: lenses\.kubernetes\.namespaces
+
+  - it: should grant a Role in every listed namespace and pin Lenses to them
+    set:
+      namespaceScope: true
+      serviceAccount:
+        create: true
+      lenses:
+        sql:
+          namespaces: [lenses, processors, processors]
+    asserts:
+      - template: role.yaml
+        hasDocuments:
+          count: 4
+      - template: role.yaml
+        documentIndex: 2
+        isKind:
+          of: Role
+      - template: role.yaml
+        documentIndex: 2
+        equal:
+          path: metadata.namespace
+          value: processors
+      - template: role.yaml
+        documentIndex: 3
+        equal:
+          path: metadata.namespace
+          value: processors
+      - template: role.yaml
+        documentIndex: 3
+        equal:
+          path: subjects
+          value:
+            - kind: ServiceAccount
+              namespace: lenses
+              name: lenses
+      - template: configmap.yaml
+        matchRegex:
+          path: data.lenses\.append\.conf
+          pattern: 'incluster = \["lenses","processors"\]'
+
+  - it: should pin Lenses to listed namespaces with a ClusterRole too
+    set:
+      lenses:
+        sql:
+          namespaces: [processors]
+    asserts:
+      - template: role.yaml
+        hasDocuments:
+          count: 0
+      - template: cluster-role.yaml
+        isKind:
+          of: ClusterRole
+      - template: configmap.yaml
+        matchRegex:
+          path: data.lenses\.append\.conf
+          pattern: 'incluster = \["processors"\]'
+
+  - it: should create no RBAC and pin nothing when rbacEnable is false
+    set:
+      rbacEnable: false
+      namespaceScope: true
+      lenses:
+        sql:
+          mode: KUBERNETES
+    asserts:
+      - template: role.yaml
+        hasDocuments:
+          count: 0
+      - template: cluster-role.yaml
+        hasDocuments:
+          count: 0
+      - template: cluster-role-binding.yaml
+        hasDocuments:
+          count: 0
+      - template: configmap.yaml
+        notMatchRegex:
+          path: data.lenses\.append\.conf
+          pattern: lenses\.kubernetes\.namespaces
+
+  - it: should keep the cluster-wide binding to the existing ServiceAccount for values from before 5.5.25
+    # What `helm upgrade --reuse-values` from an older release renders: string serviceAccount, no namespaceScope.
+    set:
+      serviceAccount: default
+      namespaceScope: null
+    asserts:
+      - template: role.yaml
+        hasDocuments:
+          count: 0
+      - template: cluster-role-binding.yaml
+        equal:
+          path: subjects
+          value:
+            - kind: ServiceAccount
+              namespace: lenses
+              name: default
