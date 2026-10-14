@@ -1,6 +1,6 @@
 # lenses-hq
 
-![Version: 6.3.1](https://img.shields.io/badge/Version-6.3.1-informational?style=flat-square) ![AppVersion: 6.3.0](https://img.shields.io/badge/AppVersion-6.3.0-informational?style=flat-square)
+![Version: 6.3.2](https://img.shields.io/badge/Version-6.3.2-informational?style=flat-square) ![AppVersion: 6.3.0](https://img.shields.io/badge/AppVersion-6.3.0-informational?style=flat-square)
 
 A chart for Lenses HQ deployment which provides a unified, streamlined view of the entire event infrastructure—whether on-premises or in the cloud—through a single, comprehensive interface.
 
@@ -95,6 +95,12 @@ The command deploys Lenses HQ on the Kubernetes cluster in the example configura
 | lensesHq.agents.tls.privateKey | string | `{"secret":{"key":"","name":""}}` | Sets the PEM formatted private key. **Required: false** |
 | lensesHq.agents.tls.verboseLogs | string | `false` | Enabled verbose of TLS debug logs **Required: true** |
 
+### Lenses HQ audit startup values
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| lensesHq.audit | dict | `{}` | Configures API audit logging. Written as is to the `audit` section of HQ's config, so a key left out keeps HQ's default. Keys and HQ defaults: `enabled` (false) and `retentionPeriod` (""), a Go duration such as "720h" after which HQ deletes audit logs. "" or "0" keeps them. **Required: false** |
+
 ### Lenses HQ AUTH startup values
 
 | Key | Type | Default | Description |
@@ -137,6 +143,21 @@ The command deploys Lenses HQ on the Kubernetes cluster in the example configura
 | lensesHq.auth.saml.userCreationMode | string | `"manual"` | Controls how the creation of users should be handled in relation to SSO information Allowed values are: sso | manual **Required: false** |
 | lensesHq.auth.saml.usersGroupMembershipManagementMode | string | `"manual"` | Controls how the management of a user's group membership should be handled in relation to SSO information. Allowed values are: sso | manual **Required: false** |
 | lensesHq.auth.sessionDuration | string | `"24h"` | # Sets the duration of a session. The duration is a string that follows the Go time.Duration format. Valid time units are "ns", "us" (or "µs"), "ms", "s", "m", "h". The duration is used to set the expiration time of the session cookie. **Required: false** |
+
+### Lenses HQ advanced startup values
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| lensesHq.environments | dict | `{}` | Tunes how HQ refreshes information about its environments. Written as is to the `environments` section of HQ's config. Keys and HQ defaults: `refreshWorkers` (4), how many environments HQ refreshes at the same time. **Required: false** |
+| lensesHq.kafka | dict | `{}` | Limits for reading topic records through the API. Written as is to the `kafka` section of HQ's config. Keys and HQ defaults: `maxRecordsPerRequest` (1000) and `maxBytesPerRequest` (33554432), the most records and bytes in one response. **Required: false** |
+| lensesHq.proxy | dict | `{}` | Configures how HQ forwards API requests to Agents. Written as is to the `proxy` section of HQ's config. Keys and HQ defaults: `apiRequestTimeout` ("30s"), how long HQ waits for an Agent to answer an API request. **Required: false** |
+| lensesHq.runtime | dict | `{}` | Configures how the HQ process uses memory. Written as is to the `runtime` section of HQ's config. Keys and HQ defaults: `memoryLimitPercent` (90), the Go soft memory limit as a percentage of the container memory limit; 0 disables it. **Required: false** |
+
+### Lenses HQ features startup values
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| lensesHq.features | dict | `{}` | Toggles optional product features. Written as is to the `features` section of HQ's config. Keys and HQ defaults: `launchPad` (true), the Launch Pad tab in Studio. **Required: false** |
 
 ### Lenses HQ HTTP startup values
 
