@@ -482,11 +482,12 @@ lensesHq:
         # **Required: true when enabled**
         issuerURL: ""
 
-        # -- (string) Absolute maximum lifetime of an authorization grant
-        # (Go time.Duration format). Default 2160h (90 days).
+        # -- (string) Absolute maximum lifetime of an authorization, after which
+        # the user must re-authorize (Go time.Duration format). If empty, the chart
+        # uses `grantLifetime`, its name before HQ 6.2.1, or else 2160h (90 days).
         # @section -- Lenses HQ OAuth2 startup values
         # **Required: false**
-        grantLifetime: "2160h"
+        authorizationLifetime: ""
 
         # -- (bool) Requires PKCE (S256) for all authorization requests.
         # OAuth 2.1 mandates PKCE; leave enabled unless you know why you're disabling it.

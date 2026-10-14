@@ -198,7 +198,7 @@ auth:
     authorizationServer:
       enabled: true
       issuerURL: {{ $authSrv.issuerURL | quote }}
-      grantLifetime: {{ default "2160h" $authSrv.grantLifetime | quote }}
+      authorizationLifetime: {{ coalesce $authSrv.authorizationLifetime $authSrv.grantLifetime "2160h" | quote }}
       requirePKCE: {{ $authSrv.requirePKCE }}
       dcr: {{ $authSrv.dcr }}
       unauthenticatedIntrospection: {{ $authSrv.unauthenticatedIntrospection }}

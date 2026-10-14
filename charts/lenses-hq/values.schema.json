@@ -1002,10 +1002,19 @@
                                             "https://hq.example.com"
                                         ]
                                     },
+                                    "authorizationLifetime": {
+                                        "type": "string",
+                                        "default": "",
+                                        "title": "The authorizationLifetime Schema",
+                                        "examples": [
+                                            "2160h",
+                                            "168h"
+                                        ]
+                                    },
                                     "grantLifetime": {
                                         "type": "string",
-                                        "default": "2160h",
                                         "title": "The grantLifetime Schema",
+                                        "description": "Deprecated: use authorizationLifetime.",
                                         "examples": [
                                             "2160h",
                                             "168h"
