@@ -630,6 +630,12 @@
                                     "examples": [
                                         33554432
                                     ]
+                                },
+                                "agentMaxRecvMessageSize": {
+                                    "type": "integer",
+                                    "minimum": 0,
+                                    "default": 0,
+                                    "title": "Maximum size in bytes of a gRPC response from an Agent. 0 keeps HQ's default"
                                 }
                             }
                         },
@@ -1046,6 +1052,16 @@
                                             true,
                                             false
                                         ]
+                                    },
+                                    "redirectMethod": {
+                                        "type": "string",
+                                        "enum": [
+                                            "",
+                                            "header",
+                                            "body"
+                                        ],
+                                        "default": "",
+                                        "title": "How HQ issues redirects. Empty keeps HQ's default, header"
                                     }
                                 }
                             }
@@ -1173,6 +1189,21 @@
                             "examples": [
                                 ["https://example.io","http://example.io"]
                             ]
+                        },
+                        "sessionCookieDomain": {
+                            "type": "string",
+                            "default": "",
+                            "title": "Sets the host to which browsers send session cookies"
+                        },
+                        "strictTransportSecurity": {
+                            "type": "boolean",
+                            "default": false,
+                            "title": "Sends the Strict-Transport-Security header"
+                        },
+                        "h2c": {
+                            "type": "boolean",
+                            "default": false,
+                            "title": "Enables HTTP/2 over unencrypted connections"
                         }
                     },
                     "examples": [{
@@ -1285,6 +1316,16 @@
                                             "sslmode": "required"
                                         }
                                     ]
+                                },
+                                "maxConns": {
+                                    "type": "integer",
+                                    "minimum": 0,
+                                    "default": 0,
+                                    "title": "Max connections in the main query pool. 0 keeps HQ's default"
+                                },
+                                "statementTimeout": {
+                                    "type": "string",
+                                    "pattern": "^(([0-9]+(\\.[0-9]+)?(ns|us|µs|ms|s|m|h))+)?$"
                                 },
                                 "port": {
                                     "type": "integer",
@@ -1540,6 +1581,69 @@
                     "examples": [{
                         "port": 9090
                     }]
+                },
+                "audit": {
+                    "type": "object",
+                    "default": {},
+                    "title": "API audit logging, written as is to HQ's config",
+                    "additionalProperties": false,
+                    "properties": {
+                        "enabled": {
+                            "type": "boolean"
+                        },
+                        "retentionPeriod": {
+                            "type": "string",
+                            "pattern": "^((([0-9]+(\\.[0-9]+)?(ns|us|µs|ms|s|m|h))+)|0)?$"
+                        }
+                    }
+                },
+                "features": {
+                    "type": "object",
+                    "default": {},
+                    "title": "Optional product features, written as is to HQ's config",
+                    "additionalProperties": false,
+                    "properties": {
+                        "launchPad": {
+                            "type": "boolean"
+                        }
+                    }
+                },
+                "environments": {
+                    "type": "object",
+                    "default": {},
+                    "title": "Environment refresh tuning, written as is to HQ's config",
+                    "additionalProperties": false,
+                    "properties": {
+                        "refreshWorkers": {
+                            "type": "integer",
+                            "minimum": 0
+                        }
+                    }
+                },
+                "runtime": {
+                    "type": "object",
+                    "default": {},
+                    "title": "HQ process memory settings, written as is to HQ's config",
+                    "additionalProperties": false,
+                    "properties": {
+                        "memoryLimitPercent": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 100
+                        }
+                    }
+                },
+                "proxy": {
+                    "type": "object",
+                    "default": {},
+                    "title": "Agent API request forwarding, written as is to HQ's config",
+                    "additionalProperties": false,
+                    "properties": {
+                        "apiRequestTimeout": {
+                            "type": "string",
+                            "pattern": "^([0-9]+(\\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$"
+                        }
+                    }
                 }
             }
         }

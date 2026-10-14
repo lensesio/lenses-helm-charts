@@ -1,0 +1,77 @@
+suite: test the newer HQ settings
+templates:
+  - configmap.yaml
+tests:
+  - it: should not write the newer settings by default
+    asserts:
+      - notMatchRegex:
+          path: data.config\.yaml
+          pattern: 'sessionCookieDomain|strictTransportSecurity|h2c|agentMaxRecvMessageSize|redirectMethod|maxConns|statementTimeout'
+      - notMatchRegex:
+          path: data.config\.yaml
+          pattern: '(?m)^(audit|features|environments|runtime|proxy):'
+
+  - it: should write the HTTP settings when set
+    set:
+      lensesHq.http.sessionCookieDomain: example.com
+      lensesHq.http.strictTransportSecurity: true
+      lensesHq.http.h2c: true
+    asserts:
+      - matchRegex:
+          path: data.config\.yaml
+          pattern: '(?m)^  sessionCookieDomain: "example.com"\n  strictTransportSecurity: true\n  h2c: true$'
+
+  - it: should write agentMaxRecvMessageSize as an integer
+    set:
+      lensesHq.agents.grpc.agentMaxRecvMessageSize: 209715200
+    asserts:
+      - matchRegex:
+          path: data.config\.yaml
+          pattern: '(?m)^    agentMaxRecvMessageSize: 209715200$'
+
+  - it: should write redirectMethod when set
+    set:
+      lensesHq.auth.oauth2.authorizationServer.enabled: true
+      lensesHq.auth.oauth2.authorizationServer.issuerURL: https://hq.example.com
+      lensesHq.auth.oauth2.authorizationServer.redirectMethod: body
+    asserts:
+      - matchRegex:
+          path: data.config\.yaml
+          pattern: '(?m)^      redirectMethod: "body"$'
+
+  - it: should write the sections as is, keeping false and 0
+    set:
+      lensesHq.audit.enabled: true
+      lensesHq.audit.retentionPeriod: 720h
+      lensesHq.features.launchPad: false
+      lensesHq.environments.refreshWorkers: 8
+      lensesHq.runtime.memoryLimitPercent: 0
+      lensesHq.proxy.apiRequestTimeout: 1m
+    asserts:
+      - matchRegex:
+          path: data.config\.yaml
+          pattern: '(?m)^audit:\n  enabled: true\n  retentionPeriod: 720h$'
+      - matchRegex:
+          path: data.config\.yaml
+          pattern: '(?m)^features:\n  launchPad: false$'
+      - matchRegex:
+          path: data.config\.yaml
+          pattern: '(?m)^environments:\n  refreshWorkers: 8$'
+      - matchRegex:
+          path: data.config\.yaml
+          pattern: '(?m)^runtime:\n  memoryLimitPercent: 0$'
+      - matchRegex:
+          path: data.config\.yaml
+          pattern: '(?m)^proxy:\n  apiRequestTimeout: 1m$'
+
+  - it: should write the database pool settings when set
+    set:
+      lensesHq.storage.postgres.maxConns: 20
+      lensesHq.storage.postgres.statementTimeout: 45s
+    asserts:
+      - matchRegex:
+          path: data.config\.yaml
+          pattern: '(?m)^  maxConns: 20$'
+      - matchRegex:
+          path: data.config\.yaml
+          pattern: '(?m)^  statementTimeout: "45s"$'

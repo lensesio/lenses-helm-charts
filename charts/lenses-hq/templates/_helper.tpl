@@ -202,6 +202,9 @@ auth:
       requirePKCE: {{ $authSrv.requirePKCE }}
       dcr: {{ $authSrv.dcr }}
       unauthenticatedIntrospection: {{ $authSrv.unauthenticatedIntrospection }}
+      {{- with $authSrv.redirectMethod }}
+      redirectMethod: {{ . | quote }}
+      {{- end }}
   {{- end }}
 http:
   address: {{ .Values.lensesHq.http.address }}
@@ -211,6 +214,15 @@ http:
   {{- end }}
   accessControlAllowCredentials: {{ .Values.lensesHq.http.accessControlAllowCredentials }}
   secureSessionCookies: {{ .Values.lensesHq.http.secureSessionCookies }}
+  {{- with .Values.lensesHq.http.sessionCookieDomain }}
+  sessionCookieDomain: {{ . | quote }}
+  {{- end }}
+  {{- if .Values.lensesHq.http.strictTransportSecurity }}
+  strictTransportSecurity: true
+  {{- end }}
+  {{- if .Values.lensesHq.http.h2c }}
+  h2c: true
+  {{- end }}
   {{ if (.Values.lensesHq.http.tls).enabled }}
   tls:
     enabled: {{ .Values.lensesHq.http.tls.enabled -}}
@@ -239,6 +251,9 @@ agents:
     {{ end }}
   grpc:
     apiMaxRecvMessageSize: {{ .Values.lensesHq.agents.grpc.apiMaxRecvMessageSize }}
+    {{- with .Values.lensesHq.agents.grpc.agentMaxRecvMessageSize }}
+    agentMaxRecvMessageSize: {{ . | int64 }}
+    {{- end }}
 database:
   {{- include "validate.singleEnabledDatabase" . -}}
 {{- range $name, $db := .Values.lensesHq.storage }}
@@ -253,6 +268,12 @@ database:
 {{ toYaml $db.params | indent 8 }}
   {{- end }}
   TLS: {{ $db.tls }}
+  {{- with $db.maxConns }}
+  maxConns: {{ . }}
+  {{- end }}
+  {{- with $db.statementTimeout }}
+  statementTimeout: {{ . | quote }}
+  {{- end }}
   {{- end }}
 {{- end }}
 license:
@@ -262,6 +283,13 @@ license:
   key: {{ .Values.lensesHq.license.stringData | indent 6 }}
   {{- end }}
   acceptEULA: {{ .Values.lensesHq.license.acceptEULA }}
+{{- /* Written as is, so that a key left out keeps HQ's default. */}}
+{{- range $section := list "audit" "features" "environments" "runtime" "proxy" }}
+{{- with index $.Values.lensesHq $section }}
+{{ $section }}:
+{{- toYaml . | nindent 2 }}
+{{- end }}
+{{- end }}
 logger:
   mode: {{ .Values.lensesHq.logger.mode }}
   level: {{ default "info" .Values.lensesHq.logger.level }}

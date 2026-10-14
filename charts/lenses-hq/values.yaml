@@ -704,6 +704,41 @@ lensesHq:
     # **Required: false**
     acceptEULA: false
 
+  # -- (dict) Configures API audit logging. Written as is to the `audit` section of HQ's
+  # config, so a key left out keeps HQ's default. Keys and HQ defaults: `enabled` (false) and
+  # `retentionPeriod` (""), a Go duration such as "720h" after which HQ deletes audit logs.
+  # "" or "0" keeps them.
+  # @section -- Lenses HQ audit startup values
+  # **Required: false**
+  audit: {}
+
+  # -- (dict) Toggles optional product features. Written as is to the `features` section of
+  # HQ's config. Keys and HQ defaults: `launchPad` (true), the Launch Pad tab in Studio.
+  # @section -- Lenses HQ features startup values
+  # **Required: false**
+  features: {}
+
+  # -- (dict) Tunes how HQ refreshes information about its environments. Written as is to the
+  # `environments` section of HQ's config. Keys and HQ defaults: `refreshWorkers` (4), how many
+  # environments HQ refreshes at the same time.
+  # @section -- Lenses HQ advanced startup values
+  # **Required: false**
+  environments: {}
+
+  # -- (dict) Configures how the HQ process uses memory. Written as is to the `runtime` section
+  # of HQ's config. Keys and HQ defaults: `memoryLimitPercent` (90), the Go soft memory limit as
+  # a percentage of the container memory limit; 0 disables it.
+  # @section -- Lenses HQ advanced startup values
+  # **Required: false**
+  runtime: {}
+
+  # -- (dict) Configures how HQ forwards API requests to Agents. Written as is to the `proxy`
+  # section of HQ's config. Keys and HQ defaults: `apiRequestTimeout` ("30s"), how long HQ waits
+  # for an Agent to answer an API request.
+  # @section -- Lenses HQ advanced startup values
+  # **Required: false**
+  proxy: {}
+
   # @section -- Lenses HQ startup values
   # Disable livenessProbe, used while debugging
   livenessProbe:
