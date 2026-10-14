@@ -1,0 +1,36 @@
+suite: test the OAuth2 authorization server config
+templates:
+  - configmap.yaml
+tests:
+  - it: should render authorizationLifetime with HQ's default
+    set:
+      lensesHq.auth.oauth2.authorizationServer.enabled: true
+      lensesHq.auth.oauth2.authorizationServer.issuerURL: https://hq.example.com
+    asserts:
+      - matchRegex:
+          path: data.config\.yaml
+          pattern: 'authorizationLifetime: "2160h"'
+      - notMatchRegex:
+          path: data.config\.yaml
+          pattern: grantLifetime
+
+  - it: should render authorizationLifetime from the deprecated grantLifetime
+    set:
+      lensesHq.auth.oauth2.authorizationServer.enabled: true
+      lensesHq.auth.oauth2.authorizationServer.issuerURL: https://hq.example.com
+      lensesHq.auth.oauth2.authorizationServer.grantLifetime: 720h
+    asserts:
+      - matchRegex:
+          path: data.config\.yaml
+          pattern: 'authorizationLifetime: "720h"'
+
+  - it: should prefer authorizationLifetime to the deprecated grantLifetime
+    set:
+      lensesHq.auth.oauth2.authorizationServer.enabled: true
+      lensesHq.auth.oauth2.authorizationServer.issuerURL: https://hq.example.com
+      lensesHq.auth.oauth2.authorizationServer.authorizationLifetime: 168h
+      lensesHq.auth.oauth2.authorizationServer.grantLifetime: 720h
+    asserts:
+      - matchRegex:
+          path: data.config\.yaml
+          pattern: 'authorizationLifetime: "168h"'

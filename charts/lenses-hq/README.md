@@ -1,6 +1,6 @@
 # lenses-hq
 
-![Version: 6.3.0](https://img.shields.io/badge/Version-6.3.0-informational?style=flat-square) ![AppVersion: 6.3.0](https://img.shields.io/badge/AppVersion-6.3.0-informational?style=flat-square)
+![Version: 6.3.1](https://img.shields.io/badge/Version-6.3.1-informational?style=flat-square) ![AppVersion: 6.3.0](https://img.shields.io/badge/AppVersion-6.3.0-informational?style=flat-square)
 
 A chart for Lenses HQ deployment which provides a unified, streamlined view of the entire event infrastructure—whether on-premises or in the cloud—through a single, comprehensive interface.
 
@@ -106,10 +106,10 @@ The command deploys Lenses HQ on the Kubernetes cluster in the example configura
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| lensesHq.auth.oauth2.authorizationServer | object | `{"dcr":false,"enabled":false,"grantLifetime":"2160h","issuerURL":"","requirePKCE":true,"unauthenticatedIntrospection":false}` | Controls HQ's OAuth2 embedded authorization server. Rendered into HQ's config only when `authorizationServer.enabled` is true. |
+| lensesHq.auth.oauth2.authorizationServer | object | `{"authorizationLifetime":"","dcr":false,"enabled":false,"issuerURL":"","requirePKCE":true,"unauthenticatedIntrospection":false}` | Controls HQ's OAuth2 embedded authorization server. Rendered into HQ's config only when `authorizationServer.enabled` is true. |
+| lensesHq.auth.oauth2.authorizationServer.authorizationLifetime | string | `""` | Absolute maximum lifetime of an authorization, after which the user must re-authorize (Go time.Duration format). If empty, the chart uses `grantLifetime`, its name before HQ 6.2.1, or else 2160h (90 days). **Required: false** |
 | lensesHq.auth.oauth2.authorizationServer.dcr | bool | `false` | Enables the dynamic client registration endpoint ([RFC 7591](https://datatracker.ietf.org/doc/html/rfc7591)). MUST be `true` when the MCP sidecar is enabled — MCP clients register themselves via DCR. **Required: false** |
 | lensesHq.auth.oauth2.authorizationServer.enabled | bool | `false` | Enables HQ's embedded OAuth 2.1 authorization server. **Required: false** |
-| lensesHq.auth.oauth2.authorizationServer.grantLifetime | string | `"2160h"` | Absolute maximum lifetime of an authorization grant (Go time.Duration format). Default 2160h (90 days). **Required: false** |
 | lensesHq.auth.oauth2.authorizationServer.issuerURL | string | `""` | The OAuth 2.0 Authorization Server issuer identifier ([RFC 8414](https://datatracker.ietf.org/doc/html/rfc8414)). Must equal the URL that clients use to reach HQ and therefore **must match `mcp.lensesAdvertisedUrl`** when the MCP sidecar is enabled. **Required: true when enabled** |
 | lensesHq.auth.oauth2.authorizationServer.requirePKCE | bool | `true` | Requires PKCE (S256) for all authorization requests. OAuth 2.1 mandates PKCE; leave enabled unless you know why you're disabling it. **Required: false** |
 | lensesHq.auth.oauth2.authorizationServer.unauthenticatedIntrospection | bool | `false` | Allows unauthenticated requests to the `/oauth2/introspect` endpoint. MUST be `true` when the MCP sidecar is enabled, because MCP's `DiscoveryTokenVerifier` posts to the introspection endpoint without client credentials. Keep the HQ introspect endpoint cluster-internal — never expose it through a public ingress. **Required: false** |
