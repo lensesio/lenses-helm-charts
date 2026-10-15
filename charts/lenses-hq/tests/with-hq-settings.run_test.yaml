@@ -9,7 +9,7 @@ tests:
           pattern: 'sessionCookieDomain|strictTransportSecurity|h2c|agentMaxRecvMessageSize|redirectMethod|maxConns|statementTimeout'
       - notMatchRegex:
           path: data.config\.yaml
-          pattern: '(?m)^(audit|features|environments|runtime|proxy|kafka):'
+          pattern: '(?m)^(audit|features|environments|runtime|proxy|kafka|k2k):'
 
   - it: should write the HTTP settings when set
     set:
@@ -67,3 +67,13 @@ tests:
       - matchRegex:
           path: data.config\.yaml
           pattern: '(?m)^proxy:\n  apiRequestTimeout: 1m$'
+
+  - it: should write the k2k allow-lists as is, keeping an empty list
+    set:
+      lensesHq.k2k.allowedImages:
+        - registry.example.com/mirror/k2k
+      lensesHq.k2k.allowedServiceAccounts: []
+    asserts:
+      - matchRegex:
+          path: data.config\.yaml
+          pattern: '(?m)^k2k:\n  allowedImages:\n  - registry.example.com/mirror/k2k\n  allowedServiceAccounts: \[\]$'

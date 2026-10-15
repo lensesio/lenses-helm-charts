@@ -754,6 +754,15 @@ lensesHq:
   # **Required: false**
   proxy: {}
 
+  # -- (dict) Limits the container images and ServiceAccounts that K2K apps may use. Written as
+  # is to the `k2k` section of HQ's config. Keys and HQ defaults: `allowedImages`
+  # (["docker.io/lensesio/k2k"]), where an entry without a tag or digest allows any tag of that
+  # repository, so add your registry mirror here; and `allowedServiceAccounts` ([]), the
+  # ServiceAccount names apps may set. A single "*" entry allows any.
+  # @section -- Lenses HQ K2K startup values
+  # **Required: false**
+  k2k: {}
+
   # @section -- Lenses HQ startup values
   # Disable livenessProbe, used while debugging
   livenessProbe:
