@@ -22,41 +22,51 @@ rules:
     - namespaces
   verbs:
     - get
+# Status of SQL Processors and K2K apps. Pods are created only through Deployments.
+- apiGroups: [""]
+  resources:
+    - pods
+    - events
+  verbs:
+    - get
+    - list
+    - watch
+# SQL Processor credentials. The Agent never reads a Secret back, so it gets no get/list.
+- apiGroups: [""]
+  resources:
+    - secrets
+  verbs:
+    - create
+    - delete
+# K2K app configuration
 - apiGroups: [""]
   resources:
     - configmaps
-    - pods
-    - secrets
-    - services
   verbs:
+    - get
     - list
     - watch
-    - get
-    - update
     - create
+    - update
     - delete
-    - patch
+# SQL Processor and K2K workloads
 - apiGroups: ["apps"]
   resources:
-    - replicasets
     - deployments
-    - deployments/scale
-    - statefulsets
   verbs:
+    - get
     - list
     - watch
+    - create
+    - update
+    - delete
+# `deployments/scale` is a separate subresource: granting `deployments` does not confer it.
+- apiGroups: ["apps"]
+  resources:
+    - deployments/scale
+  verbs:
     - get
     - update
-    - create
-    - delete
-    - patch
-- apiGroups: [""]
-  resources:
-    - events
-  verbs:
-    - list
-    - watch
-    - get
 
 ---
 kind: RoleBinding

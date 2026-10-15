@@ -13,49 +13,61 @@ metadata:
 rules:
 - apiGroups: [""]
   resources:
-    - namespaces
-  verbs:
-    - list
-    - watch
-    - get
-- apiGroups: [""]
-  resources:
-    - configmaps
-    - pods
-    - secrets
-    - services
-  verbs:
-    - list
-    - watch
-    - get
-    - update
-    - create
-    - delete
-    - patch
-- apiGroups: ["apps"]
-  resources:
-    - replicasets
-    - deployments
-    - deployments/scale
-    - statefulsets
-  verbs:
-    - list
-    - watch
-    - get
-    - update
-    - create
-    - delete
-    - patch
-- apiGroups: [""]
-  resources:
     - pods/log
   verbs:
     - get
+# Cluster-wide, so the Agent can offer and watch every namespace when
+# `lenses.kubernetes.namespaces` is not set.
 - apiGroups: [""]
   resources:
-    - events
+    - namespaces
   verbs:
+    - get
     - list
     - watch
+# Status of SQL Processors and K2K apps. Pods are created only through Deployments.
+- apiGroups: [""]
+  resources:
+    - pods
+    - events
+  verbs:
     - get
+    - list
+    - watch
+# SQL Processor credentials. The Agent never reads a Secret back, so it gets no get/list.
+- apiGroups: [""]
+  resources:
+    - secrets
+  verbs:
+    - create
+    - delete
+# K2K app configuration
+- apiGroups: [""]
+  resources:
+    - configmaps
+  verbs:
+    - get
+    - list
+    - watch
+    - create
+    - update
+    - delete
+# SQL Processor and K2K workloads
+- apiGroups: ["apps"]
+  resources:
+    - deployments
+  verbs:
+    - get
+    - list
+    - watch
+    - create
+    - update
+    - delete
+# `deployments/scale` is a separate subresource: granting `deployments` does not confer it.
+- apiGroups: ["apps"]
+  resources:
+    - deployments/scale
+  verbs:
+    - get
+    - update
 {{- end }}

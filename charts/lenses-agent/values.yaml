@@ -84,6 +84,7 @@ rbacEnable: true
 # -- (bool) Enables namespaceScope which indicates that if the cluster has rbac and namespaceScope is enabled role and
 # role binding on namespace level will be created. If SQL_PROCESSOR_MODE is set to KUBERNETES, this option should either
 # be false (giving the Agent access to all namespaces), or the namespaces the agent can access must be set explicitly.
+# Prefer the latter: with false, the Agent can create Deployments and Secrets in every namespace of the cluster.
 # @section -- Permission scope values
 namespaceScope: true
 

@@ -1,0 +1,91 @@
+suite: grant the Agent only the Kubernetes permissions it uses
+templates:
+  - namespaced-role.yaml
+  - cluster-role.yaml
+  - NOTES.txt
+tests:
+  - it: should grant the namespaced Role only what SQL Processors and K2K use
+    template: namespaced-role.yaml
+    documentIndex: 0
+    asserts:
+      - isKind:
+          of: Role
+      - equal:
+          path: rules
+          value:
+            - apiGroups: [""]
+              resources: [pods/log]
+              verbs: [get]
+            - apiGroups: [""]
+              resources: [namespaces]
+              verbs: [get]
+            - apiGroups: [""]
+              resources: [pods, events]
+              verbs: [get, list, watch]
+            - apiGroups: [""]
+              resources: [secrets]
+              verbs: [create, delete]
+            - apiGroups: [""]
+              resources: [configmaps]
+              verbs: [get, list, watch, create, update, delete]
+            - apiGroups: [apps]
+              resources: [deployments]
+              verbs: [get, list, watch, create, update, delete]
+            - apiGroups: [apps]
+              resources: [deployments/scale]
+              verbs: [get, update]
+
+  - it: should grant the ClusterRole the same rules, plus listing namespaces
+    template: cluster-role.yaml
+    set:
+      namespaceScope: false
+    asserts:
+      - isKind:
+          of: ClusterRole
+      - equal:
+          path: rules
+          value:
+            - apiGroups: [""]
+              resources: [pods/log]
+              verbs: [get]
+            - apiGroups: [""]
+              resources: [namespaces]
+              verbs: [get, list, watch]
+            - apiGroups: [""]
+              resources: [pods, events]
+              verbs: [get, list, watch]
+            - apiGroups: [""]
+              resources: [secrets]
+              verbs: [create, delete]
+            - apiGroups: [""]
+              resources: [configmaps]
+              verbs: [get, list, watch, create, update, delete]
+            - apiGroups: [apps]
+              resources: [deployments]
+              verbs: [get, list, watch, create, update, delete]
+            - apiGroups: [apps]
+              resources: [deployments/scale]
+              verbs: [get, update]
+
+  - it: should warn about cluster-wide permissions when namespaceScope is false
+    template: NOTES.txt
+    set:
+      namespaceScope: false
+    asserts:
+      - matchRegexRaw:
+          pattern: "WARNING: namespaceScope is false"
+
+  - it: should not warn when namespaceScope is true
+    template: NOTES.txt
+    asserts:
+      - notMatchRegexRaw:
+          pattern: "WARNING: namespaceScope is false"
+
+  - it: should not warn when RBAC is disabled
+    template: NOTES.txt
+    set:
+      rbacEnable: false
+      namespaceScope: false
+    asserts:
+      - notMatchRegexRaw:
+          pattern: "WARNING: namespaceScope is false"

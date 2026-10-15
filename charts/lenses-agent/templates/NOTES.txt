@@ -8,3 +8,11 @@ Lenses Agent has been deployed!
                                            __/ |                              | |
                                           |___/                               |_|
  with (time-travel) Lenses SQL Engine, REST, WS |_| APIs version {{ .Chart.AppVersion }}
+{{- if and .Values.rbacEnable (not .Values.namespaceScope) }}
+
+WARNING: namespaceScope is false, so the Agent's ServiceAccount is bound to a ClusterRole that lets it
+create Deployments and Secrets in every namespace of this cluster. Unless the Agent must deploy SQL
+Processors and K2K apps cluster-wide, set namespaceScope: true and grant it a Role only in the
+namespaces it deploys to. See:
+https://docs.lenses.io/latest/deployment/configuration/security-hardening
+{{- end }}

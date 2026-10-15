@@ -123,7 +123,7 @@ The command deploys Lenses Agent on the Kubernetes cluster in the example config
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| namespaceScope | bool | `true` | Enables namespaceScope which indicates that if the cluster has rbac and namespaceScope is enabled role and role binding on namespace level will be created. If SQL_PROCESSOR_MODE is set to KUBERNETES, this option should either be false (giving the Agent access to all namespaces), or the namespaces the agent can access must be set explicitly. |
+| namespaceScope | bool | `true` | Enables namespaceScope which indicates that if the cluster has rbac and namespaceScope is enabled role and role binding on namespace level will be created. If SQL_PROCESSOR_MODE is set to KUBERNETES, this option should either be false (giving the Agent access to all namespaces), or the namespaces the agent can access must be set explicitly. Prefer the latter: with false, the Agent can create Deployments and Secrets in every namespace of the cluster. |
 | rbacEnable | bool | `true` | Enables rbac which indicates if a the cluster has rbac enabled and a cluster role and clusterrolebinding should be created for the service account |
 | serviceAccount | object | `{"annotations":{},"create":false,"name":"default"}` | User to be used by Lenses to deploy apps |
 | serviceAccount.annotations | dict | `{}` | Additional service account annotations. |
