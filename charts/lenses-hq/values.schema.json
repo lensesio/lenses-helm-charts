@@ -1644,6 +1644,28 @@
                             "pattern": "^([0-9]+(\\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$"
                         }
                     }
+                },
+                "k2k": {
+                    "type": "object",
+                    "default": {},
+                    "title": "Images and ServiceAccounts K2K apps may use, written as is to HQ's config",
+                    "additionalProperties": false,
+                    "properties": {
+                        "allowedImages": {
+                            "type": "array",
+                            "items": {
+                                "type": "string",
+                                "minLength": 1
+                            }
+                        },
+                        "allowedServiceAccounts": {
+                            "type": "array",
+                            "items": {
+                                "type": "string",
+                                "minLength": 1
+                            }
+                        }
+                    }
                 }
             }
         }

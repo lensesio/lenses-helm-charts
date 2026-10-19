@@ -1,6 +1,6 @@
 # lenses-hq
 
-![Version: 6.2.15](https://img.shields.io/badge/Version-6.2.15-informational?style=flat-square) ![AppVersion: 6.2.10](https://img.shields.io/badge/AppVersion-6.2.10-informational?style=flat-square)
+![Version: 6.2.16](https://img.shields.io/badge/Version-6.2.16-informational?style=flat-square) ![AppVersion: 6.2.10](https://img.shields.io/badge/AppVersion-6.2.10-informational?style=flat-square)
 
 A chart for Lenses HQ deployment which provides a unified, streamlined view of the entire event infrastructure—whether on-premises or in the cloud—through a single, comprehensive interface.
 
@@ -173,6 +173,12 @@ The command deploys Lenses HQ on the Kubernetes cluster in the example configura
 | lensesHq.http.tls.enabled | string | `false` | Enables or disables TLS. **Required: true** |
 | lensesHq.http.tls.privateKey | string | `{"secret":{"key":"","name":""}}` | Sets the PEM formatted private key. **Required: false** |
 | lensesHq.http.tls.verboseLogs | string | `false` | Enabled verbose of TLS debug logs **Required: true** |
+
+### Lenses HQ K2K startup values
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| lensesHq.k2k | dict | `{}` | Limits the container images and ServiceAccounts that K2K apps may use. Written as is to the `k2k` section of HQ's config. Keys and HQ defaults: `allowedImages` (["docker.io/lensesio/k2k"]), where an entry without a tag or digest allows any tag of that repository, so add your registry mirror here; and `allowedServiceAccounts` ([]), the ServiceAccount names apps may set. A single "*" entry allows any. **Required: false** |
 
 ### Lenses HQ license values
 

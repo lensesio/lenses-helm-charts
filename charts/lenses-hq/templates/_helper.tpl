@@ -284,7 +284,7 @@ license:
   {{- end }}
   acceptEULA: {{ .Values.lensesHq.license.acceptEULA }}
 {{- /* Written as is, so that a key left out keeps HQ's default. */}}
-{{- range $section := list "audit" "features" "environments" "runtime" "proxy" }}
+{{- range $section := list "audit" "features" "environments" "runtime" "proxy" "k2k" }}
 {{- with index $.Values.lensesHq $section }}
 {{ $section }}:
 {{- toYaml . | nindent 2 }}
