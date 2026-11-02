@@ -763,6 +763,12 @@ lensesHq:
   # **Required: false**
   k2k: {}
 
+  # -- (dict) Tunes HQ's consumer group read model. Written as is to the `consumerGroups`
+  # section of HQ's config; keys left out keep HQ's defaults.
+  # @section -- Lenses HQ advanced startup values
+  # **Required: false**
+  consumerGroups: {}
+
   # @section -- Lenses HQ startup values
   # Disable livenessProbe, used while debugging
   livenessProbe:
@@ -781,6 +787,15 @@ lensesHq:
     # - name: FOO
     #   value: bar
 
+cgIndexMaintenanceCronJob:
+  # -- (bool) Creates a CronJob that rebuilds HQ's consumer group indexes, alongside or instead
+  # of HQ's own timer (`lensesHq.consumerGroups.indexMaintenance`). It runs HQ's image and must
+  # reach Postgres.
+  # @section -- Consumer group index maintenance CronJob
+  enabled: false
+  # -- (string) Cron schedule. A run skips the rebuild until HQ's `indexMaintenance.interval` has passed.
+  # @section -- Consumer group index maintenance CronJob
+  schedule: "*/15 * * * *"
 
 # -- (list) Optionally add arbitrary fields to the pod spec (e.g. priorityClassName, priority, etc)
 # @section -- Extras

@@ -268,6 +268,18 @@ database:
 {{ toYaml $db.params | indent 8 }}
   {{- end }}
   TLS: {{ $db.tls }}
+  {{- with $db.maxConns }}
+  maxConns: {{ . | int64 }}
+  {{- end }}
+  {{- with $db.statementTimeout }}
+  statementTimeout: {{ . | quote }}
+  {{- end }}
+  {{- with $db.pollerPoolMaxConns }}
+  pollerPoolMaxConns: {{ . | int64 }}
+  {{- end }}
+  {{- with $db.pollerStatementTimeout }}
+  pollerStatementTimeout: {{ . | quote }}
+  {{- end }}
   {{- end }}
 {{- end }}
 license:
@@ -278,7 +290,7 @@ license:
   {{- end }}
   acceptEULA: {{ .Values.lensesHq.license.acceptEULA }}
 {{- /* Written as is, so that a key left out keeps HQ's default. */}}
-{{- range $section := list "audit" "features" "environments" "runtime" "kafka" "proxy" "k2k" }}
+{{- range $section := list "audit" "features" "environments" "runtime" "kafka" "proxy" "k2k" "consumerGroups" }}
 {{- with index $.Values.lensesHq $section }}
 {{ $section }}:
 {{- toYaml . | nindent 2 }}
@@ -294,3 +306,60 @@ dev:
 {{- toYaml . | nindent 2 }}
 {{- end }}
 {{- end }}
+
+{{/*
+Name of the cg_partition index maintenance CronJob: at most 52 characters, as Kubernetes adds 11
+for its Jobs. fullname is cut, not the suffix, so the name never equals HQ's.
+*/}}
+{{- define "cgIndexMaintenanceCronJob.name" -}}
+{{- printf "%s-cg-reindex" (include "fullname" . | trunc 41 | trimSuffix "-") -}}
+{{- end -}}
+
+{{/*
+The database credentials HQ's config refers to. Used by the HQ Deployment and the reindex CronJob.
+*/}}
+{{- define "cgIndexMaintenanceCronJob.defaults" -}}
+resources:
+  requests:
+    cpu: 10m
+    memory: 64Mi
+  limits:
+    memory: 256Mi
+securityContext:
+  runAsNonRoot: true
+  seccompProfile:
+    type: RuntimeDefault
+containerSecurityContext:
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: true
+  capabilities:
+    drop:
+      - ALL
+{{- end -}}
+
+{{- define "lensesHq.databaseEnv" -}}
+- name: LENSESHQ_PG_PASSWORD
+  valueFrom:
+    secretKeyRef:
+    {{- include "validate.singleEnabledDatabase" . -}}
+  {{- range $name, $db := .Values.lensesHq.storage }}
+    {{- if $db.enabled }}
+    {{- if contains "createNew" $db.passwordSecret.type }}
+      name: {{ include "databaseSecretName" $ }}
+      key: "password"
+    {{ else if or (contains "precreated" $db.passwordSecret.type) (contains "externalSecret" $db.passwordSecret.type) }}
+      name: {{ $db.passwordSecret.name }}
+      key: {{ $db.passwordSecret.key }}
+    {{- end }}
+- name: LENSESHQ_PG_USERNAME
+  {{- if $db.useSecretForUsername.enabled }}
+  valueFrom:
+    secretKeyRef:
+      name: {{ $db.useSecretForUsername.existingSecret.name }}
+      key: {{ $db.useSecretForUsername.existingSecret.key }}
+  {{ else }}
+  value: {{ $db.username }}
+  {{- end }}
+{{- end}}
+  {{- end }}
+{{- end -}}

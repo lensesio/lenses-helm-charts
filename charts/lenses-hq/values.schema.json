@@ -1,5 +1,15 @@
 {
     "$schema": "http://json-schema.org/schema#",
+    "definitions": {
+        "goDuration": {
+            "type": "string",
+            "pattern": "^([0-9]+(\\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$"
+        },
+        "goDurationOrEmpty": {
+            "type": "string",
+            "pattern": "^(([0-9]+(\\.[0-9]+)?(ns|us|µs|ms|s|m|h))+)?$"
+        }
+    },
     "$id": "http://example.com/example.json",
     "type": "object",
     "default": {},
@@ -400,6 +410,83 @@
             "examples": [
                 "lenses-hq"
             ]
+        },
+        "cgIndexMaintenanceCronJob": {
+            "type": "object",
+            "default": {},
+            "title": "cg_partition index maintenance CronJob",
+            "required": [
+                "enabled"
+            ],
+            "additionalProperties": false,
+            "properties": {
+                "enabled": {
+                    "type": "boolean",
+                    "default": false
+                },
+                "schedule": {
+                    "type": "string",
+                    "title": "Cron schedule",
+                    "minLength": 1
+                },
+                "timeZone": {
+                    "type": "string",
+                    "title": "Time zone for the schedule, such as Etc/UTC"
+                },
+                "activeDeadlineSeconds": {
+                    "type": "integer",
+                    "title": "Seconds after which a run is stopped. Unset by default, as a full pass can take over an hour",
+                    "minimum": 1
+                },
+                "startingDeadlineSeconds": {
+                    "type": "integer",
+                    "title": "Seconds a missed run may still start late",
+                    "minimum": 0
+                },
+                "successfulJobsHistoryLimit": {
+                    "type": "integer",
+                    "title": "Successful Jobs to keep",
+                    "minimum": 0
+                },
+                "failedJobsHistoryLimit": {
+                    "type": "integer",
+                    "title": "Failed Jobs to keep",
+                    "minimum": 0
+                },
+                "ttlSecondsAfterFinished": {
+                    "type": "integer",
+                    "title": "Seconds before a finished Job is deleted",
+                    "minimum": 0
+                },
+                "resources": {
+                    "type": "object",
+                    "title": "Resources for the Job's container. Replaces the default: requests 10m CPU and 64Mi, limit 256Mi"
+                },
+                "securityContext": {
+                    "type": "object",
+                    "title": "Pod security context. Replaces the default: non-root, RuntimeDefault seccomp profile"
+                },
+                "containerSecurityContext": {
+                    "type": "object",
+                    "title": "Container security context. Replaces the default: no privilege escalation, read-only root filesystem, all capabilities dropped"
+                },
+                "nodeSelector": {
+                    "type": "object",
+                    "title": "Node selector for the Job's pod"
+                },
+                "tolerations": {
+                    "type": "array",
+                    "title": "Tolerations for the Job's pod"
+                },
+                "additionalVolumes": {
+                    "type": "array",
+                    "title": "Extra volumes for the Job pod, such as a database CA certificate"
+                },
+                "additionalVolumeMounts": {
+                    "type": "array",
+                    "title": "Mounts for additionalVolumes in the Job's container"
+                }
+            }
         },
         "serviceAccount": {
             "type": "object",
@@ -1317,6 +1404,26 @@
                                         }
                                     ]
                                 },
+                                "maxConns": {
+                                    "type": "integer",
+                                    "minimum": 0,
+                                    "default": 0,
+                                    "title": "Max connections in the main query pool. 0 keeps HQ's default"
+                                },
+                                "statementTimeout": {
+                                    "$ref": "#/definitions/goDurationOrEmpty",
+                                    "title": "Postgres statement_timeout for the main pool, such as 30s. Empty keeps HQ's default"
+                                },
+                                "pollerPoolMaxConns": {
+                                    "type": "integer",
+                                    "minimum": 0,
+                                    "default": 0,
+                                    "title": "Max connections in the consumer group poller pool. 0 keeps HQ's default"
+                                },
+                                "pollerStatementTimeout": {
+                                    "$ref": "#/definitions/goDurationOrEmpty",
+                                    "title": "Postgres statement_timeout for the consumer group poller pool, such as 10m. Empty keeps HQ's default"
+                                },
                                 "port": {
                                     "type": "integer",
                                     "default": null,
@@ -1461,6 +1568,55 @@
                                             }
                                         }
                                     }
+                                }
+                            }
+                        }
+                    }
+                },
+                "consumerGroups": {
+                    "type": "object",
+                    "default": {},
+                    "title": "Consumer group read model settings",
+                    "additionalProperties": false,
+                    "properties": {
+                        "pollInterval": {
+                            "$ref": "#/definitions/goDuration"
+                        },
+                        "refreshWorkers": {
+                            "type": "integer",
+                            "minimum": 1
+                        },
+                        "maxPartitionsPerBatch": {
+                            "type": "integer",
+                            "minimum": 1
+                        },
+                        "readTimeout": {
+                            "$ref": "#/definitions/goDuration"
+                        },
+                        "chunkConcurrency": {
+                            "type": "integer",
+                            "minimum": 1
+                        },
+                        "composeTimeout": {
+                            "$ref": "#/definitions/goDuration"
+                        },
+                        "composeConcurrency": {
+                            "type": "integer",
+                            "minimum": 1
+                        },
+                        "indexMaintenance": {
+                            "type": "object",
+                            "additionalProperties": false,
+                            "properties": {
+                                "enabled": {
+                                    "type": "boolean"
+                                },
+                                "interval": {
+                                    "$ref": "#/definitions/goDuration"
+                                },
+                                "minGrowthPercent": {
+                                    "type": "integer",
+                                    "minimum": 0
                                 }
                             }
                         }

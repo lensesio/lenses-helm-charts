@@ -1,0 +1,101 @@
+{{- if (.Values.cgIndexMaintenanceCronJob).enabled }}
+{{- $cj := .Values.cgIndexMaintenanceCronJob }}
+{{- $name := include "cgIndexMaintenanceCronJob.name" . }}
+{{- $defaults := include "cgIndexMaintenanceCronJob.defaults" . | fromYaml }}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ $name }}
+  labels:
+    app: {{ include "fullname" . }}
+    chart: {{ printf "%s-%s" .Chart.Name .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    lenses.io/app: {{ include "fullname" . }}
+    lenses.io/app.type: lenses-hq-cg-reindex
+    {{- range $key, $value := .Values.labels }}
+    {{ $key }}: {{ $value | quote }}
+    {{- end }}
+spec:
+  # Defaulted here too, as `helm upgrade --reuse-values` does not read the new values.yaml.
+  schedule: {{ $cj.schedule | default "*/15 * * * *" | quote }}
+  {{- with $cj.timeZone }}
+  timeZone: {{ . | quote }}
+  {{- end }}
+  # The rebuild holds a Postgres advisory lock, so overlapping runs would only exit early.
+  concurrencyPolicy: Forbid
+  {{- range $key := list "startingDeadlineSeconds" "successfulJobsHistoryLimit" "failedJobsHistoryLimit" }}
+  {{- if hasKey $cj $key }}
+  {{ $key }}: {{ index $cj $key | int64 }}
+  {{- end }}
+  {{- end }}
+  jobTemplate:
+    spec:
+      # A failed index is retried on the next scheduled run.
+      backoffLimit: 0
+      {{- with $cj.activeDeadlineSeconds }}
+      activeDeadlineSeconds: {{ . | int64 }}
+      {{- end }}
+      {{- if hasKey $cj "ttlSecondsAfterFinished" }}
+      ttlSecondsAfterFinished: {{ $cj.ttlSecondsAfterFinished | int64 }}
+      {{- end }}
+      template:
+        metadata:
+          labels:
+            # Not the HQ Deployment's `app` label, so HQ's selectors never match this pod.
+            app: {{ $name }}
+            component: "lenses-hq-cg-reindex"
+            {{- range $key, $value := .Values.labels }}
+            {{ $key }}: {{ $value | quote }}
+            {{- end }}
+        spec:
+          # The Job talks only to Postgres, never to the Kubernetes API.
+          automountServiceAccountToken: false
+          restartPolicy: Never
+          {{- with .Values.image.imagePullSecrets }}
+          imagePullSecrets:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          securityContext:
+            {{- toYaml ($cj.securityContext | default $defaults.securityContext) | nindent 12 }}
+          {{- with $cj.nodeSelector }}
+          nodeSelector:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with $cj.tolerations }}
+          tolerations:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          containers:
+            - name: cg-reindex
+              image: {{ include "lensesHqImage" . | quote }}
+              imagePullPolicy: {{ .Values.image.pullPolicy }}
+              args:
+                - reindex-cg-partition
+                - /etc/panoptes/config.yaml
+              env:
+                {{- include "lensesHq.databaseEnv" . | nindent 16 }}
+                {{- with .Values.lensesHq.additionalEnv }}
+                {{- toYaml . | nindent 16 }}
+                {{- end }}
+              volumeMounts:
+                - name: config
+                  mountPath: /etc/panoptes
+                {{- with $cj.additionalVolumeMounts }}
+                {{- toYaml . | nindent 16 }}
+                {{- end }}
+              securityContext:
+                {{- toYaml ($cj.containerSecurityContext | default $defaults.containerSecurityContext) | nindent 16 }}
+              resources:
+                {{- toYaml ($cj.resources | default $defaults.resources) | nindent 16 }}
+          volumes:
+            - name: config
+              configMap:
+                name: {{ include "fullname" . | quote }}
+                items:
+                  - key: config.yaml
+                    path: config.yaml
+            {{- with $cj.additionalVolumes }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+{{- end }}

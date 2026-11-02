@@ -1,0 +1,77 @@
+suite: consumer group and database pool tuning
+templates:
+  - configmap.yaml
+tests:
+  - it: "should leave HQ defaults in place when nothing is set"
+    set:
+      lensesHq:
+        storage:
+          postgres:
+            host: pg.example.com
+    asserts:
+      - template: "templates/configmap.yaml"
+        notMatchRegex:
+          path: data.config\.yaml
+          pattern: "(?m)^consumerGroups:|maxConns|statementTimeout|pollerPoolMaxConns|pollerStatementTimeout"
+
+  - it: "should write the database pool settings under database"
+    set:
+      lensesHq:
+        storage:
+          postgres:
+            host: pg.example.com
+            maxConns: 50
+            statementTimeout: 45s
+            pollerPoolMaxConns: 8
+            pollerStatementTimeout: 15m
+    asserts:
+      - template: "templates/configmap.yaml"
+        matchRegex:
+          path: data.config\.yaml
+          pattern: '(?m)^  maxConns: 50$'
+      - template: "templates/configmap.yaml"
+        matchRegex:
+          path: data.config\.yaml
+          pattern: '(?m)^  statementTimeout: "?45s"?$'
+      - template: "templates/configmap.yaml"
+        matchRegex:
+          path: data.config\.yaml
+          pattern: '(?m)^  pollerPoolMaxConns: 8$'
+      - template: "templates/configmap.yaml"
+        matchRegex:
+          path: data.config\.yaml
+          pattern: '(?m)^  pollerStatementTimeout: "?15m"?$'
+
+  - it: "should keep false and zero values in consumerGroups"
+    set:
+      lensesHq:
+        storage:
+          postgres:
+            host: pg.example.com
+        consumerGroups:
+          indexMaintenance:
+            enabled: false
+            minGrowthPercent: 0
+    asserts:
+      - template: "templates/configmap.yaml"
+        matchRegex:
+          path: data.config\.yaml
+          pattern: '(?m)^consumerGroups:\n  indexMaintenance:\n    enabled: false\n    minGrowthPercent: 0$'
+
+  - it: "should write large pool sizes as integers"
+    set:
+      lensesHq:
+        storage:
+          postgres:
+            host: pg.example.com
+            maxConns: 1000000
+            pollerPoolMaxConns: 2000000
+    asserts:
+      - template: "templates/configmap.yaml"
+        matchRegex:
+          path: data.config\.yaml
+          pattern: '(?m)^  maxConns: 1000000$'
+      - template: "templates/configmap.yaml"
+        matchRegex:
+          path: data.config\.yaml
+          pattern: '(?m)^  pollerPoolMaxConns: 2000000$'

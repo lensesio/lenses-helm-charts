@@ -186,30 +186,7 @@ spec:
                 name: {{ .Values.lensesHq.license.secretName }}
                 key: {{ .Values.lensesHq.license.secretKeyName }}
           {{- end }}
-          - name: LENSESHQ_PG_PASSWORD
-            valueFrom:
-              secretKeyRef:
-              {{- include "validate.singleEnabledDatabase" . -}}
-            {{- range $name, $db := .Values.lensesHq.storage }}
-              {{- if $db.enabled }}
-              {{- if contains "createNew" $db.passwordSecret.type }}
-                name: {{ include "databaseSecretName" $ }}
-                key: "password"
-              {{ else if or (contains "precreated" $db.passwordSecret.type) (contains "externalSecret" $db.passwordSecret.type) }}
-                name: {{ $db.passwordSecret.name }}
-                key: {{ $db.passwordSecret.key }}
-              {{- end }}
-          - name: LENSESHQ_PG_USERNAME
-            {{- if $db.useSecretForUsername.enabled }}
-            valueFrom:
-              secretKeyRef:
-                name: {{ $db.useSecretForUsername.existingSecret.name }}
-                key: {{ $db.useSecretForUsername.existingSecret.key }}
-            {{ else }}
-            value: {{ $db.username }}
-            {{- end }}
-          {{- end}}
-            {{- end }}
+          {{- include "lensesHq.databaseEnv" . | nindent 10 }}
 
           # Additional env variables
           {{- if .Values.lensesHq.additionalEnv }}

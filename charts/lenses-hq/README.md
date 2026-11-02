@@ -1,6 +1,6 @@
 # lenses-hq
 
-![Version: 6.3.4](https://img.shields.io/badge/Version-6.3.4-informational?style=flat-square) ![AppVersion: 6.3.2](https://img.shields.io/badge/AppVersion-6.3.2-informational?style=flat-square)
+![Version: 6.3.5](https://img.shields.io/badge/Version-6.3.5-informational?style=flat-square) ![AppVersion: 6.3.2](https://img.shields.io/badge/AppVersion-6.3.2-informational?style=flat-square)
 
 A chart for Lenses HQ deployment which provides a unified, streamlined view of the entire event infrastructure—whether on-premises or in the cloud—through a single, comprehensive interface.
 
@@ -61,6 +61,13 @@ The command deploys Lenses HQ on the Kubernetes cluster in the example configura
 | securityContext | dict | `{}` | Deployment security context |
 | strategy | dict | `{}` | Deployment strategy |
 | tolerations | dict | `[]` | Deployment tolerations |
+
+### Consumer group index maintenance CronJob
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| cgIndexMaintenanceCronJob.enabled | bool | `false` | Creates a CronJob that rebuilds HQ's consumer group indexes, alongside or instead of HQ's own timer (`lensesHq.consumerGroups.indexMaintenance`). It runs HQ's image and must reach Postgres. |
+| cgIndexMaintenanceCronJob.schedule | string | `"*/15 * * * *"` | Cron schedule. A run skips the rebuild until HQ's `indexMaintenance.interval` has passed. |
 
 ### Lenses HQ Agent Ingress deployment service values
 
@@ -148,6 +155,7 @@ The command deploys Lenses HQ on the Kubernetes cluster in the example configura
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
+| lensesHq.consumerGroups | dict | `{}` | Tunes HQ's consumer group read model. Written as is to the `consumerGroups` section of HQ's config; keys left out keep HQ's defaults. **Required: false** |
 | lensesHq.environments | dict | `{}` | Tunes how HQ refreshes information about its environments. Written as is to the `environments` section of HQ's config. Keys and HQ defaults: `refreshWorkers` (4), how many environments HQ refreshes at the same time. **Required: false** |
 | lensesHq.kafka | dict | `{}` | Limits for reading topic records through the API. Written as is to the `kafka` section of HQ's config. Keys and HQ defaults: `maxRecordsPerRequest` (1000) and `maxBytesPerRequest` (33554432), the most records and bytes in one response. **Required: false** |
 | lensesHq.proxy | dict | `{}` | Configures how HQ forwards API requests to Agents. Written as is to the `proxy` section of HQ's config. Keys and HQ defaults: `apiRequestTimeout` ("30s"), how long HQ waits for an Agent to answer an API request. **Required: false** |

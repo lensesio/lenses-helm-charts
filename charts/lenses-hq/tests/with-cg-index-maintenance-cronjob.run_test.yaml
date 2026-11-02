@@ -1,0 +1,283 @@
+suite: cg_partition index maintenance CronJob
+templates:
+  - cg-index-maintenance-cronjob.yaml
+tests:
+  - it: "should not render anything by default"
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: "should run the reindex command with HQ's image and config file"
+    set:
+      cgIndexMaintenanceCronJob:
+        enabled: true
+      image:
+        tag: 6.3.1
+    asserts:
+      - equal:
+          path: spec.jobTemplate.spec.template.spec.containers[0].image
+          value: lensesio/lenses-hq:6.3.1
+      - equal:
+          path: spec.jobTemplate.spec.template.spec.containers[0].args
+          value:
+            - reindex-cg-partition
+            - /etc/panoptes/config.yaml
+      - contains:
+          path: spec.jobTemplate.spec.template.spec.containers[0].volumeMounts
+          content:
+            name: config
+            mountPath: /etc/panoptes
+      - contains:
+          path: spec.jobTemplate.spec.template.spec.volumes
+          content:
+            name: config
+            configMap:
+              name: RELEASE-NAME-lenses-hq
+              items:
+                - key: config.yaml
+                  path: config.yaml
+
+  - it: "should give the Job HQ's database credentials"
+    set:
+      cgIndexMaintenanceCronJob:
+        enabled: true
+      lensesHq:
+        storage:
+          postgres:
+            username: lenses
+            passwordSecret:
+              type: precreated
+              name: pg-password
+              key: password
+    asserts:
+      - contains:
+          path: spec.jobTemplate.spec.template.spec.containers[0].env
+          content:
+            name: LENSESHQ_PG_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: pg-password
+                key: password
+      - contains:
+          path: spec.jobTemplate.spec.template.spec.containers[0].env
+          content:
+            name: LENSESHQ_PG_USERNAME
+            value: lenses
+
+  - it: "should take the database username from a secret when HQ does"
+    set:
+      cgIndexMaintenanceCronJob:
+        enabled: true
+      lensesHq:
+        storage:
+          postgres:
+            useSecretForUsername:
+              enabled: true
+              existingSecret:
+                name: pg-user
+                key: user
+    asserts:
+      - contains:
+          path: spec.jobTemplate.spec.template.spec.containers[0].env
+          content:
+            name: LENSESHQ_PG_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: pg-user
+                key: user
+
+  - it: "should not give the Job HQ's other secrets"
+    set:
+      cgIndexMaintenanceCronJob:
+        enabled: true
+      lensesHq:
+        license:
+          referenceFromSecret: true
+          secretName: license
+          secretKeyName: key
+    asserts:
+      - notContains:
+          path: spec.jobTemplate.spec.template.spec.containers[0].env
+          content:
+            name: LENSESHQ_LICENSE
+            valueFrom:
+              secretKeyRef:
+                name: license
+                key: key
+
+  - it: "should not mount a Kubernetes API token"
+    set:
+      cgIndexMaintenanceCronJob:
+        enabled: true
+    asserts:
+      - equal:
+          path: spec.jobTemplate.spec.template.spec.automountServiceAccountToken
+          value: false
+
+  - it: "should mount the Job's own extra volumes"
+    set:
+      cgIndexMaintenanceCronJob:
+        enabled: true
+        additionalVolumes:
+          - name: pg-ca
+            secret:
+              secretName: pg-ca
+        additionalVolumeMounts:
+          - name: pg-ca
+            mountPath: /etc/pg-ca
+    asserts:
+      - contains:
+          path: spec.jobTemplate.spec.template.spec.volumes
+          content:
+            name: pg-ca
+            secret:
+              secretName: pg-ca
+      - contains:
+          path: spec.jobTemplate.spec.template.spec.containers[0].volumeMounts
+          content:
+            name: pg-ca
+            mountPath: /etc/pg-ca
+
+  - it: "should keep the CronJob name within the 52 character limit"
+    release:
+      name: a-release-name-long-enough-to-need-truncating-here
+    set:
+      cgIndexMaintenanceCronJob:
+        enabled: true
+    asserts:
+      - matchRegex:
+          path: metadata.name
+          pattern: ^[a-z0-9]([-a-z0-9]{0,50}[a-z0-9])?$
+
+  - it: "should leave activeDeadlineSeconds unset by default, since 0 fails every run immediately"
+    set:
+      cgIndexMaintenanceCronJob:
+        enabled: true
+    asserts:
+      - isNull:
+          path: spec.jobTemplate.spec.activeDeadlineSeconds
+
+  - it: "should not label the CronJob pod with the HQ Deployment's selector"
+    set:
+      cgIndexMaintenanceCronJob:
+        enabled: true
+    asserts:
+      - notEqual:
+          path: spec.jobTemplate.spec.template.metadata.labels.app
+          value: RELEASE-NAME-lenses-hq
+
+  - it: "should not reuse the HQ name when fullname is close to the length limit"
+    set:
+      fullnameOverride: lenses-hq-with-a-fullname-of-exactly-fifty-two-chars
+      cgIndexMaintenanceCronJob:
+        enabled: true
+    asserts:
+      - notEqual:
+          path: metadata.name
+          value: lenses-hq-with-a-fullname-of-exactly-fifty-two-chars
+
+  - it: "should run with restricted security contexts and small resources by default"
+    set:
+      cgIndexMaintenanceCronJob:
+        enabled: true
+    asserts:
+      - equal:
+          path: spec.jobTemplate.spec.template.spec.securityContext
+          value:
+            runAsNonRoot: true
+            seccompProfile:
+              type: RuntimeDefault
+      - equal:
+          path: spec.jobTemplate.spec.template.spec.containers[0].securityContext
+          value:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+      - equal:
+          path: spec.jobTemplate.spec.template.spec.containers[0].resources
+          value:
+            requests:
+              cpu: 10m
+              memory: 64Mi
+            limits:
+              memory: 256Mi
+
+  - it: "should leave the Job limits to Kubernetes by default"
+    set:
+      cgIndexMaintenanceCronJob:
+        enabled: true
+    asserts:
+      - isNull:
+          path: spec.startingDeadlineSeconds
+      - isNull:
+          path: spec.successfulJobsHistoryLimit
+      - isNull:
+          path: spec.failedJobsHistoryLimit
+      - isNull:
+          path: spec.jobTemplate.spec.ttlSecondsAfterFinished
+
+  - it: "should write the Job limits when set, keeping 0"
+    set:
+      cgIndexMaintenanceCronJob:
+        enabled: true
+        startingDeadlineSeconds: 300
+        successfulJobsHistoryLimit: 0
+        failedJobsHistoryLimit: 5
+        ttlSecondsAfterFinished: 86400
+    asserts:
+      - equal:
+          path: spec.startingDeadlineSeconds
+          value: 300
+      - equal:
+          path: spec.successfulJobsHistoryLimit
+          value: 0
+      - equal:
+          path: spec.failedJobsHistoryLimit
+          value: 5
+      - equal:
+          path: spec.jobTemplate.spec.ttlSecondsAfterFinished
+          value: 86400
+
+  - it: "should replace the default resources and security context when set"
+    set:
+      cgIndexMaintenanceCronJob:
+        enabled: true
+        resources:
+          requests:
+            memory: 128Mi
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 1000
+    asserts:
+      - equal:
+          path: spec.jobTemplate.spec.template.spec.containers[0].resources
+          value:
+            requests:
+              memory: 128Mi
+      - equal:
+          path: spec.jobTemplate.spec.template.spec.securityContext
+          value:
+            runAsNonRoot: true
+            runAsUser: 1000
+
+  - it: "should default the schedule when values.yaml is not read, as with --reuse-values"
+    set:
+      cgIndexMaintenanceCronJob:
+        enabled: true
+        schedule: null
+    asserts:
+      - equal:
+          path: spec.schedule
+          value: "*/15 * * * *"
+
+  - it: "should write a large activeDeadlineSeconds as an integer"
+    set:
+      cgIndexMaintenanceCronJob:
+        enabled: true
+        activeDeadlineSeconds: 7200000
+    asserts:
+      - equal:
+          path: spec.jobTemplate.spec.activeDeadlineSeconds
+          value: 7200000
